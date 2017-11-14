@@ -73,8 +73,8 @@ def login(args):
     rr = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
     functionReturn = rr[0]
   else:
-    abort(409, error="Error: user not found.")
-    functionReturn = {"message": "Error: user not found."}
+    abort(409, error="Error: username or password is invalid.")
+    functionReturn = {"message": "Error: username or password is invalid."}
   if db:
 	cur.close()
 	db.commit()
