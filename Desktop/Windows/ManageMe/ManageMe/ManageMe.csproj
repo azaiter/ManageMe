@@ -40,6 +40,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -109,9 +110,11 @@
     <Folder Include="Models\Data Controllers\" />
     <Folder Include="Models\Data Providers\" />
     <Folder Include="Models\Interfaces\" />
-    <Folder Include="Resources\Images\" />
     <Folder Include="Utilities\" />
     <Folder Include="Views\Controls\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\close.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -64,5 +64,18 @@ namespace ManageMe.Views
             this.Close();
         }
 
+        private void buttonShowRegister_Click(object sender, RoutedEventArgs e)
+        {
+            gridSignIn.Visibility = Visibility.Hidden;
+            this.Height = 475;
+            gridRegister.Visibility = Visibility.Visible;
+        }
+
+        private void buttonBack_Click(object sender, RoutedEventArgs e)
+        {
+            gridSignIn.Visibility = Visibility.Visible;
+            this.Height = 400;
+            gridRegister.Visibility = Visibility.Hidden;
+        }
     }
 }

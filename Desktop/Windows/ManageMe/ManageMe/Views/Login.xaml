@@ -6,20 +6,156 @@
         xmlns:local="clr-namespace:ManageMe.Views"
         mc:Ignorable="d"
         Title="Login" Height="400" Width="300" ResizeMode="CanMinimize" WindowStyle="None" Background="#3CA2E0">
+    <Window.Resources>
+    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>
+            <RowDefinition Height="50"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <Button x:Name="buttonExit" Grid.Row="0" Background="Transparent" BorderBrush="Gray" Width="20" Height="20" Margin="5" HorizontalAlignment="Right" Click="buttonExit_Click">
-            X
+        <Label Grid.Row="1" HorizontalAlignment="Center" Style="{DynamicResource ManageMeHeader}">Manage Me - Login</Label>
+        <Button x:Name="buttonExit" Grid.Row="0" Background="Transparent" BorderBrush="Transparent" Width="20" Height="20" Margin="5" HorizontalAlignment="Right" Click="buttonExit_Click" Style="{DynamicResource ManageMeToobarButtons}">
+            <Image Source="/ManageMe;component/Resources/Images/close.png"/>
         </Button>
-        <StackPanel Orientation="Vertical" Grid.Row="1" VerticalAlignment="Center">
-            <TextBox Grid.Row="1" x:Name="textBoxUserName"  Height="25" Margin="10 0 10 5"></TextBox>
-            <TextBox Grid.Row="1" x:Name="textBoxPassword" Height="25" Margin="10 0 10 5"></TextBox>
-            <Button x:Name="buttonLogin" Height="25" Width="125" Margin="0 0 0 5" BorderBrush="#FF707070" Style="{DynamicResource RoundBlueButton}">Login</Button>
-            <Button x:Name="buttonSignUp" Height="25" Width="125" Style="{DynamicResource RoundBlueButton}">Signup</Button>
-        </StackPanel>
+        <Grid  x:Name="gridSignIn" Grid.Row="2" VerticalAlignment="Center" Visibility="Visible">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
+            </Grid.RowDefinitions>
 
+            <TextBox Grid.Row="0" x:Name="textBoxUserName"  Margin="20 0 20 5" Style="{DynamicResource MangeMeTextBox}"></TextBox>
+            <TextBlock Grid.Row="0" IsHitTestVisible="False" VerticalAlignment="Center" FontSize="16" TextWrapping="Wrap" Text="Email" Margin="25 0 20 5" Foreground="LightGray">
+                <TextBlock.Style>
+                    <Style TargetType="{x:Type TextBlock}">
+                        <Setter Property="Visibility" Value="Collapsed"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Text, ElementName=textBoxUserName}" Value="">
+                                <Setter Property="Visibility" Value="Visible"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+            
+            <PasswordBox Grid.Row="1" x:Name="textBoxPassword" Margin="20 0 20 5" Style="{DynamicResource ManageMePasswordBox}"></PasswordBox>
+            <TextBlock Grid.Row="1" IsHitTestVisible="False" VerticalAlignment="Center" FontSize="16" TextWrapping="Wrap" Text="Password" Margin="25 0 20 5" Foreground="LightGray">
+                <TextBlock.Style>
+                    <Style TargetType="{x:Type TextBlock}">
+                        <Setter Property="Visibility" Value="Collapsed"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Password, ElementName=textBoxPassword}" Value="s">
+                                <Setter Property="Visibility" Value="Visible"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+            
+            <Button Grid.Row="3" x:Name="buttonLogin" Height="25" Width="125" Margin="0 0 0 5" BorderBrush="#FF707070" Style="{DynamicResource ManageMeButton}">Login</Button>
+            <Button Grid.Row="4" x:Name="buttonShowRegister" Height="25" Width="125" Style="{DynamicResource ManageMeButton}" Click="buttonShowRegister_Click">Register</Button>
+        </Grid>
+        <Grid x:Name="gridRegister" Grid.Row="2" VerticalAlignment="Center" Visibility="Hidden">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
+            </Grid.RowDefinitions>
+            <TextBox Grid.Row="0" x:Name="textBoxCFirstName" Margin="20 0 20 5" Style="{DynamicResource MangeMeTextBox}"></TextBox>
+            <TextBlock Grid.Row="0" IsHitTestVisible="False" VerticalAlignment="Center" FontSize="16" TextWrapping="Wrap" Text="First Name" Margin="25 0 20 5" Foreground="LightGray">
+                <TextBlock.Style>
+                    <Style TargetType="{x:Type TextBlock}">
+                        <Setter Property="Visibility" Value="Collapsed"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Text, ElementName=textBoxCFirstName}" Value="">
+                                <Setter Property="Visibility" Value="Visible"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+            
+            <TextBox Grid.Row="1" x:Name="textBoxCLastName" Margin="20 0 20 5" Style="{DynamicResource MangeMeTextBox}"></TextBox>
+            <TextBlock Grid.Row="1" IsHitTestVisible="False" VerticalAlignment="Center" FontSize="16" TextWrapping="Wrap" Text="Last Name" Margin="25 0 20 5" Foreground="LightGray">
+                <TextBlock.Style>
+                    <Style TargetType="{x:Type TextBlock}">
+                        <Setter Property="Visibility" Value="Collapsed"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Text, ElementName=textBoxCLastName}" Value="">
+                                <Setter Property="Visibility" Value="Visible"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+            
+            <TextBox Grid.Row="2" x:Name="textBoxCUserName" Margin="20 0 20 5" Style="{DynamicResource MangeMeTextBox}"></TextBox>
+            <TextBlock Grid.Row="2" IsHitTestVisible="False" VerticalAlignment="Center" FontSize="16" TextWrapping="Wrap" Text="User Name" Margin="25 0 20 5" Foreground="LightGray">
+                <TextBlock.Style>
+                    <Style TargetType="{x:Type TextBlock}">
+                        <Setter Property="Visibility" Value="Collapsed"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Text, ElementName=textBoxCUserName}" Value="">
+                                <Setter Property="Visibility" Value="Visible"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+            
+            <TextBox Grid.Row="3" x:Name="textBoxCEmail" Margin="20 0 20 5" Style="{DynamicResource MangeMeTextBox}"></TextBox>
+            <TextBlock Grid.Row="3" IsHitTestVisible="False" VerticalAlignment="Center" FontSize="16" TextWrapping="Wrap" Text="Email" Margin="25 0 20 5" Foreground="LightGray">
+                <TextBlock.Style>
+                    <Style TargetType="{x:Type TextBlock}">
+                        <Setter Property="Visibility" Value="Collapsed"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Text, ElementName=textBoxCEmail}" Value="">
+                                <Setter Property="Visibility" Value="Visible"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+
+            <PasswordBox Grid.Row="4" x:Name="textBoxCPassword" Margin="20 0 20 5" Style="{DynamicResource ManageMePasswordBox}"></PasswordBox>
+            <TextBlock Grid.Row="4" IsHitTestVisible="False" VerticalAlignment="Center" FontSize="16" TextWrapping="Wrap" Text="Password" Margin="25 0 20 5" Foreground="LightGray">
+                <TextBlock.Style>
+                    <Style TargetType="{x:Type TextBlock}">
+                        <Setter Property="Visibility" Value="Collapsed"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Password, ElementName=textBoxCPassword}" Value="">
+                                <Setter Property="Visibility" Value="Visible"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+
+            <PasswordBox Grid.Row="5" x:Name="textBoxCConfirmPassword" Margin="20 0 20 5" Style="{DynamicResource ManageMePasswordBox}"></PasswordBox>
+            <TextBlock Grid.Row="5" IsHitTestVisible="False" VerticalAlignment="Center" FontSize="16" TextWrapping="Wrap" Text="Confirm Password" Margin="25 0 20 5" Foreground="LightGray">
+                <TextBlock.Style>
+                    <Style TargetType="{x:Type TextBlock}">
+                        <Setter Property="Visibility" Value="Collapsed"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Password, ElementName=textBoxCConfirmPassword}" Value="">
+                                <Setter Property="Visibility" Value="Visible"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+
+            <Button Grid.Row="7" x:Name="buttonBack" Height="25" Width="125" Margin="0 0 0 5" BorderBrush="#FF707070" Style="{DynamicResource ManageMeButton}" Click="buttonBack_Click">Back</Button>
+            <Button Grid.Row="8" x:Name="buttonRegister" Height="25" Width="125" Style="{DynamicResource ManageMeButton}">Register</Button>
+        </Grid>
     </Grid>
 </Window>
