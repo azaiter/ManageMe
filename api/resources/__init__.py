@@ -1,5 +1,5 @@
 from importlib import import_module
-from common import settings
-from common import util as managemeutil
-dbEngineName = str("common."+settings.dbEngineFileName)
+from api.common import settings
+from api.common import util as managemeutil
+dbEngineName = str("api.common."+settings.dbEngineFileName)
 dbengine = import_module(dbEngineName)
