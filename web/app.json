@@ -1,0 +1,14 @@
+{
+  "name": "Manage-Me",
+  "description": "Project Management Software",
+  "keywords": [
+    "react",
+    "es6",
+    "starter"
+  ],
+  "repository": "https://github.com/BChip/manageme",
+  "logo": "https://dl.dropboxusercontent.com/u/1803181/essential-react-logo.png",
+  "env": {
+    "PRODUCTION": "true"
+  }
+}
