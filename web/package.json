@@ -1,7 +1,7 @@
 {
-  "name": "Manage-Me",
+  "name": "essential-react",
   "version": "0.3.0",
-  "description": "Project Management Software",
+  "description": "A minimal skeleton for building testable React apps using ES6.",
   "main": "src/main.jsx",
   "scripts": {
     "postinstall": "npm run build",
@@ -14,7 +14,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/BChip/manageme"
+    "url": "https://github.com/pheuter/essential-react.git"
   },
   "keywords": [
     "skeleton",
