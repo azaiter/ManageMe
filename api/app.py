@@ -10,6 +10,7 @@ Dependencies:
 '''
 # import dependencies
 from sys import argv
+import sys
 from flask import Flask
 from flask_restful import Api
 
@@ -38,4 +39,3 @@ api.add_resource(getprojects, '/project/get', '/project/get/')
 # for debugging, running indivisually with -debug param
 if '-debug' in argv:
 	app.run()
-#app.run()
