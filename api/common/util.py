@@ -49,17 +49,16 @@ def verify_isStrongPassword(password):
 
 def verify_usernameExist(username):
 	usernameStr = str(username)
-	if dbengine.checkUsernameExists:
+	if dbengine.checkUsernameExists(usernameStr):
 		return usernameStr
 	else:
 		raise ValueError('Username {} does not exist'.format(usernameStr))
 
 def verify_usernameNotExist(username):
-	print("called exists UTIL")
-	usernameStr = str(username)
-	if not dbengine.checkUsernameExists:
-		return usernameStr
-	else:
-		raise ValueError('Username {} exists'.format(usernameStr))
+  usernameStr = str(username)
+  if not dbengine.checkUsernameExists(usernameStr):
+    return usernameStr
+  else:
+    raise ValueError('Username {} exists'.format(usernameStr))
 
 

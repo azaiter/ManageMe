@@ -99,8 +99,6 @@ def checkUsernameExists(username):
 	cur = db.cursor()
 	cur.callproc('sp_checkUsernameExist', [str(username)])
 	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
-	print(r)
-	print("called exists")
 	if db:
 		cur.close()
 		db.commit()

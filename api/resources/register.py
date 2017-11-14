@@ -45,7 +45,7 @@ post_parser.add_argument(
 post_parser.add_argument(
     'username', dest='username',
     location='form', required=True,
-    #type=managemeutil.verify_usernameNotExist,
+    type=managemeutil.verify_usernameNotExist,
     help='The user\'s username {error_msg}',
 )
 post_parser.add_argument(
