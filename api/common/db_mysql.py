@@ -118,6 +118,7 @@ createProject
 	from the token you can check permissions and figure out "created_by" field.
 '''
 def createProject(args):
+	checkTokenIsValid(args.token)
 	return(args)
 	
 	
@@ -129,4 +130,5 @@ getProjects:
 		all projects related to the user
 '''
 def getProjects(args):
+	checkTokenIsValid(args.token)
 	return(args)
