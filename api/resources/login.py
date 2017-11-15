@@ -25,6 +25,7 @@ post_parser.add_argument(
 )
 
 class login(Resource):
+#  @managemeutil.cors
   def post(self):
     args = post_parser.parse_args()
     return dbengine.login(args)
