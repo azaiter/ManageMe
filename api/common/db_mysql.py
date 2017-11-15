@@ -118,11 +118,11 @@ createProject
 	from the token you can check permissions and figure out "created_by" field.
 '''
 def createProject(args):
-	checkTokenIsValid(args.token)
-	db = dbConnect()
-	cur = db.cursor()
-	cur.callproc('sp_createProject',[str(args.token), str(args.project_name), str(args.project_desc)])
-	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+	if checkTokenIsValid(args.token):
+		db = dbConnect()
+		cur = db.cursor()
+		cur.callproc('sp_createProject',[str(args.token), str(args.project_name), str(args.project_desc)])
+		r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
 	if db:
 		db.close()
 	return jsonify(r)
