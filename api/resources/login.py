@@ -1,5 +1,5 @@
 from flask_restful import Resource, reqparse
-from __init__ import dbengine, managemeutil
+from resources.__init__ import dbengine, managemeutil
 
 post_parser = reqparse.RequestParser(bundle_errors=True)
 
@@ -25,7 +25,6 @@ post_parser.add_argument(
 )
 
 class login(Resource):
-  @managemeutil.cors
   def post(self):
     args = post_parser.parse_args()
     return dbengine.login(args)
