@@ -57,6 +57,7 @@ post_parser.add_argument(
 
 
 class register(Resource):
+#  @managemeutil.cors
   def post(self):
     args = post_parser.parse_args()
     return dbengine.register(args)
