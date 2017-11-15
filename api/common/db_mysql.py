@@ -1,8 +1,8 @@
-from flask import jsonify
+from flask import jsonify, json
 from flask_restful import abort
 import MySQLdb
 import sys
-import settings
+import common.settings as settings
 
 # returns a mySQL connection object.
 def dbConnect():
@@ -50,47 +50,45 @@ To Do Jaelyn:
 '''
 
 def checkTokenIsValid(token):
-  db = dbConnect()
-  cur = db.cursor()
-  cur.callproc('sp_checkToken',[str(token)])
-  r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
-  if db:
-	db.close()
-  return len(r) > 0
+	db = dbConnect()
+	cur = db.cursor()
+	cur.callproc('sp_checkToken',[str(token)])
+	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+	if db:
+		db.close()
+	return len(r) > 0
 
 def login(args):
-  functionReturn = {}
-  rr = []
-  db = dbConnect()
-  cur = db.cursor()
-  cur.callproc('sp_checkUser', [str(args.username), str(args.password)])
-  r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
-  cur.close()
-  cur = db.cursor()
-  if len(r) != 0:
-    intUID = [int(r[0]['uid'])]
-    cur.callproc('sp_createSession', [intUID])
-    rr = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
-    functionReturn = rr[0]
-  else:
-    abort(409, error="Error: username or password is invalid.")
-    functionReturn = {"message": "Error: username or password is invalid."}
-  if db:
+	db = dbConnect()
+	cur = db.cursor()
+	cur.callproc('sp_checkUser', [str(args.username), str(args.password)])
+	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
 	cur.close()
-	db.commit()
-	db.close()
-  return jsonify(functionReturn)
+	cur = db.cursor()
+	if len(r) != 0:
+		intUID = [int(r[0]['uid'])]
+		cur.callproc('sp_createSession', [intUID])
+		rr = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+		functionReturn = rr[0]
+	else:
+		abort(409, message="Error: username or password is invalid.")
+		functionReturn = {"message": "Error: username or password is invalid."}
+	if db:
+		cur.close()
+		db.commit()
+		db.close()
+	return jsonify(functionReturn)
   
 def register(args):
-  db = dbConnect()
-  cur = db.cursor()
-  cur.callproc('sp_registerUser', [(str(args.first_name)), (str(args.last_name)), (str(args.email)), (str(args.phonenum)), (str(args.address)), (str(args.username)), (str(args.password))])
-  r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
-  if db:
-	cur.close()
-	db.commit()
-	db.close()
-  return jsonify(r[0])
+	db = dbConnect()
+	cur = db.cursor()
+	cur.callproc('sp_registerUser', [(str(args.first_name)), (str(args.last_name)), (str(args.email)), (str(args.phonenum)), (str(args.address)), (str(args.username)), (str(args.password))])
+	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+	if db:
+		cur.close()
+		db.commit()
+		db.close()
+	return jsonify(r[0])
   
   
   

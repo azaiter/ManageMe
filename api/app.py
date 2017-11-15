@@ -2,13 +2,13 @@
 Dependencies:
 	install python 2.7.14
 	install latest pip
-	install flask
-	install flask-restful
-	install mysqlclient
-	install validate_email
-	install Flask-HTTPAuth
-  install -U flask-cors
-  pip install Flask-WTF
+	pip install flask
+	pip install flask-restful
+	pip install mysqlclient
+	pip install validate_email
+	pip install Flask-HTTPAuth
+	pip install -U flask-cors
+	pip install Flask-WTF
 '''
 # import dependencies
 from sys import argv
@@ -29,8 +29,8 @@ from resources.getprojects import getprojects
 # define the app and run it
 app = Flask(__name__)
 api = Api(app)
-#CORS(app)
-CORS(app, resources={r"/*": {"origins": "*"}})
+CORS(app)
+#CORS(app, resources={r"/*": {"origins": "*"}})
 
 @app.after_request
 def after_request(response):
