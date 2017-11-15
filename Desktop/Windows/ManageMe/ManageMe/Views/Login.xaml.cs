@@ -22,39 +22,13 @@ namespace ManageMe.Views
     public partial class Login : Window
     {
 
-        #region PInvoke Functions
-        /// <summary>
-        ///     The MoveWindow function changes the position and dimensions of the specified window. For a top-level window, the
-        ///     position and dimensions are relative to the upper-left corner of the screen. For a child window, they are relative
-        ///     to the upper-left corner of the parent window's client area.
-        ///     <para>
-        ///     Go to https://msdn.microsoft.com/en-us/library/windows/desktop/ms633534%28v=vs.85%29.aspx for more
-        ///     information
-        ///     </para>
-        /// </summary>
-        /// <param name="hWnd">C++ ( hWnd [in]. Type: HWND )<br /> Handle to the window.</param>
-        /// <param name="X">C++ ( X [in]. Type: int )<br />Specifies the new position of the left side of the window.</param>
-        /// <param name="Y">C++ ( Y [in]. Type: int )<br /> Specifies the new position of the top of the window.</param>
-        /// <param name="nWidth">C++ ( nWidth [in]. Type: int )<br />Specifies the new width of the window.</param>
-        /// <param name="nHeight">C++ ( nHeight [in]. Type: int )<br />Specifies the new height of the window.</param>
-        /// <param name="bRepaint">
-        ///     C++ ( bRepaint [in]. Type: bool )<br />Specifies whether the window is to be repainted. If this
-        ///     parameter is TRUE, the window receives a message. If the parameter is FALSE, no repainting of any kind occurs. This
-        ///     applies to the client area, the nonclient area (including the title bar and scroll bars), and any part of the
-        ///     parent window uncovered as a result of moving a child window.
-        /// </param>
-        /// <returns>
-        ///     If the function succeeds, the return value is nonzero.<br /> If the function fails, the return value is zero.
-        ///     <br />To get extended error information, call GetLastError.
-        /// </returns>
-        [DllImport("user32.dll", SetLastError = true)]
-        internal static extern bool MoveWindow(IntPtr hWnd, int X, int Y, int nWidth, int nHeight, bool bRepaint);
-
-        #endregion
+        ManageMe.Utilities.User user;
 
         public Login()
         {
             InitializeComponent();
+
+            user = new Utilities.User();
 
             this.MouseDown += delegate { DragMove(); };
         }
@@ -76,6 +50,59 @@ namespace ManageMe.Views
             gridSignIn.Visibility = Visibility.Visible;
             this.Height = 400;
             gridRegister.Visibility = Visibility.Hidden;
+        }
+
+        private void textBoxCConfirmPassword_PasswordChanged(object sender, RoutedEventArgs e)
+        {
+            if(textBoxCConfirmPassword.Password.Length > 0)
+            {
+                placeHolderTextBoxCConfirmPassword.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                placeHolderTextBoxCConfirmPassword.Visibility = Visibility.Visible;
+            }
+        }
+
+        private void textBoxCPassword_PasswordChanged(object sender, RoutedEventArgs e)
+        {
+            if (textBoxCPassword.Password.Length > 0)
+            {
+                placeHolderTextBoxCPassword.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                placeHolderTextBoxCPassword.Visibility = Visibility.Visible;
+            }
+        }
+
+        private void textBoxPassword_PasswordChanged(object sender, RoutedEventArgs e)
+        {
+            if (textBoxPassword.Password.Length > 0)
+            {
+                placeHolderTextBoxPassword.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                placeHolderTextBoxPassword.Visibility = Visibility.Visible;
+            }
+        }
+
+        private void buttonRegister_Click(object sender, RoutedEventArgs e)
+        {
+            if(Utilities.Utilities.CheckPasswords(textBoxCPassword.Password,textBoxCConfirmPassword.Password))
+            {
+                if(Utilities.Utilities.CheckPasswordStrength(textBoxCPassword.Password))
+                {
+                    ManageMe.Utilities.User.Register(textBoxCUserName.Text, textBoxCPassword.Password, textBoxCFirstName.Text, textBoxCLastName.Text, textBoxCEmail.Text);
+                    buttonBack_Click(null,null);
+                }
+            }
+        }
+
+        private void buttonLogin_Click(object sender, RoutedEventArgs e)
+        {
+            user.Login(textBoxUserName.Text, textBoxPassword.Password);
         }
     }
 }

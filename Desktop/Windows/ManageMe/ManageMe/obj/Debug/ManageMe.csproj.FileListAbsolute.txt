@@ -34,3 +34,23 @@ C:\Users\Trent Killinger\Documents\GitHub\manageme\Desktop\Windows\ManageMe\Mana
 C:\Users\Trent Killinger\Documents\GitHub\manageme\Desktop\Windows\ManageMe\ManageMe\obj\Debug\ManageMe.csproj.CoreCompileInputs.cache
 C:\Users\Trent Killinger\Documents\GitHub\manageme\Desktop\Windows\ManageMe\ManageMe\obj\Debug\ManageMe.exe
 C:\Users\Trent Killinger\Documents\GitHub\manageme\Desktop\Windows\ManageMe\ManageMe\obj\Debug\ManageMe.pdb
+C:\Users\trent\Documents\GitHub\manageme\Desktop\Windows\ManageMe\ManageMe\bin\Debug\ManageMe.exe.config
+C:\Users\trent\Documents\GitHub\manageme\Desktop\Windows\ManageMe\ManageMe\bin\Debug\ManageMe.exe
+C:\Users\trent\Documents\GitHub\manageme\Desktop\Windows\ManageMe\ManageMe\bin\Debug\ManageMe.pdb
+C:\Users\trent\Documents\GitHub\manageme\Desktop\Windows\ManageMe\ManageMe\obj\Debug\ManageMe.csprojResolveAssemblyReference.cache
+C:\Users\trent\Documents\GitHub\manageme\Desktop\Windows\ManageMe\ManageMe\obj\Debug\Views\Login.g.cs
+C:\Users\trent\Documents\GitHub\manageme\Desktop\Windows\ManageMe\ManageMe\obj\Debug\Views\MainWindow.g.cs
+C:\Users\trent\Documents\GitHub\manageme\Desktop\Windows\ManageMe\ManageMe\obj\Debug\App.g.cs
+C:\Users\trent\Documents\GitHub\manageme\Desktop\Windows\ManageMe\ManageMe\obj\Debug\ManageMe_MarkupCompile.cache
+C:\Users\trent\Documents\GitHub\manageme\Desktop\Windows\ManageMe\ManageMe\obj\Debug\ManageMe_MarkupCompile.lref
+C:\Users\trent\Documents\GitHub\manageme\Desktop\Windows\ManageMe\ManageMe\obj\Debug\App.baml
+C:\Users\trent\Documents\GitHub\manageme\Desktop\Windows\ManageMe\ManageMe\obj\Debug\Views\Login.baml
+C:\Users\trent\Documents\GitHub\manageme\Desktop\Windows\ManageMe\ManageMe\obj\Debug\Views\MainWindow.baml
+C:\Users\trent\Documents\GitHub\manageme\Desktop\Windows\ManageMe\ManageMe\obj\Debug\ManageMe.g.resources
+C:\Users\trent\Documents\GitHub\manageme\Desktop\Windows\ManageMe\ManageMe\obj\Debug\ManageMe.Properties.Resources.resources
+C:\Users\trent\Documents\GitHub\manageme\Desktop\Windows\ManageMe\ManageMe\obj\Debug\ManageMe.csproj.GenerateResource.Cache
+C:\Users\trent\Documents\GitHub\manageme\Desktop\Windows\ManageMe\ManageMe\obj\Debug\ManageMe.csproj.CoreCompileInputs.cache
+C:\Users\trent\Documents\GitHub\manageme\Desktop\Windows\ManageMe\ManageMe\obj\Debug\ManageMe.exe
+C:\Users\trent\Documents\GitHub\manageme\Desktop\Windows\ManageMe\ManageMe\obj\Debug\ManageMe.pdb
+C:\Users\trent\Documents\GitHub\manageme\Desktop\Windows\ManageMe\ManageMe\bin\Debug\Newtonsoft.Json.dll
+C:\Users\trent\Documents\GitHub\manageme\Desktop\Windows\ManageMe\ManageMe\bin\Debug\Newtonsoft.Json.xml
