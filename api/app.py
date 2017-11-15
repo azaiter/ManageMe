@@ -7,12 +7,14 @@ Dependencies:
 	install mysqlclient
 	install validate_email
 	install Flask-HTTPAuth
+  install -U flask-cors
 '''
 # import dependencies
 from sys import argv
 import sys
 from flask import Flask
 from flask_restful import Api
+from flask_cors import CORS, cross_origin
 
 # routing classes
 from resources.index import index
@@ -26,6 +28,7 @@ from resources.getprojects import getprojects
 # define the app and run it
 app = Flask(__name__)
 api = Api(app)
+CORS(app, expose_headers='*')
 
 # routing paths
 api.add_resource(index, '/')
