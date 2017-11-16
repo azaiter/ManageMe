@@ -139,8 +139,21 @@ getProjects:
 		all projects related to the user
 '''
 def getProjects(args):
-	checkTokenIsValid(args.token)
-	return(args)
+	returnTestData = [
+	{
+		"uid":1,
+		"name":"Test Project 1",
+		"desc":"Some Desc 1",
+		"created":"2017-11-15 08:43:24"
+	},
+	{
+		"uid":2,
+		"name":"Test Project 2",
+		"desc":"Some Desc 2",
+		"created":"2017-11-15 08:43:24"
+	}
+	]
+	return(jsonify(returnTestData))
 
 
 def checkProjectExist(projectName):
