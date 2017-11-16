@@ -39,7 +39,7 @@ CORS(app)
   # response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
   # return response
 
-# routing paths
+# routing pathss
 api.add_resource(index, '/')
 api.add_resource(helloworld, '/helloworld', '/helloworld/')
 api.add_resource(user, '/user', '/user/')
