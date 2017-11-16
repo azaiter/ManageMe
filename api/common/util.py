@@ -59,6 +59,8 @@ def verify_usernameExist(username):
 
 def verify_usernameNotExist(username):
   usernameStr = str(username)
+  if len(usernameStr) < 4:
+    raise ValueError('Username {} has to be longer than 4 characters'.format(usernameStr))
   if not dbengine.checkUsernameExists(usernameStr):
     return usernameStr
   else:
