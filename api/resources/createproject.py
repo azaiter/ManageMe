@@ -13,7 +13,7 @@ post_parser.add_argument(
 post_parser.add_argument(
     'project_name', dest='project_name',
     location='form', required=True,
-    type=str,
+    type=managemeutil.checkProjectExist,
     help='The project\'s name {error_msg}',
 )
 post_parser.add_argument(
