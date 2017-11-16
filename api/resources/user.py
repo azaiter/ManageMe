@@ -7,7 +7,7 @@ post_parser = reqparse.RequestParser(bundle_errors=True)
 
 post_parser.add_argument(
     'userid', dest='userid',
-    location='form', required=True,
+    location='json', required=True,
     help='The user\'s userid {error_msg}',
 )
 
