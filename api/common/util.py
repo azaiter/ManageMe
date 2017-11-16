@@ -63,3 +63,10 @@ def verify_usernameNotExist(username):
     return usernameStr
   else:
     raise ValueError('Username {} exists'.format(usernameStr))
+
+def verify_projectNotExist(projectName):
+  projectNameStr = str(projectName)
+  if not dbengine.checkProjectExist(projectNameStr):
+    return projectNameStr
+  else:
+    raise ValueError('project {} exists'.format(projectNameStr))
