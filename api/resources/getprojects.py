@@ -5,7 +5,7 @@ post_parser = reqparse.RequestParser(bundle_errors=True)
 
 post_parser.add_argument(
     'token', dest='token',
-    location='form', required=True,
+    location='json', required=True,
     type=managemeutil.verify_request_token,
     help='The user\'s token {error_msg}',
 )
