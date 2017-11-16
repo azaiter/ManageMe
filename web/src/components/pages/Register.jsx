@@ -4,6 +4,7 @@ import {Panel, Input, Button} from 'react-bootstrap';
 import { History } from 'history';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import $ from "jQuery";
+import {register} from '../../actions/Auth'
 
 class RegisterPage extends React.Component{
   constructor(props) {
@@ -13,6 +14,8 @@ class RegisterPage extends React.Component{
       password: '',
       isSubmitted: false
     }
+    
+    register("Bradley", "Chippi", "asdfasdf@svsfdsafu.com", "9999999999", "1446 Trent Rd.", "dingdonglinglong", "SuhDud@2123");
   }
 
   handleRegister(e){
