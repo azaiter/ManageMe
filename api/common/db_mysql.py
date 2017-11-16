@@ -124,7 +124,10 @@ def createProject(args):
 		cur.callproc('sp_createProject',[str(args.token), str(args.project_name), str(args.project_desc)])
 		r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
 	if db:
+		cur.close()
+		db.commit()
 		db.close()
+		print(r)
 	return jsonify(r)
 	
 	
@@ -138,3 +141,16 @@ getProjects:
 def getProjects(args):
 	checkTokenIsValid(args.token)
 	return(args)
+
+
+def checkProjectExist(projectName):
+	strProjectName = str(projectName)
+	db = dbConnect()
+	cur = db.cursor()
+	cur.callproc('sp_checkProjectExist', [str(strProjectName)])
+	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+	if db:
+		cur.close()
+		db.commit()
+		db.close()
+	return len(r) > 0
