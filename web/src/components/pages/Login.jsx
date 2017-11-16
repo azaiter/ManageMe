@@ -14,7 +14,7 @@ class LoginPage extends React.Component{
       password: '',
       isSubmitted: false
     }
-    Auth.login("adf","adf");
+    Auth.login("dingdonglinglong","SuhDud@2123");
   }
 
   handleLogin(e){
@@ -40,7 +40,7 @@ class LoginPage extends React.Component{
               <form role="form" onSubmit={this.handleLogin.bind(this)} className="ng-pristine ng-valid"> 
                 <div className="form-content"> 
                   <div className="form-group"> 
-                    <input type="text" className="form-control input-underline input-lg" placeholder="Email" /> 
+                    <input type="text" className="form-control input-underline input-lg" placeholder="Username" /> 
                   </div> 
                   <div className="form-group"> 
                     <input type="password" className="form-control input-underline input-lg" placeholder="Password" /> 
