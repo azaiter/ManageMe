@@ -74,6 +74,8 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Models\JsonModels\JsonAuthenticationMessage.cs" />
+    <Compile Include="Models\JsonModels\JsonAuthentification.cs" />
     <Compile Include="Models\Result.cs" />
     <Compile Include="Utilities\User.cs" />
     <Compile Include="Utilities\Utilities.cs" />

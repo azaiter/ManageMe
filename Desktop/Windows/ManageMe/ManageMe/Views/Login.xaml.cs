@@ -88,14 +88,20 @@ namespace ManageMe.Views
             }
         }
 
-        private void buttonRegister_Click(object sender, RoutedEventArgs e)
+        private async void buttonRegister_Click(object sender, RoutedEventArgs e)
         {
             if(Utilities.Utilities.CheckPasswords(textBoxCPassword.Password,textBoxCConfirmPassword.Password))
             {
                 if(Utilities.Utilities.CheckPasswordStrength(textBoxCPassword.Password))
                 {
-                    ManageMe.Utilities.User.Register(textBoxCUserName.Text, textBoxCPassword.Password, textBoxCFirstName.Text, textBoxCLastName.Text, textBoxCEmail.Text);
-                    buttonBack_Click(null,null);
+                    var result = await ManageMe.Utilities.User.Register(textBoxCUserName.Text, textBoxCPassword.Password, textBoxCFirstName.Text, textBoxCLastName.Text, textBoxCEmail.Text);
+                    if(result.Status)
+                    {
+                        buttonBack_Click(null, null);
+                    } else
+                    {
+                        MessageBox.Show(result.Message);
+                    }
                 }
             }
         }

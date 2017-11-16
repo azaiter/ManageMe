@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace ManageMe.Models
 {
-    class Result
+    public class Result
     {
         public readonly bool Status;
-        private readonly string Message;
+        public readonly string Message;
 
         public Result(bool status, string message)
         {

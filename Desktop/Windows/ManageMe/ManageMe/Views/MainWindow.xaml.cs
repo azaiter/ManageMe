@@ -20,9 +20,17 @@ namespace ManageMe.Views
     /// </summary>
     public partial class MainWindow : Window
     {
+        private Utilities.User user;
+
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        public MainWindow(Utilities.User user)
+        {
+            InitializeComponent();
+            this.user = user;
         }
     }
 }
