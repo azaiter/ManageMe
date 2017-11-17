@@ -3,7 +3,7 @@ import Router, { Link, RouteHandler } from "react-router";
 import {Panel, Input, Button} from 'react-bootstrap';
 import { History } from 'history';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
-import $ from "jQuery";
+import $ from "jquery";
 
 class AddProject extends React.Component{
   constructor(props) {

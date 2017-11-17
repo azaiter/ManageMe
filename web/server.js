@@ -4,6 +4,9 @@ let app = express();
 app.use(cors());
 app.options('*', cors());
 
+if (typeof(PhusionPassenger) != 'undefined') {
+    PhusionPassenger.configure({ autoInstall: false });
+}
 
 /************************************************************
  *
@@ -20,7 +23,7 @@ app.options('*', cors());
 
 // Serve application file depending on environment
 app.get('/app.js', function(req, res) {
-  if (process.env.PRODUCTION) {
+  if (process.env.PRODUCTION || true) {
     res.sendFile(__dirname + '/build/app.js');
   } else {
     res.redirect('//localhost:9090/build/app.js');
@@ -29,7 +32,7 @@ app.get('/app.js', function(req, res) {
 
 // Serve aggregate stylesheet depending on environment
 app.get('/style.css', function(req, res) {
-  if (process.env.PRODUCTION) {
+  if (process.env.PRODUCTION || true) {
     res.sendFile(__dirname + '/build/style.css');
   } else {
     res.redirect('//localhost:9090/build/style.css');
@@ -89,9 +92,14 @@ if (!process.env.PRODUCTION) {
  *****************/
 
 var port = process.env.PORT || 8080;
-var server = app.listen(port, function () {
-  var host = server.address().address;
-  var port = server.address().port;
+if (typeof(PhusionPassenger) != 'undefined') {
+    app.listen('passenger');
+} else {
+	var server = app.listen(port, function () {
+	  var host = server.address().address;
+	  var port = server.address().port;
 
-  console.log('Essential React listening at http://%s:%s', host, port);
-});
+	  console.log('Essential React listening at http://%s:%s', host, port);
+	});
+}
+

@@ -2,7 +2,7 @@ import React from "react";
 import Router, { Link, RouteHandler } from "react-router";
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import {Navbar, Nav, NavItem, NavDropdown, MenuItem, ProgressBar} from "react-bootstrap";
-import $ from "jQuery";
+import $ from "jquery";
 import classNames from "classnames";
 
 class HomePage extends React.Component {

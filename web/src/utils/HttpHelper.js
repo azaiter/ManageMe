@@ -1,4 +1,4 @@
-import Axios from 'Axios'
+import Axios from 'axios'
 import 'babel-polyfill'
 
 export async function validateToken(token) {
