@@ -9,13 +9,10 @@ export async function validateToken(token) {
 }
 
 export async function createUser(first, last, mail, num, addr, user, pass) {
-    let json = await (await fetch('https://api.manageme.tech/user/create', {
+    let res = await fetch('https://api.manageme.tech/user/create', {
         method: 'POST',
-        mode: 'cors',
         headers: 
-        { 'postman-token': '8faff8ff-741c-7959-4335-e4824578f1bf',
-          'cache-control': 'no-cache',
-          'content-type': 'application/json' },
+        {'content-type': 'application/json' },
         body: JSON.stringify({
           first_name: first,
           last_name: last,
@@ -24,10 +21,10 @@ export async function createUser(first, last, mail, num, addr, user, pass) {
           address: addr,
           username: user,
           password: pass
-        }),
-        json: true
-      })).json();
-    return json;
+        })
+      });
+    let json = await res.json();
+    return [json, res.status];
 }
 
 export async function createProject(token, email, projName, projReq, projSoftCap, projHardCap) {
@@ -43,7 +40,7 @@ export async function createProject(token, email, projName, projReq, projSoftCap
 }
 
 export async function getToken(user, pass) {
-    let json = await(await fetch('https://api.manageme.tech/user/login', {
+    let res = await fetch('https://api.manageme.tech/user/login', {
         method: 'POST',
         headers: 
         {'content-type': 'application/json' },
@@ -51,7 +48,8 @@ export async function getToken(user, pass) {
             username: user,
             password: pass,
         })
-    })).json();
-    return json;
+    });
+    let json = await res.json();
+    return [json, res.status];
 }
 

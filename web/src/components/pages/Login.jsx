@@ -4,22 +4,76 @@ import {Panel, Input, Button} from 'react-bootstrap';
 import { History } from 'history';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import $ from "jQuery";
-import * as Auth from '../../actions/Auth'
+import {login} from '../../actions/Auth'
 
 class LoginPage extends React.Component{
   constructor(props) {
     super(props);
     this.state = {
-      loginID: '',
+      user: '',
       password: '',
-      isSubmitted: false
+      user_error_text: null,
+      password_error_text: null,
+      disabled: true,
+      loginError: ''
+  };
+    
+  }
+
+  isDisabled() {
+    let user_is_valid = false;
+    let password_is_valid = false;
+
+    if (this.state.username === '') {
+        this.setState({
+            user_error_text: null,
+        });
+    } else if (this.state.user.length >= 3) {
+        user_is_valid = true;
+        this.setState({
+            user_error_text: null,
+        });
+
+    } else {
+        this.setState({
+            user_error_text: 'Sorry, this is not a valid user',
+        });
     }
-    Auth.login("dingdonglinglong","SuhDud@2123");
+
+    if (this.state.password === '' || !this.state.password) {
+        this.setState({
+            password_error_text: null,
+        });
+    } else if (this.state.password.length >= 8) {
+        password_is_valid = true;
+        this.setState({
+            password_error_text: null,
+        });
+    } else {
+        this.setState({
+            password_error_text: 'Your password must be at least 8 characters',
+        });
+
+    }
+
+    if (user_is_valid && password_is_valid) {
+        this.setState({
+            disabled: false,
+        });
+    }
+
   }
 
   handleLogin(e){
     e.preventDefault();
-    this.props.history.pushState(null, '/dashboard/overview');
+    console.log(e);
+    Auth.login(this.state.user, this.state.password).then(status => {
+      if(status != 200){
+        this.state.loginError = "Username or Password is Incorrect";
+        return;
+      }
+      this.props.history.pushState(null, '/dashboard/overview');
+    });
     return false;
   }
 
@@ -29,10 +83,27 @@ class LoginPage extends React.Component{
     return false;
   }
 
+  changeValue(e, type) {
+    const value = e.target.value;
+    const next_state = {};
+    next_state[type] = value;
+    this.setState(next_state, () => {
+        this.isDisabled();
+    });
+  }
+
+  _handleKeyPress(e) {
+      if (e.key === 'Enter') {
+          if (!this.state.disabled) {
+              this.handleLogin(e);
+          }
+      }
+  }
+
 
   render(){
     return(
-        <div className="login-page ng-scope ui-view"> 
+        <div className="login-page ng-scope ui-view" onKeyPress={(e) => this._handleKeyPress(e)}> 
           <div className="row"> 
             <div className="col-md-5 col-lg-4 col-md-offset-4 col-lg-offset-4"> 
               {/*<img src={require("../../common/images/flat-avatar.png")} className="user-avatar" />*/}
@@ -40,13 +111,14 @@ class LoginPage extends React.Component{
               <form role="form" onSubmit={this.handleLogin.bind(this)} className="ng-pristine ng-valid"> 
                 <div className="form-content"> 
                   <div className="form-group"> 
-                    <input type="text" className="form-control input-underline input-lg" placeholder="Username" /> 
+                    <input type="text" className="form-control input-underline input-lg" placeholder="Username" errorText={this.state.user_error_text} onChange={(e) => this.changeValue(e, 'user')} /> 
                   </div> 
                   <div className="form-group"> 
-                    <input type="password" className="form-control input-underline input-lg" placeholder="Password" /> 
+                    <input type="password" className="form-control input-underline input-lg" placeholder="Password" errorText={this.state.password_error_text} onChange={(e) => this.changeValue(e, 'password')} /> 
                   </div> 
                 </div>
-                <button type="submit" className="btn btn-white btn-outline btn-lg btn-rounded btn-block">Login</button>
+                <p errorText={this.state.loginError}></p>
+                <button className="btn btn-white btn-outline btn-lg btn-rounded btn-block" onClick={(e) => this.handleLogin(e)} disabled={this.state.disabled}>Login</button>
                 <button className="btn btn-white btn-outline btn-lg btn-rounded btn-block" onClick={this.handleRegister.bind(this)} >Register</button>                  
               </form> 
             </div> 
