@@ -54,3 +54,5 @@ C:\Users\trent\Documents\GitHub\manageme\Desktop\Windows\ManageMe\ManageMe\obj\D
 C:\Users\trent\Documents\GitHub\manageme\Desktop\Windows\ManageMe\ManageMe\obj\Debug\ManageMe.pdb
 C:\Users\trent\Documents\GitHub\manageme\Desktop\Windows\ManageMe\ManageMe\bin\Debug\Newtonsoft.Json.dll
 C:\Users\trent\Documents\GitHub\manageme\Desktop\Windows\ManageMe\ManageMe\bin\Debug\Newtonsoft.Json.xml
+C:\Users\Trent Killinger\Documents\GitHub\manageme\Desktop\Windows\ManageMe\ManageMe\bin\Debug\Newtonsoft.Json.dll
+C:\Users\Trent Killinger\Documents\GitHub\manageme\Desktop\Windows\ManageMe\ManageMe\bin\Debug\Newtonsoft.Json.xml

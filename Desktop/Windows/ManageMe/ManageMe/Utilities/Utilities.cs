@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ManageMe.Utilities
 {
-    static class Utilities
+    public static class Utilities
     {
         public static bool CheckPasswords(string password, string confirmPassword)
         {

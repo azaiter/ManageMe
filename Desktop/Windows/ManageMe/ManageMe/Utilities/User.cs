@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -10,7 +12,7 @@ namespace ManageMe.Utilities
     /// <summary>
     ///  This class maintains user session state.
     /// </summary>
-    class User
+    public class User
     {
         public string sessionState = "";
         public string userName = "";
@@ -32,13 +34,19 @@ namespace ManageMe.Utilities
                     new KeyValuePair<string, string>("password", password)
                 });
 
-                var result = await client.PostAsync("/user/login", content);
-                string resultContent = await result.Content.ReadAsStringAsync();
-                var jObject = Newtonsoft.Json.Linq.JObject.Parse(resultContent);
-                var token = jObject.Value<string>("token");
-                Console.WriteLine(resultContent);
+                var response = await client.PostAsync("/user/login", content);
+                string resultContent = await response.Content.ReadAsStringAsync();
+                var jObject = JsonConvert.DeserializeObject<Models.JsonModels.JsonAuthentification>(resultContent);
+                if (response.StatusCode == System.Net.HttpStatusCode.OK)
+                {
+                    return new ManageMe.Models.Result(true, "");
+                }
+                else
+                {
+                    var message = "";
+                    return new ManageMe.Models.Result(false, message);
+                }
             }
-            return new ManageMe.Models.Result(false, "Error");
         }
 
         /// <summary>
@@ -75,11 +83,19 @@ namespace ManageMe.Utilities
                     new KeyValuePair<string, string>("password", password)
                 });
 
-                var result = await client.PostAsync("/user/create", content);
-                string resultContent = await result.Content.ReadAsStringAsync();
-                Console.WriteLine(resultContent);
+                var response = await client.PostAsync("/user/create", content);
+                string resultContent = await response.Content.ReadAsStringAsync();
+                var jObject = JsonConvert.DeserializeObject<Models.JsonModels.JsonAuthentification>(resultContent);
+                if (response.StatusCode == System.Net.HttpStatusCode.OK)
+                {
+                    return new ManageMe.Models.Result(true, "");
+                }
+                else
+                {
+                    var message = "";
+                    return new ManageMe.Models.Result(false, message);
+                }
             }
-            return new ManageMe.Models.Result(false, "Error");
         }
     }
 }
