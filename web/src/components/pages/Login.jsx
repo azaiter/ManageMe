@@ -25,6 +25,7 @@ class LoginPage extends React.Component{
     let password_is_valid = false;
 
     if (this.state.username === '') {
+        user_is_valid = false;
         this.setState({
             user_error_text: null,
         });
@@ -35,12 +36,14 @@ class LoginPage extends React.Component{
         });
 
     } else {
+        user_is_valid = false;
         this.setState({
             user_error_text: 'Sorry, this is not a valid user',
         });
     }
 
     if (this.state.password === '' || !this.state.password) {
+        password_is_valid = false;
         this.setState({
             password_error_text: null,
         });
@@ -50,6 +53,7 @@ class LoginPage extends React.Component{
             password_error_text: null,
         });
     } else {
+        password_is_valid = false;
         this.setState({
             password_error_text: 'Your password must be at least 8 characters',
         });
@@ -60,6 +64,10 @@ class LoginPage extends React.Component{
         this.setState({
             disabled: false,
         });
+    }else{
+        this.setState({
+            disabled: true,
+        })
     }
 
   }
@@ -67,7 +75,7 @@ class LoginPage extends React.Component{
   handleLogin(e){
     e.preventDefault();
     console.log(e);
-    Auth.login(this.state.user, this.state.password).then(status => {
+    login(this.state.user, this.state.password).then(status => {
       if(status != 200){
         this.state.loginError = "Username or Password is Incorrect";
         return;

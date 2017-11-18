@@ -1,13 +1,17 @@
-import {getToken, createUser} from '../utils/HttpHelper'
+import {getToken, createUser} from "../utils/HttpHelper"
 
 function storeToken(token, expiration){
-    localStorage.setItem('token', token);
-    localStorage.setItem('expiration', expiration);
+    localStorage.setItem("token", token);
+    localStorage.setItem("expiration", expiration);
 }
 
 function storeUserDetails(firstName, email){
-    localStorage.setItem('name', firstName);
-    localStorage.setItem('email', email);
+    localStorage.setItem("name", firstName);
+    localStorage.setItem("email", email);
+}
+
+export function getLocalToken(){
+    return localStorage.getItem("token");
 }
 
 export async function login(username, password){
@@ -33,10 +37,10 @@ export function register(firstName, lastName, email, phoneNum, address, username
         if(status != 200){
             return json, status;
         }
-        console.log(firstName, email)
         storeUserDetails(firstName, email);
         return status;
     }).catch(err => {
         console.log("Error:",err);
     })
 }
+

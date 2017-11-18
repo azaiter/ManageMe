@@ -5,7 +5,7 @@ import { History } from 'history';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import $ from "jquery";
 import {register} from '../../actions/Auth'
-import {validateEmail, validatePhoneNumber} from '../../utils/misc'
+import {validateEmail, validatePhoneNumber, validatePassword} from '../../utils/misc'
 
 class RegisterPage extends React.Component{
   constructor(props) {
@@ -30,7 +30,6 @@ class RegisterPage extends React.Component{
       disabled: true,
       registerError: null
     }
-    
     
   }
 
@@ -102,10 +101,10 @@ class RegisterPage extends React.Component{
         this.setState({
             password_error_text: null,
         });
-    } else if (this.state.password.length < 7) {
+    } else if (!(validatePassword(this.state.password))) {
       password_is_valid = false;
         this.setState({
-          password_error_text: 'Your password must be at least 8 characters'
+          password_error_text: "Your password must be at least 8 characters, at least 1 lowercase, at least 1 uppercase, and at least 1 number."
         });
     } else if(this.state.password != this.state.passwordConfirm){
         password_is_valid = false;

@@ -1,12 +1,11 @@
-import Axios from 'axios'
 import 'babel-polyfill'
 
-export async function validateToken(token) {
-    let valid = await Axios.post('/api/is_token_valid', {
-        token,
-    });
-    return valid.data
-}
+// export async function validateToken(token) {
+//     let valid = await Axios.post('/api/is_token_valid', {
+//         token,
+//     });
+//     return valid.data
+// }
 
 export async function createUser(first, last, mail, num, addr, user, pass) {
     let res = await fetch('https://api.manageme.tech/user/create', {
@@ -27,16 +26,19 @@ export async function createUser(first, last, mail, num, addr, user, pass) {
     return [json, res.status];
 }
 
-export async function createProject(token, email, projName, projReq, projSoftCap, projHardCap) {
-    let res = await Axios.post("api.manageme.tech/project/create", {
-        token,
-        email,
-        projName,
-        projReq,
-        projSoftCap,
-        projHardCap
+export async function createProject(tok, projectName, projectDesc) {
+    let res = await fetch('https://api.manageme.tech/project/create', {
+        method: 'POST',
+        headers: 
+        {'content-type': 'application/json' },
+        body: JSON.stringify({
+            token: tok,
+            project_name: projectName,
+            project_desc: projectDesc,
+        })
     });
-    return res.data;
+    let json = await res.json();
+    return [json, res.status];
 }
 
 export async function getToken(user, pass) {
