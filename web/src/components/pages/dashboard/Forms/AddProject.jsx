@@ -78,7 +78,7 @@ class AddProject extends React.Component{
     if(!(token)){
       return;
     }
-    return createProject(token, this.state.name, this.state.desc)
+    createProject(token, this.state.name, this.state.desc)
     .then(res =>{
       let json = res[0];
        let status = res[1];
@@ -88,7 +88,7 @@ class AddProject extends React.Component{
     }).catch(err => {
         console.log("Error:",err);
     })
-    this.props.history.goBack();
+    this.props.history.pushState(null, '/dashboard/overview');
     return false;
   }
 
