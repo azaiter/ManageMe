@@ -172,6 +172,21 @@ def checkProjectExist(projectName):
   
 '''
 Iteration 2:
+
+- Create Team    -- API is DONE /team/create/
+- View Projects  --  getProjects is DONE /project/get
+- View Time (all clock ins and outs)      --  /clock/get
+- Clock in       --  /clock/in
+- Clock out      --  /clock/out
+- disable user   --  /user/disable
+
+
+
+For getting user information /user/
+if you send token, it will give you your information tuple. if userid is included in the call, 
+then check if the token holder has permissions to get that user's information.
+
+
 '''
 def checkTeamExist(teamName):
 	strTeamName = str(teamName)
@@ -210,3 +225,23 @@ def createTeam(args):
 		db.close()
 		print(r)
 	return jsonify(r)
+  
+
+def getHours(args):
+	returnTestData = [
+	{
+		"uid":1,
+		"req_uid":"54", # Make the DB return dummy column for req_uid until we get into next iterations
+		"in":"2017-11-15 00:43:24",
+		"out":"2017-11-15 08:11:12"
+		"user_id":"3"
+	},
+	{
+		"uid":2,
+		"req_uid":"56", # Make the DB return dummy column for req_uid until we get into next iterations
+		"in":"2017-11-15 00:43:24",
+		"out":"2017-11-15 08:11:12"
+		"user_id":"3"
+	}
+	]
+	return(jsonify(returnTestData))
