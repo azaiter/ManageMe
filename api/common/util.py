@@ -72,3 +72,10 @@ def verify_projectNotExist(projectName):
     return projectNameStr
   else:
     raise ValueError('project {} exists'.format(projectNameStr))
+
+def verify_teamNotExist(teamName):
+  teamNameStr = str(teamName)
+  if not dbengine.checkTeamExist(teamNameStr):
+    return teamNameStr
+  else:
+    raise ValueError('team {} exists'.format(teamNameStr))

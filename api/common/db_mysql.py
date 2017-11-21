@@ -167,3 +167,46 @@ def checkProjectExist(projectName):
 		db.commit()
 		db.close()
 	return len(r) > 0
+  
+
+  
+'''
+Iteration 2:
+'''
+def checkTeamExist(teamName):
+	strTeamName = str(teamName)
+	db = dbConnect()
+	cur = db.cursor()
+	cur.callproc('sp_checkTeamExist', [str(strTeamName)])
+	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+	if db:
+		cur.close()
+		db.commit()
+		db.close()
+	return len(r) > 0
+  
+  
+  
+'''
+createTeam
+	INPUT:
+		token
+		team_name
+		team_desc
+	OUTPUT:
+		Tuple of the team created.
+	
+	from the token you can check permissions and figure out "created_by" field.
+'''
+def createTeam(args):
+	if checkTokenIsValid(args.token):
+		db = dbConnect()
+		cur = db.cursor()
+		cur.callproc('sp_createTeam',[str(args.token), str(args.team_name), str(args.team_desc)])
+		r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+	if db:
+		cur.close()
+		db.commit()
+		db.close()
+		print(r)
+	return jsonify(r)
