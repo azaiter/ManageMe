@@ -175,10 +175,10 @@ Iteration 2:
 
 - Create Team    -- API is DONE /team/create/
 - View Projects  --  getProjects is DONE /project/get
-- View Time (all clock ins and outs)      --  /clock/get
-- Clock in       --  /clock/in
-- Clock out      --  /clock/out
-- disable user   --  /user/disable
+- View Time (all clock ins and outs)  --  API DONE /clock/get
+- Clock in       --  /clock/in -- 
+- Clock out      --  /clock/out -- 
+- disable user   --  /user/disable --
 
 
 
@@ -226,6 +226,12 @@ def createTeam(args):
 		print(r)
 	return jsonify(r)
   
+'''
+IN: token
+Out: user clock in/outs based on token
+
+note that in the future, admin will send user_id to get other user's clocks.
+'''
 
 def getHours(args):
 	returnTestData = [
@@ -245,3 +251,36 @@ def getHours(args):
 	}
 	]
 	return(jsonify(returnTestData))
+
+'''
+IN: token
+OUT: the updated tuple (should have NULL out time.
+'''
+def clockIn(args):
+	returnTestData = [
+	{
+		"uid":1,
+		"req_uid":"54", # Make the DB return dummy column for req_uid until we get into next iterations
+		"in":"2017-11-15 00:43:24",
+		"out":""
+		"user_id":"3"
+	}
+	]
+	return(jsonify(returnTestData))
+
+'''
+IN: token
+OUT: the updated tuple
+'''
+def clockOut(args):
+	returnTestData = [
+	{
+		"uid":1,
+		"req_uid":"54", # Make the DB return dummy column for req_uid until we get into next iterations
+		"in":"2017-11-15 00:43:24",
+		"out":""
+		"user_id":"3"
+	}
+	]
+	return(jsonify(returnTestData))
+
