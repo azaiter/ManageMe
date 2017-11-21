@@ -83,12 +83,16 @@ class AddProject extends React.Component{
       let json = res[0];
        let status = res[1];
        if(status != 200){
-           return
+          this.setState({
+            creationError: "Project exists!"
+          });
+          return;
        }
+       this.props.history.pushState(null, '/dashboard/overview');
     }).catch(err => {
         console.log("Error:",err);
     })
-    this.props.history.pushState(null, '/dashboard/overview');
+    
     return false;
   }
 
@@ -109,7 +113,7 @@ class AddProject extends React.Component{
                   <div className="form-group"> 
                     <textarea rows="4" className="form-control input-underline input-lg" placeholder="Project Description" errorText={this.state.desc_error_text} onChange={(e) => this.changeValue(e, 'desc')} /> 
                   </div>
-                  {this.state.creationError}
+                  <p style={{ color: "red" }}>{this.state.creationError}</p>
                 </div>
                 <button className="btn btn-white btn-outline btn-lg btn-rounded btn-block" onClick={this.props.history.goBack} >Back</button> 
                 <button className="btn btn-white btn-outline btn-lg btn-rounded btn-block" onClick={(e) => this.handleProjCreation(e)} disabled={this.state.disabled}>Submit</button>                  
