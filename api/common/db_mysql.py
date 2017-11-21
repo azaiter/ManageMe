@@ -176,9 +176,9 @@ Iteration 2:
 - Create Team    -- API is DONE /team/create/
 - View Projects  --  getProjects is DONE /project/get
 - View Time (all clock ins and outs)  --  API DONE /clock/get
-- Clock in       --  /clock/in -- 
-- Clock out      --  /clock/out -- 
-- disable user   --  /user/disable --
+- Clock in       --  /clock/in -- API DONE
+- Clock out      --  /clock/out --  API DONE
+- disable user   --  /user/disable -- API DONE
 
 
 
@@ -284,3 +284,30 @@ def clockOut(args):
 	]
 	return(jsonify(returnTestData))
 
+  
+'''
+IN: userID
+out: true if user exists, otherwise false. (stored procedure just selects where uid of username = inUid)
+'''
+def checkUserIDExists(userID):
+	db = dbConnect()
+	cur = db.cursor()
+	cur.callproc('sp_checkUserIDExist', [str(userID)])
+	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+	if db:
+		cur.close()
+		db.commit()
+		db.close()
+	return len(r) > 0
+
+'''
+IN: token, user_id
+OUT: a message
+'''
+def disableUser(args):
+	returnTestData = [
+	{
+		"message":"user has been disabled"
+	}
+	]
+	return(jsonify(returnTestData))
