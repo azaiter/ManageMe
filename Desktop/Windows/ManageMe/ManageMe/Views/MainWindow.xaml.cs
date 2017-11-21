@@ -27,10 +27,10 @@ namespace ManageMe.Views
             InitializeComponent();
         }
 
-        public MainWindow(Utilities.User user)
+        public MainWindow(string token)
         {
             InitializeComponent();
-            this.user = user;
+            this.user = new Utilities.User(token);
         }
     }
 }

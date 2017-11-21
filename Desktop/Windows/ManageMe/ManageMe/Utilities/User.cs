@@ -14,29 +14,42 @@ namespace ManageMe.Utilities
     /// </summary>
     public class User
     {
-        public string sessionState = "";
-        public string userName = "";
-        public string firstName = "";
-        public string lastName = "";
-        public string email = "";
+        public readonly string token = "";
+        public readonly string tokenExpire = "";
+        public readonly string userName = "";
+        public readonly string firstName = "";
+        public readonly string lastName = "";
+        public readonly string email = "";
+
+        public User(string token)
+        {
+            this.token = token;
+        }
 
         /// <summary>
         ///  This method logs the user in.
         /// </summary>
-        public async Task<ManageMe.Models.JsonModels.JsonAuthentification> Login(string username, string password)
+        public static async Task<ManageMe.Models.JsonModels.JsonAuthentification> Login(string username, string password)
         {
             using (var client = new HttpClient())
             {
                 client.BaseAddress = new Uri("https://api.manageme.tech");
-                var content = new FormUrlEncodedContent(new[]
-                {
-                    new KeyValuePair<string, string>("username", username),
-                    new KeyValuePair<string, string>("password", password)
-                });
 
+                var dict = new Dictionary<string, string>();
+                dict.Add("username", username);
+                dict.Add("password", password);
+                var content = new StringContent(JsonConvert.SerializeObject(dict), Encoding.UTF8, "application/json");
                 var response = await client.PostAsync("/user/login", content);
                 string resultContent = await response.Content.ReadAsStringAsync();
-                var jObject = JsonConvert.DeserializeObject<Models.JsonModels.JsonAuthentification>(resultContent);
+                var jObject = new Models.JsonModels.JsonAuthentification();
+                try
+                {
+                    jObject = JsonConvert.DeserializeObject<Models.JsonModels.JsonAuthentification>(resultContent);
+                }
+                catch (Exception ex)
+                {
+
+                }
                 if (response.StatusCode == System.Net.HttpStatusCode.OK)
                 {
                     jObject.Status = true;
@@ -74,18 +87,24 @@ namespace ManageMe.Utilities
             using (var client = new HttpClient())
             {
                 client.BaseAddress = new Uri("https://api.manageme.tech");
-                var content = new FormUrlEncodedContent(new[]
-                {
-                    new KeyValuePair<string, string>("first_name", firstName),
-                    new KeyValuePair<string, string>("last_name", lastName),
-                    new KeyValuePair<string, string>("email", email),
-                    new KeyValuePair<string, string>("username", username),
-                    new KeyValuePair<string, string>("password", password)
-                });
 
+                var dict = new Dictionary<string, string>();
+                dict.Add("first_name", firstName);
+                dict.Add("last_name", lastName);
+                dict.Add("email", email);
+                dict.Add("username", username);
+                dict.Add("password", password);
+                var content = new StringContent(JsonConvert.SerializeObject(dict), Encoding.UTF8, "application/json");
                 var response = await client.PostAsync("/user/create", content);
                 string resultContent = await response.Content.ReadAsStringAsync();
-                var jObject = JsonConvert.DeserializeObject<Models.JsonModels.JsonAuthentification>(resultContent);
+                var jObject = new Models.JsonModels.JsonAuthentification();
+                try
+                {
+                    jObject = JsonConvert.DeserializeObject<Models.JsonModels.JsonAuthentification>(resultContent);
+                } catch(Exception ex)
+                {
+
+                }
                 if (response.StatusCode == System.Net.HttpStatusCode.OK)
                 {
                     jObject.Status = true;
