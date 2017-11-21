@@ -28,6 +28,7 @@
             </Grid.RowDefinitions>
 
             <TextBox Grid.Row="0" x:Name="textBoxUserName"  Margin="20 0 20 5" Style="{DynamicResource MangeMeTextBox}"></TextBox>
+            <Image x:Name="imageUserNameError" Source="/ManageMe;component/Resources/Images/error.png" Visibility="Hidden" Grid.Row="0" Width="22" Height="22" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0 0 20 0"></Image>
             <TextBlock Grid.Row="0" IsHitTestVisible="False" VerticalAlignment="Center" FontSize="14" TextWrapping="Wrap" Text="Email" Margin="22 0 20 10" Foreground="LightGray">
                 <TextBlock.Style>
                     <Style TargetType="{x:Type TextBlock}">
@@ -60,7 +61,8 @@
                 <RowDefinition Height="40"/>
                 <RowDefinition Height="40"/>
             </Grid.RowDefinitions>
-            <TextBox Grid.Row="0" x:Name="textBoxCFirstName" Margin="20 0 20 5" Style="{DynamicResource MangeMeTextBox}"></TextBox>
+            <TextBox Grid.Row="0" x:Name="textBoxCFirstName" Margin="20 0 20 5" Style="{DynamicResource MangeMeTextBox}" TextChanged="textBoxCFirstName_TextChanged"></TextBox>
+            <Image x:Name="imageCFirstNameError" Source="/ManageMe;component/Resources/Images/error.png" Visibility="Hidden" Grid.Row="0" Width="22" Height="22" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0 0 20 0"></Image>
             <TextBlock Grid.Row="0" IsHitTestVisible="False" VerticalAlignment="Center" FontSize="14" TextWrapping="Wrap" Text="First Name" Margin="22 0 20 10" Foreground="LightGray">
                 <TextBlock.Style>
                     <Style TargetType="{x:Type TextBlock}">
@@ -74,7 +76,8 @@
                 </TextBlock.Style>
             </TextBlock>
             
-            <TextBox Grid.Row="1" x:Name="textBoxCLastName" Margin="20 0 20 5" Style="{DynamicResource MangeMeTextBox}"></TextBox>
+            <TextBox Grid.Row="1" x:Name="textBoxCLastName" Margin="20 0 20 5" Style="{DynamicResource MangeMeTextBox}" TextChanged="textBoxCLastName_TextChanged"></TextBox>
+            <Image x:Name="imageCLastNameError" Source="/ManageMe;component/Resources/Images/error.png" Visibility="Hidden" Grid.Row="1" Width="22" Height="22" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0 0 20 0"></Image>
             <TextBlock Grid.Row="1" IsHitTestVisible="False" VerticalAlignment="Center" FontSize="14" TextWrapping="Wrap" Text="Last Name" Margin="22 0 20 10" Foreground="LightGray">
                 <TextBlock.Style>
                     <Style TargetType="{x:Type TextBlock}">
@@ -88,7 +91,8 @@
                 </TextBlock.Style>
             </TextBlock>
             
-            <TextBox Grid.Row="2" x:Name="textBoxCUserName" Margin="20 0 20 5" Style="{DynamicResource MangeMeTextBox}"></TextBox>
+            <TextBox Grid.Row="2" x:Name="textBoxCUserName" Margin="20 0 20 5" Style="{DynamicResource MangeMeTextBox}" TextChanged="textBoxCUserName_TextChanged"></TextBox>
+            <Image x:Name="imageCUserNameError" Source="/ManageMe;component/Resources/Images/error.png" Visibility="Hidden" Grid.Row="2" Width="22" Height="22" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0 0 20 0"></Image>
             <TextBlock Grid.Row="2" IsHitTestVisible="False" VerticalAlignment="Center" FontSize="14" TextWrapping="Wrap" Text="User Name" Margin="22 0 20 10" Foreground="LightGray">
                 <TextBlock.Style>
                     <Style TargetType="{x:Type TextBlock}">
@@ -102,7 +106,8 @@
                 </TextBlock.Style>
             </TextBlock>
             
-            <TextBox Grid.Row="3" x:Name="textBoxCEmail" Margin="20 0 20 5" Style="{DynamicResource MangeMeTextBox}"></TextBox>
+            <TextBox Grid.Row="3" x:Name="textBoxCEmail" Margin="20 0 20 5" Style="{DynamicResource MangeMeTextBox}" TextChanged="textBoxCEmail_TextChanged"></TextBox>
+            <Image x:Name="imageCEmailError" Source="/ManageMe;component/Resources/Images/error.png" Visibility="Hidden" Grid.Row="3" Width="22" Height="22" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0 0 20 0"></Image>
             <TextBlock Grid.Row="3" IsHitTestVisible="False" VerticalAlignment="Center" FontSize="14" TextWrapping="Wrap" Text="Email" Margin="22 0 20 10" Foreground="LightGray">
                 <TextBlock.Style>
                     <Style TargetType="{x:Type TextBlock}">
@@ -117,10 +122,12 @@
             </TextBlock>
 
             <PasswordBox Grid.Row="4" x:Name="textBoxCPassword" Margin="20 0 20 5" Style="{DynamicResource ManageMePasswordBox}" PasswordChanged="textBoxCPassword_PasswordChanged"></PasswordBox>
+            <Image x:Name="imageCPasswordError" Source="/ManageMe;component/Resources/Images/error.png" Visibility="Hidden" Grid.Row="4" Width="22" Height="22" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0 0 20 0"></Image>
             <TextBlock Grid.Row="4" x:Name="placeHolderTextBoxCPassword"  IsHitTestVisible="False" VerticalAlignment="Center" FontSize="14" TextWrapping="Wrap" Text="Password" Margin="22 0 20 10" Foreground="LightGray">
             </TextBlock>
 
             <PasswordBox Grid.Row="5" x:Name="textBoxCConfirmPassword" Margin="20 0 20 5" Style="{DynamicResource ManageMePasswordBox}" PasswordChanged="textBoxCConfirmPassword_PasswordChanged"></PasswordBox>
+            <Image x:Name="imageCConfirmPasswordError" Source="/ManageMe;component/Resources/Images/error.png" Visibility="Hidden" Grid.Row="5" Width="22" Height="22" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0 0 20 0"></Image>
             <TextBlock Grid.Row="5" x:Name="placeHolderTextBoxCConfirmPassword" IsHitTestVisible="False" VerticalAlignment="Center" FontSize="14" TextWrapping="Wrap" Text="Confirm Password" Margin="22 0 20 10" Foreground="LightGray">
             </TextBlock>
 

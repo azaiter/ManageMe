@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace ManageMe.Models.JsonModels
 {
-    class JsonAuthentification
+    public class JsonAuthentification
     {
         public JsonAuthenticationMessage message { get; set; }
+        public bool Status { get; set; }
     }
 }

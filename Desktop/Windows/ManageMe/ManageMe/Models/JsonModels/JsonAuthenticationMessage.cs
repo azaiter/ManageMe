@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ManageMe.Models.JsonModels
 {
-    class JsonAuthenticationMessage
+    public class JsonAuthenticationMessage
     {
         public string password { get; set; }
         public string email { get; set; }

@@ -23,7 +23,7 @@ namespace ManageMe.Utilities
         /// <summary>
         ///  This method logs the user in.
         /// </summary>
-        public async Task<ManageMe.Models.Result> Login(string username, string password)
+        public async Task<ManageMe.Models.JsonModels.JsonAuthentification> Login(string username, string password)
         {
             using (var client = new HttpClient())
             {
@@ -39,13 +39,13 @@ namespace ManageMe.Utilities
                 var jObject = JsonConvert.DeserializeObject<Models.JsonModels.JsonAuthentification>(resultContent);
                 if (response.StatusCode == System.Net.HttpStatusCode.OK)
                 {
-                    return new ManageMe.Models.Result(true, "");
+                    jObject.Status = true;
                 }
                 else
                 {
-                    var message = "";
-                    return new ManageMe.Models.Result(false, message);
+                    jObject.Status = false;
                 }
+                return jObject;
             }
         }
 
@@ -69,7 +69,7 @@ namespace ManageMe.Utilities
         /// <summary>
         ///  This method regesters a user.
         /// </summary>
-        public static async Task<ManageMe.Models.Result> Register(string username, string password, string firstName,string lastName,string email)
+        public static async Task<ManageMe.Models.JsonModels.JsonAuthentification> Register(string username, string password, string firstName,string lastName,string email)
         {
             using (var client = new HttpClient())
             {
@@ -88,13 +88,13 @@ namespace ManageMe.Utilities
                 var jObject = JsonConvert.DeserializeObject<Models.JsonModels.JsonAuthentification>(resultContent);
                 if (response.StatusCode == System.Net.HttpStatusCode.OK)
                 {
-                    return new ManageMe.Models.Result(true, "");
+                    jObject.Status = true;
                 }
                 else
                 {
-                    var message = "";
-                    return new ManageMe.Models.Result(false, message);
+                    jObject.Status = false;
                 }
+                return jObject;
             }
         }
     }
