@@ -239,14 +239,14 @@ def getHours(args):
 		"uid":1,
 		"req_uid":"54", # Make the DB return dummy column for req_uid until we get into next iterations
 		"in":"2017-11-15 00:43:24",
-		"out":"2017-11-15 08:11:12"
+		"out":"2017-11-15 08:11:12",
 		"user_id":"3"
 	},
 	{
 		"uid":2,
 		"req_uid":"56", # Make the DB return dummy column for req_uid until we get into next iterations
 		"in":"2017-11-15 00:43:24",
-		"out":"2017-11-15 08:11:12"
+		"out":"2017-11-15 08:11:12",
 		"user_id":"3"
 	}
 	]
@@ -262,7 +262,7 @@ def clockIn(args):
 		"uid":1,
 		"req_uid":"54", # Make the DB return dummy column for req_uid until we get into next iterations
 		"in":"2017-11-15 00:43:24",
-		"out":""
+		"out":"",
 		"user_id":"3"
 	}
 	]
@@ -278,7 +278,7 @@ def clockOut(args):
 		"uid":1,
 		"req_uid":"54", # Make the DB return dummy column for req_uid until we get into next iterations
 		"in":"2017-11-15 00:43:24",
-		"out":""
+		"out":"",
 		"user_id":"3"
 	}
 	]
