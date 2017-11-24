@@ -24,7 +24,7 @@ def getUser(args):
   cur.callproc('sp_getUserById',[str(args.userid)])
   r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
   if len(r) == 0:
-    abort(404, message='userid {} was not found!'.format(args.userid))
+    abort(400, message='userid {} was not found!'.format(args.userid))
   if db:
     db.close()
   return jsonify(r)
@@ -51,7 +51,7 @@ def login(args):
 		rr = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
 		functionReturn = rr[0]
 	else:
-		abort(409, message="Error: username or password is invalid.")
+		abort(400, message="Error: username or password is invalid.")
 		functionReturn = {"message": "Error: username or password is invalid."}
 	if db:
 		cur.close()
@@ -101,7 +101,7 @@ def getProjects(args):
 		cur.callproc('sp_getProjects',[str(args.token)])
 		r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
 		if len(r) == 0:
-			abort(404, message='No Projects are found for user!')
+			abort(400, message='No Projects are found for user!')
 		if db:
 			db.close()
 			print(r)
@@ -166,10 +166,11 @@ createTeam
 	from the token you can check permissions and figure out "created_by" field.
 '''
 def createTeam(args):
+	print(args)
 	if checkTokenIsValid(args.token):
 		db = dbConnect()
 		cur = db.cursor()
-		cur.callproc('sp_createTeam',[str(args.token), str(args.team_name), str(args.team_desc)])
+		cur.callproc('sp_createTeam',[str(args.team_name), str(args.team_desc)])
 		r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
 	if db:
 		cur.close()
@@ -192,7 +193,7 @@ def getHours(args):
 		cur.callproc('sp_viewTime',[str(args.token)])
 		r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
 		if len(r) == 0:
-			abort(404, message='No time entries are found for user!')
+			abort(400, message='No time entries are found for user!')
 		if db:
 			db.close()
 			print(r)
@@ -240,7 +241,7 @@ out: true if user exists, otherwise false. (stored procedure just selects where 
 def checkUserIDExists(userID):
 	db = dbConnect()
 	cur = db.cursor()
-	cur.callproc('sp_checkUserIDExist', [str(userID)])
+	cur.callproc('sp_checkUserIDExist', [userID])
 	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
 	if db:
 		cur.close()
@@ -256,7 +257,7 @@ def disableUser(args):
 	if checkTokenIsValid(args.token):
 		db = dbConnect()
 		cur = db.cursor()
-		cur.callproc('sp_disableUser',[str(args.user_id)])
+		cur.callproc('sp_disableUser',[args.user_id])
 		r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
 	if db:
 		cur.close()

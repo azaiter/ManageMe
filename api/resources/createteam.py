@@ -11,14 +11,14 @@ post_parser.add_argument(
 )
 
 post_parser.add_argument(
-    'team_name', dest='project_name',
+    'team_name', dest='team_name',
     location='json', required=True,
     type=managemeutil.verify_teamNotExist,
     help='The team\'s name {error_msg}',
 )
 
 post_parser.add_argument(
-    'team_desc', dest='project_desc',
+    'team_desc', dest='team_desc',
     location='json', required=True,
     type=str,
     help='The team\'s description {error_msg}',
