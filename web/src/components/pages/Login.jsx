@@ -77,7 +77,10 @@ class LoginPage extends React.Component{
     console.log(e);
     login(this.state.user, this.state.password).then(status => {
       if(status != 200){
-        this.state.loginError = "Username or Password is Incorrect";
+        console.log("yo");
+        this.setState({
+            loginError: "Username or Password is incorrect"
+        })
         return;
       }
       this.props.history.pushState(null, '/dashboard/overview');
@@ -108,6 +111,8 @@ class LoginPage extends React.Component{
       }
   }
 
+  
+
 
   render(){
     return(
@@ -125,7 +130,7 @@ class LoginPage extends React.Component{
                     <input type="password" className="form-control input-underline input-lg" placeholder="Password" errorText={this.state.password_error_text} onChange={(e) => this.changeValue(e, 'password')} /> 
                   </div> 
                 </div>
-                <p errorText={this.state.loginError}></p>
+                <p style={{ color: "red" }}>{this.state.loginError}</p>
                 <button className="btn btn-white btn-outline btn-lg btn-rounded btn-block" onClick={(e) => this.handleLogin(e)} disabled={this.state.disabled}>Login</button>
                 <button className="btn btn-white btn-outline btn-lg btn-rounded btn-block" onClick={this.handleRegister.bind(this)} >Register</button>                  
               </form> 

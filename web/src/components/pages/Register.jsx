@@ -169,7 +169,9 @@ class RegisterPage extends React.Component{
     register(this.state.first, this.state.last, this.state.email, this.state.phoneNum, this.state.address, this.state.username, this.state.password)
       .then(status => {
       if(status != 200){
-        this.state.registerError = "Could not submit form... Try again later";
+        this.setState({
+          registerError: "Could not submit form... Try again later"
+        }) 
         return;
       }
       this.props.history.goBack();
@@ -213,6 +215,7 @@ class RegisterPage extends React.Component{
                     <input type="password" className="form-control input-underline input-lg" placeholder="Confirm Password" errorText={this.state.passwordConfirm_error_text} onChange={(e) => this.changeValue(e, 'passwordConfirm')} /> 
                   </div> 
                 </div>
+                <p style={{ color: "red" }}>{this.state.registerError}</p>
                 <button className="btn btn-white btn-outline btn-lg btn-rounded btn-block" onClick={this.props.history.goBack} >Back</button> 
                 <button className="btn btn-white btn-outline btn-lg btn-rounded btn-block" onClick={(e) => this.handleRegister(e)} disabled={this.state.disabled}>Register</button>                  
               </form> 
