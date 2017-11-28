@@ -144,16 +144,16 @@
             </Grid>
             <Grid>
                 <Grid x:Name="gridUser" Visibility="Collapsed">
-
+                    <TextBlock>User</TextBlock>
                 </Grid>
                 <Grid x:Name="gridDashboard" Visibility="Visible">
-
+                    <TextBlock>Dashboard</TextBlock>
                 </Grid>
                 <Grid x:Name="gridProjects" Visibility="Collapsed">
-
+                    <TextBlock>Projects</TextBlock>
                 </Grid>
                 <Grid x:Name="gridSettings" Visibility="Collapsed">
-
+                    <TextBlock>Settings</TextBlock>
                 </Grid>
             </Grid>
             <Grid DockPanel.Dock="Bottom" VerticalAlignment="Bottom" Background="#e8e8e8" Height="30">
