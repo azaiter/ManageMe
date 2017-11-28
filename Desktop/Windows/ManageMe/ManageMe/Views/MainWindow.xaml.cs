@@ -21,6 +21,10 @@ namespace ManageMe.Views
     public partial class MainWindow : Window
     {
         private Utilities.User user;
+        private Rectangle lastHighlightNav;
+        private Rectangle lastHighlightProjects;
+        private Grid lastGridContent;
+        private Grid lastGridTop;
 
         public MainWindow()
         {
@@ -31,6 +35,281 @@ namespace ManageMe.Views
         {
             InitializeComponent();
             this.user = new Utilities.User(token);
+
+            lastHighlightNav = highlightDashboard;
+            lastHighlightProjects = highlightInProgressProjects;
+
+            lastGridContent = gridDashboard;
+            lastGridTop = gridTopDashboard;
+
+        }
+
+        private void textBoxSearchNotifications_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if(textBoxSearchNotifications.Text.Length > 0)
+            {
+                buttonCancelSearchNotifications.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                buttonCancelSearchNotifications.Visibility = Visibility.Hidden;
+            }
+        }
+
+        private void buttonCancelSearchNotifications_Click(object sender, RoutedEventArgs e)
+        {
+            textBoxSearchNotifications.Text = "";
+        }
+
+        private void buttonViewUser_Click(object sender, RoutedEventArgs e)
+        {
+            if(lastHighlightNav != null)
+            {
+                lastHighlightNav.Visibility = Visibility.Hidden;
+                lastHighlightNav.Fill = System.Windows.Media.Brushes.Gray;
+                lastHighlightNav = highlightViewUser;
+                var converter = new System.Windows.Media.BrushConverter();
+                lastHighlightNav.Fill = (Brush)converter.ConvertFromString("#2c75a3");
+                lastHighlightNav.Visibility = Visibility.Visible;
+
+                if(lastGridContent != gridUser)
+                {
+                    lastGridContent.Visibility = Visibility.Collapsed;
+                    lastGridTop.Visibility = Visibility.Collapsed;
+                    lastGridContent = gridUser;
+                    lastGridTop = gridTopUser;
+                    lastGridContent.Visibility = Visibility.Visible;
+                    lastGridTop.Visibility = Visibility.Visible;
+                }
+
+            }
+        }
+
+        private void buttonDashboard_Click(object sender, RoutedEventArgs e)
+        {
+            if (lastHighlightNav != null)
+            {
+                lastHighlightNav.Visibility = Visibility.Hidden;
+                lastHighlightNav.Fill = System.Windows.Media.Brushes.Gray;
+                lastHighlightNav = highlightDashboard;
+                var converter = new System.Windows.Media.BrushConverter();
+                lastHighlightNav.Fill = (Brush)converter.ConvertFromString("#2c75a3");
+                lastHighlightNav.Visibility = Visibility.Visible;
+
+                if (lastGridContent != gridDashboard)
+                {
+                    lastGridContent.Visibility = Visibility.Collapsed;
+                    lastGridTop.Visibility = Visibility.Collapsed;
+                    lastGridContent = gridDashboard;
+                    lastGridTop = gridTopDashboard;
+                    lastGridContent.Visibility = Visibility.Visible;
+                    lastGridTop.Visibility = Visibility.Visible;
+                }
+            }
+        }
+
+        private void buttonProjects_Click(object sender, RoutedEventArgs e)
+        {
+            if (lastHighlightNav != null)
+            {
+                lastHighlightNav.Visibility = Visibility.Hidden;
+                lastHighlightNav.Fill = System.Windows.Media.Brushes.Gray;
+                lastHighlightNav = highlightProjects;
+                var converter = new System.Windows.Media.BrushConverter();
+                lastHighlightNav.Fill = (Brush)converter.ConvertFromString("#2c75a3");
+                lastHighlightNav.Visibility = Visibility.Visible;
+            }
+
+            if (lastGridContent != gridProjects)
+            {
+                lastGridContent.Visibility = Visibility.Collapsed;
+                lastGridTop.Visibility = Visibility.Collapsed;
+                lastGridContent = gridProjects;
+                lastGridTop = gridTopProjects;
+                lastGridContent.Visibility = Visibility.Visible;
+                lastGridTop.Visibility = Visibility.Visible;
+            }
+        }
+
+        private void buttonSettings_Click(object sender, RoutedEventArgs e)
+        {
+            if (lastHighlightNav != null)
+            {
+                lastHighlightNav.Visibility = Visibility.Hidden;
+                lastHighlightNav.Fill = System.Windows.Media.Brushes.Gray;
+                lastHighlightNav = highlightSettings;
+                var converter = new System.Windows.Media.BrushConverter();
+                lastHighlightNav.Fill = (Brush)converter.ConvertFromString("#2c75a3");
+                lastHighlightNav.Visibility = Visibility.Visible;
+            }
+
+            if (lastGridContent != gridSettings)
+            {
+                lastGridContent.Visibility = Visibility.Collapsed;
+                lastGridTop.Visibility = Visibility.Collapsed;
+                lastGridContent = gridSettings;
+                lastGridTop = gridTopSettings;
+                lastGridContent.Visibility = Visibility.Visible;
+                lastGridTop.Visibility = Visibility.Visible;
+            }
+        }
+
+        private void buttonViewUser_MouseEnter(object sender, RoutedEventArgs e)
+        {
+            if(highlightViewUser.Visibility != Visibility.Visible)
+            {
+                highlightViewUser.Visibility = Visibility.Visible;
+            }
+        }
+
+        private void buttonViewUser_MouseLeave(object sender, RoutedEventArgs e)
+        {
+            if (highlightViewUser != lastHighlightNav)
+            {
+                highlightViewUser.Visibility = Visibility.Hidden;
+            }
+        }
+
+        private void buttonDashboard_MouseEnter(object sender, RoutedEventArgs e)
+        {
+            if (highlightDashboard.Visibility != Visibility.Visible)
+            {
+                highlightDashboard.Visibility = Visibility.Visible;
+            }
+        }
+
+        private void buttonDashboard_MouseLeave(object sender, RoutedEventArgs e)
+        {
+            if (highlightDashboard != lastHighlightNav)
+            {
+                highlightDashboard.Visibility = Visibility.Hidden;
+            }
+        }
+
+        private void buttonProjects_MouseEnter(object sender, RoutedEventArgs e)
+        {
+            if (highlightProjects.Visibility != Visibility.Visible)
+            {
+                highlightProjects.Visibility = Visibility.Visible;
+            }
+        }
+
+        private void buttonProjects_MouseLeave(object sender, RoutedEventArgs e)
+        {
+            if (highlightProjects != lastHighlightNav)
+            {
+                highlightProjects.Visibility = Visibility.Hidden;
+            }
+        }
+
+        private void buttonSettings_MouseEnter(object sender, RoutedEventArgs e)
+        {
+            if (highlightSettings.Visibility != Visibility.Visible)
+            {
+                highlightSettings.Visibility = Visibility.Visible;
+            }
+        }
+
+        private void buttonSettings_MouseLeave(object sender, RoutedEventArgs e)
+        {
+            if (highlightSettings != lastHighlightNav)
+            {
+                highlightSettings.Visibility = Visibility.Hidden;
+            }
+        }
+
+        private void buttonAllProjects_Click(object sender, RoutedEventArgs e)
+        {
+            if (lastHighlightProjects != null)
+            {
+                lastHighlightProjects.Visibility = Visibility.Hidden;
+                lastHighlightProjects.Fill = System.Windows.Media.Brushes.Gray;
+                lastHighlightProjects = highlightAllProjects;
+                var converter = new System.Windows.Media.BrushConverter();
+                lastHighlightProjects.Fill = (Brush)converter.ConvertFromString("#2c75a3");
+                lastHighlightProjects.Visibility = Visibility.Visible;
+            }
+        }
+
+        private void buttonInProgress_Click(object sender, RoutedEventArgs e)
+        {
+            if (lastHighlightProjects != null)
+            {
+                lastHighlightProjects.Visibility = Visibility.Hidden;
+                lastHighlightProjects.Fill = System.Windows.Media.Brushes.Gray;
+                lastHighlightProjects = highlightInProgressProjects;
+                var converter = new System.Windows.Media.BrushConverter();
+                lastHighlightProjects.Fill = (Brush)converter.ConvertFromString("#2c75a3");
+                lastHighlightProjects.Visibility = Visibility.Visible;
+            }
+        }
+
+        private void buttonCompleted_Click(object sender, RoutedEventArgs e)
+        {
+            if (lastHighlightProjects != null)
+            {
+                lastHighlightProjects.Visibility = Visibility.Hidden;
+                lastHighlightProjects.Fill = System.Windows.Media.Brushes.Gray;
+                lastHighlightProjects = highlightCompletedProjects;
+                var converter = new System.Windows.Media.BrushConverter();
+                lastHighlightProjects.Fill = (Brush)converter.ConvertFromString("#2c75a3");
+                lastHighlightProjects.Visibility = Visibility.Visible;
+            }
+        }
+
+        private void buttonAllProjects_MouseEnter(object sender, MouseEventArgs e)
+        {
+            if (highlightAllProjects.Visibility != Visibility.Visible)
+            {
+                highlightAllProjects.Visibility = Visibility.Visible;
+            }
+        }
+
+        private void buttonAllProjects_MouseLeave(object sender, MouseEventArgs e)
+        {
+            if (highlightAllProjects != lastHighlightProjects)
+            {
+                highlightAllProjects.Visibility = Visibility.Hidden;
+            }
+        }
+
+        private void buttonInProgress_MouseEnter(object sender, MouseEventArgs e)
+        {
+            if (highlightInProgressProjects.Visibility != Visibility.Visible)
+            {
+                highlightInProgressProjects.Visibility = Visibility.Visible;
+            }
+        }
+
+        private void buttonInProgress_MouseLeave(object sender, MouseEventArgs e)
+        {
+            if (highlightInProgressProjects != lastHighlightProjects)
+            {
+                highlightInProgressProjects.Visibility = Visibility.Hidden;
+            }
+        }
+
+        private void buttonCompleted_MouseEnter(object sender, MouseEventArgs e)
+        {
+            if (highlightCompletedProjects.Visibility != Visibility.Visible)
+            {
+                highlightCompletedProjects.Visibility = Visibility.Visible;
+            }
+        }
+
+        private void buttonCompleted_MouseLeave(object sender, MouseEventArgs e)
+        {
+            if (highlightCompletedProjects != lastHighlightProjects)
+            {
+                highlightCompletedProjects.Visibility = Visibility.Hidden;
+            }
+        }
+
+        private void buttonLogout_Click(object sender, RoutedEventArgs e)
+        {
+            var login = new Login();
+            login.Show();
+            this.Close();
         }
     }
 }

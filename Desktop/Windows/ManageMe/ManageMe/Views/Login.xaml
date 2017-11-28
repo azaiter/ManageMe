@@ -29,7 +29,7 @@
 
             <TextBox Grid.Row="0" x:Name="textBoxUserName"  Margin="20 0 20 5" Style="{DynamicResource MangeMeTextBox}"></TextBox>
             <Image x:Name="imageUserNameError" Source="/ManageMe;component/Resources/Images/error.png" Visibility="Hidden" Grid.Row="0" Width="22" Height="22" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0 0 20 0"></Image>
-            <TextBlock Grid.Row="0" IsHitTestVisible="False" VerticalAlignment="Center" FontSize="14" TextWrapping="Wrap" Text="Email" Margin="22 0 20 10" Foreground="LightGray">
+            <TextBlock Grid.Row="0" IsHitTestVisible="False" VerticalAlignment="Center" FontSize="14" TextWrapping="Wrap" Text="Username" Margin="22 0 20 10" Foreground="LightGray">
                 <TextBlock.Style>
                     <Style TargetType="{x:Type TextBlock}">
                         <Setter Property="Visibility" Value="Collapsed"/>
@@ -46,8 +46,8 @@
             <TextBlock Grid.Row="1" x:Name="placeHolderTextBoxPassword" IsHitTestVisible="False" VerticalAlignment="Center" FontSize="14" TextWrapping="Wrap" Text="Password" Margin="22 0 20 10" Foreground="LightGray">
             </TextBlock>
             
-            <Button Grid.Row="3" x:Name="buttonLogin" Height="25" Width="125" Margin="0 0 0 5" BorderBrush="#FF707070" Style="{DynamicResource ManageMeButton}" Click="buttonLogin_Click">Login</Button>
-            <Button Grid.Row="4" x:Name="buttonShowRegister" Height="25" Width="125" Style="{DynamicResource ManageMeButton}" Click="buttonShowRegister_Click">Register</Button>
+            <Button Grid.Row="3" x:Name="buttonLogin" Margin="0 0 0 5" BorderBrush="#FF707070" Style="{DynamicResource ManageMeButton}" Click="buttonLogin_Click">Login</Button>
+            <Button Grid.Row="4" x:Name="buttonShowRegister" Style="{DynamicResource ManageMeButton}" Click="buttonShowRegister_Click">Register</Button>
         </Grid>
         <Grid x:Name="gridRegister" Grid.Row="2" VerticalAlignment="Center" Visibility="Hidden">
             <Grid.RowDefinitions>
@@ -131,8 +131,8 @@
             <TextBlock Grid.Row="5" x:Name="placeHolderTextBoxCConfirmPassword" IsHitTestVisible="False" VerticalAlignment="Center" FontSize="14" TextWrapping="Wrap" Text="Confirm Password" Margin="22 0 20 10" Foreground="LightGray">
             </TextBlock>
 
-            <Button Grid.Row="7" x:Name="buttonBack" Height="25" Width="125" Margin="0 0 0 5" BorderBrush="#FF707070" Style="{DynamicResource ManageMeButton}" Click="buttonBack_Click">Back</Button>
-            <Button Grid.Row="8" x:Name="buttonRegister" Height="25" Width="125" Style="{DynamicResource ManageMeButton}" Click="buttonRegister_Click">Register</Button>
+            <Button Grid.Row="7" x:Name="buttonBack" Margin="0 0 0 5" BorderBrush="#FF707070" Style="{DynamicResource ManageMeButton}" Click="buttonBack_Click">Back</Button>
+            <Button Grid.Row="8" x:Name="buttonRegister" Style="{DynamicResource ManageMeButton}" Click="buttonRegister_Click">Register</Button>
         </Grid>
     </Grid>
 </Window>
