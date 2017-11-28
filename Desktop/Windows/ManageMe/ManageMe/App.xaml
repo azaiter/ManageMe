@@ -245,7 +245,6 @@
         </Style>
         <Style x:Key="ButtonStyleManageMeCancelSearch" TargetType="{x:Type Button}">
             <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="Visibility" Value="Hidden"/>
             <Setter Property="HorizontalContentAlignment" Value="Center"/>
             <Setter Property="VerticalContentAlignment" Value="Center"/>
             <Setter Property="Padding" Value="1"/>
@@ -258,11 +257,11 @@
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="true">
-                                <Setter Property="BorderBrush" TargetName="border" Value="Red"/>
+                                <Setter Property="BorderBrush" TargetName="border" Value="#eaeaea"/>
                                 <Setter Property="BorderThickness" TargetName="border" Value="1"/>
                             </Trigger>
                             <Trigger Property="IsPressed" Value="true">
-                                <Setter Property="BorderBrush" TargetName="border" Value="Red"/>
+                                <Setter Property="BorderBrush" TargetName="border" Value="#eaeaea"/>
                                 <Setter Property="BorderThickness" TargetName="border" Value="1"/>
                             </Trigger>
                             
@@ -273,8 +272,8 @@
         </Style>
         <Style x:Key="ButtonStyleManageMeNav" TargetType="{x:Type Button}">
             <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
-            <Setter Property="Width" Value="150"/>
-            <Setter Property="Height" Value="150"/>
+            <Setter Property="Width" Value="125"/>
+            <Setter Property="Height" Value="125"/>
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="BorderBrush" Value="DarkGray"/>
             <Setter Property="BorderThickness" Value="0"/>
@@ -295,7 +294,7 @@
         </Style>
         <Style x:Key="ButtonStyleManageMeTopPanel" TargetType="{x:Type Button}">
             <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="FontSize" Value="18"/>
             <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="HorizontalContentAlignment" Value="Center"/>
@@ -341,7 +340,7 @@
         <SolidColorBrush x:Key="ListBox.Disabled.Background" Color="#FFFFFFFF"/>
         <SolidColorBrush x:Key="ListBox.Disabled.Border" Color="#FFD9D9D9"/>
         <Style x:Key="ListViewStyleManageMe" TargetType="{x:Type ListView}">
-            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Background" Value="#3CA2E0"/>
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
             <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Hidden"/>

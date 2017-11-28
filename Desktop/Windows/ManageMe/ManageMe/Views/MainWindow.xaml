@@ -8,27 +8,33 @@
         mc:Ignorable="d"
         Title="ManageMe" Height="900" Width="1200">
     <Window.Resources>
-
+        <Storyboard x:Key="storyBoardShowSearchPane" Storyboard.Target="{Binding ElementName=listViewSearchResults}">
+            <DoubleAnimation Storyboard.TargetProperty="Width" To="250" Duration="0:0:0.25"/>
+        </Storyboard>
+        <Storyboard x:Key="storyBoardHideSearchPane" Storyboard.Target="{Binding ElementName=listViewSearchResults}">
+            <DoubleAnimation Storyboard.TargetProperty="Width" To="0" Duration="0:0:0.25"/>
+        </Storyboard>
     </Window.Resources>
     <Grid>
         <DockPanel>
             <Grid DockPanel.Dock="Left">
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="150"/>
-                        <ColumnDefinition Width="250"/>
+                        <ColumnDefinition Width="120"/>
+                        <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
                     <Grid Grid.Column="0" Background="#68b7e7">
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="65"/>
-                            <RowDefinition Height="150"/>
-                            <RowDefinition Height="150"/>
-                            <RowDefinition Height="150"/>
-                            <RowDefinition Height="150"/>
+                            <RowDefinition Height="50"/>
+                            <RowDefinition Height="120"/>
+                            <RowDefinition Height="120"/>
+                            <RowDefinition Height="120"/>
+                            <RowDefinition Height="120"/>
+                            <RowDefinition Height="120"/>
                             <RowDefinition/>
                         </Grid.RowDefinitions>
                         <Grid Grid.Row="0" Background="Gray">
-                            <TextBlock Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="25">ManageMe</TextBlock>
+                            <TextBlock Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="20">ManageMe</TextBlock>
                         </Grid>
                         <Grid Grid.Row="1">
                             <Rectangle x:Name="highlightViewUser" HorizontalAlignment="Left" Width="10" Visibility="Hidden" Fill="Gray"/>
@@ -36,7 +42,7 @@
                                 <Button x:Name="buttonViewUser" Style="{DynamicResource ButtonStyleManageMeNav}" Click="buttonViewUser_Click"  MouseEnter="buttonViewUser_MouseEnter" MouseLeave="buttonViewUser_MouseLeave">
                                     <StackPanel Orientation="Vertical">
                                         <Image Height="60" Source="/ManageMe;component/Resources/Images/user.png"></Image>
-                                        <TextBlock Height="25" HorizontalAlignment="Center" Foreground="#eaeaea" FontSize="16">User</TextBlock>
+                                        <TextBlock Height="22" HorizontalAlignment="Center" Foreground="#eaeaea" FontSize="16">User</TextBlock>
                                     </StackPanel>
                                 </Button>
                             </StackPanel>
@@ -47,7 +53,7 @@
                                 <Button x:Name="buttonDashboard" Style="{DynamicResource ButtonStyleManageMeNav}" Click="buttonDashboard_Click" MouseEnter="buttonDashboard_MouseEnter" MouseLeave="buttonDashboard_MouseLeave">
                                     <StackPanel Orientation="Vertical">
                                         <Image Height="60" Source="/ManageMe;component/Resources/Images/dashboard.png"></Image>
-                                        <TextBlock Height="25" HorizontalAlignment="Center" Foreground="#eaeaea" FontSize="16">Dashboard</TextBlock>
+                                        <TextBlock Height="22" HorizontalAlignment="Center" Foreground="#eaeaea" FontSize="16">Dashboard</TextBlock>
                                     </StackPanel>
                                 </Button>
                             </StackPanel>
@@ -58,92 +64,124 @@
                                 <Button x:Name="buttonProjects" Style="{DynamicResource ButtonStyleManageMeNav}" Click="buttonProjects_Click" MouseEnter="buttonProjects_MouseEnter" MouseLeave="buttonProjects_MouseLeave">
                                     <StackPanel Orientation="Vertical">
                                         <Image Height="60" Source="/ManageMe;component/Resources/Images/projects.png"></Image>
-                                        <TextBlock Height="25" HorizontalAlignment="Center" Foreground="#eaeaea" FontSize="16">Projects</TextBlock>
+                                        <TextBlock Height="22" HorizontalAlignment="Center" Foreground="#eaeaea" FontSize="16">Projects</TextBlock>
                                     </StackPanel>
                                 </Button>
                             </StackPanel>
                         </Grid>
                         <Grid Grid.Row="4">
+                            <Rectangle x:Name="highlightReports" HorizontalAlignment="Left" Width="10" Fill="Gray" Visibility="Hidden"></Rectangle>
+                            <StackPanel Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                <Button x:Name="buttonReports" Style="{DynamicResource ButtonStyleManageMeNav}" Click="buttonReports_Click" MouseEnter="buttonReports_MouseEnter" MouseLeave="buttonReports_MouseLeave">
+                                    <StackPanel Orientation="Vertical">
+                                        <Image Height="60" Source="/ManageMe;component/Resources/Images/reports.png"></Image>
+                                        <TextBlock Height="22" HorizontalAlignment="Center" Foreground="#eaeaea" FontSize="16">Reports</TextBlock>
+                                    </StackPanel>
+                                </Button>
+                            </StackPanel>
+                        </Grid>
+                        <Grid Grid.Row="5">
                             <Rectangle x:Name="highlightSettings" HorizontalAlignment="Left" Width="10" Fill="Gray" Visibility="Hidden"></Rectangle>
                             <StackPanel Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Center">
                                 <Button x:Name="buttonSettings" Style="{DynamicResource ButtonStyleManageMeNav}" Click="buttonSettings_Click" MouseEnter="buttonSettings_MouseEnter" MouseLeave="buttonSettings_MouseLeave">
                                     <StackPanel Orientation="Vertical">
                                         <Image Height="60" Source="/ManageMe;component/Resources/Images/settings.png"></Image>
-                                        <TextBlock Height="25" HorizontalAlignment="Center" Foreground="#eaeaea" FontSize="16">Settings</TextBlock>
+                                        <TextBlock Height="22" HorizontalAlignment="Center" Foreground="#eaeaea" FontSize="16">Settings</TextBlock>
                                     </StackPanel>
                                 </Button>
                             </StackPanel>
                         </Grid>
-                        <Button x:Name="buttonLogout" Grid.Row="5" VerticalAlignment="Bottom" Margin="0 0 0 20" Style="{DynamicResource ManageMeButton}" Click="buttonLogout_Click">
+                        <Button x:Name="buttonLogout" Width="75" Grid.Row="6" VerticalAlignment="Bottom" Margin="0 0 0 20" Style="{DynamicResource ManageMeButton}" Click="buttonLogout_Click">
                             Logtout
                         </Button>
-                    </Grid>
-                    <Grid Grid.Column="1" Background="#3CA2E0">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="65"/>
-                            <RowDefinition/>
-                        </Grid.RowDefinitions>
-                        <Grid Grid.Row="0">
-                            <Border CornerRadius="25" Margin="10" Background="#68b7e7">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="35"/>
-                                        <ColumnDefinition Width="1*"/>
-                                        <ColumnDefinition Width="35"/>
-                                    </Grid.ColumnDefinitions>
-                                    <Image Grid.Column="0" Width="20" HorizontalAlignment="Right" Source="/ManageMe;component/Resources/Images/search.png"></Image>
-                                    <TextBox x:Name="textBoxSearchNotifications" Grid.Column="1" VerticalAlignment="Center" FontSize="20" Style="{DynamicResource TextBoxStyleManageMeSearch}" TextChanged="textBoxSearchNotifications_TextChanged"></TextBox>
-                                    <Button x:Name="buttonCancelSearchNotifications" Grid.Column="2" Height="25" Width="25" HorizontalAlignment="Left" Style="{DynamicResource ButtonStyleManageMeCancelSearch}" Click="buttonCancelSearchNotifications_Click">
-                                        <Image Source="/ManageMe;component/Resources/Images/cancel.png"></Image>
-                                    </Button>
-                                </Grid>
-                            </Border>
-                        </Grid>
-                        <ListView Grid.Row="1" Style="{DynamicResource ListViewStyleManageMe}">
-                            
-                        </ListView>
                     </Grid>
                 </Grid>
 
             </Grid>
-            <Grid DockPanel.Dock="Top" Background="#e8e8e8" Height="65">
-                <Grid x:Name="gridTopUser" Visibility="Collapsed">
-                    <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="20" Foreground="Black">User</TextBlock>
+            <Grid DockPanel.Dock="Top" Background="#e8e8e8" Height="50">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="250"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid Grid.Column="0" Background="#3CA2E0">
+                    <Border CornerRadius="15" Margin="10" Background="#68b7e7">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="25"/>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="25"/>
+                            </Grid.ColumnDefinitions>
+                            <Image Grid.Column="0" Width="20" HorizontalAlignment="Right" Source="/ManageMe;component/Resources/Images/search.png"></Image>
+                            <TextBox x:Name="textBoxSearchNotifications" Grid.Column="1" VerticalAlignment="Center" FontSize="18" Style="{DynamicResource TextBoxStyleManageMeSearch}" TextChanged="textBoxSearchNotifications_TextChanged"></TextBox>
+                            <Button x:Name="buttonCancelSearchNotifications" Grid.Column="2" Visibility="Hidden" Height="20" Width="20" HorizontalAlignment="Left" Style="{DynamicResource ButtonStyleManageMeCancelSearch}" Click="buttonCancelSearchNotifications_Click">
+                                <Image Source="/ManageMe;component/Resources/Images/cancel.png"></Image>
+                            </Button>
+                        </Grid>
+                    </Border>
                 </Grid>
-                <Grid x:Name="gridTopDashboard" Visibility="Visible">
-                    <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="20" Foreground="Black">Dashboard</TextBlock>
-                </Grid>
-                <Grid x:Name="gridTopProjects" Visibility="Collapsed">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
-                        <ColumnDefinition Width="175"/>
-                        <ColumnDefinition Width="175"/>
-                        <ColumnDefinition Width="175"/>
-                        <ColumnDefinition/>
-                        <ColumnDefinition Width="65"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid Grid.Column="1">
-                        <Button x:Name="buttonAllProjects" Style="{DynamicResource ButtonStyleManageMeTopPanel}" Click="buttonAllProjects_Click" MouseEnter="buttonAllProjects_MouseEnter" MouseLeave="buttonAllProjects_MouseLeave">All</Button>
-                        <Rectangle x:Name="highlightAllProjects" VerticalAlignment="Bottom" Height="10" Fill="Gray" Visibility="Hidden"></Rectangle>
+                <Grid Grid.Column="1">
+                    <Grid x:Name="gridTopUser" Visibility="Collapsed">
+                        <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="18" Foreground="Black">User</TextBlock>
                     </Grid>
-                    <Grid Grid.Column="2">
-                        <Button x:Name="buttonInProgress" Style="{DynamicResource ButtonStyleManageMeTopPanel}" Click="buttonInProgress_Click" MouseEnter="buttonInProgress_MouseEnter" MouseLeave="buttonInProgress_MouseLeave">In Progress</Button>
-                        <Rectangle x:Name="highlightInProgressProjects" VerticalAlignment="Bottom" Height="10" Fill="#2c75a3" Visibility="Visible"></Rectangle>
+                    <Grid x:Name="gridTopDashboard" Visibility="Visible">
+                        <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="18" Foreground="Black">Dashboard</TextBlock>
                     </Grid>
-                    <Grid Grid.Column="3">
-                        <Button x:Name="buttonCompleted" Style="{DynamicResource ButtonStyleManageMeTopPanel}" Click="buttonCompleted_Click" MouseEnter="buttonCompleted_MouseEnter" MouseLeave="buttonCompleted_MouseLeave">Completed</Button>
-                        <Rectangle x:Name="highlightCompletedProjects" VerticalAlignment="Bottom" Height="10" Fill="Gray" Visibility="Hidden"></Rectangle>
+                    <Grid x:Name="gridTopProjects" Visibility="Collapsed">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="175"/>
+                            <ColumnDefinition Width="175"/>
+                            <ColumnDefinition Width="175"/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="65"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid Grid.Column="1">
+                            <Rectangle x:Name="highlightAllProjects" VerticalAlignment="Bottom" Height="10" Fill="Gray" Visibility="Hidden"></Rectangle>
+                            <Button x:Name="buttonAllProjects" Style="{DynamicResource ButtonStyleManageMeTopPanel}" Click="buttonAllProjects_Click" MouseEnter="buttonAllProjects_MouseEnter" MouseLeave="buttonAllProjects_MouseLeave">All</Button>
+                        </Grid>
+                        <Grid Grid.Column="2">
+                            <Rectangle x:Name="highlightInProgressProjects" VerticalAlignment="Bottom" Height="10" Fill="#2c75a3" Visibility="Visible"></Rectangle>
+                            <Button x:Name="buttonInProgress" Style="{DynamicResource ButtonStyleManageMeTopPanel}" Click="buttonInProgress_Click" MouseEnter="buttonInProgress_MouseEnter" MouseLeave="buttonInProgress_MouseLeave">In Progress</Button>
+                        </Grid>
+                        <Grid Grid.Column="3">
+                            <Rectangle x:Name="highlightCompletedProjects" VerticalAlignment="Bottom" Height="10" Fill="Gray" Visibility="Hidden"></Rectangle>
+                            <Button x:Name="buttonCompleted" Style="{DynamicResource ButtonStyleManageMeTopPanel}" Click="buttonCompleted_Click" MouseEnter="buttonCompleted_MouseEnter" MouseLeave="buttonCompleted_MouseLeave">Completed</Button>
+                        </Grid>
+                        <Button Grid.Column="5" Style="{DynamicResource ButtonStyleAddProject}">
+                            <Image Margin="10" Source="/ManageMe;component/Resources/Images/add.png"></Image>
+                        </Button>
                     </Grid>
-                    <Button Grid.Column="5" Style="{DynamicResource ButtonStyleAddProject}">
-                        <Image Margin="15" Source="/ManageMe;component/Resources/Images/add.png"></Image>
-                    </Button>
+                    <Grid x:Name="gridTopReports" Visibility="Collapsed">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="175"/>
+                            <ColumnDefinition Width="175"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Grid Grid.Column="1">
+                            <Rectangle x:Name="highlightHours" VerticalAlignment="Bottom" Height="10" Fill="#2c75a3" Visibility="Visible"></Rectangle>
+                            <Button x:Name="buttonHours" Style="{DynamicResource ButtonStyleManageMeTopPanel}" Click="buttonHours_Click" MouseEnter="buttonHours_MouseEnter" MouseLeave="buttonHours_MouseLeave">Hours</Button>
+                        </Grid>
+                        <Grid Grid.Column="2">
+                            <Rectangle x:Name="highlightProjectReports" VerticalAlignment="Bottom" Height="10" Fill="Gray" Visibility="Hidden"></Rectangle>
+                            <Button x:Name="buttonProjectReports" Style="{DynamicResource ButtonStyleManageMeTopPanel}" Click="buttonProjectReports_Click" MouseEnter="buttonProjectReports_MouseEnter" MouseLeave="buttonProjectReports_MouseLeave">Project Reports</Button>
+                        </Grid>
+                    </Grid>
+                    <Grid x:Name="gridTopSettings" Visibility="Collapsed">
+                        <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="20" Foreground="Black">Settings</TextBlock>
+                    </Grid>
                 </Grid>
-                <Grid x:Name="gridTopSettings" Visibility="Collapsed">
-                    <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="20" Foreground="Black">Settings</TextBlock>
-                </Grid>
+                
+            </Grid>
+            <Grid DockPanel.Dock="Bottom" VerticalAlignment="Bottom" Background="#e8e8e8" Height="30">
+
             </Grid>
             <Grid>
-                <Grid x:Name="gridUser" Visibility="Collapsed">
+                <StackPanel Orientation="Horizontal">
+                    <ListView x:Name="listViewSearchResults" Width="0" Style="{DynamicResource ListViewStyleManageMe}">
+
+                    </ListView>
+                    <Grid x:Name="gridUser" Visibility="Collapsed">
                     <TextBlock>User</TextBlock>
                 </Grid>
                 <Grid x:Name="gridDashboard" Visibility="Visible">
@@ -152,12 +190,14 @@
                 <Grid x:Name="gridProjects" Visibility="Collapsed">
                     <TextBlock>Projects</TextBlock>
                 </Grid>
+                <Grid x:Name="gridReports" Visibility="Collapsed">
+                    <TextBlock>Projects</TextBlock>
+                </Grid>
                 <Grid x:Name="gridSettings" Visibility="Collapsed">
                     <TextBlock>Settings</TextBlock>
                 </Grid>
-            </Grid>
-            <Grid DockPanel.Dock="Bottom" VerticalAlignment="Bottom" Background="#e8e8e8" Height="30">
-
+                </StackPanel>
+                
             </Grid>
         </DockPanel>
     </Grid>

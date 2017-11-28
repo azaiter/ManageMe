@@ -9,6 +9,7 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
@@ -23,6 +24,7 @@ namespace ManageMe.Views
         private Utilities.User user;
         private Rectangle lastHighlightNav;
         private Rectangle lastHighlightProjects;
+        private Rectangle lastHighlightReports;
         private Grid lastGridContent;
         private Grid lastGridTop;
 
@@ -38,27 +40,11 @@ namespace ManageMe.Views
 
             lastHighlightNav = highlightDashboard;
             lastHighlightProjects = highlightInProgressProjects;
+            lastHighlightReports = highlightHours;
 
             lastGridContent = gridDashboard;
             lastGridTop = gridTopDashboard;
 
-        }
-
-        private void textBoxSearchNotifications_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            if(textBoxSearchNotifications.Text.Length > 0)
-            {
-                buttonCancelSearchNotifications.Visibility = Visibility.Visible;
-            }
-            else
-            {
-                buttonCancelSearchNotifications.Visibility = Visibility.Hidden;
-            }
-        }
-
-        private void buttonCancelSearchNotifications_Click(object sender, RoutedEventArgs e)
-        {
-            textBoxSearchNotifications.Text = "";
         }
 
         private void buttonViewUser_Click(object sender, RoutedEventArgs e)
@@ -126,6 +112,29 @@ namespace ManageMe.Views
                 lastGridTop.Visibility = Visibility.Collapsed;
                 lastGridContent = gridProjects;
                 lastGridTop = gridTopProjects;
+                lastGridContent.Visibility = Visibility.Visible;
+                lastGridTop.Visibility = Visibility.Visible;
+            }
+        }
+
+        private void buttonReports_Click(object sender, RoutedEventArgs e)
+        {
+            if (lastHighlightNav != null)
+            {
+                lastHighlightNav.Visibility = Visibility.Hidden;
+                lastHighlightNav.Fill = System.Windows.Media.Brushes.Gray;
+                lastHighlightNav = highlightReports;
+                var converter = new System.Windows.Media.BrushConverter();
+                lastHighlightNav.Fill = (Brush)converter.ConvertFromString("#2c75a3");
+                lastHighlightNav.Visibility = Visibility.Visible;
+            }
+
+            if (lastGridContent != gridReports)
+            {
+                lastGridContent.Visibility = Visibility.Collapsed;
+                lastGridTop.Visibility = Visibility.Collapsed;
+                lastGridContent = gridReports;
+                lastGridTop = gridTopReports;
                 lastGridContent.Visibility = Visibility.Visible;
                 lastGridTop.Visibility = Visibility.Visible;
             }
@@ -218,6 +227,22 @@ namespace ManageMe.Views
             }
         }
 
+        private void buttonReports_MouseEnter(object sender, RoutedEventArgs e)
+        {
+            if (highlightReports.Visibility != Visibility.Visible)
+            {
+                highlightReports.Visibility = Visibility.Visible;
+            }
+        }
+
+        private void buttonReports_MouseLeave(object sender, RoutedEventArgs e)
+        {
+            if (highlightReports != lastHighlightNav)
+            {
+                highlightReports.Visibility = Visibility.Hidden;
+            }
+        }
+
         private void buttonAllProjects_Click(object sender, RoutedEventArgs e)
         {
             if (lastHighlightProjects != null)
@@ -254,6 +279,32 @@ namespace ManageMe.Views
                 var converter = new System.Windows.Media.BrushConverter();
                 lastHighlightProjects.Fill = (Brush)converter.ConvertFromString("#2c75a3");
                 lastHighlightProjects.Visibility = Visibility.Visible;
+            }
+        }
+
+        private void buttonHours_Click(object sender, RoutedEventArgs e)
+        {
+            if (lastHighlightReports != null)
+            {
+                lastHighlightReports.Visibility = Visibility.Hidden;
+                lastHighlightReports.Fill = System.Windows.Media.Brushes.Gray;
+                lastHighlightReports = highlightHours;
+                var converter = new System.Windows.Media.BrushConverter();
+                lastHighlightReports.Fill = (Brush)converter.ConvertFromString("#2c75a3");
+                lastHighlightReports.Visibility = Visibility.Visible;
+            }
+        }
+
+        private void buttonProjectReports_Click(object sender, RoutedEventArgs e)
+        {
+            if (lastHighlightProjects != null)
+            {
+                lastHighlightReports.Visibility = Visibility.Hidden;
+                lastHighlightReports.Fill = System.Windows.Media.Brushes.Gray;
+                lastHighlightReports = highlightProjectReports;
+                var converter = new System.Windows.Media.BrushConverter();
+                lastHighlightReports.Fill = (Brush)converter.ConvertFromString("#2c75a3");
+                lastHighlightReports.Visibility = Visibility.Visible;
             }
         }
 
@@ -305,11 +356,63 @@ namespace ManageMe.Views
             }
         }
 
+        private void buttonHours_MouseEnter(object sender, MouseEventArgs e)
+        {
+            if (highlightHours.Visibility != Visibility.Visible)
+            {
+                highlightHours.Visibility = Visibility.Visible;
+            }
+        }
+
+        private void buttonHours_MouseLeave(object sender, MouseEventArgs e)
+        {
+            if (highlightHours != lastHighlightReports)
+            {
+                highlightHours.Visibility = Visibility.Hidden;
+            }
+        }
+
+        private void buttonProjectReports_MouseEnter(object sender, MouseEventArgs e)
+        {
+            if (highlightProjectReports.Visibility != Visibility.Visible)
+            {
+                highlightProjectReports.Visibility = Visibility.Visible;
+            }
+        }
+
+        private void buttonProjectReports_MouseLeave(object sender, MouseEventArgs e)
+        {
+            if (highlightProjectReports != lastHighlightReports)
+            {
+                highlightProjectReports.Visibility = Visibility.Hidden;
+            }
+        }
+
         private void buttonLogout_Click(object sender, RoutedEventArgs e)
         {
             var login = new Login();
             login.Show();
             this.Close();
+        }
+        
+        private void buttonCancelSearchNotifications_Click(object sender, RoutedEventArgs e)
+        {
+            buttonCancelSearchNotifications.Visibility = Visibility.Hidden;
+            textBoxSearchNotifications.Text = "";
+            Storyboard storyBoard = (Storyboard)this.Resources["storyBoardHideSearchPane"];
+            storyBoard.Begin();
+        }
+
+        private void textBoxSearchNotifications_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if(listViewSearchResults.Width == 0)
+            {
+                Storyboard storyBoard = (Storyboard)this.Resources["storyBoardShowSearchPane"];
+                storyBoard.Begin();
+            } else
+            {
+                buttonCancelSearchNotifications.Visibility = Visibility.Visible;
+            }
         }
     }
 }
