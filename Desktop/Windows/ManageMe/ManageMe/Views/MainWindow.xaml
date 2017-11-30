@@ -6,13 +6,49 @@
         xmlns:local="clr-namespace:ManageMe"
         xmlns:views="ManageMe.Views"
         mc:Ignorable="d"
-        Title="ManageMe" Height="900" Width="1200">
+        Title="ManageMe" MinHeight="825" MinWidth="1200" Width="1200" Height="825">
     <Window.Resources>
         <Storyboard x:Key="storyBoardShowSearchPane" Storyboard.Target="{Binding ElementName=listViewSearchResults}">
             <DoubleAnimation Storyboard.TargetProperty="Width" To="250" Duration="0:0:0.25"/>
         </Storyboard>
         <Storyboard x:Key="storyBoardHideSearchPane" Storyboard.Target="{Binding ElementName=listViewSearchResults}">
             <DoubleAnimation Storyboard.TargetProperty="Width" To="0" Duration="0:0:0.25"/>
+        </Storyboard>
+        <Storyboard x:Key="storyBoardHideBottomPopOut">
+            <DoubleAnimation Storyboard.TargetName="bottomPopOut" Storyboard.TargetProperty="Height" To="0" Duration="0:0:0.25"/>
+            <DoubleAnimation Storyboard.TargetName="gridPopOutBackdrop" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.25"/>
+            <ObjectAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="gridPopOutBackdrop" Storyboard.TargetProperty="(UIElement.Visibility)">
+                <DiscreteObjectKeyFrame KeyTime="00:00:00.25" Value="{x:Static Visibility.Collapsed}"/>
+            </ObjectAnimationUsingKeyFrames>
+        </Storyboard>
+        <Storyboard x:Key="storyBoardHideRightPopOut">
+            <DoubleAnimation Storyboard.TargetName="rightPopOut" Storyboard.TargetProperty="Width" To="0" Duration="0:0:0.25"/>
+            <DoubleAnimation Storyboard.TargetName="gridPopOutBackdrop" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.25"/>
+            <ObjectAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="gridPopOutBackdrop" Storyboard.TargetProperty="(UIElement.Visibility)">
+                <DiscreteObjectKeyFrame KeyTime="00:00:00.25" Value="{x:Static Visibility.Collapsed}"/>
+            </ObjectAnimationUsingKeyFrames>
+        </Storyboard>
+        <Storyboard x:Key="storyBoardShowBottomPopOut">
+            <DoubleAnimation Storyboard.TargetName="bottomPopOut" Storyboard.TargetProperty="Height" To="600" Duration="0:0:0.25"/>
+            <DoubleAnimation Storyboard.TargetName="gridPopOutBackdrop" Storyboard.TargetProperty="Opacity" To=".75" Duration="0:0:0.25"/>
+            <ObjectAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="gridPopOutBackdrop" Storyboard.TargetProperty="(UIElement.Visibility)">
+                <DiscreteObjectKeyFrame KeyTime="00:00:00" Value="{x:Static Visibility.Visible}"/>
+            </ObjectAnimationUsingKeyFrames>
+        </Storyboard>
+        <Storyboard x:Key="storyBoardShowRightPopOut">
+            <DoubleAnimation Storyboard.TargetName="rightPopOut" Storyboard.TargetProperty="Width" To="400" Duration="0:0:0.25"/>
+            <DoubleAnimation Storyboard.TargetName="gridPopOutBackdrop" Storyboard.TargetProperty="Opacity" To=".75" Duration="0:0:0.25"/>
+            <ObjectAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="gridPopOutBackdrop" Storyboard.TargetProperty="(UIElement.Visibility)">
+                <DiscreteObjectKeyFrame KeyTime="00:00:00" Value="{x:Static Visibility.Visible}"/>
+            </ObjectAnimationUsingKeyFrames>
+        </Storyboard>
+        <Storyboard x:Key="storyBoardHideAllPopOut">
+            <DoubleAnimation Storyboard.TargetName="bottomPopOut" Storyboard.TargetProperty="Height" To="0" Duration="0:0:0.25"/>
+            <DoubleAnimation Storyboard.TargetName="rightPopOut" Storyboard.TargetProperty="Width" To="0" Duration="0:0:0.25"/>
+            <DoubleAnimation Storyboard.TargetName="gridPopOutBackdrop" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.25"/>
+            <ObjectAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="gridPopOutBackdrop" Storyboard.TargetProperty="(UIElement.Visibility)">
+                <DiscreteObjectKeyFrame KeyTime="00:00:00.25" Value="{x:Static Visibility.Collapsed}"/>
+            </ObjectAnimationUsingKeyFrames>
         </Storyboard>
     </Window.Resources>
     <Grid>
@@ -48,6 +84,9 @@
                             </StackPanel>
                         </Grid>
                         <Grid Grid.Row="2">
+                            <Border x:Name="notificationPending1" Height="15" Width="15" BorderBrush="Red" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0 0 10 0">
+                                <Ellipse Fill="Red"></Ellipse>
+                            </Border>
                             <Rectangle x:Name="highlightDashboard" HorizontalAlignment="Left" Width="10" Fill="#2c75a3" Visibility="Visible"></Rectangle>
                             <StackPanel Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Center">
                                 <Button x:Name="buttonDashboard" Style="{DynamicResource ButtonStyleManageMeNav}" Click="buttonDashboard_Click" MouseEnter="buttonDashboard_MouseEnter" MouseLeave="buttonDashboard_MouseLeave">
@@ -102,6 +141,7 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="250"/>
                     <ColumnDefinition/>
+
                 </Grid.ColumnDefinitions>
                 <Grid Grid.Column="0" Background="#3CA2E0">
                     <Border CornerRadius="15" Margin="10" Background="#68b7e7">
@@ -136,8 +176,8 @@
                             <ColumnDefinition Width="65"/>
                         </Grid.ColumnDefinitions>
                         <Grid Grid.Column="1">
-                            <Rectangle x:Name="highlightAllProjects" VerticalAlignment="Bottom" Height="10" Fill="Gray" Visibility="Hidden"></Rectangle>
-                            <Button x:Name="buttonAllProjects" Style="{DynamicResource ButtonStyleManageMeTopPanel}" Click="buttonAllProjects_Click" MouseEnter="buttonAllProjects_MouseEnter" MouseLeave="buttonAllProjects_MouseLeave">All</Button>
+                            <Rectangle x:Name="highlightPendingProjects" VerticalAlignment="Bottom" Height="10" Fill="Gray" Visibility="Hidden"></Rectangle>
+                            <Button x:Name="buttonPendingProjects" Style="{DynamicResource ButtonStyleManageMeTopPanel}" Click="buttonPendingProjects_Click" MouseEnter="buttonPendingProjects_MouseEnter" MouseLeave="buttonPendingProjects_MouseLeave">Pending</Button>
                         </Grid>
                         <Grid Grid.Column="2">
                             <Rectangle x:Name="highlightInProgressProjects" VerticalAlignment="Bottom" Height="10" Fill="#2c75a3" Visibility="Visible"></Rectangle>
@@ -147,7 +187,7 @@
                             <Rectangle x:Name="highlightCompletedProjects" VerticalAlignment="Bottom" Height="10" Fill="Gray" Visibility="Hidden"></Rectangle>
                             <Button x:Name="buttonCompleted" Style="{DynamicResource ButtonStyleManageMeTopPanel}" Click="buttonCompleted_Click" MouseEnter="buttonCompleted_MouseEnter" MouseLeave="buttonCompleted_MouseLeave">Completed</Button>
                         </Grid>
-                        <Button Grid.Column="5" Style="{DynamicResource ButtonStyleAddProject}">
+                        <Button Grid.Column="5" Style="{DynamicResource ButtonStyleAddProject}" ToolTip="Add Project">
                             <Image Margin="10" Source="/ManageMe;component/Resources/Images/add.png"></Image>
                         </Button>
                     </Grid>
@@ -171,33 +211,208 @@
                         <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="20" Foreground="Black">Settings</TextBlock>
                     </Grid>
                 </Grid>
-                
+
             </Grid>
             <Grid DockPanel.Dock="Bottom" VerticalAlignment="Bottom" Background="#e8e8e8" Height="30">
 
             </Grid>
-            <Grid>
-                <StackPanel Orientation="Horizontal">
-                    <ListView x:Name="listViewSearchResults" Width="0" Style="{DynamicResource ListViewStyleManageMe}">
+            <Grid x:Name="gridContent">
+                <DockPanel>
+                    <ListView x:Name="listViewSearchResults" DockPanel.Dock="Left" Width="0" Style="{DynamicResource ListViewStyleManageMe}">
 
                     </ListView>
-                    <Grid x:Name="gridUser" Visibility="Collapsed">
-                    <TextBlock>User</TextBlock>
-                </Grid>
-                <Grid x:Name="gridDashboard" Visibility="Visible">
-                    <TextBlock>Dashboard</TextBlock>
-                </Grid>
-                <Grid x:Name="gridProjects" Visibility="Collapsed">
-                    <TextBlock>Projects</TextBlock>
-                </Grid>
-                <Grid x:Name="gridReports" Visibility="Collapsed">
-                    <TextBlock>Projects</TextBlock>
-                </Grid>
-                <Grid x:Name="gridSettings" Visibility="Collapsed">
-                    <TextBlock>Settings</TextBlock>
-                </Grid>
-                </StackPanel>
-                
+                    <Grid>
+                        <Grid x:Name="gridUser" Visibility="Collapsed">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="450"/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <Grid Grid.Row="0">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition MaxWidth="800"/>
+                                            <ColumnDefinition Width="450"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Border Grid.Row="0" Margin="15" BorderBrush="#68b7e7" BorderThickness="2">
+                                            <Grid>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="30"/>
+                                                    <RowDefinition/>
+                                                </Grid.RowDefinitions>
+                                                <Grid Grid.Row="0" Background="#68b7e7" Margin="-1">
+                                                    <TextBlock VerticalAlignment="Center" Foreground="White" Margin="10 0 0 0">My Information</TextBlock>
+                                                </Grid>
+                                            </Grid>
+                                        </Border>
+                                        <Border Grid.Column="1" Margin="15" BorderBrush="#68b7e7" BorderThickness="2">
+                                            <Grid>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="30"/>
+                                                    <RowDefinition/>
+                                                    <RowDefinition Height="50"/>
+                                                </Grid.RowDefinitions>
+                                                <Grid Grid.Row="0" Background="#68b7e7" Margin="-1">
+                                                    <TextBlock VerticalAlignment="Center" Foreground="White" Margin="10 0 0 0">Profile Picture</TextBlock>
+                                                </Grid>
+                                                <Image Grid.Row="1" Height="300" Width="300" VerticalAlignment="Center" Source="/ManageMe;component/Resources/Images/user.png">
+                                                </Image>
+                                                <Button Grid.Row="2" x:Name="buttonSelectProfilePicture" Margin="0 0 0 5" BorderBrush="#FF707070" Style="{DynamicResource ButtonStyleManageMeInverted}">Select Image</Button>
+                                                <Grid Grid.Row="2">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition/>
+                                                        <ColumnDefinition/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <Button Grid.Column="0" x:Name="buttonCancelProfilePictureChange" Margin="0 0 0 5" BorderBrush="#FF707070" Visibility="Collapsed" Style="{DynamicResource ButtonStyleManageMeInverted}">Cancel</Button>
+                                                    <Button Grid.Column="1" x:Name="buttonUpdateProfilePictureChange" Margin="0 0 0 5" BorderBrush="#FF707070" Visibility="Collapsed"  Style="{DynamicResource ButtonStyleManageMeInverted}">Update</Button>
+                                                </Grid>
+                                            </Grid>
+                                        </Border>
+                                    </Grid>
+                                </Grid>
+                                <Grid Grid.Row="1">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition MaxWidth="600"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Border Grid.Column="0" Margin="15" BorderBrush="#68b7e7" BorderThickness="2">
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="30"/>
+                                                <RowDefinition/>
+                                            </Grid.RowDefinitions>
+                                            <Grid Grid.Row="0" Background="#68b7e7" Margin="-1">
+                                                <TextBlock VerticalAlignment="Center" Foreground="White" Margin="10 0 0 0">My History</TextBlock>
+                                            </Grid>
+                                        </Grid>
+                                    </Border>
+                                </Grid>
+                            </Grid>
+                            
+                        </Grid>
+                        <Grid x:Name="gridDashboard" Visibility="Visible">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="180"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid Grid.Column="0">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="350"/>
+                                    <RowDefinition Height="350"/>
+                                    <RowDefinition />
+                                </Grid.RowDefinitions>
+                                <Border Grid.Row="0" Margin="15" BorderBrush="#68b7e7" BorderThickness="2">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="30"/>
+                                            <RowDefinition/>
+                                        </Grid.RowDefinitions>
+                                        <Grid Grid.Row="0" Background="#68b7e7" Margin="-1">
+                                            <TextBlock VerticalAlignment="Center" Foreground="White" Margin="10 0 0 0">Hours by Day (This Week)</TextBlock>
+                                        </Grid>
+                                    </Grid>
+                                </Border>
+                                <Grid Grid.Row="1">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition MaxWidth="400"/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid Grid.Column="0">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition/>
+                                            <RowDefinition/>
+                                        </Grid.RowDefinitions>
+                                        <Border Grid.Row="0" Margin="15" BorderBrush="#68b7e7" BorderThickness="2">
+                                            <Grid>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="30"/>
+                                                    <RowDefinition/>
+                                                </Grid.RowDefinitions>
+                                                <Grid Grid.Row="0" Background="#68b7e7" Margin="-1">
+                                                    <TextBlock VerticalAlignment="Center" Foreground="White" Margin="10 0 0 0">Hours</TextBlock>
+                                                </Grid>
+                                            </Grid>
+                                        </Border>
+                                        <Border Grid.Row="1" Margin="15" BorderBrush="#68b7e7" BorderThickness="2">
+                                            <Grid>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="30"/>
+                                                    <RowDefinition/>
+                                                </Grid.RowDefinitions>
+                                                <Grid Grid.Row="0" Background="#68b7e7" Margin="-1">
+                                                    <TextBlock VerticalAlignment="Center" Foreground="White" Margin="10 0 0 0">Requirements Completed</TextBlock>
+                                                </Grid>
+                                            </Grid>
+                                        </Border>
+                                    </Grid>
+                                    
+                                    <Border Grid.Column="1" Margin="15" BorderBrush="#68b7e7" BorderThickness="2">
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="30"/>
+                                                <RowDefinition/>
+                                            </Grid.RowDefinitions>
+                                            <Grid Grid.Row="0" Background="#68b7e7" Margin="-1">
+                                                <TextBlock VerticalAlignment="Center" Foreground="White" Margin="10 0 0 0">Notifications</TextBlock>
+                                                <Border x:Name="notificationPending2" Height="15" Width="15" BorderBrush="Red" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0 0 10 0">
+                                                    <Ellipse Fill="Red"></Ellipse>
+                                                </Border>
+                                            </Grid>
+                                        </Grid>
+                                    </Border>
+                                </Grid>
+                            </Grid>
+                            <Grid Grid.Column="1">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="700"/>
+                                    <RowDefinition />
+                                </Grid.RowDefinitions>
+                                <Border Grid.Column="0" Margin="15" BorderBrush="#68b7e7" BorderThickness="2">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="30"/>
+                                            <RowDefinition/>
+                                        </Grid.RowDefinitions>
+                                        <Grid Grid.Row="0" Background="#68b7e7" Margin="-1">
+                                            <TextBlock VerticalAlignment="Center" Foreground="White" Margin="10 0 0 0">Management</TextBlock>
+                                        </Grid>
+                                        <StackPanel Grid.Row="1" Orientation="Vertical">
+                                            <Button Grid.Row="2" Margin="5 10 5 5" Style="{DynamicResource ButtonStyleManageMeInverted}">Add User</Button>
+                                            <Button Grid.Row="2" Margin="5" Style="{DynamicResource ButtonStyleManageMeInverted}">Edit User</Button>
+                                            <Button Grid.Row="2" Margin="5" Style="{DynamicResource ButtonStyleManageMeInverted}">Add Team</Button>
+                                            <Button Grid.Row="2" Margin="5" Style="{DynamicResource ButtonStyleManageMeInverted}">Edit Team</Button>
+                                            <Button Grid.Row="2" Margin="5" Style="{DynamicResource ButtonStyleManageMeInverted}">Add Pay Rate</Button>
+                                            <Button Grid.Row="2" Margin="5" Style="{DynamicResource ButtonStyleManageMeInverted}">Edit Pay Rate</Button>
+                                        </StackPanel>
+                                    </Grid>
+                                </Border>
+                            </Grid>
+                        </Grid>
+                        <Grid x:Name="gridProjects" Visibility="Collapsed">
+                            <TextBlock>Projects</TextBlock>
+                        </Grid>
+                        <Grid x:Name="gridReports" Visibility="Collapsed">
+                            <TextBlock>Projects</TextBlock>
+                        </Grid>
+                        <Grid x:Name="gridSettings" Visibility="Collapsed">
+                            <TextBlock>Settings</TextBlock>
+                        </Grid>
+                        <Grid x:Name="gridPopOutBackdrop" Background="Black" Visibility="Collapsed" Opacity="0" MouseDown="HidePopOuts">
+                            <Grid.Triggers>
+                                <EventTrigger RoutedEvent="FrameworkElement.MouseDown">
+                                    <BeginStoryboard Storyboard="{StaticResource storyBoardHideAllPopOut}"/>
+                                </EventTrigger> 
+                            </Grid.Triggers>
+                        </Grid>
+                        <Grid x:Name="rightPopOut" MaxWidth="{Binding ElementName=gridContent, Path=ActualWidth}" Width="0" Height="400" HorizontalAlignment="Right" Background="White">
+                        </Grid>
+                        <StackPanel Orientation="Vertical" VerticalAlignment="Bottom">
+                            <StackPanel x:Name="stackPanelTabs" Orientation="Horizontal" FlowDirection="LeftToRight"></StackPanel>
+                            <Grid x:Name="bottomPopOut" MaxHeight="{Binding ElementName=gridContent, Path=ActualHeight}" Height="0" Background="White">
+
+                            </Grid>
+                        </StackPanel>
+                    </Grid>
+                </DockPanel>
             </Grid>
         </DockPanel>
     </Grid>

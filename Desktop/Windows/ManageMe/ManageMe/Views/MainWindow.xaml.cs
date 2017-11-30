@@ -33,6 +33,21 @@ namespace ManageMe.Views
             InitializeComponent();
         }
 
+        private void ShowPopOutBackDrop(object sender, EventArgs e)
+        {
+            gridPopOutBackdrop.Visibility = Visibility.Visible;
+        }
+
+        private void HidePopOutBackDrop(object sender, EventArgs e)
+        {
+            gridPopOutBackdrop.Visibility = Visibility.Hidden;
+        }
+
+        private void HidePopOuts(object sender, MouseEventArgs e)
+        {
+
+        }
+
         public MainWindow(string token)
         {
             InitializeComponent();
@@ -243,13 +258,13 @@ namespace ManageMe.Views
             }
         }
 
-        private void buttonAllProjects_Click(object sender, RoutedEventArgs e)
+        private void buttonPendingProjects_Click(object sender, RoutedEventArgs e)
         {
             if (lastHighlightProjects != null)
             {
                 lastHighlightProjects.Visibility = Visibility.Hidden;
                 lastHighlightProjects.Fill = System.Windows.Media.Brushes.Gray;
-                lastHighlightProjects = highlightAllProjects;
+                lastHighlightProjects = highlightPendingProjects;
                 var converter = new System.Windows.Media.BrushConverter();
                 lastHighlightProjects.Fill = (Brush)converter.ConvertFromString("#2c75a3");
                 lastHighlightProjects.Visibility = Visibility.Visible;
@@ -308,19 +323,19 @@ namespace ManageMe.Views
             }
         }
 
-        private void buttonAllProjects_MouseEnter(object sender, MouseEventArgs e)
+        private void buttonPendingProjects_MouseEnter(object sender, MouseEventArgs e)
         {
-            if (highlightAllProjects.Visibility != Visibility.Visible)
+            if (highlightPendingProjects.Visibility != Visibility.Visible)
             {
-                highlightAllProjects.Visibility = Visibility.Visible;
+                highlightPendingProjects.Visibility = Visibility.Visible;
             }
         }
 
-        private void buttonAllProjects_MouseLeave(object sender, MouseEventArgs e)
+        private void buttonPendingProjects_MouseLeave(object sender, MouseEventArgs e)
         {
-            if (highlightAllProjects != lastHighlightProjects)
+            if (highlightPendingProjects != lastHighlightProjects)
             {
-                highlightAllProjects.Visibility = Visibility.Hidden;
+                highlightPendingProjects.Visibility = Visibility.Hidden;
             }
         }
 
