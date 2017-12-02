@@ -1,0 +1,79 @@
+﻿<UserControl x:Class="ManageMe.Views.Controls.ProjectListItem"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:ManageMe.Views.Controls"
+             xmlns:converters="clr-namespace:ManageMe.Models.Converters"
+             mc:Ignorable="d" 
+             d:DesignHeight="50" d:DesignWidth="1000" Background="White">
+    <UserControl.Resources>
+        <converters:ProgressForegroundConverter x:Key="ProgressForegroundConverter"/>
+    </UserControl.Resources>
+    <Grid Height="55">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="2*"/>
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <TextBlock x:Name="textBlockProjectName" Grid.Row="0">Project Name</TextBlock>
+            <TextBlock x:Name="textBlockProjectCompany" Grid.Row="1">Project Company</TextBlock>
+        </Grid>
+        <StackPanel x:Name="listViewAssignedTo" Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Center" FlowDirection="RightToLeft">
+            <Ellipse Height="40" Width="40" Margin="-5">
+                <Ellipse.Fill>
+                    <!--<ImageBrush ImageSource="/ManageMe;component/Resources/Images/dashboard.png"/>-->
+                    <SolidColorBrush Color="Red"/>
+                </Ellipse.Fill>
+            </Ellipse>
+            <Ellipse Height="40" Width="40" Margin="-5">
+                <Ellipse.Fill>
+                    <!--<ImageBrush ImageSource="/ManageMe;component/Resources/Images/dashboard.png"/>-->
+                    <SolidColorBrush Color="Green"/>
+                </Ellipse.Fill>
+            </Ellipse>
+            <Ellipse Height="40" Width="40" Margin="-5">
+                <Ellipse.Fill>
+                    <!--<ImageBrush ImageSource="/ManageMe;component/Resources/Images/dashboard.png"/>-->
+                    <SolidColorBrush Color="Blue"/>
+                </Ellipse.Fill>
+            </Ellipse>
+            <Ellipse Height="40" Width="40" Margin="-5">
+                <Ellipse.Fill>
+                    <!--<ImageBrush ImageSource="/ManageMe;component/Resources/Images/dashboard.png"/>-->
+                    <SolidColorBrush Color="Purple"/>
+                </Ellipse.Fill>
+            </Ellipse>
+        </StackPanel>
+        <Grid Grid.Column="2">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <ProgressBar Grid.Row="0" x:Name="progressBarProgress" Value="95"
+                         BorderThickness="0" 
+                         Background="Transparent" 
+                         Height="20" Margin="40 0 0 0" 
+                         Width="100" 
+                         HorizontalAlignment="Left"
+                         VerticalAlignment="Center" 
+                         Foreground="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Value, Converter={StaticResource ProgressForegroundConverter}}" />
+            <TextBlock x:Name="textBlockProgress" Grid.Row="1">$500/$500</TextBlock>
+        </Grid>
+        <Grid Grid.Column="4">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <TextBlock x:Name="textBlockDeadline" Grid.Row="0">Monday Dec 24th 2017</TextBlock>
+            <TextBlock x:Name="textBlockRemainingDays" Grid.Row="4">11 Days</TextBlock>
+        </Grid>
+        <Border VerticalAlignment="Bottom" BorderBrush="#bcbcbc" BorderThickness="1" Grid.ColumnSpan="4"/>
+    </Grid>
+</UserControl>

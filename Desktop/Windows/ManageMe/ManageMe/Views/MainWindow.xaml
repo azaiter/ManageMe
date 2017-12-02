@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ManageMe"
         xmlns:views="ManageMe.Views"
+        xmlns:Controls="clr-namespace:ManageMe.Views.Controls"
         mc:Ignorable="d"
         Title="ManageMe" MinHeight="825" MinWidth="1200" Width="1200" Height="825">
     <Window.Resources>
@@ -140,7 +141,7 @@
             <Grid DockPanel.Dock="Top" Background="#e8e8e8" Height="50">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="250"/>
-                    <ColumnDefinition/>
+                    <ColumnDefinition />
 
                 </Grid.ColumnDefinitions>
                 <Grid Grid.Column="0" Background="#3CA2E0">
@@ -287,7 +288,7 @@
                                     </Border>
                                 </Grid>
                             </Grid>
-                            
+
                         </Grid>
                         <Grid x:Name="gridDashboard" Visibility="Visible">
                             <Grid.ColumnDefinitions>
@@ -344,7 +345,7 @@
                                             </Grid>
                                         </Border>
                                     </Grid>
-                                    
+
                                     <Border Grid.Column="1" Margin="15" BorderBrush="#68b7e7" BorderThickness="2">
                                         <Grid>
                                             <Grid.RowDefinitions>
@@ -363,7 +364,7 @@
                             </Grid>
                             <Grid Grid.Column="1">
                                 <Grid.RowDefinitions>
-                                    <RowDefinition Height="700"/>
+                                    <RowDefinition Height="500"/>
                                     <RowDefinition />
                                 </Grid.RowDefinitions>
                                 <Border Grid.Column="0" Margin="15" BorderBrush="#68b7e7" BorderThickness="2">
@@ -376,34 +377,42 @@
                                             <TextBlock VerticalAlignment="Center" Foreground="White" Margin="10 0 0 0">Management</TextBlock>
                                         </Grid>
                                         <StackPanel Grid.Row="1" Orientation="Vertical">
-                                            <Button Grid.Row="2" Margin="5 10 5 5" Style="{DynamicResource ButtonStyleManageMeInverted}">Add User</Button>
-                                            <Button Grid.Row="2" Margin="5" Style="{DynamicResource ButtonStyleManageMeInverted}">Edit User</Button>
-                                            <Button Grid.Row="2" Margin="5" Style="{DynamicResource ButtonStyleManageMeInverted}">Add Team</Button>
+                                            <Button Grid.Row="2" Margin="5 10 5 5" Style="{DynamicResource ButtonStyleManageMeInverted}">Create Project</Button>
+                                            <Button Grid.Row="2" Margin="5" Style="{DynamicResource ButtonStyleManageMeInverted}">Edit Project</Button>
+                                            <Button Grid.Row="2" Margin="5" Style="{DynamicResource ButtonStyleManageMeInverted}">Create Requirement</Button>
+                                            <Button Grid.Row="2" Margin="5" Style="{DynamicResource ButtonStyleManageMeInverted}">Edit Requirement</Button>
+                                            <Button Grid.Row="2" Margin="5" Style="{DynamicResource ButtonStyleManageMeInverted}">Create Team</Button>
                                             <Button Grid.Row="2" Margin="5" Style="{DynamicResource ButtonStyleManageMeInverted}">Edit Team</Button>
-                                            <Button Grid.Row="2" Margin="5" Style="{DynamicResource ButtonStyleManageMeInverted}">Add Pay Rate</Button>
+                                            <Button Grid.Row="2" Margin="5" Style="{DynamicResource ButtonStyleManageMeInverted}">Create User</Button>
+                                            <Button Grid.Row="2" Margin="5" Style="{DynamicResource ButtonStyleManageMeInverted}">Edit User</Button>
+                                            <Button Grid.Row="2" Margin="5" Style="{DynamicResource ButtonStyleManageMeInverted}">Create Pay Rate</Button>
                                             <Button Grid.Row="2" Margin="5" Style="{DynamicResource ButtonStyleManageMeInverted}">Edit Pay Rate</Button>
+                                            <Button Grid.Row="2" Margin="5" Style="{DynamicResource ButtonStyleManageMeInverted}">Create Role</Button>
+                                            <Button Grid.Row="2" Margin="5" Style="{DynamicResource ButtonStyleManageMeInverted}">Edit Role</Button>
                                         </StackPanel>
                                     </Grid>
                                 </Border>
                             </Grid>
                         </Grid>
                         <Grid x:Name="gridProjects" Visibility="Collapsed">
-                            <TextBlock>Projects</TextBlock>
+                            <Controls:ProjectList x:Name="projectListPending" ProjectType="Pending" Visibility="Collapsed"/>
+                            <Controls:ProjectList x:Name="projectListInProgress" ProjectType="InProgress" Visibility="Visible"/>
+                            <Controls:ProjectList x:Name="projectListCompleted" ProjectType="Completed" Visibility="Collapsed"/>
                         </Grid>
                         <Grid x:Name="gridReports" Visibility="Collapsed">
-                            <TextBlock>Projects</TextBlock>
+                            <TextBlock>Reports</TextBlock>
                         </Grid>
                         <Grid x:Name="gridSettings" Visibility="Collapsed">
-                            <TextBlock>Settings</TextBlock>
+
                         </Grid>
                         <Grid x:Name="gridPopOutBackdrop" Background="Black" Visibility="Collapsed" Opacity="0" MouseDown="HidePopOuts">
                             <Grid.Triggers>
                                 <EventTrigger RoutedEvent="FrameworkElement.MouseDown">
                                     <BeginStoryboard Storyboard="{StaticResource storyBoardHideAllPopOut}"/>
-                                </EventTrigger> 
+                                </EventTrigger>
                             </Grid.Triggers>
                         </Grid>
-                        <Grid x:Name="rightPopOut" MaxWidth="{Binding ElementName=gridContent, Path=ActualWidth}" Width="0" Height="400" HorizontalAlignment="Right" Background="White">
+                        <Grid x:Name="rightPopOut" MaxWidth="{Binding ElementName=gridContent, Path=ActualWidth}" HorizontalAlignment="Right" Background="White">
                         </Grid>
                         <StackPanel Orientation="Vertical" VerticalAlignment="Bottom">
                             <StackPanel x:Name="stackPanelTabs" Orientation="Horizontal" FlowDirection="LeftToRight"></StackPanel>

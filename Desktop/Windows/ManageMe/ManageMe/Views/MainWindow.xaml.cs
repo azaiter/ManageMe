@@ -268,6 +268,9 @@ namespace ManageMe.Views
                 var converter = new System.Windows.Media.BrushConverter();
                 lastHighlightProjects.Fill = (Brush)converter.ConvertFromString("#2c75a3");
                 lastHighlightProjects.Visibility = Visibility.Visible;
+                projectListPending.Visibility = Visibility.Visible;
+                projectListCompleted.Visibility = Visibility.Collapsed;
+                projectListInProgress.Visibility = Visibility.Collapsed;
             }
         }
 
@@ -281,6 +284,9 @@ namespace ManageMe.Views
                 var converter = new System.Windows.Media.BrushConverter();
                 lastHighlightProjects.Fill = (Brush)converter.ConvertFromString("#2c75a3");
                 lastHighlightProjects.Visibility = Visibility.Visible;
+                projectListPending.Visibility = Visibility.Collapsed;
+                projectListCompleted.Visibility = Visibility.Collapsed;
+                projectListInProgress.Visibility = Visibility.Visible;
             }
         }
 
@@ -294,6 +300,9 @@ namespace ManageMe.Views
                 var converter = new System.Windows.Media.BrushConverter();
                 lastHighlightProjects.Fill = (Brush)converter.ConvertFromString("#2c75a3");
                 lastHighlightProjects.Visibility = Visibility.Visible;
+                projectListPending.Visibility = Visibility.Collapsed;
+                projectListCompleted.Visibility = Visibility.Visible;
+                projectListInProgress.Visibility = Visibility.Collapsed;
             }
         }
 

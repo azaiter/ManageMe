@@ -10,11 +10,11 @@ none
 false
 DEBUG;TRACE
 C:\Users\Trent Killinger\Documents\GitHub\manageme\Desktop\Windows\ManageMe\ManageMe\App.xaml
-2-800704520
+4-1802892323
 
-111629904185
+14-831672305
 151700605255
-Views\Login.xaml;Views\MainWindow.xaml;
+Views\Controls\ProjectList.xaml;Views\Controls\ProjectListItem.xaml;Views\Login.xaml;Views\MainWindow.xaml;
 
 False
 
