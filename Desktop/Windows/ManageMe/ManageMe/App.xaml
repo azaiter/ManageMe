@@ -412,7 +412,6 @@
         <Style x:Key="TextBlockStyleProjectHeadersList" TargetType="{x:Type TextBlock}">
             <Setter Property="TextWrapping" Value="NoWrap"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
-            <Setter Property="Padding" Value="40 0 0 0"/>
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="Foreground" Value="#292b2c"/>
             <Setter Property="FontWeight" Value="Bold"/>

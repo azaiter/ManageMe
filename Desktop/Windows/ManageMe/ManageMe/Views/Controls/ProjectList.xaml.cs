@@ -23,23 +23,12 @@ namespace ManageMe.Views.Controls
     {
         private string sessionID;
         private ProjectTypes projectType;
-        private System.Timers.Timer updateTimer;
 
         public ProjectList()
         {
             InitializeComponent();
             this.sessionID = "";
             projectType = ProjectTypes.InProgress;
-            updateTimer = new System.Timers.Timer();
-            updateTimer.AutoReset = true;
-            updateTimer.Interval = 5000;
-            updateTimer.Elapsed += new System.Timers.ElapsedEventHandler(updateTimer_Elapsed);
-
-        }
-
-        private void updateTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
-        {
-            UpdateList();
         }
 
         public string SessionID {
@@ -49,15 +38,16 @@ namespace ManageMe.Views.Controls
             }
         }
 
-        public void Start()
+        public async void UpdateList()
         {
-            UpdateList();
-            updateTimer.Start();
-        }
+            var projectList = await Utilities.API.GetProjects(sessionID);
 
-        public void UpdateList()
-        {
+            stackPanelProjects.Children.Clear();
 
+            foreach (Models.JsonModels.JsonProject p in projectList)
+            {
+                stackPanelProjects.Children.Add(new ProjectListItem() { ProjectName = p.name, ProjectCompany = p.name , Progress = (new Random().NextDouble() * 100), Deadline = DateTime.Now.AddDays(7) });
+            }
         }
 
         public ProjectTypes ProjectType

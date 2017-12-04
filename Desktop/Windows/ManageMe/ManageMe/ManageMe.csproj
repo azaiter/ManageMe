@@ -85,7 +85,9 @@
     <Compile Include="Models\Converters\ProgressForegroundConverter.cs" />
     <Compile Include="Models\JsonModels\JsonAuthenticationMessage.cs" />
     <Compile Include="Models\JsonModels\JsonAuthentification.cs" />
+    <Compile Include="Models\JsonModels\JsonProject.cs" />
     <Compile Include="Models\Result.cs" />
+    <Compile Include="Utilities\API.cs" />
     <Compile Include="Utilities\User.cs" />
     <Compile Include="Utilities\Utilities.cs" />
     <Compile Include="Views\Controls\ProjectList.xaml.cs">

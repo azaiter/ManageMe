@@ -20,9 +20,74 @@ namespace ManageMe.Views.Controls
     /// </summary>
     public partial class ProjectListItem : UserControl
     {
+        private int id;
+
         public ProjectListItem()
         {
             InitializeComponent();
+            id = 0;
         }
+
+        public string ProjectName
+        {
+            set
+            {
+                textBlockProjectName.Text = value;
+            }
+            get
+            {
+                return textBlockProjectName.Text;
+            }
+        }
+
+        public string ProjectCompany
+        {
+            set
+            {
+                textBlockProjectCompany.Text = value;
+            }
+            get
+            {
+                return textBlockProjectCompany.Text;
+            }
+        }
+
+        public double Progress
+        {
+            set
+            {
+                progressBarProgress.Value = value;
+            }
+            get
+            {
+                return progressBarProgress.Value;
+            }
+        }
+
+        public string ProgressText
+        {
+            set
+            {
+                textBlockProgress.Text = value;
+            }
+            get
+            {
+                return textBlockProgress.Text;
+            }
+        }
+
+        public DateTime Deadline
+        {
+            set
+            {
+                textBlockDeadline.Text = value.ToLongDateString();
+                textBlockRemainingDays.Text = (value.Date - DateTime.Now).Days.ToString() + " days remaining";
+            }
+            get
+            {
+                return DateTime.Parse(textBlockDeadline.Text);
+            }
+        }
+
     }
 }

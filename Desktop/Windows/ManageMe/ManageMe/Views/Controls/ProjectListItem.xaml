@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:ManageMe.Views.Controls"
              xmlns:converters="clr-namespace:ManageMe.Models.Converters"
              mc:Ignorable="d" 
-             d:DesignHeight="50" d:DesignWidth="1000" Background="White">
+             d:DesignHeight="55" d:DesignWidth="1000" Background="White">
     <UserControl.Resources>
         <converters:ProgressForegroundConverter x:Key="ProgressForegroundConverter"/>
     </UserControl.Resources>
@@ -16,16 +16,25 @@
             <ColumnDefinition Width="2*"/>
             <ColumnDefinition Width="2*"/>
             <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="200"/>
         </Grid.ColumnDefinitions>
         <Grid Grid.Column="0">
             <Grid.RowDefinitions>
                 <RowDefinition/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
-            <TextBlock x:Name="textBlockProjectName" Grid.Row="0">Project Name</TextBlock>
-            <TextBlock x:Name="textBlockProjectCompany" Grid.Row="1">Project Company</TextBlock>
+            <TextBlock x:Name="textBlockProjectName" 
+                       Grid.Row="0"
+                       VerticalAlignment="Bottom"
+                       FontSize="16"
+                       Margin="40 0 0 0">Project Name</TextBlock>
+            <TextBlock x:Name="textBlockProjectCompany"
+                       Grid.Row="1"
+                       VerticalAlignment="Top"
+                       Margin="40 0 0 0"
+                       Foreground="#3a3a3a">Project Company</TextBlock>
         </Grid>
-        <StackPanel x:Name="listViewAssignedTo" Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Center" FlowDirection="RightToLeft">
+        <StackPanel x:Name="listViewAssignedTo" Orientation="Horizontal" Grid.Column="1" Margin="5" HorizontalAlignment="Left" FlowDirection="RightToLeft">
             <Ellipse Height="40" Width="40" Margin="-5">
                 <Ellipse.Fill>
                     <!--<ImageBrush ImageSource="/ManageMe;component/Resources/Images/dashboard.png"/>-->
@@ -59,21 +68,22 @@
             <ProgressBar Grid.Row="0" x:Name="progressBarProgress" Value="95"
                          BorderThickness="0" 
                          Background="Transparent" 
-                         Height="20" Margin="40 0 0 0" 
+                         Height="20"
                          Width="100" 
                          HorizontalAlignment="Left"
-                         VerticalAlignment="Center" 
+                         VerticalAlignment="Bottom" 
                          Foreground="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Value, Converter={StaticResource ProgressForegroundConverter}}" />
-            <TextBlock x:Name="textBlockProgress" Grid.Row="1">$500/$500</TextBlock>
+            <TextBlock x:Name="textBlockProgress" Grid.Row="1" Foreground="#3a3a3a">$500/$500</TextBlock>
         </Grid>
-        <Grid Grid.Column="4">
+        <Grid Grid.Column="3">
             <Grid.RowDefinitions>
                 <RowDefinition/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
-            <TextBlock x:Name="textBlockDeadline" Grid.Row="0">Monday Dec 24th 2017</TextBlock>
-            <TextBlock x:Name="textBlockRemainingDays" Grid.Row="4">11 Days</TextBlock>
+            <TextBlock x:Name="textBlockDeadline" Grid.Row="0" VerticalAlignment="Bottom" FontSize="14">Monday Dec 24th</TextBlock>
+            <TextBlock x:Name="textBlockRemainingDays" Grid.Row="1" Foreground="#3a3a3a">11 Days</TextBlock>
         </Grid>
-        <Border VerticalAlignment="Bottom" BorderBrush="#bcbcbc" BorderThickness="1" Grid.ColumnSpan="4"/>
+        <Button Grid.Column="5" Style="{DynamicResource ButtonStyleManageMeInverted}" >View</Button>
+        <Border VerticalAlignment="Bottom" BorderBrush="#bcbcbc" BorderThickness="1" Grid.ColumnSpan="5"/>
     </Grid>
 </UserControl>

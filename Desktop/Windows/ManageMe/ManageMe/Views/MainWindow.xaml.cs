@@ -31,6 +31,7 @@ namespace ManageMe.Views
         public MainWindow()
         {
             InitializeComponent();
+
         }
 
         private void ShowPopOutBackDrop(object sender, EventArgs e)
@@ -59,6 +60,9 @@ namespace ManageMe.Views
 
             lastGridContent = gridDashboard;
             lastGridTop = gridTopDashboard;
+
+            projectListInProgress.SessionID = token;
+            projectListInProgress.UpdateList();
 
         }
 
@@ -287,6 +291,7 @@ namespace ManageMe.Views
                 projectListPending.Visibility = Visibility.Collapsed;
                 projectListCompleted.Visibility = Visibility.Collapsed;
                 projectListInProgress.Visibility = Visibility.Visible;
+                projectListInProgress.UpdateList();
             }
         }
 
