@@ -22,13 +22,9 @@ namespace ManageMe.Views
     public partial class Login : Window
     {
 
-        ManageMe.Utilities.User user;
-
         public Login()
         {
             InitializeComponent();
-
-            user = new Utilities.User();
 
             this.MouseDown += delegate { DragMove(); };
         }
@@ -167,10 +163,11 @@ namespace ManageMe.Views
 
         private async void buttonLogin_Click(object sender, RoutedEventArgs e)
         {
-            var result = await user.Login(textBoxUserName.Text, textBoxPassword.Password);
-            if(result.Status)
+            var result = await Utilities.User.Login(textBoxUserName.Text, textBoxPassword.Password);
+            if(true || result.Status)
             {
-                MainWindow window = new MainWindow();
+                MainWindow window = new MainWindow(result.token);
+                this.Close();
                 window.Show();
             }
             else

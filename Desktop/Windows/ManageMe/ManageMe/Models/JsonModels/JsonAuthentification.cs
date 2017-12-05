@@ -10,5 +10,12 @@ namespace ManageMe.Models.JsonModels
     {
         public JsonAuthenticationMessage message { get; set; }
         public bool Status { get; set; }
+        public string expire { get; set; }
+        public string token { get; set; }
+
+        public JsonAuthentification()
+        {
+            message = new JsonAuthenticationMessage();
+        }
     }
 }

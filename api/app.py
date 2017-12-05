@@ -25,6 +25,11 @@ from resources.login import login
 from resources.register import register
 from resources.createproject import createproject
 from resources.getprojects import getprojects
+from resources.createteam import createteam
+from resources.viewhours import viewhours
+from resources.clockin import clockin
+from resources.clockout import clockout
+from resources.disableuser import disableuser
 
 # define the app and run it
 app = Flask(__name__)
@@ -47,6 +52,11 @@ api.add_resource(login, '/user/login', '/user/login/')
 api.add_resource(register, '/user/create', '/user/create/')
 api.add_resource(createproject, '/project/create', '/project/create/')
 api.add_resource(getprojects, '/project/get', '/project/get/')
+api.add_resource(createteam, '/team/create', '/team/create/')
+api.add_resource(viewhours, '/clock/get', '/clock/get/')
+api.add_resource(clockin, '/clock/in', '/clock/in/')
+api.add_resource(clockout, '/clock/out', '/clock/out/')
+api.add_resource(disableuser, '/user/disable', '/user/disable/')
 
 # for debugging, running indivisually with -debug param
 if '-debug' in argv:

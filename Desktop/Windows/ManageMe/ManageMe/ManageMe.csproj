@@ -62,6 +62,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Views\Controls\ProjectList.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Controls\ProjectListItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Login.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -74,11 +82,20 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Models\Converters\ProgressForegroundConverter.cs" />
     <Compile Include="Models\JsonModels\JsonAuthenticationMessage.cs" />
     <Compile Include="Models\JsonModels\JsonAuthentification.cs" />
+    <Compile Include="Models\JsonModels\JsonProject.cs" />
     <Compile Include="Models\Result.cs" />
+    <Compile Include="Utilities\API.cs" />
     <Compile Include="Utilities\User.cs" />
     <Compile Include="Utilities\Utilities.cs" />
+    <Compile Include="Views\Controls\ProjectList.xaml.cs">
+      <DependentUpon>ProjectList.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Controls\ProjectListItem.xaml.cs">
+      <DependentUpon>ProjectListItem.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Login.xaml.cs">
       <DependentUpon>Login.xaml</DependentUpon>
     </Compile>
@@ -117,13 +134,53 @@
   <ItemGroup>
     <Folder Include="Converters\" />
     <Folder Include="Models\Interfaces\" />
-    <Folder Include="Views\Controls\" />
+    <Folder Include="Resources\Fonts\" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Images\close.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Images\error.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\restore.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\maximize.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\minimize.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\search.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\cancel.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\user.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\dashboard.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\projects.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\settings.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\add.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\reports.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\cancelblue.png" />
+    <Resource Include="Resources\Images\searchblue.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\searchwhite.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

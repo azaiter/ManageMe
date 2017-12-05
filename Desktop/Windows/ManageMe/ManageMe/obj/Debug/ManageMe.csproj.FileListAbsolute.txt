@@ -56,3 +56,8 @@ C:\Users\trent\Documents\GitHub\manageme\Desktop\Windows\ManageMe\ManageMe\bin\D
 C:\Users\trent\Documents\GitHub\manageme\Desktop\Windows\ManageMe\ManageMe\bin\Debug\Newtonsoft.Json.xml
 C:\Users\Trent Killinger\Documents\GitHub\manageme\Desktop\Windows\ManageMe\ManageMe\bin\Debug\Newtonsoft.Json.dll
 C:\Users\Trent Killinger\Documents\GitHub\manageme\Desktop\Windows\ManageMe\ManageMe\bin\Debug\Newtonsoft.Json.xml
+C:\Users\Trent Killinger\Documents\GitHub\manageme\Desktop\Windows\ManageMe\ManageMe\obj\Debug\Views\Controls\ProjectList.g.cs
+C:\Users\Trent Killinger\Documents\GitHub\manageme\Desktop\Windows\ManageMe\ManageMe\obj\Debug\Views\Controls\ProjectList.baml
+C:\Users\Trent Killinger\Documents\GitHub\manageme\Desktop\Windows\ManageMe\ManageMe\obj\Debug\GeneratedInternalTypeHelper.g.cs
+C:\Users\Trent Killinger\Documents\GitHub\manageme\Desktop\Windows\ManageMe\ManageMe\obj\Debug\Views\Controls\ProjectListItem.g.cs
+C:\Users\Trent Killinger\Documents\GitHub\manageme\Desktop\Windows\ManageMe\ManageMe\obj\Debug\Views\Controls\ProjectListItem.baml

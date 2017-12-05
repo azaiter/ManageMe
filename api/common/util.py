@@ -72,3 +72,18 @@ def verify_projectNotExist(projectName):
     return projectNameStr
   else:
     raise ValueError('project {} exists'.format(projectNameStr))
+
+def verify_teamNotExist(teamName):
+  teamNameStr = str(teamName)
+  if not dbengine.checkTeamExist(teamNameStr):
+    return teamNameStr
+  else:
+    raise ValueError('team {} exists'.format(teamNameStr))
+
+    
+def verify_userIDNotExist(userID):
+	userIDStr = str(userID)
+	if dbengine.checkUserIDExists(userIDStr):
+		return userIDStr
+	else:
+		raise ValueError('User with ID {} does not exist'.format(userIDStr))
