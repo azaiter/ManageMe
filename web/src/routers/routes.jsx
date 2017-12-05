@@ -8,7 +8,9 @@ import DashboardOverviewPage from "../components/pages/dashboard/Overview";
 import DashboardReportsPage from "../components/pages/dashboard/Reports";
 import LoginPage from "../components/pages/Login";
 import RegisterPage from "../components/pages/Register";
-import AddProject from "../components/pages/dashboard/Forms/AddProject";
+import CreateProject from "../components/pages/dashboard/Forms/CreateProject";
+import DashboardProjectPage from "../components/pages/dashboard/Projects"
+import CreateTeam from "../components/pages/dashboard/Forms/CreateTeam"
 
 class Routes extends React.Component {
   static getRoutes() {
@@ -16,13 +18,16 @@ class Routes extends React.Component {
         <Route name="base" path="/" handler={BaseLayout}>
           <Route name="dashboard" path="/dashboard" handler={DashboardLayout}>
             <Route name="dashboard.overview" path="/overview" handler={DashboardOverviewPage} />
+            <Route name="dashboard.project" path="/project" handler={DashboardProjectPage} />
             <Route name="dashboard.reports" path="/reports" handler={DashboardReportsPage} />
             <DefaultRoute name="dashboard.default" handler={DashboardOverviewPage} />
           </Route>
           <Route name="login" path="/login" handler={LoginPage} />
           <Route name="register" path="/register" handler={RegisterPage} />
-          <Route name="addProject" path="/addProject" handler={AddProject} />
+          <Route name="createProject" path="/createProject" handler={CreateProject} />
           <DefaultRoute name="default" handler={DashboardLayout} />
+          <Route name="createTeam" handler={CreateTeam} />
+
           <Redirect from="/" to="dashboard.overview" />
         </Route>
     );

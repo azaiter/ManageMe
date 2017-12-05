@@ -1,26 +1,37 @@
 import React, { PropTypes, Component } from 'react';
 import { Link } from "react-router";
 import {Jumbotron} from 'react-bootstrap';
+import ToolBar from '../../../layouts/ToolBar'
 
 class Blank extends React.Component {
+
   render() {
     return (
       <div className="overview-page" key="overview"> 
-        <Link to="/dashboard/reports" className="pull-right btn btn-primary btn-outline btn-rounded">View Reports</Link> 
-        <Link to="/addProject" className="pull-right btn btn-primary btn-outline btn-rounded">Add Project</Link> 
+        <ToolBar></ToolBar>
         <h2>My Projects:</h2> 
         <Jumbotron> 
-          <h1>Project BlueFox</h1> 
+        <Link to="/dashboard/project"><h1>Project BlueFox</h1> </Link>
           Description: Moving on-prem databases to Microsoft Azure.<br />
           Due: December 2017
-          <br /><br /> 
-          <a className="btn btn-primary btn-sm btn-outline btn-rounded">More</a>
+          <br /> <br />
+          <div className="progress">
+            <div className="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40"
+            aria-valuemin="0" aria-valuemax="100" style={{width: "90%"}}>
+              90% Complete (on track)
+            </div>
+          </div>
           <hr />
-          <h1>Project Trent</h1> 
+          <Link to="/dashboard/project"><h1>Project RedTiger</h1> </Link>
           Description: Convert 1996 VB Project to Windows 10 C# App.<br />
           Due: January 2018
-          <br /><br /> 
-          <a className="btn btn-primary btn-sm btn-outline btn-rounded">More</a>
+          <br /> <br />
+          <div className="progress">
+            <div className="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="40"
+            aria-valuemin="0" aria-valuemax="100" style={{width: "20%"}}>
+              20% Complete (off track)
+            </div>
+          </div>
           <hr />
         </Jumbotron> 
       </div>

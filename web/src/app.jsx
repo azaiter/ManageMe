@@ -21,7 +21,8 @@ const rootRoute = {
       indexRoute: {component: require('./components/pages/dashboard/Overview')},
       childRoutes: [
         require('./components/pages/dashboard/Overview'),
-        require('./components/pages/dashboard/Reports')
+        require('./components/pages/dashboard/Reports'),
+        require('./components/pages/dashboard/Projects')
       ]
     },
     {
@@ -37,8 +38,14 @@ const rootRoute = {
       ]
     },
     {
-      path: '/addProject',
-      component: require('./components/pages/dashboard/Forms/AddProject'),
+      path: '/createProject',
+      component: require('./components/pages/dashboard/Forms/CreateProject'),
+      childRoutes: [
+      ]
+    },
+    {
+      path: '/createTeam',
+      component: require('./components/pages/dashboard/Forms/CreateTeam'),
       childRoutes: [
       ]
     },

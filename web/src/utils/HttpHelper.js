@@ -41,6 +41,21 @@ export async function createProject(tok, projectName, projectDesc) {
     return [json, res.status];
 }
 
+export async function createTeam(tok, teamName, users) {
+    let res = await fetch('https://api.manageme.tech/team/create', {
+        method: 'POST',
+        headers: 
+        {'content-type': 'application/json' },
+        body: JSON.stringify({
+            token: tok,
+            team_name: teamName,
+            users: users,
+        })
+    });
+    let json = await res.json();
+    return [json, res.status];
+}
+
 export async function getToken(user, pass) {
     let res = await fetch('https://api.manageme.tech/user/login', {
         method: 'POST',

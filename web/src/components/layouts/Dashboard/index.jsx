@@ -10,8 +10,8 @@ class HomePage extends React.Component {
     super(props);
     this.state = {
       date: new Date(),
-      user: "Bradley Chippi",
-      image: "http://bradleychippi.com/images/me.jpg",
+      user: this.getUserDetails(),
+      image: "https://static1.squarespace.com/static/5596b8dee4b040c14b0c0258/t/559e72c5e4b0e8dddc483815/1436447432964/icon+blue+people.png",
       uiElementsCollapsed: true,
       chartsElementsCollapsed: true,
       multiLevelDropdownCollapsed: true,
@@ -34,6 +34,10 @@ class HomePage extends React.Component {
   componentWillUnmount() {
     $(window).unbind('resize',this.adjustResize);
 
+  }
+
+  getUserDetails(){
+    return localStorage.getItem("name");
   }
 
   render() {
