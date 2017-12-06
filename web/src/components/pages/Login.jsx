@@ -74,10 +74,8 @@ class LoginPage extends React.Component{
 
   handleLogin(e){
     e.preventDefault();
-    console.log(e);
     login(this.state.user, this.state.password).then(status => {
       if(status != 200){
-        console.log("yo");
         this.setState({
             loginError: "Username or Password is incorrect"
         })

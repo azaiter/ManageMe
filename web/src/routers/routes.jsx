@@ -10,6 +10,7 @@ import LoginPage from "../components/pages/Login";
 import RegisterPage from "../components/pages/Register";
 import CreateProject from "../components/pages/dashboard/Forms/CreateProject";
 import DashboardProjectPage from "../components/pages/dashboard/Projects"
+import AdminPage from "../components/pages/dashboard/Administrator"
 import CreateTeam from "../components/pages/dashboard/Forms/CreateTeam"
 
 class Routes extends React.Component {
@@ -20,6 +21,7 @@ class Routes extends React.Component {
             <Route name="dashboard.overview" path="/overview" handler={DashboardOverviewPage} />
             <Route name="dashboard.project" path="/project" handler={DashboardProjectPage} />
             <Route name="dashboard.reports" path="/reports" handler={DashboardReportsPage} />
+            <Route name="dashboard.admin" path="/admin" handler={AdminPage} />
             <DefaultRoute name="dashboard.default" handler={DashboardOverviewPage} />
           </Route>
           <Route name="login" path="/login" handler={LoginPage} />

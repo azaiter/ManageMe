@@ -70,3 +70,16 @@ export async function getToken(user, pass) {
     return [json, res.status];
 }
 
+export async function getTime(tok){
+    let res = await fetch('https://api.manageme.tech/clock/get', {
+        method: 'POST',
+        headers: 
+        {'content-type': 'application/json' },
+        body: JSON.stringify({
+            token: tok
+        })
+    });
+    let json = await res.json();
+    return [json, res.status];
+}
+
