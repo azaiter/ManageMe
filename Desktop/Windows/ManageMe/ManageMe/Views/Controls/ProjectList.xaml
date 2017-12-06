@@ -42,7 +42,7 @@
             <TextBlock Grid.Column="3" Style="{DynamicResource TextBlockStyleProjectHeadersList}">DEADLINE</TextBlock>
             <Border VerticalAlignment="Bottom" BorderBrush="#bcbcbc" BorderThickness="1" Grid.ColumnSpan="5"/>
         </Grid>
-        <ScrollViewer Grid.Row="1" Template="{DynamicResource ScrollViewerProjects}">
+        <ScrollViewer Grid.Row="1" ScrollViewer.VerticalScrollBarVisibility="Auto" Template="{DynamicResource ScrollViewerProjects}">
             <StackPanel x:Name="stackPanelProjects" Orientation="Vertical">
             </StackPanel>
         </ScrollViewer>
