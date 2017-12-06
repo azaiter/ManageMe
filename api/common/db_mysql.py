@@ -265,3 +265,15 @@ def disableUser(args):
 		db.close()
 		print(r)
 	return jsonify(r)
+
+
+'''
+IN: token, uid
+OUT: uid and time remaining on the project
+'''
+def getProjectHours(args):
+  r = {
+  "uid":"56",
+  "remaining_hours":"5:12:00"
+  }
+  return jsonify(r)

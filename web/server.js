@@ -23,7 +23,7 @@ if (typeof(PhusionPassenger) != 'undefined') {
 
 // Serve application file depending on environment
 app.get('/app.js', function(req, res) {
-  if (process.env.PRODUCTION) {
+  if (process.env.PRODUCTION || true) {
     res.sendFile(__dirname + '/build/app.js');
   } else {
     res.redirect('//localhost:9090/build/app.js');

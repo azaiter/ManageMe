@@ -27,6 +27,7 @@ from resources.createproject import createproject
 from resources.getprojects import getprojects
 from resources.createteam import createteam
 from resources.viewhours import viewhours
+from resources.viewprojecthours import viewprojecthours
 from resources.clockin import clockin
 from resources.clockout import clockout
 from resources.disableuser import disableuser
@@ -54,6 +55,7 @@ api.add_resource(createproject, '/project/create', '/project/create/')
 api.add_resource(getprojects, '/project/get', '/project/get/')
 api.add_resource(createteam, '/team/create', '/team/create/')
 api.add_resource(viewhours, '/clock/get', '/clock/get/')
+api.add_resource(viewprojecthours, '/project/hours/get', '/project/hours/get/')
 api.add_resource(clockin, '/clock/in', '/clock/in/')
 api.add_resource(clockout, '/clock/out', '/clock/out/')
 api.add_resource(disableuser, '/user/disable', '/user/disable/')
