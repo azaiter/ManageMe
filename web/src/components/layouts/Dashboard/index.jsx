@@ -70,6 +70,9 @@ class HomePage extends React.Component {
                   <li>
                     <Link to="/dashboard/reports">Reports</Link>
                   </li> 
+                  <li>
+                    <Link to="/dashboard/admin">Admin</Link>
+                  </li> 
                 </ul> 
               </div>
 

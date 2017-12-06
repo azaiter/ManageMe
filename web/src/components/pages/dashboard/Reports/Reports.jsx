@@ -1,21 +1,41 @@
 import React, { PropTypes, Component } from 'react';
 import { Link } from "react-router";
 import {Jumbotron} from 'react-bootstrap';
+import ToolBar from '../../../layouts/ToolBar'
+import {getLocalToken} from '../../../../actions/Auth'
+import {getTime} from '../../../../utils/HttpHelper'
 
 class Buttons extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      times: null,
+      timeReportingError: null
+    }
+
+    getTime(getLocalToken()).then(res => {
+      let json = res[0];
+      let status = res[1];
+      console.log(json);
+      this.setState({
+        times: json.message
+      })
+
+    }).catch(err => {
+      console.log("Error:",err);
+    });
+  }
+  
+
   render() {
     return (
 
       <div key="reports" className="reports-page">
         <div className="ng-scope"> 
-          <Link to="/dashboard/overview" className="pull-right btn btn-primary btn-outline btn-rounded">Back to Overview</Link> 
-          <h2>Reports <small>Work with Chart.js and D3</small></h2> 
-
-          <i className="glyphicon glyphicon-dashboard bg-fade"></i>
+          <ToolBar></ToolBar>
+          <h2>Reports:</h2> 
           <Jumbotron> 
-            <h1>Add Charts here</h1> 
-            <p>You can use C3.js or Chart.js</p> 
-            <p> <a className="btn btn-primary btn-lg btn-outline btn-rounded">Learn more</a> </p> 
+            {this.state.times}
           </Jumbotron> 
         </div>
       </div>

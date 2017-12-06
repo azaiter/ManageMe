@@ -22,7 +22,8 @@ const rootRoute = {
       childRoutes: [
         require('./components/pages/dashboard/Overview'),
         require('./components/pages/dashboard/Reports'),
-        require('./components/pages/dashboard/Projects')
+        require('./components/pages/dashboard/Projects'),
+        require('./components/pages/dashboard/Administrator')
       ]
     },
     {

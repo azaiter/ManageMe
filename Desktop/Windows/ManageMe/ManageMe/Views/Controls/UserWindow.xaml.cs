@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -11,34 +10,39 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace ManageMe.Views
+namespace ManageMe.Views.Controls
 {
-
     /// <summary>
-    /// Interaction logic for Login.xaml
+    /// Interaction logic for UserWindow.xaml
     /// </summary>
-    public partial class Login : Window
+    public partial class UserWindow : UserControl
     {
+        public event EventHandler Close;
 
-        public Login()
+        private bool editMode;
+
+        public UserWindow()
         {
             InitializeComponent();
-
-            this.MouseDown += delegate { DragMove(); };
-
-            textBoxPassword.Password = "Trent12345!";
+            EditMode = true;
         }
 
-        public void ClearInputs()
+        private void buttonCancel_Click(object sender, RoutedEventArgs e)
         {
-            textBoxCFirstName.Text = "";
-            textBoxCLastName.Text = "";
-            textBoxCUserName.Text = "";
-            textBoxCEmail.Text = "";
-            textBoxCPassword.Password = "";
-            textBoxCConfirmPassword.Password = "";
+
+        }
+
+        private void buttonCreate_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void comboBoxUser_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
         }
 
         public bool AllInputsValid()
@@ -58,29 +62,9 @@ namespace ManageMe.Views
             return true;
         }
 
-        #region Control Events
-        private void buttonExit_Click(object sender, RoutedEventArgs e)
-        {
-            this.Close();
-        }
-
-        private void buttonShowRegister_Click(object sender, RoutedEventArgs e)
-        {
-            gridSignIn.Visibility = Visibility.Hidden;
-            this.Height = 450;
-            gridRegister.Visibility = Visibility.Visible;
-        }
-
-        private void buttonBack_Click(object sender, RoutedEventArgs e)
-        {
-            gridSignIn.Visibility = Visibility.Visible;
-            this.Height = 400;
-            gridRegister.Visibility = Visibility.Hidden;
-        }
-
         private void textBoxCConfirmPassword_PasswordChanged(object sender, RoutedEventArgs e)
         {
-            if(textBoxCConfirmPassword.Password.Length > 0)
+            if (textBoxCConfirmPassword.Password.Length > 0)
             {
                 placeHolderTextBoxCConfirmPassword.Visibility = Visibility.Collapsed;
             }
@@ -122,70 +106,14 @@ namespace ManageMe.Views
             }
         }
 
-        private void textBoxPassword_PasswordChanged(object sender, RoutedEventArgs e)
-        {
-            if (textBoxPassword.Password.Length > 0)
-            {
-                placeHolderTextBoxPassword.Visibility = Visibility.Collapsed;
-            }
-            else
-            {
-                placeHolderTextBoxPassword.Visibility = Visibility.Visible;
-            }
-        }
-
-        private async void buttonRegister_Click(object sender, RoutedEventArgs e)
-        {
-            if (AllInputsValid())
-            {
-                var result = await Utilities.User.Register(textBoxCUserName.Text, textBoxCPassword.Password, textBoxCFirstName.Text, textBoxCLastName.Text, textBoxCEmail.Text);
-                if (result.Status)
-                {
-                    MessageBox.Show("You have successfully registered " + textBoxCFirstName.Text + " " + textBoxCLastName.Text + ". You may now sign in.");
-                    gridSignIn.Visibility = Visibility.Visible;
-                    this.Height = 400;
-                    gridRegister.Visibility = Visibility.Hidden;
-                    ClearInputs();
-                }
-                else
-                {
-                    if (result.message.username != "")
-                    {
-                        imageCUserNameError.Visibility = Visibility.Visible;
-                        imageCUserNameError.ToolTip = new ToolTip() { Content = "Username already taken" };
-                    }
-                    else
-                    {
-                        MessageBox.Show("There was an error registering, please try again.");
-                    }
-
-                }
-            }
-        }
-
-        private async void buttonLogin_Click(object sender, RoutedEventArgs e)
-        {
-            var result = await Utilities.User.Login(textBoxUserName.Text, textBoxPassword.Password);
-            if(true || result.Status)
-            {
-                MainWindow window = new MainWindow(result.token);
-                this.Close();
-                window.Show();
-            }
-            else
-            {
-                imageUserNameError.Visibility = Visibility.Visible;
-                imageUserNameError.ToolTip = new ToolTip() { Content = "Username or password is incorrect" };
-            }
-        }
-
         private void textBoxCFirstName_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if(textBoxCFirstName.Text.Length < 4)
+            if (textBoxCFirstName.Text.Length < 4)
             {
                 imageCFirstNameError.Visibility = Visibility.Visible;
                 imageCFirstNameError.ToolTip = new ToolTip() { Content = "First name must be over 4 characters" };
-            } else
+            }
+            else
             {
                 imageCFirstNameError.Visibility = Visibility.Hidden;
             }
@@ -219,7 +147,7 @@ namespace ManageMe.Views
 
         private void textBoxCEmail_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if(Utilities.Utilities.IsValidEmail(textBoxCEmail.Text))
+            if (Utilities.Utilities.IsValidEmail(textBoxCEmail.Text))
             {
                 imageCEmailError.Visibility = Visibility.Visible;
                 imageCEmailError.ToolTip = new ToolTip() { Content = "Not a valid email address" };
@@ -229,6 +157,33 @@ namespace ManageMe.Views
                 imageCEmailError.Visibility = Visibility.Hidden;
             }
         }
-        #endregion
+
+        public bool EditMode
+        {
+            get
+            {
+                return editMode;
+            }
+            set
+            {
+                editMode = value;
+                if (editMode)
+                {
+                    buttonCreate.Content = "Update";
+                    rowSelectUser.Height = new GridLength(50);
+
+                }
+                else
+                {
+                    buttonCreate.Content = "Create";
+                    rowSelectUser.Height = new GridLength(0);
+                }
+            }
+        }
+
+        private void buttonRemoveTeam_Click(object sender, RoutedEventArgs e)
+        {
+            Close?.Invoke(this, new EventArgs());
+        }
     }
 }
