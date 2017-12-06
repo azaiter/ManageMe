@@ -64,6 +64,7 @@ namespace ManageMe.Views
             projectListInProgress.SessionID = token;
             projectListInProgress.UpdateList();
 
+
         }
 
         private void buttonViewUser_Click(object sender, RoutedEventArgs e)
@@ -442,6 +443,74 @@ namespace ManageMe.Views
             {
                 buttonCancelSearchNotifications.Visibility = Visibility.Visible;
             }
+        }
+
+        private void buttonCreateTeam_Click(object sender, RoutedEventArgs e)
+        {
+            rightPopOutContent.Children.Clear();
+            var createTeamWindow = new Controls.TeamWindow();
+            createTeamWindow.EditMode = false;
+            rightPopOutHeader.Text = "Create Team";
+            rightPopOut.Height = createTeamWindow.Height + 30;
+            createTeamWindow.Close += delegate
+            {
+                Storyboard storyBoardExit = (Storyboard)this.Resources["storyBoardHideRightPopOut"];
+                storyBoardExit.Begin();
+            };
+            rightPopOutContent.Children.Add(createTeamWindow);
+            Storyboard storyBoard = (Storyboard)this.Resources["storyBoardShowRightPopOut"];
+            storyBoard.Begin();
+        }
+
+        private void buttonEditTeam_Click(object sender, RoutedEventArgs e)
+        {
+            rightPopOutContent.Children.Clear();
+            var editTeamWindow = new Controls.TeamWindow();
+            editTeamWindow.EditMode = true;
+            rightPopOutHeader.Text = "Edit Team";
+            rightPopOut.Height = editTeamWindow.Height + 30;
+            editTeamWindow.Close += delegate
+            {
+                Storyboard storyBoardExit = (Storyboard)this.Resources["storyBoardHideRightPopOut"];
+                storyBoardExit.Begin();
+            };
+            rightPopOutContent.Children.Add(editTeamWindow);
+            Storyboard storyBoard = (Storyboard)this.Resources["storyBoardShowRightPopOut"];
+            storyBoard.Begin();
+        }
+
+        private void buttonEditUser_Click(object sender, RoutedEventArgs e)
+        {
+            rightPopOutContent.Children.Clear();
+            var editUserWindow = new Controls.UserWindow();
+            editUserWindow.EditMode = true;
+            rightPopOutHeader.Text = "Edit User";
+            rightPopOut.Height = editUserWindow.Height + 30;
+            editUserWindow.Close += delegate
+            {
+                Storyboard storyBoardExit = (Storyboard)this.Resources["storyBoardHideRightPopOut"];
+                storyBoardExit.Begin();
+            };
+            rightPopOutContent.Children.Add(editUserWindow);
+            Storyboard storyBoard = (Storyboard)this.Resources["storyBoardShowRightPopOut"];
+            storyBoard.Begin();
+        }
+
+        private void buttonCreateUser_Click(object sender, RoutedEventArgs e)
+        {
+            rightPopOutContent.Children.Clear();
+            var editUserWindow = new Controls.UserWindow();
+            editUserWindow.EditMode = false;
+            rightPopOutHeader.Text = "Create User";
+            rightPopOut.Height = editUserWindow.Height + 30;
+            editUserWindow.Close += delegate
+            {
+                Storyboard storyBoardExit = (Storyboard)this.Resources["storyBoardHideRightPopOut"];
+                storyBoardExit.Begin();
+            };
+            rightPopOutContent.Children.Add(editUserWindow);
+            Storyboard storyBoard = (Storyboard)this.Resources["storyBoardShowRightPopOut"];
+            storyBoard.Begin();
         }
     }
 }

@@ -28,7 +28,7 @@
                 <RowDefinition Height="40"/>
             </Grid.RowDefinitions>
 
-            <TextBox Grid.Row="0" x:Name="textBoxUserName"  Margin="20 0 20 5" Style="{DynamicResource MangeMeTextBox}"></TextBox>
+            <TextBox Grid.Row="0" x:Name="textBoxUserName"  Margin="20 0 20 5" Style="{DynamicResource MangeMeTextBox}">Crimson-Traxis</TextBox>
             <Image x:Name="imageUserNameError" Source="/ManageMe;component/Resources/Images/error.png" Visibility="Hidden" Grid.Row="0" Width="22" Height="22" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0 0 20 0"></Image>
             <TextBlock Grid.Row="0" IsHitTestVisible="False" VerticalAlignment="Center" FontSize="14" TextWrapping="Wrap" Text="Username" Margin="22 0 20 10" Foreground="LightGray">
                 <TextBlock.Style>
