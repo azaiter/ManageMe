@@ -5,7 +5,7 @@ import { Route, DefaultRoute, RouteHandler } from "react-router";
 
 class Base extends React.Component {
   componentWillMount() {
-    // this.props.history.pushState(null, '/dashboard/overview');
+     this.props.history.pushState(null, '/login');
   }
 
   render() {

@@ -38,7 +38,7 @@ class CreateTeam extends React.Component{
     }else{
       desc_is_valid = false;
       this.setState({
-        desc_error_text: "Please enter a user",
+        desc_error_text: "Please enter a desc",
       })
     }
 
