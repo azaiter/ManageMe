@@ -224,7 +224,7 @@
                 <TextBox x:Name="textBoxStatus" Grid.Column="3" VerticalAlignment="Center" HorizontalAlignment="Right" Background="Transparent" BorderThickness="0" Margin="0 0 20 0">Status</TextBox>
                 <StackPanel Grid.Column="0" Orientation="Horizontal">
                     <TextBox VerticalAlignment="Center" HorizontalAlignment="Right" Background="Transparent" BorderThickness="0" Margin="20 0 0 0">Total Hours Clocked Today:</TextBox>
-                    <TextBox x:Name="textBoxTotalHours" VerticalAlignment="Center" HorizontalAlignment="Right" Background="Transparent" BorderThickness="0"></TextBox>
+                    <TextBox x:Name="textBoxTotalHours" VerticalAlignment="Center" HorizontalAlignment="Right" Background="Transparent" BorderThickness="0">0</TextBox>
                 </StackPanel>
             </Grid>
             <Grid x:Name="gridContent">
@@ -309,7 +309,7 @@
                                 <Grid.RowDefinitions>
                                     <RowDefinition />
                                 </Grid.RowDefinitions>
-                                <Border Grid.Row="0" Margin="15 15 0 15" BorderBrush="#68b7e7" BorderThickness="2">
+                                <Border Grid.Row="0" Margin="15 15 0 15" BorderBrush="#68b7e7" Background="White" BorderThickness="2">
                                     <Grid>
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="30"/>
@@ -398,7 +398,7 @@
                             </ScrollViewer>
 
                             <Grid x:Name="bottomPopOut" MaxHeight="{Binding ElementName=gridContent, Path=ActualHeight}" Height="0" Background="White">
-
+                                
                             </Grid>
                         </StackPanel>
                     </Grid>

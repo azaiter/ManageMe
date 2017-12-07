@@ -22,6 +22,8 @@ namespace ManageMe.Views.Controls
     {
         private int id;
 
+        public event EventHandler<Models.EventArguments.ViewProjectEventArgs> RequestingProjectView;
+
         public ProjectListItem()
         {
             InitializeComponent();
@@ -89,5 +91,9 @@ namespace ManageMe.Views.Controls
             }
         }
 
+        private void buttonViewProject_Click(object sender, RoutedEventArgs e)
+        {
+            RequestingProjectView?.Invoke(this, new Models.EventArguments.ViewProjectEventArgs(id));
+        }
     }
 }

@@ -1,0 +1,131 @@
+﻿<UserControl x:Class="ManageMe.Views.Controls.ProjectWindow"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:ManageMe.Views.Controls"
+             mc:Ignorable="d"
+             xmlns:Controls="clr-namespace:ManageMe.Views.Controls"
+             d:DesignHeight="700" d:DesignWidth="1000">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Rectangle VerticalAlignment="Top" Grid.ColumnSpan="3" Fill="#3CA2E0" Height="2"></Rectangle>
+        <Grid Grid.Row="0">
+            <TextBlock x:Name="textBlockProjectName" VerticalAlignment="Center" FontSize="20" Margin="20 0 0 0">Project Name</TextBlock>
+        </Grid>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Column="0">
+                <Grid  Margin="20 20 0 20">
+                    <Rectangle HorizontalAlignment="Right" Fill="#3CA2E0" Width="1"/>
+                    <StackPanel x:Name="stackPanelRequirements">
+                        <Controls:RequirementListItem Selected="True" RequirementName="Requirement 1"/>
+                        <Controls:RequirementListItem Selected="False" RequirementName="Requirement 2"/>
+                        <Controls:RequirementListItem Selected="False" RequirementName="Requirement 3"/>
+                        <Controls:RequirementListItem Selected="False" RequirementName="Requirement 4"/>
+                        <Controls:RequirementListItem Selected="False" RequirementName="Requirement 5"/>
+                        <Controls:RequirementListItem Selected="False" RequirementName="Requirement 6"/>
+                    </StackPanel>
+                </Grid>
+            </Grid>
+            <Grid Grid.Column="1">
+                <Border Margin="0 20 20 20" BorderThickness=" 0 1 1 1" BorderBrush="#3CA2E0">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="80"/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition Height="45"/>
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="25"/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <TextBlock HorizontalAlignment="Center" FontSize="14">Requirement Description</TextBlock>
+                            <TextBlock x:Name="textBlockRequirementDescription" Grid.Row="1" FontSize="12" Margin="5">Description</TextBlock>
+                        </Grid>
+                        <Grid Grid.Row="1">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="25"/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14">Comments</TextBlock>
+                            <Border Grid.Row="1" Margin="5" BorderThickness="0 1 0 0" BorderBrush="#3CA2E0">
+                                <TextBlock x:Name="textBlockRequirementComments" Grid.Row="1" FontSize="12" Margin="5">Comments</TextBlock>
+                            </Border>
+                        </Grid>
+                        <Grid Grid.Row="2">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="25"/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14">Files</TextBlock>
+                            <Border Grid.Row="1" Margin="5" BorderThickness="0 1 0 0" BorderBrush="#3CA2E0">
+                                <TextBlock x:Name="textBlockRequirementFiles" Grid.Row="1" FontSize="12" Margin="5">Files</TextBlock>
+                            </Border>
+                        </Grid>
+                        <Grid Grid.Row="3">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Button x:Name="buttonClockOut" Grid.Column="0" Style="{DynamicResource ButtonStyleManageMeInverted}">Clock Out</Button>
+                            <Button x:Name="buttonClockIn" Grid.Column="1" Style="{DynamicResource ButtonStyleManageMeInverted}">Clock In</Button>
+
+                        </Grid>
+                    </Grid>
+
+                </Border>
+            </Grid>
+
+            <Grid Grid.Column="2">
+                <Border Margin="0 20 20 20" BorderThickness="1" BorderBrush="Gray">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="80"/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition Height="45"/>
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="25"/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <TextBlock HorizontalAlignment="Center" FontSize="14">Project Description</TextBlock>
+                            <TextBlock x:Name="textBlockProjectDescription" Grid.Row="1" FontSize="12" Margin="5">Description</TextBlock>
+                        </Grid>
+                        <Grid Grid.Row="1">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="25"/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14">Comments</TextBlock>
+                            <Border Grid.Row="1" Margin="5" BorderThickness="0 1 0 0" BorderBrush="Gray">
+                                <TextBlock x:Name="textBlockProjectComments" FontSize="12" Margin="5">Comments</TextBlock>
+                            </Border>
+                        </Grid>
+                        <Grid Grid.Row="2">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="25"/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14">Files</TextBlock>
+                            <Border Grid.Row="1" Margin="5" BorderThickness="0 1 0 0" BorderBrush="Gray">
+                                <TextBlock x:Name="textBlockProjectFiles" FontSize="12" Margin="5">Files</TextBlock>
+                            </Border>
+                        </Grid>
+                    </Grid>
+                </Border>
+            </Grid>
+        </Grid>
+    </Grid>
+</UserControl>
