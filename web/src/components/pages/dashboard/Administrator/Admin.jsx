@@ -40,7 +40,7 @@ class Admin extends React.Component {
         delete: "mns23234dfmnAASDF213"
     }]
     function deleteButton(cell, row){
-        return <button className="btn btn-danger btn-outline btn-rounded btn-block" onClick={(e) => deleteUser(cell)}>Delete User</button>;
+        return <button className="btn btn-danger btn-outline btn-rounded btn-block" onClick={(e) => deleteUser(cell)}>Disable User</button>;
     }
 
     function deleteUser(id){

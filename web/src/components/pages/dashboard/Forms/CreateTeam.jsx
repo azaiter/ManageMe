@@ -12,9 +12,9 @@ class CreateTeam extends React.Component{
     super(props);
     this.state = {
       name: "",
-      users: "",
+      desc: "",
       name_error_text: null,
-      users_error_text: null,
+      desc_error_text: null,
       creationError: null,
       disabled: true,
     }
@@ -22,7 +22,7 @@ class CreateTeam extends React.Component{
 
   isDisabled() {
     let name_is_valid = false;
-    let users_is_valid = false;
+    let desc_is_valid = false;
 
     if(this.state.name.length > 0){
       name_is_valid = true;
@@ -33,16 +33,16 @@ class CreateTeam extends React.Component{
       })
     }
 
-    if(this.state.users.length > 0){
-      users_is_valid = true;
+    if(this.state.desc.length > 0){
+      desc_is_valid = true;
     }else{
-      users_is_valid = false;
+      desc_is_valid = false;
       this.setState({
-        users_error_text: "Please enter a user",
+        desc_error_text: "Please enter a user",
       })
     }
 
-    if (name_is_valid && users_is_valid) {
+    if (name_is_valid && desc_is_valid) {
       this.setState({
         disabled: false,
       });
@@ -110,7 +110,7 @@ class CreateTeam extends React.Component{
                     <input type="text" className="form-control input-underline input-lg" placeholder="Team Name" errorText={this.state.name_error_text} onChange={(e) => this.changeValue(e, 'name')} /> 
                   </div>
                   <div className="form-group"> 
-                    <textarea rows="4" className="form-control input-underline input-lg" placeholder="Users: Seperate emails with a comma" errorText={this.state.users_error_text} onChange={(e) => this.changeValue(e, 'desc')} /> 
+                    <textarea rows="4" className="form-control input-underline input-lg" placeholder="Description" errorText={this.state.desc_error_text} onChange={(e) => this.changeValue(e, 'desc')} /> 
                   </div>
                   <p style={{ color: "red" }}>{this.state.creationError}</p>
                 </div>
