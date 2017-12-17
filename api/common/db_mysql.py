@@ -170,7 +170,7 @@ def createTeam(args):
 	if checkTokenIsValid(args.token):
 		db = dbConnect()
 		cur = db.cursor()
-		cur.callproc('sp_createTeam',[str(args.team_name), str(args.team_desc)])
+		cur.callproc('sp_createTeam',[str(args.token), str(args.team_name), str(args.team_desc)])
 		r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
 	if db:
 		cur.close()
