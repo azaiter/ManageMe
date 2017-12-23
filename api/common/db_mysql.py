@@ -357,3 +357,38 @@ OUT: true if req_id is valid otherwise false
 def checkIsValidRequirementId(req_id):
 	return True
 
+
+'''
+IN: token, project_id
+OUT: json of soft and hard caps of each requirement in the project
+'''
+def readProjectTimeCaps(args):
+	r={
+		[
+			{"req_id": "1234", "soft_cap" : "12:00:00", "soft_cap_used": "06:00:00", "hard_cap": "24:00:00", "hard_cap_used": "12:00:00"},
+			{"req_id": "432", "soft_cap" : "11:00:00", "soft_cap_used": "03:00:00", "hard_cap": "24:00:00", "hard_cap_used": "23:00:00"},
+			{"req_id": "679967", "soft_cap" : "17:00:00", "soft_cap_used": "05:00:00", "hard_cap": "66:00:00", "hard_cap_used": "67:00:00"},
+		]
+	}
+	return jsonify(r)
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
