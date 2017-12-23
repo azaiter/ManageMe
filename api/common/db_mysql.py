@@ -321,13 +321,11 @@ IN: token, project_id
 OUT: json of estimates for the project requirements.
 '''
 def readProjectEstimates(args):
-	r={
-		[
+	r=[
 			{"req_id" : "1234", "estimate" : "3"},
 			{"req_id" : "5678", "estimate" : "7"},
 			{"req_id" : "9023", "estimate" : "1"}
 		]
-	}
 	return jsonify(r)
 
 '''
@@ -343,11 +341,9 @@ OUT: json of estimate for the requirement.
 TODO: be able to send an array of req_id's
 '''
 def readRequirementEstimate(args):
-	r={
-		[
+	r=[
 			{"req_id" : "1234", "estimate" : "3"}
 		]
-	}
 	return jsonify(r)
 
 '''
@@ -363,13 +359,11 @@ IN: token, project_id
 OUT: json of soft and hard caps of each requirement in the project
 '''
 def readProjectTimeCaps(args):
-	r={
-		[
+	r=[
 			{"req_id": "1234", "soft_cap" : "12:00:00", "soft_cap_used": "06:00:00", "hard_cap": "24:00:00", "hard_cap_used": "12:00:00"},
 			{"req_id": "432", "soft_cap" : "11:00:00", "soft_cap_used": "03:00:00", "hard_cap": "24:00:00", "hard_cap_used": "23:00:00"},
 			{"req_id": "679967", "soft_cap" : "17:00:00", "soft_cap_used": "05:00:00", "hard_cap": "66:00:00", "hard_cap_used": "67:00:00"},
 		]
-	}
 	return jsonify(r)
 
 
