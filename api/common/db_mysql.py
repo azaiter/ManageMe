@@ -277,3 +277,42 @@ def getProjectHours(args):
   "remaining_hours":"5:12:00"
   }
   return jsonify(r)
+
+  
+'''
+Iteration 3:
+'''
+
+'''
+IN: token, privilage_id, affected_user_id
+OUT: a message indicating if the privilage has been assinged or not.
+NOTES: privilage_id is the id of the privilage that the token user is giving to the other affected_user_id.
+'''
+def assignPrivilage(args):
+	r = {"message": "Privilage has been assigned."}
+	return jsonify(r)
+
+'''
+IN: token, privilage_id, affected_user_id
+OUT: a message indicating if the privilage has been assinged or not.
+NOTES: privilage_id is the id of the privilage that the token user is giving to the other affected_user_id.
+'''
+def revokePrivilage(args):
+	r = {"message": "Privilage has been revoked."}
+	return jsonify(r)
+
+'''
+IN: token and privilage_id
+OUT: true is user has privilage specified by id, otherwise false.
+NOTE: the purpose of this function is for example, if you change privilage, you need to check if user is an admin before assigning any privilages.
+'''
+def checkHasPrivilage(token, privilage_id):
+	return True
+
+'''
+IN: privilage_id
+OUT: true if privilage exists in the database and it's a valid one
+'''
+def checkIsValidPrivilage(privilage_id):
+	return True
+

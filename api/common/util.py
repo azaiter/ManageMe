@@ -87,3 +87,10 @@ def verify_userIDNotExist(userID):
 		return userIDStr
 	else:
 		raise ValueError('User with ID {} does not exist'.format(userIDStr))
+		
+def verify_valid_privilage(privilage_id):
+	"""Return privilage_id if valid, raise an exception in other case."""
+	if dbengine.checkIsValidPrivilage(privilage_id):
+		return privilage_id
+	else:
+		raise ValueError('{} is not a valid privilage_id'.format(privilage_id))
