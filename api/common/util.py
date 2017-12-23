@@ -94,3 +94,16 @@ def verify_valid_privilage(privilage_id):
 		return privilage_id
 	else:
 		raise ValueError('{} is not a valid privilage_id'.format(privilage_id))
+
+def verify_valid_project_id(project_id):
+	if dbengine.checkIsValidProjectId(project_id):
+		return project_id
+	else:
+		raise ValueError('{} is not a valid project_id'.format(project_id))
+
+def verify_valid_req_id(req_id):
+	if dbengine.checkIsValidProjectId(req_id):
+		return req_id
+	else:
+		raise ValueError('{} is not a valid req_id'.format(req_id))
+

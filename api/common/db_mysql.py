@@ -316,3 +316,44 @@ OUT: true if privilage exists in the database and it's a valid one
 def checkIsValidPrivilage(privilage_id):
 	return True
 
+'''
+IN: token, project_id
+OUT: json of estimates for the project requirements.
+'''
+def readProjectEstimates(args):
+	r={
+		[
+			{"req_id" : "1234", "estimate" : "3"},
+			{"req_id" : "5678", "estimate" : "7"},
+			{"req_id" : "9023", "estimate" : "1"}
+		]
+	}
+	return jsonify(r)
+
+'''
+IN: project_id
+OUT: true if project_id is valid otherwise false
+'''
+def checkIsValidProjectId(project_id):
+	return True
+
+'''
+IN: token, req_id
+OUT: json of estimate for the requirement.
+TODO: be able to send an array of req_id's
+'''
+def readRequirementEstimate(args):
+	r={
+		[
+			{"req_id" : "1234", "estimate" : "3"}
+		]
+	}
+	return jsonify(r)
+
+'''
+IN: req_id
+OUT: true if req_id is valid otherwise false
+'''
+def checkIsValidRequirementId(req_id):
+	return True
+
