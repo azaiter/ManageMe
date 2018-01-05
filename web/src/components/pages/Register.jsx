@@ -167,16 +167,18 @@ class RegisterPage extends React.Component{
   handleRegister(e){
     e.preventDefault();
     register(this.state.first, this.state.last, this.state.email, this.state.phoneNum, this.state.address, this.state.username, this.state.password)
-      .then(status => {
-      if(status != 200){
-        this.setState({
-          registerError: "Could not submit form... Try again later"
-        }) 
-        return;
-      }
-      this.props.history.goBack();
-    });
-    return false;
+      .then(res => {
+        let json = res[0];
+        let status = res[1]
+        if(status != 200){
+          this.setState({
+            registerError: Object.values(json.message)
+          }) 
+          return;
+        }
+        this.props.history.goBack();
+      });
+      return false;
   }
 
 
@@ -203,13 +205,13 @@ class RegisterPage extends React.Component{
                     <input type="email" className="form-control input-underline input-lg" placeholder="Email" placeholder="Email" errorText={this.state.email_error_text} onChange={(e) => this.changeValue(e, 'email')}  /> 
                   </div> 
                   <div className="form-group"> 
-                    <input type="text" className="form-control input-underline input-lg" placeholder="Phone Number" placeholder="Phone Number (optional)" errorText={this.state.phoneNum_error_text} onChange={(e) => this.changeValue(e, 'phoneNum')} /> 
+                    <input type="text" className="form-control input-underline input-lg" placeholder="Phone Number" placeholder="Phone Number" errorText={this.state.phoneNum_error_text} onChange={(e) => this.changeValue(e, 'phoneNum')} /> 
                   </div>
                   <div className="form-group"> 
                     <input type="text" className="form-control input-underline input-lg" placeholder="Address" placeholder="Address" errorText={this.state.address_error_text} onChange={(e) => this.changeValue(e, 'address')} /> 
                   </div>
                   <div className="form-group"> 
-                    <input type="password" className="form-control input-underline input-lg" placeholder="Password" errorText={this.state.password_error_text} onChange={(e) => this.changeValue(e, 'password')} /> 
+                    <input type="password" className="form-control input-underline input-lg" placeholder="Password (at least 1 lower, 1 upper, 1 special character, and 1 digit)" errorText={this.state.password_error_text} onChange={(e) => this.changeValue(e, 'password')} /> 
                   </div> 
                   <div className="form-group"> 
                     <input type="password" className="form-control input-underline input-lg" placeholder="Confirm Password" errorText={this.state.passwordConfirm_error_text} onChange={(e) => this.changeValue(e, 'passwordConfirm')} /> 

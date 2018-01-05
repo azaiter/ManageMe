@@ -31,6 +31,11 @@ from resources.viewprojecthours import viewprojecthours
 from resources.clockin import clockin
 from resources.clockout import clockout
 from resources.disableuser import disableuser
+from resources.assignprivilage import assignprivilage
+from resources.revoke_privilage import revoke_privilage
+from resources.read_estimate_by_project_id import read_estimate_by_project_id
+from resources.read_estimate_by_req_id import read_estimate_by_req_id
+from resources.read_timecaps_by_project_id import read_timecaps_by_project_id
 
 # define the app and run it
 app = Flask(__name__)
@@ -59,6 +64,11 @@ api.add_resource(viewprojecthours, '/project/hours/get', '/project/hours/get/')
 api.add_resource(clockin, '/clock/in', '/clock/in/')
 api.add_resource(clockout, '/clock/out', '/clock/out/')
 api.add_resource(disableuser, '/user/disable', '/user/disable/')
+api.add_resource(assignprivilage, '/privilage/assign', '/privilage/assign/')
+api.add_resource(revoke_privilage, '/privilage/revoke', '/privilage/revoke/')
+api.add_resource(read_estimate_by_project_id, '/project/estimate/get', '/project/estimate/get/')
+api.add_resource(read_estimate_by_req_id, '/requirement/estimate/get', '/requirement/estimate/get/')
+api.add_resource(read_timecaps_by_project_id, '/project/timecaps/get', '/project/timecaps/get/')
 
 # for debugging, running indivisually with -debug param
 if '-debug' in argv:

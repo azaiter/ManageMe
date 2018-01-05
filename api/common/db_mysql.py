@@ -170,7 +170,7 @@ def createTeam(args):
 	if checkTokenIsValid(args.token):
 		db = dbConnect()
 		cur = db.cursor()
-		cur.callproc('sp_createTeam',[str(args.team_name), str(args.team_desc)])
+		cur.callproc('sp_createTeam',[str(args.token), str(args.team_name), str(args.team_desc)])
 		r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
 	if db:
 		cur.close()
@@ -277,3 +277,112 @@ def getProjectHours(args):
   "remaining_hours":"5:12:00"
   }
   return jsonify(r)
+
+  
+'''
+Iteration 3:
+'''
+
+'''
+IN: token, privilage_id, affected_user_id
+OUT: a message indicating if the privilage has been assinged or not.
+NOTES: privilage_id is the id of the privilage that the token user is giving to the other affected_user_id.
+'''
+def assignPrivilage(args):
+	r = {"message": "Privilage has been assigned."}
+	return jsonify(r)
+
+'''
+IN: token, privilage_id, affected_user_id
+OUT: a message indicating if the privilage has been assinged or not.
+NOTES: privilage_id is the id of the privilage that the token user is giving to the other affected_user_id.
+'''
+def revokePrivilage(args):
+	r = {"message": "Privilage has been revoked."}
+	return jsonify(r)
+
+'''
+IN: token and privilage_id
+OUT: true is user has privilage specified by id, otherwise false.
+NOTE: the purpose of this function is for example, if you change privilage, you need to check if user is an admin before assigning any privilages.
+'''
+def checkHasPrivilage(token, privilage_id):
+	return True
+
+'''
+IN: privilage_id
+OUT: true if privilage exists in the database and it's a valid one
+'''
+def checkIsValidPrivilage(privilage_id):
+	return True
+
+'''
+IN: token, project_id
+OUT: json of estimates for the project requirements.
+'''
+def readProjectEstimates(args):
+	r=[
+			{"req_id" : "1234", "estimate" : "3"},
+			{"req_id" : "5678", "estimate" : "7"},
+			{"req_id" : "9023", "estimate" : "1"}
+		]
+	return jsonify(r)
+
+'''
+IN: project_id
+OUT: true if project_id is valid otherwise false
+'''
+def checkIsValidProjectId(project_id):
+	return True
+
+'''
+IN: token, req_id
+OUT: json of estimate for the requirement.
+TODO: be able to send an array of req_id's
+'''
+def readRequirementEstimate(args):
+	r=[
+			{"req_id" : "1234", "estimate" : "3"}
+		]
+	return jsonify(r)
+
+'''
+IN: req_id
+OUT: true if req_id is valid otherwise false
+'''
+def checkIsValidRequirementId(req_id):
+	return True
+
+
+'''
+IN: token, project_id
+OUT: json of soft and hard caps of each requirement in the project
+'''
+def readProjectTimeCaps(args):
+	r=[
+			{"req_id": "1234", "soft_cap" : "12:00:00", "soft_cap_used": "06:00:00", "hard_cap": "24:00:00", "hard_cap_used": "12:00:00"},
+			{"req_id": "432", "soft_cap" : "11:00:00", "soft_cap_used": "03:00:00", "hard_cap": "24:00:00", "hard_cap_used": "23:00:00"},
+			{"req_id": "679967", "soft_cap" : "17:00:00", "soft_cap_used": "05:00:00", "hard_cap": "66:00:00", "hard_cap_used": "67:00:00"},
+		]
+	return jsonify(r)
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	

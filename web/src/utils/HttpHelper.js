@@ -41,7 +41,7 @@ export async function createProject(tok, projectName, projectDesc) {
     return [json, res.status];
 }
 
-export async function createTeam(tok, teamName, users) {
+export async function createTeam(tok, teamName, desc) {
     let res = await fetch('https://api.manageme.tech/team/create', {
         method: 'POST',
         headers: 
@@ -49,7 +49,7 @@ export async function createTeam(tok, teamName, users) {
         body: JSON.stringify({
             token: tok,
             team_name: teamName,
-            users: users,
+            team_desc: desc,
         })
     });
     let json = await res.json();
@@ -72,6 +72,32 @@ export async function getToken(user, pass) {
 
 export async function getTime(tok){
     let res = await fetch('https://api.manageme.tech/clock/get', {
+        method: 'POST',
+        headers: 
+        {'content-type': 'application/json' },
+        body: JSON.stringify({
+            token: tok
+        })
+    });
+    let json = await res.json();
+    return [json, res.status];
+}
+
+export async function clockIn(tok){
+    let res = await fetch('https://api.manageme.tech/clock/in', {
+        method: 'POST',
+        headers: 
+        {'content-type': 'application/json' },
+        body: JSON.stringify({
+            token: tok
+        })
+    });
+    let json = await res.json();
+    return [json, res.status];
+}
+
+export async function clockOut(tok){
+    let res = await fetch('https://api.manageme.tech/clock/out', {
         method: 'POST',
         headers: 
         {'content-type': 'application/json' },

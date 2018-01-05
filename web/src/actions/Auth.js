@@ -35,10 +35,10 @@ export function register(firstName, lastName, email, phoneNum, address, username
         let json = res[0];
         let status = res[1];
         if(status != 200){
-            return json, status;
+            return [json, status];
         }
         storeUserDetails(firstName, email);
-        return status;
+        return [json, status];
     }).catch(err => {
         console.log("Error:",err);
     })
