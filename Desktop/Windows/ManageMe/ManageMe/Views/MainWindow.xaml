@@ -30,7 +30,7 @@
             </ObjectAnimationUsingKeyFrames>
         </Storyboard>
         <Storyboard x:Key="storyBoardShowBottomPopOut">
-            <DoubleAnimation Storyboard.TargetName="bottomPopOut" Storyboard.TargetProperty="Height" To="600" Duration="0:0:0.25"/>
+            <DoubleAnimation Storyboard.TargetName="bottomPopOut" Storyboard.TargetProperty="Height" To="625" Duration="0:0:0.25"/>
             <DoubleAnimation Storyboard.TargetName="gridPopOutBackdrop" Storyboard.TargetProperty="Opacity" To=".75" Duration="0:0:0.25"/>
             <ObjectAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="gridPopOutBackdrop" Storyboard.TargetProperty="(UIElement.Visibility)">
                 <DiscreteObjectKeyFrame KeyTime="00:00:00" Value="{x:Static Visibility.Visible}"/>
@@ -223,8 +223,8 @@
                 </Grid.ColumnDefinitions>
                 <TextBox x:Name="textBoxStatus" Grid.Column="3" VerticalAlignment="Center" HorizontalAlignment="Right" Background="Transparent" BorderThickness="0" Margin="0 0 20 0">Status</TextBox>
                 <StackPanel Grid.Column="0" Orientation="Horizontal">
-                    <TextBox VerticalAlignment="Center" HorizontalAlignment="Right" Background="Transparent" BorderThickness="0" Margin="20 0 0 0">Total Hours Clocked Today:</TextBox>
-                    <TextBox x:Name="textBoxTotalHours" VerticalAlignment="Center" HorizontalAlignment="Right" Background="Transparent" BorderThickness="0">0</TextBox>
+                    <TextBox VerticalAlignment="Center" HorizontalAlignment="Right" Background="Transparent" BorderThickness="0" Margin="20 0 0 0">Total Time Clocked Today:</TextBox>
+                    <TextBox x:Name="textBoxTotalTime" VerticalAlignment="Center" HorizontalAlignment="Right" Background="Transparent" BorderThickness="0">0</TextBox>
                 </StackPanel>
             </Grid>
             <Grid x:Name="gridContent">
@@ -341,7 +341,7 @@
                                         <StackPanel Grid.Row="1" Orientation="Vertical">
                                             <Button Grid.Row="2" Margin="5 10 5 5" Style="{DynamicResource ButtonStyleManageMeInverted}">Create Project</Button>
                                             <Button Grid.Row="2" Margin="5" Style="{DynamicResource ButtonStyleManageMeInverted}">Edit Project</Button>
-                                            <Button Grid.Row="2" Margin="5" Style="{DynamicResource ButtonStyleManageMeInverted}">Create Requirement</Button>
+                                            <Button Grid.Row="2" Margin="5" Style="{DynamicResource ButtonStyleManageMeInverted}" >Create Requirement</Button>
                                             <Button Grid.Row="2" Margin="5" Style="{DynamicResource ButtonStyleManageMeInverted}">Edit Requirement</Button>
                                             <Button Grid.Row="2" Margin="5" Style="{DynamicResource ButtonStyleManageMeInverted}" Click="buttonCreateTeam_Click">Create Team</Button>
                                             <Button Grid.Row="2" Margin="5" Style="{DynamicResource ButtonStyleManageMeInverted}" Click="buttonEditTeam_Click">Edit Team</Button>
@@ -391,14 +391,34 @@
                             </Border>
                         </Grid>
                         <StackPanel Orientation="Vertical" VerticalAlignment="Bottom">
-                            <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Hidden">
-                                <StackPanel x:Name="stackPanelTabs" Orientation="Horizontal" FlowDirection="LeftToRight">
-
-                                </StackPanel>
-                            </ScrollViewer>
-
                             <Grid x:Name="bottomPopOut" MaxHeight="{Binding ElementName=gridContent, Path=ActualHeight}" Height="0" Background="White">
-                                
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="25"/>
+                                    <RowDefinition />
+                                </Grid.RowDefinitions>
+                                <Grid>
+                                    <StackPanel Orientation="Horizontal" FlowDirection="RightToLeft" Background="#3CA2E0">
+                                        <Button x:Name="buttonCloseProject" Height="20" Width="20" Margin="2.5" Style="{DynamicResource ManageMeToobarButtons}">
+                                            <Image Source="/ManageMe;component/Resources/Images/close.png"></Image>
+                                            <Button.Triggers>
+                                                <EventTrigger RoutedEvent="Button.Click">
+                                                    <BeginStoryboard Storyboard="{StaticResource storyBoardHideAllPopOut}"/>
+                                                </EventTrigger>
+                                            </Button.Triggers>
+                                        </Button>
+                                        <Button x:Name="buttonPopOutProject" Height="20" Width="20" Style="{DynamicResource ManageMeToobarButtons}" Click="buttonPopOutProject_Click">
+                                            <Image Source="/ManageMe;component/Resources/Images/restore.png"></Image>
+                                            <Button.Triggers>
+                                                <EventTrigger RoutedEvent="Button.Click">
+                                                    <BeginStoryboard Storyboard="{StaticResource storyBoardHideAllPopOut}"/>
+                                                </EventTrigger>
+                                            </Button.Triggers>
+                                        </Button>
+                                    </StackPanel>
+                                </Grid>
+                                <Grid Grid.Row="1" x:Name="bottomPopOutContent">
+                                    
+                                </Grid>
                             </Grid>
                         </StackPanel>
                     </Grid>

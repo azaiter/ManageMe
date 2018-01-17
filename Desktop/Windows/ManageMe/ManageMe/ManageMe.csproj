@@ -63,6 +63,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="ProjectWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Controls\ProjectWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -109,6 +113,9 @@
     <Compile Include="Models\JsonModels\JsonAuthentification.cs" />
     <Compile Include="Models\JsonModels\JsonProject.cs" />
     <Compile Include="Models\Result.cs" />
+    <Compile Include="ProjectWindow.xaml.cs">
+      <DependentUpon>ProjectWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Utilities\API.cs" />
     <Compile Include="Utilities\User.cs" />
     <Compile Include="Utilities\Utilities.cs" />

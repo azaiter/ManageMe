@@ -38,31 +38,5 @@ namespace ManageMe.Views.Controls
                 textBlockRequirementName.Text = value;
             }
         }
-
-        public bool Selected
-        {
-            set
-            {
-                if(value)
-                {
-                    borderSelected.BorderThickness = new Thickness(1, 1, 0, 1);
-                }
-                else
-                {
-                    borderSelected.BorderThickness = new Thickness(1);
-                }
-            }
-        }
-
-        public void UnSelect()
-        {
-            borderSelected.BorderThickness = new Thickness(1);
-        }
-
-        private void Grid_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            borderSelected.BorderThickness = new Thickness(1,1,0,1);
-            RequirementSelected?.Invoke(sender, e);
-        }
     }
 }

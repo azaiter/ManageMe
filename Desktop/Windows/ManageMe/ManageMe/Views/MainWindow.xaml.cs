@@ -36,10 +36,10 @@ namespace ManageMe.Views
 
         private void ViewProject(object sender, Models.EventArguments.ViewProjectEventArgs e)
         {
-            bottomPopOut.Children.Clear();
+            bottomPopOutContent.Children.Clear();
             var project = new Views.Controls.ProjectWindow();
             project.ProjectName = "Project - " + e.ProjectId;
-            bottomPopOut.Children.Add(project);
+            bottomPopOutContent.Children.Add(project);
 
             Storyboard storyBoard = (Storyboard)this.Resources["storyBoardShowBottomPopOut"];
             storyBoard.Begin();
@@ -522,6 +522,17 @@ namespace ManageMe.Views
             rightPopOutContent.Children.Add(editUserWindow);
             Storyboard storyBoard = (Storyboard)this.Resources["storyBoardShowRightPopOut"];
             storyBoard.Begin();
+        }
+
+        private void buttonPopOutProject_Click(object sender, RoutedEventArgs e)
+        {
+            var project = (Views.Controls.ProjectWindow)bottomPopOutContent.Children[0];
+
+            bottomPopOutContent.Children.RemoveAt(0);
+
+            var projectWindow = new ProjectWindow(project);
+
+            projectWindow.Show();
         }
     }
 }

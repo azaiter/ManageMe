@@ -6,126 +6,153 @@
              xmlns:local="clr-namespace:ManageMe.Views.Controls"
              mc:Ignorable="d"
              xmlns:Controls="clr-namespace:ManageMe.Views.Controls"
-             d:DesignHeight="700" d:DesignWidth="1000">
+             d:DesignHeight="700" d:DesignWidth="1000"
+             MinHeight="600">
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="40"/>
-            <RowDefinition/>
-        </Grid.RowDefinitions>
-        <Rectangle VerticalAlignment="Top" Grid.ColumnSpan="3" Fill="#3CA2E0" Height="2"></Rectangle>
-        <Grid Grid.Row="0">
-            <TextBlock x:Name="textBlockProjectName" VerticalAlignment="Center" FontSize="20" Margin="20 0 0 0">Project Name</TextBlock>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="2*"/>
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Column="0">
+            <Border Margin="20 20 0 20" BorderThickness="1" BorderBrush="Gray">
+                <Grid Margin="5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="40"/>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="3*"/>
+                        <RowDefinition Height="2*"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock x:Name="textBlockProjectName" VerticalAlignment="Center" FontSize="20">Project Name</TextBlock>
+                    <TextBlock x:Name="textBlockProjectDescription" Grid.Row="1" FontSize="12">Description</TextBlock>
+                    <Grid Grid.Row="2">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="1*"/>
+                            <RowDefinition Height="1*" MaxHeight="100"/>
+                        </Grid.RowDefinitions>
+                        <Border BorderBrush="Gray" BorderThickness="0 1 0 0">
+                            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                <StackPanel x:Name="stackPanelProjectComments"/>
+                            </ScrollViewer>
+                        </Border>
+                        <Grid Grid.Row="1">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="1*"/>
+                                <RowDefinition Height="40"/>
+                            </Grid.RowDefinitions>
+                            <RichTextBox x:Name="richTextBoxProjectComment" Margin="5" Padding="5" Block.LineHeight="1" TextChanged="richTextBoxProjectComment_TextChanged"/>
+                            <TextBlock x:Name="placeHolderTextBoxProjectComment" IsHitTestVisible="False" VerticalAlignment="Top" FontSize="12" TextWrapping="Wrap" Text="Add A Comment..." Margin="17 10" Foreground="LightGray">
+                            </TextBlock>
+                            <Button x:Name="buttonAddProjectComment" Grid.Row="1" Style="{DynamicResource ButtonStyleManageMeInverted}">Add Comment</Button>
+                        </Grid>
+                    </Grid>
+                    <Grid Grid.Row="3">
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition Height="40"/>
+                        </Grid.RowDefinitions>
+                        <Border BorderBrush="Gray" BorderThickness="0 1 0 0">
+                            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                <StackPanel x:Name="stackPanelProjectFiles"/>
+                            </ScrollViewer>
+                        </Border>
+                        <Grid Grid.Row="1">
+                            <Button x:Name="buttonAddProjectFile" Grid.Row="1" Style="{DynamicResource ButtonStyleManageMeInverted}">Add File</Button>
+                        </Grid>
+                    </Grid>
+                </Grid>
+            </Border>
         </Grid>
-        <Grid Grid.Row="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-            </Grid.ColumnDefinitions>
-            <Grid Grid.Column="0">
-                <Grid  Margin="20 20 0 20">
-                    <Rectangle HorizontalAlignment="Right" Fill="#3CA2E0" Width="1"/>
-                    <StackPanel x:Name="stackPanelRequirements">
-                        <Controls:RequirementListItem Selected="True" RequirementName="Requirement 1"/>
-                        <Controls:RequirementListItem Selected="False" RequirementName="Requirement 2"/>
-                        <Controls:RequirementListItem Selected="False" RequirementName="Requirement 3"/>
-                        <Controls:RequirementListItem Selected="False" RequirementName="Requirement 4"/>
-                        <Controls:RequirementListItem Selected="False" RequirementName="Requirement 5"/>
-                        <Controls:RequirementListItem Selected="False" RequirementName="Requirement 6"/>
-                    </StackPanel>
+        <Border Grid.Column="1" BorderBrush="#3CA2E0" BorderThickness="1" Margin="20">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid Grid.Column="0">
+                    <Grid  Margin="20 20 20 20">
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition Height="45"/>
+                        </Grid.RowDefinitions>
+                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                            <StackPanel x:Name="stackPanelRequirements" Orientation="Vertical">
+                                <Controls:RequirementListItem RequirementName="Requirement 1"/>
+                                <Controls:RequirementListItem RequirementName="Requirement 2"/>
+                                <Controls:RequirementListItem RequirementName="Requirement 3"/>
+                                <Controls:RequirementListItem RequirementName="Requirement 4"/>
+                                <Controls:RequirementListItem RequirementName="Requirement 5"/>
+                                <Controls:RequirementListItem RequirementName="Requirement 6"/>
+                            </StackPanel>
+                        </ScrollViewer>
+                        <Button x:Name="buttonAddRequirement" Grid.Row="1" Style="{DynamicResource ButtonStyleManageMeInverted}">Add Requirement</Button>
+                    </Grid>
+                </Grid>
+                <Grid Grid.Column="1">
+                    <Border Margin="0 20 20 20" BorderThickness="1" BorderBrush="#e3e3e3" Background="#f5f5f5">
+                        <Grid Margin="5 0 5 5">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="40"/>
+                                <RowDefinition Height="1*"/>
+                                <RowDefinition Height="20"/>
+                                <RowDefinition Height="25"/>
+                                <RowDefinition Height="3*"/>
+                                <RowDefinition Height="2*"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock x:Name="textBlockRequirementName" VerticalAlignment="Center" FontSize="20">Requirement Name</TextBlock>
+                            <Button x:Name="buttonClockInOut" Width="75" HorizontalAlignment="Right" Style="{DynamicResource ButtonStyleManageMeInverted}">Clock In</Button>
+                            <TextBlock x:Name="textBlockRequirementDescription" Grid.Row="1" FontSize="12">Description</TextBlock>
+                            <Grid Grid.Row="2">
+                                <ProgressBar Grid.Row="0" x:Name="progressBarProgress" Value="95"
+                                     BorderThickness="0" 
+                                     Background="Transparent" 
+                                     Height="20"
+                                     VerticalAlignment="Bottom" 
+                                     Foreground="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Value, Converter={StaticResource ProgressForegroundConverter}}" />
+                            </Grid>
+                            <StackPanel Grid.Row="3" Orientation="Horizontal">
+                                <TextBlock VerticalAlignment="Center">Team:</TextBlock>
+                                <ComboBox x:Name="comboBoxTeam" Margin="5 0 5 0" Height="20" Style="{DynamicResource ComboBoxFlatStyle}"></ComboBox>
+                                <Button x:Name="buttonApplyTeam" Height="20" Style="{DynamicResource ButtonStyleConfirmInverted}">Apply</Button>
+                            </StackPanel>
+                            <Grid Grid.Row="4">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="1*"/>
+                                    <RowDefinition Height="1*" MaxHeight="100"/>
+                                </Grid.RowDefinitions>
+                                <Border BorderBrush="Gray" BorderThickness="0 1 0 0">
+                                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                        <StackPanel x:Name="stackPanelRequirementComments"/>
+                                    </ScrollViewer>
+                                </Border>
+                                <Grid Grid.Row="1">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="1*"/>
+                                        <RowDefinition Height="40"/>
+                                    </Grid.RowDefinitions>
+                                    <RichTextBox x:Name="richTextBoxRequirementComment" Margin="5" Padding="5" Block.LineHeight="1" TextChanged="richTextBoxRequirementComment_TextChanged"/>
+                                    <TextBlock x:Name="placeHolderTextBoxRequirementComment" IsHitTestVisible="False" VerticalAlignment="Top" FontSize="12" TextWrapping="Wrap" Text="Add A Comment..." Margin="17 10" Foreground="LightGray">
+                                    </TextBlock>
+                                    <Button x:Name="buttonAddRequirementComment" Grid.Row="1" Style="{DynamicResource ButtonStyleManageMeInverted}">Add Comment</Button>
+                                </Grid>
+                            </Grid>
+                            <Grid Grid.Row="5">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition Height="40"/>
+                                </Grid.RowDefinitions>
+                                <Border BorderBrush="Gray" BorderThickness="0 1 0 0">
+                                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                        <StackPanel x:Name="stackPanelRequirementFiles"/>
+                                    </ScrollViewer>
+                                </Border>
+                                <Grid Grid.Row="1">
+                                    <Button x:Name="buttonAddRequirementFile" Grid.Row="1" Style="{DynamicResource ButtonStyleManageMeInverted}">Add File</Button>
+                                </Grid>
+                            </Grid>
+                        </Grid>
+                    </Border>
                 </Grid>
             </Grid>
-            <Grid Grid.Column="1">
-                <Border Margin="0 20 20 20" BorderThickness=" 0 1 1 1" BorderBrush="#3CA2E0">
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="80"/>
-                            <RowDefinition/>
-                            <RowDefinition/>
-                            <RowDefinition Height="45"/>
-                        </Grid.RowDefinitions>
-                        <Grid Grid.Row="0">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="25"/>
-                                <RowDefinition/>
-                            </Grid.RowDefinitions>
-                            <TextBlock HorizontalAlignment="Center" FontSize="14">Requirement Description</TextBlock>
-                            <TextBlock x:Name="textBlockRequirementDescription" Grid.Row="1" FontSize="12" Margin="5">Description</TextBlock>
-                        </Grid>
-                        <Grid Grid.Row="1">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="25"/>
-                                <RowDefinition/>
-                            </Grid.RowDefinitions>
-                            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14">Comments</TextBlock>
-                            <Border Grid.Row="1" Margin="5" BorderThickness="0 1 0 0" BorderBrush="#3CA2E0">
-                                <TextBlock x:Name="textBlockRequirementComments" Grid.Row="1" FontSize="12" Margin="5">Comments</TextBlock>
-                            </Border>
-                        </Grid>
-                        <Grid Grid.Row="2">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="25"/>
-                                <RowDefinition/>
-                            </Grid.RowDefinitions>
-                            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14">Files</TextBlock>
-                            <Border Grid.Row="1" Margin="5" BorderThickness="0 1 0 0" BorderBrush="#3CA2E0">
-                                <TextBlock x:Name="textBlockRequirementFiles" Grid.Row="1" FontSize="12" Margin="5">Files</TextBlock>
-                            </Border>
-                        </Grid>
-                        <Grid Grid.Row="3">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition/>
-                                <ColumnDefinition/>
-                            </Grid.ColumnDefinitions>
-                            <Button x:Name="buttonClockOut" Grid.Column="0" Style="{DynamicResource ButtonStyleManageMeInverted}">Clock Out</Button>
-                            <Button x:Name="buttonClockIn" Grid.Column="1" Style="{DynamicResource ButtonStyleManageMeInverted}">Clock In</Button>
-
-                        </Grid>
-                    </Grid>
-
-                </Border>
-            </Grid>
-
-            <Grid Grid.Column="2">
-                <Border Margin="0 20 20 20" BorderThickness="1" BorderBrush="Gray">
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="80"/>
-                            <RowDefinition/>
-                            <RowDefinition/>
-                            <RowDefinition Height="45"/>
-                        </Grid.RowDefinitions>
-                        <Grid Grid.Row="0">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="25"/>
-                                <RowDefinition/>
-                            </Grid.RowDefinitions>
-                            <TextBlock HorizontalAlignment="Center" FontSize="14">Project Description</TextBlock>
-                            <TextBlock x:Name="textBlockProjectDescription" Grid.Row="1" FontSize="12" Margin="5">Description</TextBlock>
-                        </Grid>
-                        <Grid Grid.Row="1">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="25"/>
-                                <RowDefinition/>
-                            </Grid.RowDefinitions>
-                            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14">Comments</TextBlock>
-                            <Border Grid.Row="1" Margin="5" BorderThickness="0 1 0 0" BorderBrush="Gray">
-                                <TextBlock x:Name="textBlockProjectComments" FontSize="12" Margin="5">Comments</TextBlock>
-                            </Border>
-                        </Grid>
-                        <Grid Grid.Row="2">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="25"/>
-                                <RowDefinition/>
-                            </Grid.RowDefinitions>
-                            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14">Files</TextBlock>
-                            <Border Grid.Row="1" Margin="5" BorderThickness="0 1 0 0" BorderBrush="Gray">
-                                <TextBlock x:Name="textBlockProjectFiles" FontSize="12" Margin="5">Files</TextBlock>
-                            </Border>
-                        </Grid>
-                    </Grid>
-                </Border>
-            </Grid>
-        </Grid>
+        </Border>
     </Grid>
 </UserControl>

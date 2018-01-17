@@ -6,10 +6,18 @@
              xmlns:local="clr-namespace:ManageMe.Views.Controls"
              mc:Ignorable="d">
 
-    <Grid Height="45" MouseDown="Grid_MouseDown">
-        <Border x:Name="borderSelected" BorderThickness="1 1 0 1" BorderBrush="#3CA2E0" Background="White" Opacity="1">
-            <Grid Background="White">
-                <TextBlock x:Name="textBlockRequirementName" FontSize="18" VerticalAlignment="Center" Margin="15 0 0 0">Requirement 1</TextBlock>
+    <Grid Height="35" Margin="0 0 0 5">
+        <Border x:Name="borderSelected" BorderThickness="1" BorderBrush="#3CA2E0" Background="White" Opacity="1">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="115"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock x:Name="textBlockRequirementName" FontSize="15" VerticalAlignment="Center" Margin="15 0 0 0">Requirement 1</TextBlock>
+                <StackPanel Orientation="Horizontal" Grid.Column="1">
+                    <Button x:Name="buttonView" Width="50" FontSize="10" Margin="4" Style="{DynamicResource ButtonStyleManageMeInverted}">View</Button>
+                    <Button x:Name="buttonEdit" Width="50" FontSize="10"  Margin="0 4 4 4" Style="{DynamicResource ButtonStyleManageMeInverted}">Edit</Button>
+                </StackPanel>
             </Grid>
         </Border>
     </Grid>

@@ -16,7 +16,7 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
         <Label Grid.Row="1" HorizontalAlignment="Center" Style="{DynamicResource ManageMeHeader}">Manage Me - Login</Label>
-        <Button x:Name="buttonExit" Grid.Row="0" Background="Transparent" BorderBrush="Transparent" Width="20" Height="20" Margin="5" HorizontalAlignment="Right" Click="buttonExit_Click" Style="{DynamicResource ManageMeToobarButtons}">
+        <Button x:Name="buttonExit" Grid.Row="0" Width="20" Height="20" Margin="5" HorizontalAlignment="Right" Click="buttonExit_Click" Style="{DynamicResource ManageMeToobarButtons}">
             <Image Source="/ManageMe;component/Resources/Images/close.png"/>
         </Button>
         <Grid  x:Name="gridSignIn" Grid.Row="2" VerticalAlignment="Center" Visibility="Visible">
