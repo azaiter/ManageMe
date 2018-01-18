@@ -83,7 +83,7 @@
             <TextBlock x:Name="textBlockDeadline" Grid.Row="0" VerticalAlignment="Bottom" FontSize="14">Monday Dec 24th</TextBlock>
             <TextBlock x:Name="textBlockRemainingDays" Grid.Row="1" Foreground="#3a3a3a">11 Days</TextBlock>
         </Grid>
-        <Button Grid.Column="5" Style="{DynamicResource ButtonStyleManageMeInverted}" >View</Button>
+        <Button x:Name="buttonViewProject" Grid.Column="5" Style="{DynamicResource ButtonStyleManageMeInverted}" Click="buttonViewProject_Click" >View</Button>
         <Border VerticalAlignment="Bottom" BorderBrush="#bcbcbc" BorderThickness="1" Grid.ColumnSpan="5"/>
     </Grid>
 </UserControl>

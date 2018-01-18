@@ -34,6 +34,17 @@ namespace ManageMe.Views
 
         }
 
+        private void ViewProject(object sender, Models.EventArguments.ViewProjectEventArgs e)
+        {
+            bottomPopOutContent.Children.Clear();
+            var project = new Views.Controls.ProjectWindow();
+            project.ProjectName = "Project - " + e.ProjectId;
+            bottomPopOutContent.Children.Add(project);
+
+            Storyboard storyBoard = (Storyboard)this.Resources["storyBoardShowBottomPopOut"];
+            storyBoard.Begin();
+        }
+
         private void ShowPopOutBackDrop(object sender, EventArgs e)
         {
             gridPopOutBackdrop.Visibility = Visibility.Visible;
@@ -64,7 +75,7 @@ namespace ManageMe.Views
             projectListInProgress.SessionID = token;
             projectListInProgress.UpdateList();
 
-
+            projectListInProgress.RequestingProjectView += ViewProject;
         }
 
         private void buttonViewUser_Click(object sender, RoutedEventArgs e)
@@ -511,6 +522,17 @@ namespace ManageMe.Views
             rightPopOutContent.Children.Add(editUserWindow);
             Storyboard storyBoard = (Storyboard)this.Resources["storyBoardShowRightPopOut"];
             storyBoard.Begin();
+        }
+
+        private void buttonPopOutProject_Click(object sender, RoutedEventArgs e)
+        {
+            var project = (Views.Controls.ProjectWindow)bottomPopOutContent.Children[0];
+
+            bottomPopOutContent.Children.RemoveAt(0);
+
+            var projectWindow = new ProjectWindow(project);
+
+            projectWindow.Show();
         }
     }
 }

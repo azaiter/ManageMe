@@ -23,6 +23,7 @@ namespace ManageMe.Views.Controls
     {
         private string sessionID;
         private ProjectTypes projectType;
+        public event EventHandler<Models.EventArguments.ViewProjectEventArgs> RequestingProjectView;
 
         public ProjectList()
         {
@@ -46,7 +47,11 @@ namespace ManageMe.Views.Controls
 
             foreach (Models.JsonModels.JsonProject p in projectList)
             {
-                stackPanelProjects.Children.Add(new ProjectListItem() { ProjectName = p.name, ProjectCompany = p.name , Progress = (new Random().NextDouble() * 100), Deadline = DateTime.Now.AddDays(7) });
+                var project = new ProjectListItem() { ProjectName = p.name, ProjectCompany = p.name, Progress = (new Random().NextDouble() * 100), Deadline = DateTime.Now.AddDays(7) };
+                project.RequestingProjectView += (o,e)=> {
+                    RequestingProjectView?.Invoke(o, e);
+                };
+                stackPanelProjects.Children.Add(project);
             }
         }
 
