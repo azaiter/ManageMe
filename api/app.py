@@ -9,6 +9,7 @@ Dependencies:
 	pip install Flask-HTTPAuth
 	pip install -U flask-cors
 	pip install Flask-WTF
+	pip install simplejson
 '''
 # import dependencies
 from sys import argv

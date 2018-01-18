@@ -203,7 +203,8 @@ OUT: the updated tuple (should have NULL out time.
 '''
 def clockIn(args):
 	checkHasPrivilage(args.token, 10)
-	checkIfNotclockedIn(token, req_id)
+	#checkIfNotclockedIn(args.token, args.req_id)
+	checkIfNotclockedIn(args.token, 56)
 	db = dbConnect()
 	cur = db.cursor()
 	cur.callproc('sp_clockIn',[str(args.token), str(56)])
@@ -219,16 +220,43 @@ def clockIn(args):
 	
 	
 def checkIfNotclockedIn(token, req_id):
-	'''
-	check througgh the DB if user is clocked in "select from TimeEntry where"
-	'''
-	return True
+	db = dbConnect()
+	cur = db.cursor()
+	cur.callproc('sp_checkClockIn',[str(token), req_id])
+	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+	print("From clocked in: " + str(r))
+	if db:
+		db.close()
+	if len(r) > 0:
+		pass
+	else:
+		abort(400, message="Error: user is already clocked in.")
+	return len(r) > 0
+	
+def checkIfUserNeedsToClockOut(token, req_id):
+	db = dbConnect()
+	cur = db.cursor()
+	cur.callproc('sp_checkClockOut',[str(token), req_id])
+	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+	print("From clocked out: " + str(r))
+	if db:
+		db.close()
+	if len(r) > 0:
+		pass
+	else:
+		abort(400, message="Error: user is already clocked out.")
+	return len(r) > 0
+	
+	
 '''
 IN: token
 OUT: the updated tuple
 '''
 def clockOut(args):
 	checkHasPrivilage(args.token, 10)
+	#checkIfUserNeedsToClockOut(args.token, args.req_id)
+	checkIfUserNeedsToClockOut(args.token, 56)
+	#### check if user needs to clock out otherwise throw an error that he can't clock out twice.
 	db = dbConnect()
 	cur = db.cursor()
 	cur.callproc('sp_clockOut',[str(args.token), str(56)])
@@ -316,7 +344,7 @@ def revokePrivilage(args):
 	checkHasPrivilage(args.token, 11)
 	db = dbConnect()
 	cur = db.cursor()
-	cur.callproc('sp_removePermission', [(args.privilage_id), (args.affected_user_id)])
+	cur.callproc('sp_removePermission', [(args.affected_user_id), (args.privilage_id)])
 	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
 	if db:
 		cur.close()
@@ -370,6 +398,7 @@ def readProjectEstimates(args):
 		cur.close()
 		db.commit()
 		db.close()
+	print("r is: " + str(r))
 	return jsonify(r)
 
 '''
