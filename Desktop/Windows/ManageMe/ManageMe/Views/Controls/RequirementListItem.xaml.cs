@@ -22,9 +22,19 @@ namespace ManageMe.Views.Controls
     {
         public event EventHandler<MouseButtonEventArgs> RequirementSelected;
 
+        private bool selected;
+
+        private int id;
+
         public RequirementListItem()
         {
             InitializeComponent();
+        }
+
+        public RequirementListItem(int id,string name)
+        {
+            this.id = id;
+            RequirementName = name;
         }
 
         public string RequirementName
@@ -36,6 +46,43 @@ namespace ManageMe.Views.Controls
             set
             {
                 textBlockRequirementName.Text = value;
+            }
+        }
+
+        private void Grid_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            Selected = true;
+        }
+
+        private void Grid_MouseEnter(object sender, MouseEventArgs e)
+        {
+            var grid = (Grid)sender;
+            grid.Background = Brushes.LightGray;
+        }
+
+        private void Grid_MouseLeave(object sender, MouseEventArgs e)
+        {
+            var grid = (Grid)sender;
+            grid.Background = Brushes.Transparent;
+        }
+
+        public bool Selected
+        {
+            get
+            {
+                return rectanagleViewing.Visibility == Visibility.Visible;
+            }
+            set
+            {
+                if(value)
+                {
+                    rectanagleViewing.Visibility = Visibility.Visible;
+                    RequirementSelected?.Invoke(this, null);
+                }
+                else
+                {
+                    rectanagleViewing.Visibility = Visibility.Hidden;
+                }
             }
         }
     }
