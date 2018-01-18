@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ManageMe"
         xmlns:views="ManageMe.Views"
+        xmlns:chart="clr-namespace:De.TorstenMandelkow.MetroChart;assembly=De.TorstenMandelkow.MetroChart"
         xmlns:Controls="clr-namespace:ManageMe.Views.Controls"
         mc:Ignorable="d"
         Title="ManageMe" MinHeight="825" MinWidth="1200" Width="1200" Height="825">
@@ -319,7 +320,7 @@
                                             <TextBlock VerticalAlignment="Center" Foreground="White" Margin="10 0 0 0">My Dashboard</TextBlock>
                                         </Grid>
                                         <Grid>
-
+                                            
                                         </Grid>
                                     </Grid>
                                 </Border>

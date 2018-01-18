@@ -23,7 +23,7 @@
                         <RowDefinition Height="2*"/>
                     </Grid.RowDefinitions>
                     <TextBlock x:Name="textBlockProjectName" VerticalAlignment="Center" FontSize="20">Project Name</TextBlock>
-                    <TextBlock x:Name="textBlockProjectDescription" Grid.Row="1" FontSize="12">Description</TextBlock>
+                    <TextBlock x:Name="textBlockProjectDescription" Grid.Row="1" FontSize="12" TextWrapping="Wrap" Padding="1" >Description jlajsdoi alilkjdlk  idjsapop a;sdfkjnids alaljf lsklj slkd lsdjfal; alsdkjf al lajlskd alfjkhjal ;a;wsekdlfkjh  lkajdfjks  kdlsk</TextBlock>
                     <Grid Grid.Row="2">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="1*"/>
@@ -75,8 +75,9 @@
                             <RowDefinition Height="45"/>
                         </Grid.RowDefinitions>
                         <ScrollViewer VerticalScrollBarVisibility="Auto">
+                            
                             <StackPanel x:Name="stackPanelRequirements" Orientation="Vertical">
-                                <Controls:RequirementListItem RequirementName="Requirement 1"/>
+                                <Controls:RequirementListItem RequirementName="Requirement 1" Selected="True"/>
                                 <Controls:RequirementListItem RequirementName="Requirement 2"/>
                                 <Controls:RequirementListItem RequirementName="Requirement 3"/>
                                 <Controls:RequirementListItem RequirementName="Requirement 4"/>
@@ -94,25 +95,20 @@
                                 <RowDefinition Height="40"/>
                                 <RowDefinition Height="1*"/>
                                 <RowDefinition Height="20"/>
-                                <RowDefinition Height="25"/>
+                                <RowDefinition Height="20"/>
                                 <RowDefinition Height="3*"/>
                                 <RowDefinition Height="2*"/>
                             </Grid.RowDefinitions>
                             <TextBlock x:Name="textBlockRequirementName" VerticalAlignment="Center" FontSize="20">Requirement Name</TextBlock>
                             <Button x:Name="buttonClockInOut" Width="75" HorizontalAlignment="Right" Style="{DynamicResource ButtonStyleManageMeInverted}">Clock In</Button>
-                            <TextBlock x:Name="textBlockRequirementDescription" Grid.Row="1" FontSize="12">Description</TextBlock>
-                            <Grid Grid.Row="2">
-                                <ProgressBar Grid.Row="0" x:Name="progressBarProgress" Value="95"
-                                     BorderThickness="0" 
-                                     Background="Transparent" 
-                                     Height="20"
-                                     VerticalAlignment="Bottom" 
-                                     Foreground="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Value, Converter={StaticResource ProgressForegroundConverter}}" />
-                            </Grid>
-                            <StackPanel Grid.Row="3" Orientation="Horizontal">
-                                <TextBlock VerticalAlignment="Center">Team:</TextBlock>
-                                <ComboBox x:Name="comboBoxTeam" Margin="5 0 5 0" Height="20" Style="{DynamicResource ComboBoxFlatStyle}"></ComboBox>
-                                <Button x:Name="buttonApplyTeam" Height="20" Style="{DynamicResource ButtonStyleConfirmInverted}">Apply</Button>
+                            <TextBlock x:Name="textBlockRequirementDescription" TextWrapping="Wrap" Padding="1" Grid.Row="1" FontSize="12">Description djlasdjf a slkdfj asdfkl dsljfklajs dfo asoiiookjd lslkjoi asdfij lkjasldf lkjalksdjf asdlkf aslkdfja lsdkfj asd fasldkfja lsdflkdsajfd </TextBlock>
+                            <StackPanel Orientation="Horizontal" Grid.Row="2">
+                                <TextBlock Grid.Row="1" FontSize="14">Progress:&#160;</TextBlock>
+                                <TextBlock x:Name="textBlockRequirementProgress" FontSize="14">$250/$500</TextBlock>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Grid.Row="3">
+                                <TextBlock Grid.Row="1" FontSize="14">Team:&#160;</TextBlock>
+                                <TextBlock x:Name="textBlockRequirementTeam" FontSize="14" TextWrapping="Wrap">Team Trent</TextBlock>
                             </StackPanel>
                             <Grid Grid.Row="4">
                                 <Grid.RowDefinitions>
