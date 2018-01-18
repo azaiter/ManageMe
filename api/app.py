@@ -72,4 +72,4 @@ api.add_resource(read_timecaps_by_project_id, '/project/timecaps/get', '/project
 
 # for debugging, running indivisually with -debug param
 if '-debug' in argv:
-	app.run()
+	app.run(debug=True)

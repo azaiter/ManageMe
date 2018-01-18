@@ -82,11 +82,11 @@ def checkUsernameExists(username):
 	return len(r) > 0
 
 def createProject(args):
-	if checkHasPrivilage(args.token, 3):
-		db = dbConnect()
-		cur = db.cursor()
-		cur.callproc('sp_createProject',[str(args.token), str(args.project_name), str(args.project_desc)])
-		r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+	checkHasPrivilage(args.token, 3)
+	db = dbConnect()
+	cur = db.cursor()
+	cur.callproc('sp_createProject',[str(args.token), str(args.project_name), str(args.project_desc)])
+	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
 	if db:
 		cur.close()
 		db.commit()
@@ -165,11 +165,11 @@ createTeam
 	from the token you can check permissions and figure out "created_by" field.
 '''
 def createTeam(args):
-	if checkHasPrivilage(args.token, 2):
-		db = dbConnect()
-		cur = db.cursor()
-		cur.callproc('sp_createTeam',[str(args.token), str(args.team_name), str(args.team_desc)])
-		r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+	checkHasPrivilage(args.token, 2)
+	db = dbConnect()
+	cur = db.cursor()
+	cur.callproc('sp_createTeam',[str(args.token), str(args.team_name), str(args.team_desc)])
+	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
 	if db:
 		cur.close()
 		db.commit()
@@ -185,16 +185,16 @@ note that in the future, admin will send user_id to get other user's clocks.
 '''
 
 def getHours(args):
-	if checkHasPrivilage(args.token, 10):
-		db = dbConnect()
-		cur = db.cursor()
-		cur.callproc('sp_viewTime',[str(args.token)])
-		r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
-		if len(r) == 0:
-			abort(400, message='No time entries are found for user!')
-		if db:
-			db.close()
-			print(r)
+	checkHasPrivilage(args.token, 10)
+	db = dbConnect()
+	cur = db.cursor()
+	cur.callproc('sp_viewTime',[str(args.token)])
+	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+	if len(r) == 0:
+		abort(400, message='No time entries are found for user!')
+	if db:
+		db.close()
+		print(r)
 	return jsonify(r)
 
 '''
@@ -202,28 +202,37 @@ IN: token
 OUT: the updated tuple (should have NULL out time.
 '''
 def clockIn(args):
-	if checkHasPrivilage(args.token, 10):
-		db = dbConnect()
-		cur = db.cursor()
-		cur.callproc('sp_clockIn',[str(args.token), str(56)])
-		r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+	checkHasPrivilage(args.token, 10)
+	checkIfNotclockedIn(token, req_id)
+	db = dbConnect()
+	cur = db.cursor()
+	cur.callproc('sp_clockIn',[str(args.token), str(56)])
+	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
 	if db:
 		cur.close()
 		db.commit()
 		db.close()
 		print(r)
 	return jsonify(r)
+	
 
+	
+	
+def checkIfNotclockedIn(token, req_id):
+	'''
+	check througgh the DB if user is clocked in "select from TimeEntry where"
+	'''
+	return True
 '''
 IN: token
 OUT: the updated tuple
 '''
 def clockOut(args):
-	if checkHasPrivilage(args.token, 10):
-		db = dbConnect()
-		cur = db.cursor()
-		cur.callproc('sp_clockOut',[str(args.token), str(56)])
-		r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+	checkHasPrivilage(args.token, 10)
+	db = dbConnect()
+	cur = db.cursor()
+	cur.callproc('sp_clockOut',[str(args.token), str(56)])
+	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
 	if db:
 		cur.close()
 		db.commit()
@@ -252,11 +261,11 @@ IN: token, user_id
 OUT: a message
 '''
 def disableUser(args):
-	if checkHasPrivilage(args.token, 11):
-		db = dbConnect()
-		cur = db.cursor()
-		cur.callproc('sp_disableUser',[args.user_id])
-		r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+	checkHasPrivilage(args.token, 11)
+	db = dbConnect()
+	cur = db.cursor()
+	cur.callproc('sp_disableUser',[args.user_id])
+	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
 	if db:
 		cur.close()
 		db.commit()
@@ -287,15 +296,15 @@ OUT: a message indicating if the privilage has been assinged or not.
 NOTES: privilage_id is the id of the privilage that the token user is giving to the other affected_user_id.
 '''
 def assignPrivilage(args):
-	if checkHasPrivilage(args.token, 11):
-		db = dbConnect()
-		cur = db.cursor()
-		cur.callproc('sp_assignPermission', [(args.privilage_id), (args.affected_user_id)])
-		r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
-		if db:
-			cur.close()
-			db.commit()
-			db.close()
+	checkHasPrivilage(args.token, 11)
+	db = dbConnect()
+	cur = db.cursor()
+	cur.callproc('sp_assignPermission', [(args.privilage_id), (args.affected_user_id)])
+	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+	if db:
+		cur.close()
+		db.commit()
+		db.close()
 	return jsonify(r)
 
 '''
@@ -304,15 +313,15 @@ OUT: a message indicating if the privilage has been assinged or not.
 NOTES: privilage_id is the id of the privilage that the token user is giving to the other affected_user_id.
 '''
 def revokePrivilage(args):
-	if checkHasPrivilage(args.token, 11):
-		db = dbConnect()
-		cur = db.cursor()
-		cur.callproc('sp_removePermission', [(args.privilage_id), (args.affected_user_id)])
-		r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
-		if db:
-			cur.close()
-			db.commit()
-			db.close()
+	checkHasPrivilage(args.token, 11)
+	db = dbConnect()
+	cur = db.cursor()
+	cur.callproc('sp_removePermission', [(args.privilage_id), (args.affected_user_id)])
+	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+	if db:
+		cur.close()
+		db.commit()
+		db.close()
 	return jsonify(r)
 
 '''
@@ -325,8 +334,13 @@ def checkHasPrivilage(token, privilage_id):
 	cur = db.cursor()
 	cur.callproc('sp_checkPermission',[str(token), privilage_id])
 	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+	print("From check prev: " + str(r))
 	if db:
 		db.close()
+	if len(r) > 0:
+		pass
+	else:
+		abort(400, message="Error: user doesn't have proper privilege.")
 	return len(r) > 0
 
 '''
@@ -347,15 +361,15 @@ IN: token, project_id
 OUT: json of estimates for the project requirements.
 '''
 def readProjectEstimates(args):
-	if checkHasPrivilage(args.token, 12):
-		db = dbConnect()
-		cur = db.cursor()
-		cur.callproc('sp_readEstimateFromProject', [(args.project_id)])
-		r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
-		if db:
-			cur.close()
-			db.commit()
-			db.close()
+	checkHasPrivilage(args.token, 12)
+	db = dbConnect()
+	cur = db.cursor()
+	cur.callproc('sp_readEstimateFromProject', [(args.project_id)])
+	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+	if db:
+		cur.close()
+		db.commit()
+		db.close()
 	return jsonify(r)
 
 '''
@@ -377,15 +391,15 @@ OUT: json of estimate for the requirement.
 TODO: be able to send an array of req_id's
 '''
 def readRequirementEstimate(args):
-	if checkHasPrivilage(args.token, 12):
-		db = dbConnect()
-		cur = db.cursor()
-		cur.callproc('sp_readEstimateFromReq', [(args.req_id)])
-		r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
-		if db:
-			cur.close()
-			db.commit()
-			db.close()
+	checkHasPrivilage(args.token, 12)
+	db = dbConnect()
+	cur = db.cursor()
+	cur.callproc('sp_readEstimateFromReq', [(args.req_id)])
+	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+	if db:
+		cur.close()
+		db.commit()
+		db.close()
 	return jsonify(r)
 
 '''
@@ -407,15 +421,15 @@ IN: token, project_id
 OUT: json of soft and hard caps of each requirement in the project
 '''
 def readProjectTimeCaps(args):
-	if checkHasPrivilage(args.token, 13):
-		db = dbConnect()
-		cur = db.cursor()
-		cur.callproc('sp_viewTimeCaps', [(args.project_id)])
-		r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
-		if db:
-			cur.close()
-			db.commit()
-			db.close()
+	checkHasPrivilage(args.token, 13)
+	db = dbConnect()
+	cur = db.cursor()
+	cur.callproc('sp_viewTimeCaps', [(args.project_id)])
+	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+	if db:
+		cur.close()
+		db.commit()
+		db.close()
 	return jsonify(r)
 
 
