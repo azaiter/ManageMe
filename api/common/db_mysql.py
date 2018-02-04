@@ -523,7 +523,7 @@ def createReq(args):
 	checkHasPrivilage(args.token, 16)
 	db = dbConnect()
 	cur = db.cursor()
-	cur.callproc('sp_createReq',[str(args.token), str(args.estimate), str(args.desc)], str(args.name), str(args.softcap)], str(args.hardcap), str(args.priority)])
+	cur.callproc('sp_createReq',[str(args.token), str(args.estimate), str(args.desc), str(args.name), str(args.softcap), str(args.hardcap), str(args.priority)])
 	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
 	if db:
 		cur.close()
@@ -573,7 +573,7 @@ def readReqs(args):
 def checkIsValidTeamId(team_id):
 	db = dbConnect()
 	cur = db.cursor()
-	cur.callproc('sp_checkValidTeamID',[project_id])
+	cur.callproc('sp_checkValidTeamID',[team_id])
 	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
 	if db:
 		db.close()
@@ -622,11 +622,13 @@ def createEstimate(args):
 	checkHasPrivilage(args.token, 6)
 	db = dbConnect()
 	cur = db.cursor()
-	cur.callproc('sp_updateEstimate',[str(args.reqID), str(estimateAmt)])
+	cur.callproc('sp_updateEstimate',[str(args.reqID), str(args.estimateAmt)])
 	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
 	if len(r) == 0:
 		abort(400, message='No Reqs are found with that ID!')
 	if db:
+		cur.close()
+		db.commit()
 		db.close()
 		print(r)
 	return jsonify(r)
