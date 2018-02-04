@@ -1,8 +1,9 @@
-from flask import jsonify, json
+from flask import jsonify
 from flask_restful import abort
 import MySQLdb
 import sys
 import common.settings as settings
+import simplejson as json
 
 # returns a mySQL connection object.
 def dbConnect():
@@ -465,9 +466,86 @@ def readProjectTimeCaps(args):
 
 
 
+'''
+	IN: token, userID
+	OUT: JSON object (user information)
+'''
+def readUserByID(args):
+	print("readUserByID(args)")
+	args.update({"method":"readUserByID(args)"})
+	return jsonify(args)
+
+'''
+	IN: token
+	OUT: JSON object (all user information)
+'''
+def readUsers(args):
+	print("readUsers(args)")
+	args.update({"method":"readUsers(args)"})
+	return jsonify(args)
 	
+'''
+	IN: token, estimate, desc, name, softcap, hardcap, priority
+	OUT: JSON object message whether it is created or not
+'''
+def createReq(args):
+	print("createReq(args)")
+	args.update({"method":"createReq(args)"})
+	return jsonify(args)
 	
+'''
+	IN: token, reqID
+	OUT: JSON object (req info just for that one)
+'''
+def readReqByID(args):
+	print("readReqByID(args)")
+	args.update({"method":"readReqByID(args)"})
+	return jsonify(args)
 	
+'''
+	IN: token
+	OUT: JSON object (requirement info of everything)
+'''
+def readReqs(args):
+	print("readReqs(args)")
+	args.update({"method":"readReqs(args)"})
+	return jsonify(args)
+	
+'''
+	IN: team_id
+	OUT: true of false
+'''
+def checkIsValidTeamId(team_id):
+	print("checkIsValidTeamId(team_id)")
+	return True
+	
+'''
+	IN: token, teamID
+	OUT: JSON object (team info)
+'''
+def readTeamByID(args):
+	print("readTeamByID(args)")
+	args.update({"method":"readTeamByID(args)"})
+	return jsonify(args)
+	
+'''
+	IN: token
+	OUT: JSON object (all teams info)
+'''
+def readTeams(args):
+	print("readTeams(args)")
+	args.update({"method":"readTeams(args)"})
+	return jsonify(args)
+	
+'''
+	IN: token, reqID, estimateAmt
+	OUT: JSON object message whether it is created or not
+'''
+def createEstimate(args):
+	print("createEstimate(args)")
+	args.update({"method":"createEstimate(args)"})
+	return jsonify(args)
+
 	
 	
 	
