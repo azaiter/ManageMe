@@ -326,6 +326,7 @@ NOTES: privilage_id is the id of the privilage that the token user is giving to 
 '''
 def assignPrivilage(args):
 	checkHasPrivilage(args.token, 11)
+	checkAlreadyHasPrivilage(args.affected_user_id, privilage_id)
 	db = dbConnect()
 	cur = db.cursor()
 	cur.callproc('sp_assignPermission', [(args.privilage_id), (args.affected_user_id)])
@@ -371,6 +372,20 @@ def checkHasPrivilage(token, privilage_id):
 	else:
 		abort(400, message="Error: user doesn't have proper privilege.")
 	return len(r) > 0
+	
+def checkAlreadyHasPrivilage(user_id, privilage_id):
+	db = dbConnect()
+	cur = db.cursor()
+	cur.callproc('sp_checkPermissionByID',[str(user_id), privilage_id])
+	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+	print("From check prev: " + str(r))
+	if db:
+		db.close()
+	if len(r) == 0:
+		pass
+	else:
+		abort(400, message="Error: user already has privilege.")
+	return len(r) == 0
 
 '''
 IN: privilage_id
@@ -471,80 +486,150 @@ def readProjectTimeCaps(args):
 	OUT: JSON object (user information)
 '''
 def readUserByID(args):
-	print("readUserByID(args)")
-	args.update({"method":"readUserByID(args)"})
-	return jsonify(args)
+	checkHasPrivilage(args.token, 14)
+	db = dbConnect()
+	cur = db.cursor()
+	cur.callproc('sp_getUserByID',[str(args.userID)])
+	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+	if len(r) == 0:
+		abort(400, message='No Users are found with that ID!')
+	if db:
+		db.close()
+		print(r)
+	return jsonify(r)
 
 '''
 	IN: token
 	OUT: JSON object (all user information)
 '''
 def readUsers(args):
-	print("readUsers(args)")
-	args.update({"method":"readUsers(args)"})
-	return jsonify(args)
+	checkHasPrivilage(args.token, 14)
+	db = dbConnect()
+	cur = db.cursor()
+	cur.callproc('sp_getAllUsers',[])
+	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+	if len(r) == 0:
+		abort(400, message='No Users are found!')
+	if db:
+		db.close()
+		print(r)
+	return jsonify(r)
 	
 '''
 	IN: token, estimate, desc, name, softcap, hardcap, priority
 	OUT: JSON object message whether it is created or not
 '''
 def createReq(args):
-	print("createReq(args)")
-	args.update({"method":"createReq(args)"})
-	return jsonify(args)
+	checkHasPrivilage(args.token, 16)
+	db = dbConnect()
+	cur = db.cursor()
+	cur.callproc('sp_createReq',[str(args.token), str(args.estimate), str(args.desc)], str(args.name), str(args.softcap)], str(args.hardcap), str(args.priority)])
+	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+	if db:
+		cur.close()
+		db.commit()
+		db.close()
+		print(r)
+	return jsonify(r)
 	
 '''
 	IN: token, reqID
 	OUT: JSON object (req info just for that one)
 '''
 def readReqByID(args):
-	print("readReqByID(args)")
-	args.update({"method":"readReqByID(args)"})
-	return jsonify(args)
+	checkHasPrivilage(args.token, 15)
+	db = dbConnect()
+	cur = db.cursor()
+	cur.callproc('sp_getReqByID',[str(args.reqID)])
+	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+	if len(r) == 0:
+		abort(400, message='No Reqs are found with that ID!')
+	if db:
+		db.close()
+		print(r)
+	return jsonify(r)
 	
 '''
 	IN: token
 	OUT: JSON object (requirement info of everything)
 '''
 def readReqs(args):
-	print("readReqs(args)")
-	args.update({"method":"readReqs(args)"})
-	return jsonify(args)
+	checkHasPrivilage(args.token, 15)
+	db = dbConnect()
+	cur = db.cursor()
+	cur.callproc('sp_getAllReqs',[])
+	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+	if len(r) == 0:
+		abort(400, message='No Reqs are found!')
+	if db:
+		db.close()
+		print(r)
+	return jsonify(r)
 	
 '''
 	IN: team_id
 	OUT: true of false
 '''
 def checkIsValidTeamId(team_id):
-	print("checkIsValidTeamId(team_id)")
-	return True
+	db = dbConnect()
+	cur = db.cursor()
+	cur.callproc('sp_checkValidTeamID',[project_id])
+	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+	if db:
+		db.close()
+	return len(r) > 0
 	
 '''
 	IN: token, teamID
 	OUT: JSON object (team info)
 '''
 def readTeamByID(args):
-	print("readTeamByID(args)")
-	args.update({"method":"readTeamByID(args)"})
-	return jsonify(args)
+	checkHasPrivilage(args.token, 17)
+	checkIsValidTeamId(args.teamID)
+	db = dbConnect()
+	cur = db.cursor()
+	cur.callproc('sp_getTeamByID',[str(args.teamID)])
+	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+	if len(r) == 0:
+		abort(400, message='No Teams are found with that ID!')
+	if db:
+		db.close()
+		print(r)
+	return jsonify(r)
 	
 '''
 	IN: token
 	OUT: JSON object (all teams info)
 '''
 def readTeams(args):
-	print("readTeams(args)")
-	args.update({"method":"readTeams(args)"})
-	return jsonify(args)
+	checkHasPrivilage(args.token, 17)
+	db = dbConnect()
+	cur = db.cursor()
+	cur.callproc('sp_getAllTeams',[])
+	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+	if len(r) == 0:
+		abort(400, message='No Teams are found!')
+	if db:
+		db.close()
+		print(r)
+	return jsonify(r)
 	
 '''
 	IN: token, reqID, estimateAmt
 	OUT: JSON object message whether it is created or not
 '''
 def createEstimate(args):
-	print("createEstimate(args)")
-	args.update({"method":"createEstimate(args)"})
-	return jsonify(args)
+	checkHasPrivilage(args.token, 6)
+	db = dbConnect()
+	cur = db.cursor()
+	cur.callproc('sp_updateEstimate',[str(args.reqID), str(estimateAmt)])
+	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+	if len(r) == 0:
+		abort(400, message='No Reqs are found with that ID!')
+	if db:
+		db.close()
+		print(r)
+	return jsonify(r)
 
 	
 	
