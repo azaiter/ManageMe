@@ -638,9 +638,29 @@ def createEstimate(args):
 	
 	
 	
+############## week 2
+
+'''
+IN: token, project_id, project_name, project_desc
+OUT: updated row
+'''
+def updateProject(args):
+	print("updateProject(args)")
+	args.update({"method":"updateProject(args)"})
+	return jsonify(args)
 	
 	
+'''
+IN: token, project_id
+OUT: message
+'''
+def deleteProject(args):
+	print("deleteProject(args)")
+	args.update({"method":"deleteProject(args)"})
+	return jsonify(args)
 	
+
+############# DONE WEEK 2
 	
 	
 	
