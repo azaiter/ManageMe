@@ -4,6 +4,7 @@ import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import {Navbar, Nav, NavItem, NavDropdown, MenuItem, ProgressBar} from "react-bootstrap";
 import $ from "jquery";
 import classNames from "classnames";
+import {deleteStore, getLocalToken} from "../../../actions/Auth";
 
 class HomePage extends React.Component {
   constructor(props) {
@@ -17,6 +18,9 @@ class HomePage extends React.Component {
       multiLevelDropdownCollapsed: true,
       thirdLevelDropdownCollapsed: true,
       samplePagesCollapsed: true
+    }
+    if(!getLocalToken()){
+      this.props.history.pushState(null, '/login');       
     }
   }
 
@@ -40,6 +44,11 @@ class HomePage extends React.Component {
     return localStorage.getItem("name");
   }
 
+  logout(){
+    deleteStore();
+    this.props.history.pushState(null, '/login');
+  }
+
   render() {
 
     //console.log(this.context);
@@ -59,7 +68,7 @@ class HomePage extends React.Component {
                   <h2 className="brand">Manage Me <br /><small>{this.state.user}<br />{this.state.date.toLocaleString()}</small></h2> 
                   <img src={this.state.image} className="user-avatar" />
                   <br /> 
-                  <Link to="/login" className="btn btn-white btn-outline btn-rounded btn-sm">Logout</Link> 
+                  <button onClick={this.logout.bind(this)} className="btn btn-white btn-outline btn-rounded btn-sm">Logout</button> 
                   
                 </div> 
 
@@ -72,6 +81,9 @@ class HomePage extends React.Component {
                   </li> 
                   <li>
                     <Link to="/dashboard/admin">Admin</Link>
+                  </li> 
+                  <li>
+                    <Link to="/dashboard/profile">Edit Profile</Link>
                   </li> 
                 </ul> 
               </div>
