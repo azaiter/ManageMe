@@ -38,6 +38,7 @@ from resources.read_estimate_by_project_id import read_estimate_by_project_id
 from resources.read_estimate_by_req_id import read_estimate_by_req_id
 from resources.read_timecaps_by_project_id import read_timecaps_by_project_id
 from resources.create_read import readUser, createReq, readReq, readTeam, createEstimate
+from resources.update_delete import updateProject, deleteProject
 
 # define the app and run it
 app = Flask(__name__)
@@ -77,6 +78,9 @@ api.add_resource(createReq, '/requirement/create', '/requirement/create/')
 api.add_resource(readReq, '/requirement/get', '/requirement/get/')
 api.add_resource(readTeam, '/team/get', '/team/get/')
 api.add_resource(createEstimate, '/requirement/estimate/create', '/requirement/estimate/create/')
+### capstone 3
+api.add_resource(updateProject, '/project/update', '/project/update/')
+api.add_resource(deleteProject, '/project/delete', '/project/delete/')
 
 # for debugging, running indivisually with -debug param
 if '-debug' in argv:
