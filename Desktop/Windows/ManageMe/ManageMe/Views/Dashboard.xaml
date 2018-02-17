@@ -1,0 +1,49 @@
+﻿<UserControl x:Class="ManageMe.Views.Dashboard"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:ManageMe.Views"
+             mc:Ignorable="d" 
+             xmlns:views="ManageMe.Views"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:Controls="clr-namespace:ManageMe.Views.Controls"
+             d:DesignWidth="1200" d:DesignHeight="825">
+    <Grid>
+        <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="250"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid Grid.Column="0">
+                        <materialDesign:Card Margin="5" materialDesign:ShadowAssist.ShadowDepth="Depth2" VerticalAlignment="Stretch">
+                            
+                        </materialDesign:Card>
+                    </Grid>
+        <StackPanel Orientation="Vertical" Grid.Column="1" Margin="10">
+            <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth2" Padding="10">
+                <StackPanel>
+                    <TextBlock HorizontalAlignment="Center" Style="{StaticResource MaterialDesignSubheadingTextBlock}" Text="Create"/>
+                    <Separator/>
+                    <Button Grid.Row="2" Margin="5">Create Project</Button>
+                    <Button Grid.Row="2" Margin="5">Create Requirement</Button>
+                    <Button Grid.Row="2" Margin="5">Create Team</Button>
+                    <Button Grid.Row="2" Margin="5">Create User</Button>
+                    <Button Grid.Row="2" Margin="5">Create Pay Rate</Button>
+                    <Button Grid.Row="2" Margin="5">Create Role</Button>
+                </StackPanel>
+            </materialDesign:Card>
+            <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth2" Padding="10" Margin="0 10 0 0">
+                <StackPanel>
+                    <TextBlock HorizontalAlignment="Center" Style="{StaticResource MaterialDesignSubheadingTextBlock}" Text="Edit"/>
+                    <Separator/>
+                    <Button Grid.Row="2" Margin="5" Style="{StaticResource MaterialDesignRaisedAccentButton}">Edit Project</Button>
+                    <Button Grid.Row="2" Margin="5" Style="{StaticResource MaterialDesignRaisedAccentButton}">Edit Requirement</Button>
+                    <Button Grid.Row="2" Margin="5" Style="{StaticResource MaterialDesignRaisedAccentButton}">Edit Team</Button>
+                    <Button Grid.Row="2" Margin="5" Style="{StaticResource MaterialDesignRaisedAccentButton}">Edit User</Button>
+                    <Button Grid.Row="2" Margin="5" Style="{StaticResource MaterialDesignRaisedAccentButton}">Edit Pay Rate</Button>
+                    <Button Grid.Row="2" Margin="5" Style="{StaticResource MaterialDesignRaisedAccentButton}">Edit Role</Button>
+                </StackPanel>
+            </materialDesign:Card>
+        </StackPanel>
+    </Grid>
+</UserControl>
