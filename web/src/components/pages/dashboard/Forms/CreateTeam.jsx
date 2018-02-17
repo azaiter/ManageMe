@@ -99,28 +99,20 @@ class CreateTeam extends React.Component{
 
   render(){
     return(
-        <div className="login-page ng-scope ui-view"> 
-          <div className="row"> 
-            <div className="col-md-5 col-lg-4 col-md-offset-4 col-lg-offset-4"> 
-              {/*<img src={require("../../common/images/flat-avatar.png")} className="user-avatar" />*/}
-              <h1>Manage Me - Create Team</h1> 
+      <div>
               <form role="form" onSubmit={this.handleTeamCreation.bind(this)} className="ng-pristine ng-valid"> 
                 <div className="form-content"> 
                   <div className="form-group"> 
-                    <input type="text" className="form-control input-underline input-lg" placeholder="Team Name" errorText={this.state.name_error_text} onChange={(e) => this.changeValue(e, 'name')} /> 
+                    <input className="form-control" placeholder="Team Name" errorText={this.state.name_error_text} onChange={(e) => this.changeValue(e, 'name')} /> 
                   </div>
                   <div className="form-group"> 
-                    <textarea rows="4" className="form-control input-underline input-lg" placeholder="Description" errorText={this.state.desc_error_text} onChange={(e) => this.changeValue(e, 'desc')} /> 
+                    <textarea rows="4" className="form-control" placeholder="Description" errorText={this.state.desc_error_text} onChange={(e) => this.changeValue(e, 'desc')} /> 
                   </div>
                   <p style={{ color: "red" }}>{this.state.creationError}</p>
                 </div>
-                <button className="btn btn-white btn-outline btn-lg btn-rounded btn-block" onClick={this.props.history.goBack} >Back</button> 
-                <button className="btn btn-white btn-outline btn-lg btn-rounded btn-block" onClick={(e) => this.handleTeamCreation(e)} disabled={this.state.disabled}>Submit</button>                  
+                <Button bsStyle="success" onClick={(e) => this.handleTeamCreation(e)} disabled={this.state.disabled}>Submit</Button>                  
               </form> 
             </div> 
-          </div> 
-        </div>
-      
     );
   }
 }

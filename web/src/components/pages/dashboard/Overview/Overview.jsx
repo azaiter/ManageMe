@@ -10,7 +10,11 @@ class Blank extends React.Component {
       <div className="overview-page" key="overview"> 
         <ToolBar></ToolBar>
         <h2>My Projects:</h2> 
-        <Jumbotron> 
+        <Jumbotron>
+        <div className="btn-toolbar pull-right">
+            <button className="btn btn-info">Update Project</button>
+            <button className="btn btn-danger">Delete Project</button>
+          </div> 
         <Link to="/dashboard/project"><h1>Project BlueFox</h1> </Link>
           Description: Moving on-prem databases to Microsoft Azure.<br />
           Due: December 2017
@@ -22,6 +26,10 @@ class Blank extends React.Component {
             </div>
           </div>
           <hr />
+          <div className="btn-toolbar pull-right">
+            <button className="btn btn-info">Update Project</button>
+            <button className="btn btn-danger">Delete Project</button>
+          </div>
           <Link to="/dashboard/project"><h1>Project RedTiger</h1> </Link>
           Description: Convert 1996 VB Project to Windows 10 C# App.<br />
           Due: January 2018
@@ -33,6 +41,7 @@ class Blank extends React.Component {
             </div>
           </div>
           <hr />
+          
         </Jumbotron> 
       </div>
       

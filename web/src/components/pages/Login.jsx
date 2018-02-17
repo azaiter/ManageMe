@@ -4,7 +4,7 @@ import {Panel, Input, Button} from 'react-bootstrap';
 import { History } from 'history';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import $ from "jquery";
-import {login} from '../../actions/Auth'
+import {login, getLocalToken} from '../../actions/Auth'
 
 class LoginPage extends React.Component{
   constructor(props) {
@@ -16,8 +16,12 @@ class LoginPage extends React.Component{
       password_error_text: null,
       disabled: true,
       loginError: ''
+
+      
   };
-    
+    if(getLocalToken){
+        this.props.history.pushState(null, '/dashboard/overview');       
+    }
   }
 
   isDisabled() {

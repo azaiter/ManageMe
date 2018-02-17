@@ -9,6 +9,7 @@ Dependencies:
 	pip install Flask-HTTPAuth
 	pip install -U flask-cors
 	pip install Flask-WTF
+	pip install simplejson
 '''
 # import dependencies
 from sys import argv
@@ -36,6 +37,8 @@ from resources.revoke_privilage import revoke_privilage
 from resources.read_estimate_by_project_id import read_estimate_by_project_id
 from resources.read_estimate_by_req_id import read_estimate_by_req_id
 from resources.read_timecaps_by_project_id import read_timecaps_by_project_id
+from resources.create_read import readUser, createReq, readReq, readTeam, createEstimate
+from resources.update_delete import updateProject, deleteProject
 
 # define the app and run it
 app = Flask(__name__)
@@ -69,7 +72,16 @@ api.add_resource(revoke_privilage, '/privilage/revoke', '/privilage/revoke/')
 api.add_resource(read_estimate_by_project_id, '/project/estimate/get', '/project/estimate/get/')
 api.add_resource(read_estimate_by_req_id, '/requirement/estimate/get', '/requirement/estimate/get/')
 api.add_resource(read_timecaps_by_project_id, '/project/timecaps/get', '/project/timecaps/get/')
+### capstone2
+api.add_resource(readUser, '/user/get', '/user/get/')
+api.add_resource(createReq, '/requirement/create', '/requirement/create/')
+api.add_resource(readReq, '/requirement/get', '/requirement/get/')
+api.add_resource(readTeam, '/team/get', '/team/get/')
+api.add_resource(createEstimate, '/requirement/estimate/create', '/requirement/estimate/create/')
+### capstone 3
+api.add_resource(updateProject, '/project/update', '/project/update/')
+api.add_resource(deleteProject, '/project/delete', '/project/delete/')
 
 # for debugging, running indivisually with -debug param
 if '-debug' in argv:
-	app.run()
+	app.run(debug=True)

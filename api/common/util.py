@@ -72,6 +72,7 @@ def verify_projectNotExist(projectName):
     return projectNameStr
   else:
     raise ValueError('project {} exists'.format(projectNameStr))
+    
 
 def verify_teamNotExist(teamName):
   teamNameStr = str(teamName)
@@ -102,8 +103,14 @@ def verify_valid_project_id(project_id):
 		raise ValueError('{} is not a valid project_id'.format(project_id))
 
 def verify_valid_req_id(req_id):
-	if dbengine.checkIsValidProjectId(req_id):
+	if dbengine.checkIsValidRequirementId(req_id):
 		return req_id
 	else:
 		raise ValueError('{} is not a valid req_id'.format(req_id))
+
+def verify_valid_team_id(team_id):
+	if dbengine.checkIsValidTeamId(team_id):
+		return team_id
+	else:
+		raise ValueError('{} is not a valid team_id'.format(team_id))
 
