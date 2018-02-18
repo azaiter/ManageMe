@@ -20,9 +20,20 @@ namespace ManageMe.Views
     /// </summary>
     public partial class Projects : UserControl
     {
+        public ViewModels.ProjectsViewModel ViewModel;
+
         public Projects()
         {
             InitializeComponent();
+
+            ViewModel = new ViewModels.ProjectsViewModel();
+
+            this.DataContext = ViewModel;
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.RefreshList();
         }
     }
 }

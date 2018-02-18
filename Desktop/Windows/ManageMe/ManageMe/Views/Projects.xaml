@@ -4,9 +4,116 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ManageMe.Views"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+             Background="{DynamicResource MaterialDesignPaper}"
+             TextElement.FontWeight="Medium"
+             TextElement.FontSize="14"
+             FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
+             xmlns:dragablz="clr-namespace:Dragablz;assembly=Dragablz"
+              xmlns:converters="clr-namespace:ManageMe.Models.Converters"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="700" d:DesignWidth="1200">
     <Grid>
-            
+        <Grid.RowDefinitions>
+            <RowDefinition  Height="65"/>
+            <RowDefinition/>
+            <RowDefinition  Height="50"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="2*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Margin="40 0 0 0" VerticalAlignment="Center">PROJECT</TextBlock>
+            <TextBlock Grid.Column="1" VerticalAlignment="Center">ASSIGNED TO</TextBlock>
+            <TextBlock Grid.Column="2" VerticalAlignment="Center">PROGRESS</TextBlock>
+            <TextBlock Grid.Column="3" VerticalAlignment="Center">DEADLINE</TextBlock>
+            <Border VerticalAlignment="Bottom" BorderBrush="#bcbcbc" BorderThickness="1" Grid.ColumnSpan="5"/>
+        </Grid>
+        <ListView
+            HorizontalContentAlignment="Stretch"
+            Grid.Row="1"
+            ItemsSource="{Binding Projects}"
+            SelectedIndex="-1">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <Grid Height="55">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="3*"/>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="2*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid Grid.Column="0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <TextBlock x:Name="textBlockProjectName" Grid.Row="0" VerticalAlignment="Bottom" FontSize="16" Margin="40 0 0 0" Text="{Binding Name}" ></TextBlock>
+                            <TextBlock x:Name="textBlockProjectCompany" Grid.Row="1" VerticalAlignment="Top" Margin="40 0 0 0" Foreground="#3a3a3a" Text="{Binding Company}"></TextBlock>
+                        </Grid>
+                        <StackPanel x:Name="listViewAssignedTo" Orientation="Horizontal" Grid.Column="1" Margin="5" HorizontalAlignment="Left" FlowDirection="RightToLeft">
+                            <Ellipse Height="40" Width="40" Margin="-5">
+                                <Ellipse.Fill>
+                                    <!--<ImageBrush ImageSource="/ManageMe;component/Resources/Images/dashboard.png"/>-->
+                                    <SolidColorBrush Color="Red"/>
+                                </Ellipse.Fill>
+                            </Ellipse>
+                            <Ellipse Height="40" Width="40" Margin="-5">
+                                <Ellipse.Fill>
+                                    <!--<ImageBrush ImageSource="/ManageMe;component/Resources/Images/dashboard.png"/>-->
+                                    <SolidColorBrush Color="Green"/>
+                                </Ellipse.Fill>
+                            </Ellipse>
+                            <Ellipse Height="40" Width="40" Margin="-5">
+                                <Ellipse.Fill>
+                                    <!--<ImageBrush ImageSource="/ManageMe;component/Resources/Images/dashboard.png"/>-->
+                                    <SolidColorBrush Color="Blue"/>
+                                </Ellipse.Fill>
+                            </Ellipse>
+                            <Ellipse Height="40" Width="40" Margin="-5">
+                                <Ellipse.Fill>
+                                    <!--<ImageBrush ImageSource="/ManageMe;component/Resources/Images/dashboard.png"/>-->
+                                    <SolidColorBrush Color="Purple"/>
+                                </Ellipse.Fill>
+                            </Ellipse>
+                        </StackPanel>
+                        <Grid Grid.Column="2">
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <TextBlock x:Name="textBlockProgress" Grid.Row="0" Foreground="#3a3a3a">$500/$500</TextBlock>
+                            <ProgressBar Grid.Row="1" x:Name="progressBarProgress"
+                                BorderThickness="0" 
+                                Height="20"
+                                Width="150" 
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Bottom" 
+                                Maximum="1"
+                                Minimum="0"
+                                Value="{Binding Progress}"/>
+                        </Grid>
+                        <Grid Grid.Column="3">
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <TextBlock x:Name="textBlockDeadline" Grid.Row="0" VerticalAlignment="Bottom" FontSize="14" Text="{Binding DueDate}"></TextBlock>
+                            <StackPanel Orientation="Horizontal"  Grid.Row="1">
+                                <TextBlock Text="Days Remaining:"/>
+                                <TextBlock x:Name="textBlockRemainingDays" Foreground="#3a3a3a" Text="{Binding DaysRemaining}"></TextBlock>
+                            </StackPanel>
+                        </Grid>
+                    </Grid>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        <Button Grid.Row="2" Height="30" Width="30" HorizontalAlignment="Right" Margin="0 0 10 0" Style="{StaticResource MaterialDesignFloatingActionButton}"
+                IsEnabled="{Binding NotLoading}"
+                Content="{materialDesign:PackIcon Kind=Refresh}" Click="Button_Click" />
     </Grid>
 </UserControl>

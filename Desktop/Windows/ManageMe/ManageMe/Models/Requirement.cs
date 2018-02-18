@@ -16,5 +16,22 @@ namespace ManageMe.Models
         public double Spent { get; set; }
         public double Cost { get; set; }
         public string Team { get; set; }
+        public double Progress
+        {
+            get
+            {
+                try
+                {
+                    return Spent / Cost;
+                }
+                catch { }
+
+                return 0;
+            }
+            set
+            {
+
+            }
+        }
     }
 }
