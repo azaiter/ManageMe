@@ -190,3 +190,76 @@ class readPermissions(Resource):
 		return dbengine.readPermissions(args)
 
 #######################################################################
+
+
+###########################################################################
+
+create_team_member_parser = reqparse.RequestParser(bundle_errors=True)
+
+create_team_member_parser.add_argument(
+    'token', dest='token',
+    location='json', required=True,
+    type=managemeutil.verify_request_token,
+    help='The user\'s token {error_msg}',
+)
+
+create_team_member_parser.add_argument(
+    'teamID', dest='teamID',
+    location='json', required=True,
+    type=managemeutil.verify_valid_team_id,
+    help='The req\'s ID. {error_msg}',
+)
+
+create_team_member_parser.add_argument(
+    'user_id', dest='user_id',
+    location='json', required=True,
+    type=managemeutil.verify_userIDNotExist,
+    help='The user\'s ID. {error_msg}',
+)
+
+class createTeamMember(Resource):
+	def post(self):
+		args = create_team_member_parser.parse_args()
+		return dbengine.createTeamMember(args)
+	
+###########################################################################
+
+###########################################################################
+
+update_team_lead_parser = reqparse.RequestParser(bundle_errors=True)
+
+update_team_lead_parser.add_argument(
+    'token', dest='token',
+    location='json', required=True,
+    type=managemeutil.verify_request_token,
+    help='The user\'s token {error_msg}',
+)
+
+update_team_lead_parser.add_argument(
+    'teamID', dest='teamID',
+    location='json', required=True,
+    type=managemeutil.verify_valid_team_id,
+    help='The req\'s ID. {error_msg}',
+)
+
+update_team_lead_parser.add_argument(
+    'user_id', dest='user_id',
+    location='json', required=True,
+    type=managemeutil.verify_userIDNotExist,
+    help='The user\'s ID. {error_msg}',
+)
+
+update_team_lead_parser.add_argument(
+    'isLead', dest='isLead',
+    location='json', required=True,
+    #type=managemeutil.verify_userIDNotExist,
+    choices=('1', '0'),
+    help='The user\'s ID. {error_msg}',
+)
+
+class updateTeamLead(Resource):
+	def post(self):
+		args = create_team_member_parser.parse_args()
+		return dbengine.updateTeamLead(args)
+	
+###########################################################################

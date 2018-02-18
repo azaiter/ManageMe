@@ -37,7 +37,7 @@ from resources.revoke_privilage import revoke_privilage
 from resources.read_estimate_by_project_id import read_estimate_by_project_id
 from resources.read_estimate_by_req_id import read_estimate_by_req_id
 from resources.read_timecaps_by_project_id import read_timecaps_by_project_id
-from resources.create_read import readUser, createReq, readReq, readTeam, createEstimate, readPermissions
+from resources.create_read import readUser, createReq, readReq, readTeam, createEstimate, readPermissions, createTeamMember, updateTeamLead
 from resources.update_delete import updateProject, deleteProject
 
 # define the app and run it
@@ -81,6 +81,11 @@ api.add_resource(createEstimate, '/requirement/estimate/create', '/requirement/e
 ### capstone 3
 api.add_resource(updateProject, '/project/update', '/project/update/')
 api.add_resource(deleteProject, '/project/delete', '/project/delete/')
+
+api.add_resource(readPermissions, '/privilage/get', '/privilage/get/')
+api.add_resource(createTeamMember, '/team/member/create', '/team/member/create/')
+api.add_resource(updateTeamLead, '/team/member/lead', '/team/member/lead/')
+#### 4
 
 # for debugging, running indivisually with -debug param
 if '-debug' in argv:

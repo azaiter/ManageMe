@@ -696,8 +696,18 @@ def deleteProject(args):
 def readPermissions(args):
 	if args.user_id is not None:
 		args.update({"Note":"user_id operation"})
-	print("updateProject(args)")
+	print("readPermissions(args)")
 	args.update({"method":"readPermissions(args)"})
+	return jsonify(args)
+
+def createTeamMember(args):
+	print("createTeamMember(args)")
+	args.update({"method":"createTeamMember(args)"})
+	return jsonify(args)
+
+def updateTeamLead(args):
+	print("updateTeamLead(args)")
+	args.update({"method":"updateTeamLead(args)"})
 	return jsonify(args)
 	
 	
