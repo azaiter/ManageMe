@@ -18,6 +18,9 @@ class CreateProject extends React.Component{
       desc_error_text: null,
       creationError: null,
       disabled: true,
+      reqName: '',
+      reqTime: '',
+      requirements: [{ reqName: '', reqTime: 0 }],
     }
   }
 
@@ -55,6 +58,30 @@ class CreateProject extends React.Component{
 
   }
 
+  handleRequirementChange = (idx) => (evt) => {
+    const newRequirements = this.state.requirements.map((requirement, sidx) => {
+      if (idx !== sidx) return requirement;
+      if(Number.isInteger(parseInt(evt.target.value)))
+        return { ...requirement, reqTime: evt.target.value };
+      else
+        return { ...requirement, reqName: evt.target.value };
+    });
+
+    this.setState({ requirements: newRequirements });
+  }
+
+  handleAddRequirement = () => {
+    this.setState({
+      requirements: this.state.requirements.concat([{ reqName: '', reqTime: 0 }])
+    });
+  }
+
+  handleRemoveRequirement = (idx) => () => {
+    this.setState({
+      requirements: this.state.requirements.filter((s, sidx) => idx !== sidx)
+    });
+  }
+
   changeValue(e, type) {
     const value = e.target.value;
     const next_state = {};
@@ -73,7 +100,9 @@ class CreateProject extends React.Component{
   }
 
   handleProjCreation(e){
+    
     e.preventDefault();
+    console.log(this.state.requirements);
     let token = getLocalToken();
     if(!(token)){
       return;
@@ -100,27 +129,41 @@ class CreateProject extends React.Component{
 
   render(){
     return(
-        <div className="login-page ng-scope ui-view"> 
-          <div className="row"> 
-            <div className="col-md-5 col-lg-4 col-md-offset-4 col-lg-offset-4"> 
-              {/*<img src={require("../../common/images/flat-avatar.png")} className="user-avatar" />*/}
-              <h1>Manage Me - Create Project</h1> 
+      <div>
               <form role="form" onSubmit={this.handleProjCreation.bind(this)} className="ng-pristine ng-valid"> 
                 <div className="form-content"> 
                   <div className="form-group"> 
-                    <input type="text" className="form-control input-underline input-lg" placeholder="Project Name" errorText={this.state.name_error_text} onChange={(e) => this.changeValue(e, 'name')} /> 
+                    <input type="text" className="form-control" placeholder="Project Name" errorText={this.state.name_error_text} onChange={(e) => this.changeValue(e, 'name')} /> 
                   </div>
                   <div className="form-group"> 
-                    <textarea rows="4" className="form-control input-underline input-lg" placeholder="Project Description" errorText={this.state.desc_error_text} onChange={(e) => this.changeValue(e, 'desc')} /> 
+                    <textarea rows="4" className="form-control" placeholder="Project Description" errorText={this.state.desc_error_text} onChange={(e) => this.changeValue(e, 'desc')} /> 
                   </div>
+                  {this.state.requirements.map((requirement, idx) => (
+                    <div className="requirement form-inline">
+                      <input
+                        type="text"
+                        placeholder={`Requirement #${idx + 1} name`}
+                        value={requirement.name}
+                        onChange={this.handleRequirementChange(idx)}
+                        className="form-control"
+                      />
+                      {'\u00A0'}
+                      <input
+                        type="number"
+                        placeholder={`Time`}
+                        value={requirement.time}
+                        onChange={this.handleRequirementChange(idx)}
+                        className="form-control"
+                      />{'\u00A0'}
+                      <button type="button" onClick={this.handleRemoveRequirement(idx)} className="btn btn-danger btn-small">-</button>
+                    </div>
+                  ))}
+                  <button type="button" onClick={this.handleAddRequirement} className="btn btn-warning btn-small">+</button>
                   <p style={{ color: "red" }}>{this.state.creationError}</p>
                 </div>
-                <button className="btn btn-white btn-outline btn-lg btn-rounded btn-block" onClick={this.props.history.goBack} >Back</button> 
-                <button className="btn btn-white btn-outline btn-lg btn-rounded btn-block" onClick={(e) => this.handleProjCreation(e)} disabled={this.state.disabled}>Submit</button>                  
+                <button className="btn btn-success" onClick={(e) => this.handleProjCreation(e)} disabled={this.state.disabled}>Submit</button>                  
               </form> 
             </div> 
-          </div> 
-        </div>
       
     );
   }

@@ -10,6 +10,10 @@ function storeUserDetails(firstName, email){
     localStorage.setItem("email", email);
 }
 
+export function deleteStore(){
+    localStorage.clear();
+}
+
 export function getLocalToken(){
     return localStorage.getItem("token");
 }

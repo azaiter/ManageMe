@@ -24,14 +24,14 @@ namespace ManageMe
             InitializeComponent();
         }
 
-        public ProjectWindow(Views.Controls.ProjectWindow project)
+        public ProjectWindow(Views.Controls.Project project)
         {
             InitializeComponent();
 
             gridMain.Children.Clear();
             gridMain.Children.Add(project);
 
-            Title = project.ProjectName;
+            Title = project.Name;
         }
     }
 }
