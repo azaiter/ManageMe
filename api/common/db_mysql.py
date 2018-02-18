@@ -645,9 +645,26 @@ IN: token, project_id, project_name, project_desc
 OUT: updated row
 '''
 def updateProject(args):
-	print("updateProject(args)")
-	args.update({"method":"updateProject(args)"})
-	return jsonify(args)
+	checkHasPrivilage(args.token, 3)
+	db = dbConnect()
+	cur = db.cursor()
+	r = []
+	
+	if args.project_desc is None:
+		cur.callproc('sp_updateProjName',[str(args.project_id), str(args.project_name)])
+		r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+	elif args.project_name is None:
+		cur.callproc('sp_updateProjDesc',[str(args.project_id), str(args.project_desc)])
+		r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+		
+	if len(r) == 0:
+		abort(400, message='No Projects are found with that ID!')
+	if db:
+		cur.close()
+		db.commit()
+		db.close()
+		print(r)
+	return jsonify(r)
 	
 	
 '''
@@ -655,9 +672,17 @@ IN: token, project_id
 OUT: message
 '''
 def deleteProject(args):
-	print("deleteProject(args)")
-	args.update({"method":"deleteProject(args)"})
-	return jsonify(args)
+	checkHasPrivilage(args.token, 4)
+	db = dbConnect()
+	cur = db.cursor()
+	cur.callproc('sp_deleteProject',[str(args.project_id)])
+	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+	if db:
+		cur.close()
+		db.commit()
+		db.close()
+		print(r)
+	return jsonify(r)
 	
 
 ############# DONE WEEK 2
