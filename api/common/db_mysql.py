@@ -650,17 +650,21 @@ def updateProject(args):
 	cur = db.cursor()
 	r = []
 	
-	if args.project_desc is None:
-		cur.callproc('sp_updateProjName',[str(args.project_id), str(args.project_name)])
-		r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
-	elif args.project_name is None:
+	if args.project_desc is not None:
+		cur = db.cursor()
 		cur.callproc('sp_updateProjDesc',[str(args.project_id), str(args.project_desc)])
 		r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+		cur.close()
+
+	if args.project_name is not None:
+		cur = db.cursor()
+		cur.callproc('sp_updateProjName',[str(args.project_id), str(args.project_name)])
+		r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+		cur.close()
 		
 	if len(r) == 0:
 		abort(400, message='No Projects are found with that ID!')
 	if db:
-		cur.close()
 		db.commit()
 		db.close()
 		print(r)
@@ -688,6 +692,12 @@ def deleteProject(args):
 ############# DONE WEEK 2
 	
 	
-	
+############## WEEK 3
+def readPermissions(args):
+	if args.user_id is not None:
+		args.update({"Note":"user_id operation"})
+	print("updateProject(args)")
+	args.update({"method":"readPermissions(args)"})
+	return jsonify(args)
 	
 	

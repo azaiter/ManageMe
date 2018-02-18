@@ -37,7 +37,7 @@ from resources.revoke_privilage import revoke_privilage
 from resources.read_estimate_by_project_id import read_estimate_by_project_id
 from resources.read_estimate_by_req_id import read_estimate_by_req_id
 from resources.read_timecaps_by_project_id import read_timecaps_by_project_id
-from resources.create_read import readUser, createReq, readReq, readTeam, createEstimate
+from resources.create_read import readUser, createReq, readReq, readTeam, createEstimate, readPermissions
 from resources.update_delete import updateProject, deleteProject
 
 # define the app and run it

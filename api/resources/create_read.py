@@ -166,3 +166,27 @@ class createEstimate(Resource):
 		return dbengine.createEstimate(args)
 	
 ###########################################################################
+
+#######################################################
+read_permissions_parser = reqparse.RequestParser(bundle_errors=True)
+
+read_permissions_parser.add_argument(
+    'token', dest='token',
+    location='json', required=True,
+    type=managemeutil.verify_request_token,
+    help='The user\'s token {error_msg}',
+)
+
+read_permissions_parser.add_argument(
+    'user_id', dest='user_id',
+    location='json', required=False,
+    type=managemeutil.verify_userIDNotExist,
+    help='The user\'s ID. {error_msg}',
+)
+
+class readPermissions(Resource):
+	def post(self):
+		args = read_permissions_parser.parse_args()
+		return dbengine.readPermissions(args)
+
+#######################################################################

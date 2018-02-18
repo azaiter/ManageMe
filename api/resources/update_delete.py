@@ -21,12 +21,12 @@ updateProject_parser.add_argument(
 
 updateProject_parser.add_argument(
     'project_name', dest='project_name',
-    location='json', required=True,
+    location='json', required=False,
     help='The project\'s name {error_msg}',
 )
 updateProject_parser.add_argument(
     'project_desc', dest='project_desc',
-    location='json', required=True,
+    location='json', required=False,
     type=str,
     help='The project\'s description {error_msg}',
 )
