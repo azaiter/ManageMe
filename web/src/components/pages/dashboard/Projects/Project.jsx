@@ -11,10 +11,10 @@ class Project extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      name: 'BlueFox',
-      desc: 'Moving on-prem databases to Microsoft Azure.',
-      due: 'December 2017',
-      created: 'Feburary 2nd 2017',
+      projId: this.props.location.query.id,
+      name: this.props.location.query.name,
+      desc: this.props.location.query.desc,
+      created: this.props.location.query.created,
       clockError: null,
       status: null,
       reqClockedInto: null,
@@ -108,7 +108,6 @@ class Project extends React.Component {
           <h1>{this.state.name}</h1> 
           <hr />
           Description: {this.state.desc}<br />
-          Due: {this.state.due} <br />
           Created: {this.state.created}
           <hr />
           <h3>Requirements:</h3>
