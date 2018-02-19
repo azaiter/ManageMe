@@ -37,8 +37,8 @@ from resources.revoke_privilage import revoke_privilage
 from resources.read_estimate_by_project_id import read_estimate_by_project_id
 from resources.read_estimate_by_req_id import read_estimate_by_req_id
 from resources.read_timecaps_by_project_id import read_timecaps_by_project_id
-from resources.create_read import readUser, createReq, readReq, readTeam, createEstimate
-from resources.update_delete import updateProject, deleteProject
+from resources.create_read import readUser, createReq, readReq, readTeam, createEstimate, readPermissions, createTeamMember, readTeamMembers, createDocument, readDocument, createProjectDocument, readProjectDocument, readDocumentFileTypes, readReqByProjID 
+from resources.update_delete import updateProject, deleteProject, updateTeamLead, deleteTeamMember, deleteProjectDocument
 
 # define the app and run it
 app = Flask(__name__)
@@ -81,6 +81,20 @@ api.add_resource(createEstimate, '/requirement/estimate/create', '/requirement/e
 ### capstone 3
 api.add_resource(updateProject, '/project/update', '/project/update/')
 api.add_resource(deleteProject, '/project/delete', '/project/delete/')
+
+#### 4
+api.add_resource(readPermissions, '/privilage/get', '/privilage/get/')
+api.add_resource(createTeamMember, '/team/member/create', '/team/member/create/')
+api.add_resource(updateTeamLead, '/team/member/lead', '/team/member/lead/')
+api.add_resource(readTeamMembers, '/team/member/get', '/team/member/get/')
+api.add_resource(deleteTeamMember, '/team/member/delete', '/team/member/delete/')
+api.add_resource(createDocument, '/document/create', '/document/create/')
+api.add_resource(readDocument, '/document/get', '/document/get/')
+api.add_resource(createProjectDocument, '/project/document/create', '/project/document/create/')
+api.add_resource(readProjectDocument, '/project/document/get', '/project/document/get/')
+api.add_resource(deleteProjectDocument, '/project/document/delete', '/project/document/delete/')
+api.add_resource(readDocumentFileTypes, '/document/type/get', '/document/type/get/')
+api.add_resource(readReqByProjID, '/project/req/get', '/project/req/get/')
 
 # for debugging, running indivisually with -debug param
 if '-debug' in argv:

@@ -114,3 +114,8 @@ def verify_valid_team_id(team_id):
 	else:
 		raise ValueError('{} is not a valid team_id'.format(team_id))
 
+def verify_valid_file_type(fileTypeId):
+	if dbengine.checkIsValidFileType(fileTypeId):
+		return fileTypeId
+	else:
+		raise ValueError('{} is not a valid fileTypeId'.format(fileTypeId))

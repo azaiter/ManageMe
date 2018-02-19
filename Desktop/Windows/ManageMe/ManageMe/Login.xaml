@@ -1,0 +1,80 @@
+﻿<Window x:Class="ManageMe.Login"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ManageMe"
+        mc:Ignorable="d"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        TextOptions.TextFormattingMode="Ideal"
+        TextOptions.TextRenderingMode="Auto"
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{DynamicResource MaterialDesignFont}"
+        Title="Login" Height="400" Width="300">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="50"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="1" HorizontalAlignment="Center" Style="{StaticResource MaterialDesignTitleTextBlock}">Manage Me - Login</TextBlock>
+        
+        <Grid  x:Name="gridSignIn" Grid.Row="2" VerticalAlignment="Center" Visibility="Visible">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
+            </Grid.RowDefinitions>
+
+            <TextBox Grid.Row="0" x:Name="textBoxUserName" Margin="20 0 20 5" materialDesign:HintAssist.Hint="UserName">Crimson-Traxis</TextBox>
+            <materialDesign:PackIcon x:Name="imageUserNameError" Grid.Row="0" Visibility="Hidden" Kind="Alert" Width="22" Height="22" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0 10 20 0" Foreground="{Binding ElementName=textBoxUserName, Path=Foreground}"></materialDesign:PackIcon>
+
+            <PasswordBox Grid.Row="1" x:Name="textBoxPassword" Margin="20 0 20 5" materialDesign:HintAssist.Hint="Password" Password="Trent12345!"></PasswordBox>
+
+            <Button Grid.Row="3" x:Name="buttonLogin" Width="100" Click="buttonLogin_Click">Login</Button>
+            <Button Grid.Row="4" x:Name="buttonShowRegister" Width="100" Click="buttonShowRegister_Click">Register</Button>
+        </Grid>
+        <Grid x:Name="gridRegister" Grid.Row="2" VerticalAlignment="Center" Visibility="Hidden">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
+            </Grid.RowDefinitions>
+
+            <TextBox Grid.Row="0" x:Name="textBoxCFirstName" Margin="20 0 20 5" TextChanged="textBoxCFirstName_TextChanged" materialDesign:HintAssist.Hint="First Name">
+            </TextBox>
+            <materialDesign:PackIcon x:Name="imageCFirstNameError" Grid.Row="0" Visibility="Hidden" Kind="Alert" Width="22" Height="22" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0 10 20 0" Foreground="{Binding ElementName=textBoxUserName, Path=Foreground}"></materialDesign:PackIcon>
+
+            <TextBox Grid.Row="1" x:Name="textBoxCLastName" Margin="20 0 20 5" TextChanged="textBoxCLastName_TextChanged" materialDesign:HintAssist.Hint="Last Name"></TextBox>
+            <materialDesign:PackIcon x:Name="imageCLastNameError" Grid.Row="1" Visibility="Hidden" Kind="Alert" Width="22" Height="22" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0 10 20 0" Foreground="{Binding ElementName=textBoxUserName, Path=Foreground}"></materialDesign:PackIcon>
+            
+            <TextBox Grid.Row="2" x:Name="textBoxCUserName" Margin="20 0 20 5" TextChanged="textBoxCUserName_TextChanged" materialDesign:HintAssist.Hint="User Name"></TextBox>
+            <materialDesign:PackIcon x:Name="imageCUserNameError" Grid.Row="2"  Visibility="Hidden" Kind="Alert" Width="22" Height="22" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0 10 20 0" Foreground="{Binding ElementName=textBoxUserName, Path=Foreground}"></materialDesign:PackIcon>
+
+            <TextBox Grid.Row="3" x:Name="textBoxCEmail" Margin="20 0 20 5" TextChanged="textBoxCEmail_TextChanged" materialDesign:HintAssist.Hint="Email"></TextBox>
+            <materialDesign:PackIcon x:Name="imageCEmailError" Grid.Row="3" Visibility="Hidden" Kind="Alert" Width="22" Height="22" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0 10 20 0" Foreground="{Binding ElementName=textBoxUserName, Path=Foreground}"></materialDesign:PackIcon>
+            
+            <PasswordBox Grid.Row="4" x:Name="textBoxCPassword" Margin="20 0 20 5" PasswordChanged="textBoxCPassword_PasswordChanged" materialDesign:HintAssist.Hint="Password"></PasswordBox>
+            <materialDesign:PackIcon x:Name="imageCPasswordError" Grid.Row="4" Visibility="Hidden" Kind="Alert" Width="22" Height="22" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0 10 20 0" Foreground="{Binding ElementName=textBoxUserName, Path=Foreground}"></materialDesign:PackIcon>
+
+            <PasswordBox Grid.Row="5" x:Name="textBoxCConfirmPassword" Margin="20 0 20 5" PasswordChanged="textBoxCConfirmPassword_PasswordChanged" materialDesign:HintAssist.Hint="Retype Password"></PasswordBox>
+            <materialDesign:PackIcon x:Name="imageCConfirmPasswordError" Grid.Row="5" Visibility="Hidden" Kind="Alert" Width="22" Height="22" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0 10 20 0" Foreground="{Binding ElementName=textBoxUserName, Path=Foreground}"></materialDesign:PackIcon>
+
+
+            <Button Grid.Row="7" x:Name="buttonBack" Click="buttonBack_Click" Width="100">Back</Button>
+            <Button Grid.Row="8" x:Name="buttonRegister" Click="buttonRegister_Click" Width="100">Register</Button>
+        </Grid>
+    </Grid>
+</Window>

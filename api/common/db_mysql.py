@@ -308,11 +308,16 @@ IN: token, uid
 OUT: uid and time remaining on the project
 '''
 def getProjectHours(args):
-  r = {
-  "uid":"56",
-  "remaining_hours":"5:12:00"
-  }
-  return jsonify(r)
+	checkHasPrivilage(args.token, 15)
+	db = dbConnect()
+	cur = db.cursor()
+	cur.callproc('sp_viewProjectTime', [(args.uid)])
+	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+	if db:
+		cur.close()
+		db.commit()
+		db.close()
+	return jsonify(r)
 
   
 '''
@@ -645,9 +650,30 @@ IN: token, project_id, project_name, project_desc
 OUT: updated row
 '''
 def updateProject(args):
-	print("updateProject(args)")
-	args.update({"method":"updateProject(args)"})
-	return jsonify(args)
+	checkHasPrivilage(args.token, 3)
+	db = dbConnect()
+	cur = db.cursor()
+	r = []
+	
+	if args.project_desc is not None:
+		cur = db.cursor()
+		cur.callproc('sp_updateProjDesc',[str(args.project_id), str(args.project_desc)])
+		r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+		cur.close()
+
+	if args.project_name is not None:
+		cur = db.cursor()
+		cur.callproc('sp_updateProjName',[str(args.project_id), str(args.project_name)])
+		r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+		cur.close()
+		
+	if len(r) == 0:
+		abort(400, message='No Projects are found with that ID!')
+	if db:
+		db.commit()
+		db.close()
+		print(r)
+	return jsonify(r)
 	
 	
 '''
@@ -655,14 +681,207 @@ IN: token, project_id
 OUT: message
 '''
 def deleteProject(args):
-	print("deleteProject(args)")
-	args.update({"method":"deleteProject(args)"})
-	return jsonify(args)
+	checkHasPrivilage(args.token, 4)
+	db = dbConnect()
+	cur = db.cursor()
+	cur.callproc('sp_deleteProject',[str(args.project_id)])
+	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+	if db:
+		cur.close()
+		db.commit()
+		db.close()
+		print(r)
+	return jsonify(r)
 	
 
 ############# DONE WEEK 2
 	
 	
+############## WEEK 3
+# IN: token, user_id (optional)
+def readPermissions(args):
+	checkHasPrivilage(args.token, 18)
+	db = dbConnect()
+	cur = db.cursor()
+	r = []
+	if args.user_id is None:
+		cur = db.cursor()
+		cur.callproc('sp_readPermissions',[])
+		r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+		cur.close()
+	else: 
+		cur = db.cursor()
+		cur.callproc('sp_readPermissionsByID',[str(args.user_id)])
+		r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+		cur.close()
+		
+	if db:
+		cur.close()
+		db.commit()
+		db.close()
+		print(r)
+	return jsonify(r)
+
 	
+# IN: token, teamID, user_id
+def createTeamMember(args):
+	checkHasPrivilage(args.token, 2)
+	db = dbConnect()
+	cur = db.cursor()
+	cur.callproc('sp_addMember',[str(args.teamID), str(args.user_id)])
+	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+	if db:
+		cur.close()
+		db.commit()
+		db.close()
+		print(r)
+	return jsonify(r)
+
+#IN: token, teamID, user_id
+def updateTeamLead(args):
+	checkHasPrivilage(args.token, 2)
+	db = dbConnect()
+	cur = db.cursor()
+	cur.callproc('sp_updateTeamLead',[str(args.teamID), str(args.user_id)])
+	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+	if db:
+		cur.close()
+		db.commit()
+		db.close()
+		print(r)
+	return jsonify(r)
 	
+# IN:token, teamID, user_id
+def deleteTeamMember(args):
+	checkHasPrivilage(args.token, 2)
+	db = dbConnect()
+	cur = db.cursor()
+	cur.callproc('sp_removeMembers',[str(args.teamID), str(args.user_id)])
+	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+	if db:
+		cur.close()
+		db.commit()
+		db.close()
+		print(r)
+	return jsonify(r)
+
+# IN:token, teamID
+def readTeamMembers(args):
+	checkHasPrivilage(args.token, 17)
+	db = dbConnect()
+	cur = db.cursor()
+	cur.callproc('sp_readMembers',[str(args.teamID)])
+	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+	if len(r) == 0:
+		abort(400, message='No Team Members are found!')
+	if db:
+		db.close()
+		print(r)
+	return jsonify(r)
 	
+def checkIsValidFileType(fileTypeId):
+	db = dbConnect()
+	cur = db.cursor()
+	cur.callproc('sp_checkValidFileType',[fileTypeId])
+	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+	if db:
+		db.close()
+	return len(r) > 0
+	
+# IN: token fileTypeId name desc blob
+def createDocument(args):
+	checkHasPrivilage(args.token, 20)
+	checkIsValidFileType(args.fileTypeId)
+	db = dbConnect()
+	cur = db.cursor()
+	cur.callproc('sp_createFile',[str(args.fileTypeId), str(args.name), str(args.desc), str(args.blob)])
+	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+	if db:
+		cur.close()
+		db.commit()
+		db.close()
+		print(r)
+	return jsonify(r)
+	
+#IN: token doc_id
+def readDocument(args):
+	checkHasPrivilage(args.token, 19)
+	db = dbConnect()
+	cur = db.cursor()
+	cur.callproc('sp_readFiles',[str(args.doc_id)])
+	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+	if len(r) == 0:
+		abort(400, message='No Document found!')
+	if db:
+		db.close()
+		print(r)
+	return jsonify(r)
+	
+#IN: token project_uid doc_uid
+def createProjectDocument(args):
+	checkHasPrivilage(args.token, 20)
+	db = dbConnect()
+	cur = db.cursor()
+	cur.callproc('sp_createProjectFile',[str(args.project_uid), str(args.doc_uid)])
+	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+	if db:
+		cur.close()
+		db.commit()
+		db.close()
+		print(r)
+	return jsonify(r)
+	
+#IN: token, project_uid
+def readProjectDocument(args):
+	checkHasPrivilage(args.token, 19)
+	db = dbConnect()
+	cur = db.cursor()
+	cur.callproc('sp_readProjectFiles',[str(args.project_uid)])
+	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+	if len(r) == 0:
+		abort(400, message='No Files found for Project!')
+	if db:
+		db.close()
+		print(r)
+	return jsonify(r)
+	
+#IN: token project_uid doc_uid
+def deleteProjectDocument(args):
+	checkHasPrivilage(args.token, 21)
+	db = dbConnect()
+	cur = db.cursor()
+	cur.callproc('sp_deleteProjectFile',[str(args.project_uid), str(args.doc_uid)])
+	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+	if db:
+		cur.close()
+		db.commit()
+		db.close()
+		print(r)
+	return jsonify(r)
+
+#IN: token
+def readDocumentFileTypes(args):
+	checkHasPrivilage(args.token, 19)
+	db = dbConnect()
+	cur = db.cursor()
+	cur.callproc('sp_getFileTypes',[])
+	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+	if len(r) == 0:
+		abort(400, message='No File Types are found!')
+	if db:
+		db.close()
+		print(r)
+	return jsonify(r)
+	
+# IN: token, project_uid
+def readReqByProjID(args):
+	checkHasPrivilage(args.token, 15)
+	db = dbConnect()
+	cur = db.cursor()
+	cur.callproc('sp_getAllReqsByProjectID', [(args.project_uid)])
+	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+	if db:
+		cur.close()
+		db.commit()
+		db.close()
+	return jsonify(r)

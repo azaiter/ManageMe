@@ -12,19 +12,14 @@ namespace ManageMe.Utilities
     /// <summary>
     ///  This class maintains user session state.
     /// </summary>
-    public class User
+    public static class User
     {
-        public readonly string token = "";
-        public readonly string tokenExpire = "";
-        public readonly string userName = "";
-        public readonly string firstName = "";
-        public readonly string lastName = "";
-        public readonly string email = "";
-
-        public User(string token)
-        {
-            this.token = token;
-        }
+        public static string Token { get; set; }
+        public static string TokenExpire { get; set; }
+        public static string UserName { get; set; }
+        public static string FirstName { get; set; }
+        public static string LastName { get; set; }
+        public static string Email { get; set; }
 
         /// <summary>
         ///  This method logs the user in.
@@ -65,7 +60,7 @@ namespace ManageMe.Utilities
         /// <summary>
         ///  This method logs the user out.
         /// </summary>
-        public async Task<ManageMe.Models.Result> LogOut()
+        public static async Task<ManageMe.Models.Result> LogOut()
         {
 
             return new ManageMe.Models.Result(false, "Error");
@@ -74,7 +69,7 @@ namespace ManageMe.Utilities
         /// <summary>
         ///  This method determines if the user is in a role.
         /// </summary>
-        public async Task<ManageMe.Models.Result> IsInRole(string role)
+        public static async Task<ManageMe.Models.Result> IsInRole(string role)
         {
             return new ManageMe.Models.Result(false, "Error");
         }
