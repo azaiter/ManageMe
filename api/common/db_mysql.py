@@ -308,11 +308,16 @@ IN: token, uid
 OUT: uid and time remaining on the project
 '''
 def getProjectHours(args):
-  r = {
-  "uid":"56",
-  "remaining_hours":"5:12:00"
-  }
-  return jsonify(r)
+	checkHasPrivilage(args.token, 15)
+	db = dbConnect()
+	cur = db.cursor()
+	cur.callproc('sp_viewTime', [(args.uid)])
+	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+	if db:
+		cur.close()
+		db.commit()
+		db.close()
+	return jsonify(r)
 
   
 '''
@@ -746,4 +751,30 @@ def updateTeamLead(args):
 		print(r)
 	return jsonify(r)
 	
-	
+# IN:token, teamID, user_id
+def deleteTeamMember(args):
+	checkHasPrivilage(args.token, 2)
+	db = dbConnect()
+	cur = db.cursor()
+	cur.callproc('sp_removeMembers',[str(args.teamID), str(args.user_id)])
+	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+	if db:
+		cur.close()
+		db.commit()
+		db.close()
+		print(r)
+	return jsonify(r)
+
+# IN:token, teamID
+def readTeamMembers(args):
+	checkHasPrivilage(args.token, 17)
+	db = dbConnect()
+	cur = db.cursor()
+	cur.callproc('sp_readMembers',[str(args.teamID)])
+	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+	if len(r) == 0:
+		abort(400, message='No Team Members are found!')
+	if db:
+		db.close()
+		print(r)
+	return jsonify(r)
