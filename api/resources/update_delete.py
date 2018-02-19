@@ -125,3 +125,34 @@ class deleteTeamMember(Resource):
 		return dbengine.deleteTeamMember(args)
 	
 ###########################################################################
+
+###########################################################################
+
+delete_project_document_parser = reqparse.RequestParser(bundle_errors=True)
+
+delete_project_document_parser.add_argument(
+    'token', dest='token',
+    location='json', required=True,
+    type=managemeutil.verify_request_token,
+    help='The user\'s token {error_msg}',
+)
+
+delete_project_document_parser.add_argument(
+    'project_uid', dest='project_uid',
+    location='json', required=True,
+    type=managemeutil.verify_valid_project_id,
+    help='The file\'s project id. {error_msg}',
+)
+
+delete_project_document_parser.add_argument(
+    'doc_uid', dest='doc_uid',
+    location='json', required=True,
+    help='The document\'s doc_uid. {error_msg}',
+)
+
+class deleteProjectDocument(Resource):
+	def post(self):
+		args = delete_project_document_parser.parse_args()
+		return dbengine.deleteProjectDocument(args)
+	
+###########################################################################

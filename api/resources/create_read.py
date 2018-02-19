@@ -252,8 +252,8 @@ class readTeamMembers(Resource):
 ###########################################################################
 
 '''
-check valid file type
-
+check valid file type : verify_valid_file_type
+list file types
 '''
 ###########################################################################
 
@@ -267,15 +267,109 @@ create_document_parser.add_argument(
 )
 
 create_document_parser.add_argument(
-    'teamID', dest='teamID',
+    'fileTypeId', dest='fileTypeId',
     location='json', required=True,
-    type=managemeutil.verify_valid_team_id,
-    help='The team\'s ID. {error_msg}',
+    type=managemeutil.verify_valid_file_type,
+    help='The document\'s file type id. {error_msg}',
+)
+
+create_document_parser.add_argument(
+    'name', dest='name',
+    location='json', required=True,
+    help='The document\'s name. {error_msg}',
+)
+
+create_document_parser.add_argument(
+    'desc', dest='desc',
+    location='json', required=True,
+    help='The doc\'s desc. {error_msg}',
 )
 
 class createDocument(Resource):
 	def post(self):
 		args = create_document_parser.parse_args()
 		return dbengine.createDocument(args)
+	
+###########################################################################
+
+###########################################################################
+
+read_document_parser = reqparse.RequestParser(bundle_errors=True)
+
+read_document_parser.add_argument(
+    'token', dest='token',
+    location='json', required=True,
+    type=managemeutil.verify_request_token,
+    help='The user\'s token {error_msg}',
+)
+
+read_document_parser.add_argument(
+    'doc_id', dest='doc_id',
+    location='json', required=True,
+    help='The document\'s file type id. {error_msg}',
+)
+
+
+class readDocument(Resource):
+	def post(self):
+		args = read_document_parser.parse_args()
+		return dbengine.readDocument(args)
+	
+###########################################################################
+
+###########################################################################
+
+create_project_document_parser = reqparse.RequestParser(bundle_errors=True)
+
+create_project_document_parser.add_argument(
+    'token', dest='token',
+    location='json', required=True,
+    type=managemeutil.verify_request_token,
+    help='The user\'s token {error_msg}',
+)
+
+create_project_document_parser.add_argument(
+    'project_uid', dest='project_uid',
+    location='json', required=True,
+    type=managemeutil.verify_valid_project_id,
+    help='The file\'s project id. {error_msg}',
+)
+
+create_project_document_parser.add_argument(
+    'doc_uid', dest='doc_uid',
+    location='json', required=True,
+    help='The document\'s doc_uid. {error_msg}',
+)
+
+
+class createProjectDocument(Resource):
+	def post(self):
+		args = create_project_document_parser.parse_args()
+		return dbengine.createProjectDocument(args)
+	
+###########################################################################
+
+###########################################################################
+
+read_project_document_parser = reqparse.RequestParser(bundle_errors=True)
+
+read_project_document_parser.add_argument(
+    'token', dest='token',
+    location='json', required=True,
+    type=managemeutil.verify_request_token,
+    help='The user\'s token {error_msg}',
+)
+
+read_project_document_parser.add_argument(
+    'project_uid', dest='project_uid',
+    location='json', required=True,
+    type=managemeutil.verify_valid_project_id,
+    help='The file\'s project id. {error_msg}',
+)
+
+class readProjectDocument(Resource):
+	def post(self):
+		args = read_project_document_parser.parse_args()
+		return dbengine.readProjectDocument(args)
 	
 ###########################################################################

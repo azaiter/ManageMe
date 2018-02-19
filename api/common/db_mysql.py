@@ -778,3 +778,22 @@ def readTeamMembers(args):
 		db.close()
 		print(r)
 	return jsonify(r)
+	
+def checkIsValidFileType(fileTypeId):
+	return True
+	
+def createDocument(args):
+	pass
+	
+def readDocument(args):
+	pass
+	
+def createProjectDocument(args):
+	pass
+	
+def readProjectDocument(args):
+	pass
+	
+def deleteProjectDocument(args):
+	pass
+	
