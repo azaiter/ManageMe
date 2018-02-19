@@ -373,3 +373,22 @@ class readProjectDocument(Resource):
 		return dbengine.readProjectDocument(args)
 	
 ###########################################################################
+
+###########################################################################
+
+read_document_filetypes_parser = reqparse.RequestParser(bundle_errors=True)
+
+read_document_filetypes_parser.add_argument(
+    'token', dest='token',
+    location='json', required=True,
+    type=managemeutil.verify_request_token,
+    help='The user\'s token {error_msg}',
+)
+
+class readDocumentFileTypes(Resource):
+	def post(self):
+		args = read_document_filetypes_parser.parse_args()
+		return dbengine.readDocumentFileTypes(args)
+	
+###########################################################################
+

@@ -782,18 +782,27 @@ def readTeamMembers(args):
 def checkIsValidFileType(fileTypeId):
 	return True
 	
+# IN: token fileTypeId name desc blob
 def createDocument(args):
 	pass
 	
+#IN: token doc_id
 def readDocument(args):
 	pass
 	
+#IN: token project_uid doc_uid
 def createProjectDocument(args):
 	pass
 	
+#IN: token, project_uid
 def readProjectDocument(args):
 	pass
 	
+#IN: token project_uid doc_uid
 def deleteProjectDocument(args):
+	pass
+
+#IN: token
+def readDocumentFileTypes(args):
 	pass
 	

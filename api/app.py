@@ -37,7 +37,7 @@ from resources.revoke_privilage import revoke_privilage
 from resources.read_estimate_by_project_id import read_estimate_by_project_id
 from resources.read_estimate_by_req_id import read_estimate_by_req_id
 from resources.read_timecaps_by_project_id import read_timecaps_by_project_id
-from resources.create_read import readUser, createReq, readReq, readTeam, createEstimate, readPermissions, createTeamMember, readTeamMembers, createDocument, readDocument, createProjectDocument, readProjectDocument
+from resources.create_read import readUser, createReq, readReq, readTeam, createEstimate, readPermissions, createTeamMember, readTeamMembers, createDocument, readDocument, createProjectDocument, readProjectDocument, readDocumentFileTypes
 from resources.update_delete import updateProject, deleteProject, updateTeamLead, deleteTeamMember, deleteProjectDocument
 
 # define the app and run it
@@ -93,6 +93,7 @@ api.add_resource(readDocument, '/document/get', '/document/get/')
 api.add_resource(createProjectDocument, '/project/document/create', '/project/document/create/')
 api.add_resource(readProjectDocument, '/project/document/get', '/project/document/get/')
 api.add_resource(deleteProjectDocument, '/project/document/delete', '/project/document/delete/')
+api.add_resource(readDocumentFileTypes, '/document/type/get', '/document/type/get/')
 
 # for debugging, running indivisually with -debug param
 if '-debug' in argv:
