@@ -117,7 +117,8 @@ class CreateProject extends React.Component{
           });
           return;
        }
-       this.props.history.pushState(null, '/dashboard/overview');
+       console.log("I AM WORKING")
+       window.location.reload();
     }).catch(err => {
         console.log("Error:",err);
     })

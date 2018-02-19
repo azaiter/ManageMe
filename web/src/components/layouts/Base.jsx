@@ -2,10 +2,13 @@ import React from "react";
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
 import { Route, DefaultRoute, RouteHandler } from "react-router";
+import {getLocalToken} from "../../actions/Auth";
 
 class Base extends React.Component {
   componentWillMount() {
-     this.props.history.pushState(null, '/login');
+    if(!getLocalToken()){
+      this.props.history.pushState(null, '/login');       
+    }
   }
 
   render() {
