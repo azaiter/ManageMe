@@ -26,8 +26,6 @@ namespace ManageMe.ViewModels
             InterTabClient = new MainInterTabClient();
             contentList = new List<UIElement>();
             projects = new ObservableCollection<Views.Controls.Project>();
-            projects.Add(new Views.Controls.Project(1));
-            projects.Add(new Views.Controls.Project(1));
             contentList.Add(new Dashboard());
             contentList.Add(new Projects());
             contentList.Add(new Reports());

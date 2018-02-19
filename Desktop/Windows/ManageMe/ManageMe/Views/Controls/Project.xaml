@@ -8,6 +8,12 @@
              xmlns:views="ManageMe.Views"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:Controls="clr-namespace:ManageMe.Views.Controls"
+             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+             Background="{DynamicResource MaterialDesignPaper}"
+             TextElement.FontWeight="Medium"
+             TextElement.FontSize="14"
+             FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
+             xmlns:dragablz="clr-namespace:Dragablz;assembly=Dragablz"
              d:DesignWidth="1200" d:DesignHeight="825">
     <Grid>
         <Grid.ColumnDefinitions>
@@ -133,7 +139,6 @@
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
                         </ListBox>
-                        <Button x:Name="buttonAddRequirement" Width="150" Style="{StaticResource MaterialDesignRaisedAccentButton}" Grid.Row="1">Add Requirement</Button>
                     </Grid>
                 </Grid>
                 <Grid Grid.Column="1">

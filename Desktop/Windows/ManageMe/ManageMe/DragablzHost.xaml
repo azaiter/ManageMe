@@ -5,21 +5,17 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ManageMe"
         mc:Ignorable="d"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        Background="{DynamicResource MaterialDesignPaper}"
+        TextElement.FontWeight="Medium"
+        TextElement.FontSize="14"
+        FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
         xmlns:dragablz="clr-namespace:Dragablz;assembly=Dragablz"
-        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         Title="Project" MinHeight="700" Height="700 " Width="1200">
-    <materialDesign:DialogHost Identifier="RootDialog" SnackbarMessageQueue="{Binding ElementName=MainSnackbar, Path=MessageQueue}">
-        <materialDesign:DialogHost x:Name="dialogHost">
-            <materialDesign:DialogHost.DialogContent>
-                <StackPanel Background="{DynamicResource MaterialDesignPaper}">
 
-                </StackPanel>
-            </materialDesign:DialogHost.DialogContent>
-            <dragablz:TabablzControl x:Name="TabablzControl" HeaderMemberPath="DataContext.Name">
-                <dragablz:TabablzControl.InterTabController>
-                    <dragablz:InterTabController />
-                </dragablz:TabablzControl.InterTabController>
-            </dragablz:TabablzControl>
-        </materialDesign:DialogHost>
-    </materialDesign:DialogHost>
+    <dragablz:TabablzControl x:Name="TabablzControl" HeaderMemberPath="DataContext.Name">
+        <dragablz:TabablzControl.InterTabController>
+            <dragablz:InterTabController />
+        </dragablz:TabablzControl.InterTabController>
+    </dragablz:TabablzControl>
 </Window>

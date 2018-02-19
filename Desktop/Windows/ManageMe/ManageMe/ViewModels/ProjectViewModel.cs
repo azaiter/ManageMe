@@ -16,7 +16,7 @@ namespace ManageMe.ViewModels
         private string description;
         private List<Models.Comment> comments;
         private List<Models.File> files;
-        private List<Models.Requirement> requirments;
+        private List<Models.Requirement> requirments;     
 
         private System.Threading.Timer timer;
 
@@ -35,6 +35,8 @@ namespace ManageMe.ViewModels
         {
             timer = null;
         }
+
+        public static bool ClockedIn { get; set; }
 
         public void RefreshData()
         {

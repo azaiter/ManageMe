@@ -8,6 +8,11 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:Controls="clr-namespace:ManageMe.Views.Controls"
         mc:Ignorable="d"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        Background="{DynamicResource MaterialDesignPaper}"
+        TextElement.FontWeight="Medium"
+        TextElement.FontSize="14"
+        FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
         xmlns:dragablz="clr-namespace:Dragablz;assembly=Dragablz"
         Title="ManageMe" MinHeight="825" MinWidth="1200" Width="1200" Height="825">
     <materialDesign:DialogHost Identifier="RootDialog" SnackbarMessageQueue="{Binding ElementName=MainSnackbar, Path=MessageQueue}">
@@ -58,13 +63,13 @@
                             <ContentPresenter Content="{Binding Content}"/>
                         </Grid>
                     </DockPanel>
-                    <Grid Height="41" VerticalAlignment="Bottom" HorizontalAlignment="Stretch">
+                    <!--<Grid Height="41" VerticalAlignment="Bottom" HorizontalAlignment="Stretch">
                         <dragablz:TabablzControl ItemsSource="{Binding Projects}" HeaderMemberPath="DataContext.Name">
                             <dragablz:TabablzControl.InterTabController>
                                 <dragablz:InterTabController InterTabClient="{Binding InterTabClient}"/>
                             </dragablz:TabablzControl.InterTabController>
                         </dragablz:TabablzControl>
-                    </Grid>
+                    </Grid>-->
                 </Grid>
             </materialDesign:DrawerHost>
         </materialDesign:DialogHost>
