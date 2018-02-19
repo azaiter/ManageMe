@@ -725,8 +725,6 @@ def createTeamMember(args):
 	cur = db.cursor()
 	cur.callproc('sp_addMembers',[str(args.teamID), str(args.user_id)])
 	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
-	if len(r) == 0:
-		abort(400, message='No Reqs are found with that ID!')
 	if db:
 		cur.close()
 		db.commit()
@@ -734,10 +732,18 @@ def createTeamMember(args):
 		print(r)
 	return jsonify(r)
 
-#IN: token, teamID, user_id, isLead
+#IN: token, teamID, user_id
 def updateTeamLead(args):
-	print("updateTeamLead(args)")
-	args.update({"method":"updateTeamLead(args)"})
-	return jsonify(args)
+	checkHasPrivilage(args.token, 2)
+	db = dbConnect()
+	cur = db.cursor()
+	cur.callproc('sp_updateTeamLead',[str(args.teamID), str(args.user_id)])
+	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+	if db:
+		cur.close()
+		db.commit()
+		db.close()
+		print(r)
+	return jsonify(r)
 	
 	
