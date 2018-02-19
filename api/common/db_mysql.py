@@ -331,7 +331,7 @@ NOTES: privilage_id is the id of the privilage that the token user is giving to 
 '''
 def assignPrivilage(args):
 	checkHasPrivilage(args.token, 11)
-	checkAlreadyHasPrivilage(args.affected_user_id, privilage_id)
+	checkAlreadyHasPrivilage(args.affected_user_id, args.privilage_id)
 	db = dbConnect()
 	cur = db.cursor()
 	cur.callproc('sp_assignPermission', [(args.privilage_id), (args.affected_user_id)])
