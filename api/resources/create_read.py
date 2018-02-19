@@ -392,3 +392,27 @@ class readDocumentFileTypes(Resource):
 	
 ###########################################################################
 
+###########################################################################
+
+read_req_by_projID_filetypes_parser = reqparse.RequestParser(bundle_errors=True)
+
+read_req_by_projID_filetypes_parser.add_argument(
+    'token', dest='token',
+    location='json', required=True,
+    type=managemeutil.verify_request_token,
+    help='The user\'s token {error_msg}',
+)
+
+read_req_by_projID_filetypes_parser.add_argument(
+    'project_uid', dest='project_uid',
+    location='json', required=True,
+    type=managemeutil.verify_valid_project_id,
+    help='The req\'s project id. {error_msg}',
+)
+
+class readReqByProjID(Resource):
+	def post(self):
+		args = read_req_by_projID_filetypes_parser.parse_args()
+		return dbengine.readReqByProjID(args)
+	
+###########################################################################

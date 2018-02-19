@@ -311,7 +311,7 @@ def getProjectHours(args):
 	checkHasPrivilage(args.token, 15)
 	db = dbConnect()
 	cur = db.cursor()
-	cur.callproc('sp_viewTime', [(args.uid)])
+	cur.callproc('sp_viewProjectTime', [(args.uid)])
 	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
 	if db:
 		cur.close()
@@ -780,29 +780,108 @@ def readTeamMembers(args):
 	return jsonify(r)
 	
 def checkIsValidFileType(fileTypeId):
-	return True
+	db = dbConnect()
+	cur = db.cursor()
+	cur.callproc('sp_checkValidFileType',[fileTypeId])
+	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+	if db:
+		db.close()
+	return len(r) > 0
 	
 # IN: token fileTypeId name desc blob
 def createDocument(args):
-	pass
+	checkHasPrivilage(args.token, 20)
+	checkIsValidFileType(args.fileTypeId)
+	db = dbConnect()
+	cur = db.cursor()
+	cur.callproc('sp_createFile',[str(args.fileTypeId), str(args.name), str(args.desc), str(args.blob)])
+	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+	if db:
+		cur.close()
+		db.commit()
+		db.close()
+		print(r)
+	return jsonify(r)
 	
 #IN: token doc_id
 def readDocument(args):
-	pass
+	checkHasPrivilage(args.token, 19)
+	db = dbConnect()
+	cur = db.cursor()
+	cur.callproc('sp_readFiles',[str(args.doc_id)])
+	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+	if len(r) == 0:
+		abort(400, message='No Document found!')
+	if db:
+		db.close()
+		print(r)
+	return jsonify(r)
 	
 #IN: token project_uid doc_uid
 def createProjectDocument(args):
-	pass
+	checkHasPrivilage(args.token, 20)
+	db = dbConnect()
+	cur = db.cursor()
+	cur.callproc('sp_createProjectFile',[str(args.project_uid), str(args.doc_uid)])
+	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+	if db:
+		cur.close()
+		db.commit()
+		db.close()
+		print(r)
+	return jsonify(r)
 	
 #IN: token, project_uid
 def readProjectDocument(args):
-	pass
+	checkHasPrivilage(args.token, 19)
+	db = dbConnect()
+	cur = db.cursor()
+	cur.callproc('sp_readProjectFiles',[str(args.project_uid)])
+	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+	if len(r) == 0:
+		abort(400, message='No Files found for Project!')
+	if db:
+		db.close()
+		print(r)
+	return jsonify(r)
 	
 #IN: token project_uid doc_uid
 def deleteProjectDocument(args):
-	pass
+	checkHasPrivilage(args.token, 21)
+	db = dbConnect()
+	cur = db.cursor()
+	cur.callproc('sp_deleteProjectFile',[str(args.project_uid), str(args.doc_uid)])
+	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+	if db:
+		cur.close()
+		db.commit()
+		db.close()
+		print(r)
+	return jsonify(r)
 
 #IN: token
 def readDocumentFileTypes(args):
-	pass
+	checkHasPrivilage(args.token, 19)
+	db = dbConnect()
+	cur = db.cursor()
+	cur.callproc('sp_getFileTypes',[])
+	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+	if len(r) == 0:
+		abort(400, message='No File Types are found!')
+	if db:
+		db.close()
+		print(r)
+	return jsonify(r)
 	
+# IN: token, project_uid
+def readReqByProjID(args):
+	checkHasPrivilage(args.token, 15)
+	db = dbConnect()
+	cur = db.cursor()
+	cur.callproc('sp_getAllReqsByProjectID', [(args.project_uid)])
+	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+	if db:
+		cur.close()
+		db.commit()
+		db.close()
+	return jsonify(r)
