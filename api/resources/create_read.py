@@ -250,3 +250,32 @@ class readTeamMembers(Resource):
 		return dbengine.readTeamMembers(args)
 	
 ###########################################################################
+
+'''
+check valid file type
+
+'''
+###########################################################################
+
+create_document_parser = reqparse.RequestParser(bundle_errors=True)
+
+create_document_parser.add_argument(
+    'token', dest='token',
+    location='json', required=True,
+    type=managemeutil.verify_request_token,
+    help='The user\'s token {error_msg}',
+)
+
+create_document_parser.add_argument(
+    'teamID', dest='teamID',
+    location='json', required=True,
+    type=managemeutil.verify_valid_team_id,
+    help='The team\'s ID. {error_msg}',
+)
+
+class createDocument(Resource):
+	def post(self):
+		args = create_document_parser.parse_args()
+		return dbengine.createDocument(args)
+	
+###########################################################################

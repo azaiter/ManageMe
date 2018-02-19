@@ -709,7 +709,7 @@ def readPermissions(args):
 		cur.callproc('sp_readPermissions',[])
 		r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
 		cur.close()
-	else
+	else: 
 		cur = db.cursor()
 		cur.callproc('sp_readPermissionsByID',[str(args.user_id)])
 		r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
@@ -720,7 +720,7 @@ def readPermissions(args):
 		db.commit()
 		db.close()
 		print(r)
-	return jsonify(args)
+	return jsonify(r)
 
 	
 # IN: token, teamID, user_id
@@ -728,7 +728,7 @@ def createTeamMember(args):
 	checkHasPrivilage(args.token, 2)
 	db = dbConnect()
 	cur = db.cursor()
-	cur.callproc('sp_addMembers',[str(args.teamID), str(args.user_id)])
+	cur.callproc('sp_addMember',[str(args.teamID), str(args.user_id)])
 	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
 	if db:
 		cur.close()

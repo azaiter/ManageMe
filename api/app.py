@@ -86,6 +86,8 @@ api.add_resource(deleteProject, '/project/delete', '/project/delete/')
 api.add_resource(readPermissions, '/privilage/get', '/privilage/get/')
 api.add_resource(createTeamMember, '/team/member/create', '/team/member/create/')
 api.add_resource(updateTeamLead, '/team/member/lead', '/team/member/lead/')
+api.add_resource(readTeamMembers, '/team/member/get', '/team/member/get/')
+api.add_resource(deleteTeamMember, '/team/member/delete', '/team/member/delete/')
 
 # for debugging, running indivisually with -debug param
 if '-debug' in argv:
