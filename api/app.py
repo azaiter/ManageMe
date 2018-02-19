@@ -37,8 +37,8 @@ from resources.revoke_privilage import revoke_privilage
 from resources.read_estimate_by_project_id import read_estimate_by_project_id
 from resources.read_estimate_by_req_id import read_estimate_by_req_id
 from resources.read_timecaps_by_project_id import read_timecaps_by_project_id
-from resources.create_read import readUser, createReq, readReq, readTeam, createEstimate, readPermissions, createTeamMember, updateTeamLead
-from resources.update_delete import updateProject, deleteProject
+from resources.create_read import readUser, createReq, readReq, readTeam, createEstimate, readPermissions, createTeamMember, readTeamMembers
+from resources.update_delete import updateProject, deleteProject, updateTeamLead, deleteTeamMember
 
 # define the app and run it
 app = Flask(__name__)
@@ -82,10 +82,10 @@ api.add_resource(createEstimate, '/requirement/estimate/create', '/requirement/e
 api.add_resource(updateProject, '/project/update', '/project/update/')
 api.add_resource(deleteProject, '/project/delete', '/project/delete/')
 
+#### 4
 api.add_resource(readPermissions, '/privilage/get', '/privilage/get/')
 api.add_resource(createTeamMember, '/team/member/create', '/team/member/create/')
 api.add_resource(updateTeamLead, '/team/member/lead', '/team/member/lead/')
-#### 4
 
 # for debugging, running indivisually with -debug param
 if '-debug' in argv:

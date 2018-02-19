@@ -693,18 +693,48 @@ def deleteProject(args):
 	
 	
 ############## WEEK 3
+# IN: token, user_id (optional)
 def readPermissions(args):
-	if args.user_id is not None:
-		args.update({"Note":"user_id operation"})
-	print("readPermissions(args)")
-	args.update({"method":"readPermissions(args)"})
+	checkHasPrivilage(args.token, 18)
+	db = dbConnect()
+	cur = db.cursor()
+	r = []
+	if args.user_id is None:
+		cur = db.cursor()
+		cur.callproc('sp_readPermissions',[])
+		r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+		cur.close()
+	else
+		cur = db.cursor()
+		cur.callproc('sp_readPermissionsByID',[str(args.user_id)])
+		r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+		cur.close()
+		
+	if db:
+		cur.close()
+		db.commit()
+		db.close()
+		print(r)
 	return jsonify(args)
 
+	
+# IN: token, teamID, user_id
 def createTeamMember(args):
-	print("createTeamMember(args)")
-	args.update({"method":"createTeamMember(args)"})
-	return jsonify(args)
+	checkHasPrivilage(args.token, 2)
+	db = dbConnect()
+	cur = db.cursor()
+	cur.callproc('sp_addMembers',[str(args.teamID), str(args.user_id)])
+	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+	if len(r) == 0:
+		abort(400, message='No Reqs are found with that ID!')
+	if db:
+		cur.close()
+		db.commit()
+		db.close()
+		print(r)
+	return jsonify(r)
 
+#IN: token, teamID, user_id, isLead
 def updateTeamLead(args):
 	print("updateTeamLead(args)")
 	args.update({"method":"updateTeamLead(args)"})
