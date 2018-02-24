@@ -10,6 +10,7 @@ Dependencies:
 	pip install -U flask-cors
 	pip install Flask-WTF
 	pip install simplejson
+	pip install Werkzeug
 '''
 # import dependencies
 from sys import argv

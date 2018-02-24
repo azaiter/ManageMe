@@ -794,7 +794,7 @@ def createDocument(args):
 	checkIsValidFileType(args.fileTypeId)
 	db = dbConnect()
 	cur = db.cursor()
-	cur.callproc('sp_createFile',[str(args.fileTypeId), str(args.name), str(args.desc), str(args.blob)])
+	cur.callproc('sp_createFile',[str(args.token),str(args.fileTypeId), str(args.name), str(args.desc), str(args.blob.read())])
 	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
 	if db:
 		cur.close()

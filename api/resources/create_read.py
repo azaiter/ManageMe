@@ -1,5 +1,6 @@
 from flask_restful import Resource, reqparse
 from resources.__init__ import dbengine, managemeutil
+import werkzeug
 
 ###########################################################################
 read_user_post_parser = reqparse.RequestParser(bundle_errors=True)
@@ -261,28 +262,35 @@ create_document_parser = reqparse.RequestParser(bundle_errors=True)
 
 create_document_parser.add_argument(
     'token', dest='token',
-    location='json', required=True,
+    location='form', required=True,
     type=managemeutil.verify_request_token,
     help='The user\'s token {error_msg}',
 )
 
 create_document_parser.add_argument(
     'fileTypeId', dest='fileTypeId',
-    location='json', required=True,
+    location='form', required=True,
     type=managemeutil.verify_valid_file_type,
     help='The document\'s file type id. {error_msg}',
 )
 
 create_document_parser.add_argument(
     'name', dest='name',
-    location='json', required=True,
+    location='form', required=True,
     help='The document\'s name. {error_msg}',
 )
 
 create_document_parser.add_argument(
     'desc', dest='desc',
-    location='json', required=True,
+    location='form', required=True,
     help='The doc\'s desc. {error_msg}',
+)
+
+create_document_parser.add_argument(
+    'blob', dest='blob',
+    location='files', required=True,
+    type=werkzeug.datastructures.FileStorage,
+    help='The doc\'s blob. {error_msg}',
 )
 
 class createDocument(Resource):
