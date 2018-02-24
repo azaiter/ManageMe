@@ -885,3 +885,25 @@ def readReqByProjID(args):
 		db.commit()
 		db.close()
 	return jsonify(r)
+	
+# IN: token, user_id
+def deleteUser(args):
+	pass
+	
+'''
+IN REQUIRED: token, user_id
+IN NOT REQUIRED: first_name, last_name, email, phonenum, address
+'''
+def updateUser(args):
+	pass
+	
+# IN: token, req_id
+def deleteReq(args):
+	pass
+
+'''
+IN REQUIRED: token, req_id
+IN NOT REQUIRED: estimate, desc, name, softcap, hardcap, priority
+'''
+def updateReq(args):
+	pass
