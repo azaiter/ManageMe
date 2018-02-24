@@ -30,6 +30,13 @@ updateProject_parser.add_argument(
     type=str,
     help='The project\'s description {error_msg}',
 )
+
+updateProject_parser.add_argument(
+    'team_id', dest='team_id',
+    location='json', required=False,
+    type=str,
+    help='The project\'s description {error_msg}',
+)
 class updateProject(Resource):
 	def post(self):
 		args = updateProject_parser.parse_args()

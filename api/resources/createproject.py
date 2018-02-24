@@ -23,6 +23,13 @@ post_parser.add_argument(
     help='The project\'s description {error_msg}',
 )
 
+post_parser.add_argument(
+    'team_id', dest='team_id',
+    location='json', required=True,
+    type=str,
+    help='The project\'s description {error_msg}',
+)
+
 class createproject(Resource):
   def post(self):
     args = post_parser.parse_args()
