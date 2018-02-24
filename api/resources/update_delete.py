@@ -30,6 +30,13 @@ updateProject_parser.add_argument(
     type=str,
     help='The project\'s description {error_msg}',
 )
+
+updateProject_parser.add_argument(
+    'team_id', dest='team_id',
+    location='json', required=False,
+    type=str,
+    help='The project\'s description {error_msg}',
+)
 class updateProject(Resource):
 	def post(self):
 		args = updateProject_parser.parse_args()
@@ -154,5 +161,181 @@ class deleteProjectDocument(Resource):
 	def post(self):
 		args = delete_project_document_parser.parse_args()
 		return dbengine.deleteProjectDocument(args)
+	
+###########################################################################
+
+###########################################################################
+
+delete_user_parser = reqparse.RequestParser(bundle_errors=True)
+
+delete_user_parser.add_argument(
+    'token', dest='token',
+    location='json', required=True,
+    type=managemeutil.verify_request_token,
+    help='The user\'s token {error_msg}',
+)
+
+delete_user_parser.add_argument(
+    'user_id', dest='user_id',
+    location='json', required=True,
+    type=managemeutil.verify_userIDNotExist,
+    help='The file\'s project id. {error_msg}',
+)
+
+
+class deleteUser(Resource):
+	def post(self):
+		args = delete_user_parser.parse_args()
+		return dbengine.deleteUser(args)
+	
+###########################################################################
+
+###########################################################################
+
+update_user_parser = reqparse.RequestParser(bundle_errors=True)
+
+update_user_parser.add_argument(
+    'token', dest='token',
+    location='json', required=True,
+    type=managemeutil.verify_request_token,
+    help='The user\'s token {error_msg}',
+)
+
+update_user_parser.add_argument(
+    'user_id', dest='user_id',
+    location='json', required=True,
+    type=managemeutil.verify_userIDNotExist,
+    help='The user\'s ID. {error_msg}',
+)
+
+update_user_parser.add_argument(
+    'first_name', dest='first_name',
+    location='json', required=False,
+    type=str,
+    help='The user\'s first name {error_msg}',
+)
+
+update_user_parser.add_argument(
+    'last_name', dest='last_name',
+    location='json', required=False,
+    type=str,
+    help='The user\'s last name {error_msg}',
+)
+update_user_parser.add_argument(
+    'email', dest='email',
+    location='json', required=False,
+    type=managemeutil.email,
+    help='The user\'s email {error_msg}',
+)
+update_user_parser.add_argument(
+    'phonenum', dest='phonenum',
+    location='json', required=False,
+    type=managemeutil.verify_isTenDigitNum,
+    help='The user\'s phonenumber {error_msg}',
+)
+update_user_parser.add_argument(
+    'address', dest='address',
+    location='json', required=False,
+    type=str,
+    help='The user\'s address {error_msg}',
+)
+
+class updateUser(Resource):
+	def post(self):
+		args = update_user_parser.parse_args()
+		return dbengine.updateUser(args)
+	
+###########################################################################
+
+###########################################################################
+
+delete_req_parser = reqparse.RequestParser(bundle_errors=True)
+
+delete_req_parser.add_argument(
+    'token', dest='token',
+    location='json', required=True,
+    type=managemeutil.verify_request_token,
+    help='The user\'s token {error_msg}',
+)
+
+delete_req_parser.add_argument(
+    'req_id', dest='req_id',
+    location='json', required=True,
+    type=managemeutil.verify_valid_req_id,
+    help='The req id. {error_msg}',
+)
+
+
+class deleteReq(Resource):
+	def post(self):
+		args = delete_req_parser.parse_args()
+		return dbengine.deleteReq(args)
+	
+###########################################################################
+
+###########################################################################
+
+update_req_parser = reqparse.RequestParser(bundle_errors=True)
+
+update_req_parser.add_argument(
+    'token', dest='token',
+    location='json', required=True,
+    type=managemeutil.verify_request_token,
+    help='The user\'s token {error_msg}',
+)
+
+update_req_parser.add_argument(
+    'req_id', dest='req_id',
+    location='json', required=True,
+    type=managemeutil.verify_valid_req_id,
+    help='The req id. {error_msg}',
+)
+
+
+update_req_parser.add_argument(
+    'estimate', dest='estimate',
+    location='json', required=False,
+    #type=managemeutil.verify_projectNotExist,
+    help='The req\'s estimate. {error_msg}',
+)
+
+update_req_parser.add_argument(
+    'desc', dest='desc',
+    location='json', required=False,
+    #type=managemeutil.verify_projectNotExist,
+    help='The req\'s description. {error_msg}',
+)
+
+update_req_parser.add_argument(
+    'name', dest='name',
+    location='json', required=False,
+    #type=managemeutil.verify_projectNotExist,
+    help='The req\'s name. {error_msg}',
+)
+
+update_req_parser.add_argument(
+    'softcap', dest='softcap',
+    location='json', required=False,
+    #type=managemeutil.verify_projectNotExist,
+    help='The req\'s softcap. {error_msg}',
+)
+update_req_parser.add_argument(
+    'hardcap', dest='hardcap',
+    location='json', required=False,
+    #type=managemeutil.verify_projectNotExist,
+    help='The req\'s hardcap. {error_msg}',
+)
+update_req_parser.add_argument(
+    'priority', dest='priority',
+    location='json', required=False,
+    #type=managemeutil.verify_projectNotExist,
+    help='The req\'s priority. {error_msg}',
+)
+
+
+class updateReq(Resource):
+	def post(self):
+		args = update_req_parser.parse_args()
+		return dbengine.updateReq(args)
 	
 ###########################################################################

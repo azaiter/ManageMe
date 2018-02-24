@@ -86,7 +86,7 @@ def createProject(args):
 	checkHasPrivilage(args.token, 3)
 	db = dbConnect()
 	cur = db.cursor()
-	cur.callproc('sp_createProject',[str(args.token), str(args.project_name), str(args.project_desc)])
+	cur.callproc('sp_createProject',[str(args.token), str(args.project_name), str(args.project_desc) ,str(args.team_id)])
 	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
 	if db:
 		cur.close()
@@ -666,6 +666,12 @@ def updateProject(args):
 		cur.callproc('sp_updateProjName',[str(args.project_id), str(args.project_name)])
 		r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
 		cur.close()
+	
+	if args.team_id is not None:
+		cur = db.cursor()
+		cur.callproc('sp_assignTeam',[str(args.project_id), str(args.team_id)])
+		r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+		cur.close()
 		
 	if len(r) == 0:
 		abort(400, message='No Projects are found with that ID!')
@@ -794,7 +800,7 @@ def createDocument(args):
 	checkIsValidFileType(args.fileTypeId)
 	db = dbConnect()
 	cur = db.cursor()
-	cur.callproc('sp_createFile',[str(args.fileTypeId), str(args.name), str(args.desc), str(args.blob)])
+	cur.callproc('sp_createFile',[str(args.token),str(args.fileTypeId), str(args.name), str(args.desc), str(args.blob.read())])
 	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
 	if db:
 		cur.close()
@@ -885,3 +891,168 @@ def readReqByProjID(args):
 		db.commit()
 		db.close()
 	return jsonify(r)
+	
+# IN: token, user_id
+def deleteUser(args):
+	return disableUser(args)
+	
+'''
+IN REQUIRED: token, user_id
+IN NOT REQUIRED: first_name, last_name, email, phonenum, address
+'''
+def updateUser(args):
+	checkHasPrivilage(args.token, 11)
+	db = dbConnect()
+	cur = db.cursor()
+	r = []
+	
+	if args.first_name is not None:
+		cur = db.cursor()
+		cur.callproc('sp_updateUserFirstName',[str(args.user_id), str(args.first_name)])
+		r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+		cur.close()
+
+	if args.last_name is not None:
+		cur = db.cursor()
+		cur.callproc('sp_updateUserLastName',[str(args.user_id), str(args.last_name)])
+		r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+		cur.close()
+		
+	if args.email is not None:
+		cur = db.cursor()
+		cur.callproc('sp_updateUserEmail',[str(args.user_id), str(args.email)])
+		r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+		cur.close()
+		
+	if args.phonenum is not None:
+		cur = db.cursor()
+		cur.callproc('sp_updateUserPhone',[str(args.user_id), str(args.phonenum)])
+		r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+		cur.close()
+		
+	if args.address is not None:
+		cur = db.cursor()
+		cur.callproc('sp_updateUserAddress',[str(args.user_id), str(args.address)])
+		r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+		cur.close()
+		
+	if len(r) == 0:
+		abort(400, message='No Users are found with that ID!')
+	if db:
+		db.commit()
+		db.close()
+		print(r)
+	return jsonify(r)
+	
+# IN: token, req_id
+def deleteReq(args):
+	checkHasPrivilage(args.token, 22)
+	db = dbConnect()
+	cur = db.cursor()
+	cur.callproc('sp_deleteReq',[str(args.req_id)])
+	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+	if db:
+		cur.close()
+		db.commit()
+		db.close()
+		print(r)
+	return jsonify(r)
+
+'''
+IN REQUIRED: token, req_id
+IN NOT REQUIRED: estimate, desc, name, softcap, hardcap, priority
+'''
+def updateReq(args):
+	checkHasPrivilage(args.token, 22)
+	db = dbConnect()
+	cur = db.cursor()
+	r = []
+	
+	if args.estimate is not None:
+		cur = db.cursor()
+		cur.callproc('sp_updateEstimate',[str(args.req_id), str(args.estimate)])
+		r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+		cur.close()
+
+	if args.desc is not None:
+		cur = db.cursor()
+		cur.callproc('sp_updateReqDesc',[str(args.req_id), str(args.desc)])
+		r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+		cur.close()
+
+	if args.name is not None:
+		cur = db.cursor()
+		cur.callproc('sp_updateReqName',[str(args.req_id), str(args.name)])
+		r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+		cur.close()
+
+	if args.softcap is not None:
+		cur = db.cursor()
+		cur.callproc('sp_updateReqSoftCap',[str(args.req_id), str(args.softcap)])
+		r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+		cur.close()
+
+	if args.hardcap is not None:
+		cur = db.cursor()
+		cur.callproc('sp_updateReqHardCap',[str(args.req_id), str(args.hardcap)])
+		r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+		cur.close()
+
+	if args.priority is not None:
+		cur = db.cursor()
+		cur.callproc('sp_updateReqPriority',[str(args.req_id), str(args.priority)])
+		r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+		cur.close()
+		
+	if len(r) == 0:
+		abort(400, message='No Requirements are found with that ID!')
+	if db:
+		db.commit()
+		db.close()
+		print(r)
+	return jsonify(r)
+
+	
+	
+# IN: token, OldreqID, estimate, desc, name, softcap, hardcap, priority
+def createReqChangeRequest(args):
+	checkHasPrivilage(args.token, 16)
+	db = dbConnect()
+	cur = db.cursor()
+	cur.callproc('sp_createChangeRequest',[str(args.token), str(args.estimate), str(args.desc), str(args.name), str(args.softcap), str(args.hardcap), str(args.priority), str(args.OldreqID)])
+	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+	if db:
+		cur.close()
+		db.commit()
+		db.close()
+		print(r)
+	return jsonify(r)
+	
+# IN: token, reqID
+def acceptReqChangeRequest(args):
+	checkHasPrivilage(args.token, 16)
+	db = dbConnect()
+	cur = db.cursor()
+	cur.callproc('sp_acceptChangeRequest',[str(args.reqID)])
+	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+	if db:
+		cur.close()
+		db.commit()
+		db.close()
+		print(r)
+	return jsonify(r)
+	
+# IN: token, reqID
+def rejectReqChangeRequest(args):
+	checkHasPrivilage(args.token, 16)
+	db = dbConnect()
+	cur = db.cursor()
+	cur.callproc('sp_rejectChangeRequest',[str(args.reqID)])
+	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+	if db:
+		cur.close()
+		db.commit()
+		db.close()
+		print(r)
+	return jsonify(r)
+	
