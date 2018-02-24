@@ -86,7 +86,7 @@ def createProject(args):
 	checkHasPrivilage(args.token, 3)
 	db = dbConnect()
 	cur = db.cursor()
-	cur.callproc('sp_createProject',[str(args.token), str(args.project_name), str(args.project_desc)])
+	cur.callproc('sp_createProject',[str(args.token), str(args.project_name), str(args.project_desc) ,str(args.team_id)])
 	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
 	if db:
 		cur.close()
@@ -666,6 +666,12 @@ def updateProject(args):
 		cur.callproc('sp_updateProjName',[str(args.project_id), str(args.project_name)])
 		r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
 		cur.close()
+	
+	if args.team_id is not None:
+		cur = db.cursor()
+		cur.callproc('sp_assignTeam',[str(args.project_id), str(args.team_id)])
+		r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+		cur.close()
 		
 	if len(r) == 0:
 		abort(400, message='No Projects are found with that ID!')
@@ -888,7 +894,7 @@ def readReqByProjID(args):
 	
 # IN: token, user_id
 def deleteUser(args):
-	disableUser(args)
+	return disableUser(args)
 	
 '''
 IN REQUIRED: token, user_id
@@ -943,7 +949,7 @@ def deleteReq(args):
 	checkHasPrivilage(args.token, 22)
 	db = dbConnect()
 	cur = db.cursor()
-	cur.callproc('sp_deleteReq',[str(args.req_uid)])
+	cur.callproc('sp_deleteReq',[str(args.req_id)])
 	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
 	if db:
 		cur.close()
@@ -980,15 +986,15 @@ def updateReq(args):
 		r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
 		cur.close()
 
-	if args.soft_cap is not None:
+	if args.softcap is not None:
 		cur = db.cursor()
-		cur.callproc('sp_updateReqSoftCap',[str(args.req_id), str(args.soft_cap)])
+		cur.callproc('sp_updateReqSoftCap',[str(args.req_id), str(args.softcap)])
 		r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
 		cur.close()
 
-	if args.hard_cap is not None:
+	if args.hardcap is not None:
 		cur = db.cursor()
-		cur.callproc('sp_updateReqHardCap',[str(args.req_id), str(args.hard_cap)])
+		cur.callproc('sp_updateReqHardCap',[str(args.req_id), str(args.hardcap)])
 		r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
 		cur.close()
 
@@ -1005,3 +1011,18 @@ def updateReq(args):
 		db.close()
 		print(r)
 	return jsonify(r)
+
+	
+	
+# IN: token, estimate, desc, name, softcap, hardcap, priority
+def createReqChangeRequest(args):
+	pass
+	
+# IN: token, reqID
+def acceptReqChangeRequest(args):
+	pass
+	
+# IN: token, reqID
+def rejectReqChangeRequest(args):
+	pass
+	

@@ -424,3 +424,112 @@ class readReqByProjID(Resource):
 		return dbengine.readReqByProjID(args)
 	
 ###########################################################################
+
+###########################################################################
+
+create_requirement_change_request_post_parser = reqparse.RequestParser(bundle_errors=True)
+
+create_requirement_change_request_post_parser.add_argument(
+    'token', dest='token',
+    location='json', required=True,
+    type=managemeutil.verify_request_token,
+    help='The user\'s token {error_msg}',
+)
+
+create_requirement_change_request_post_parser.add_argument(
+    'estimate', dest='estimate',
+    location='json', required=True,
+    #type=managemeutil.verify_projectNotExist,
+    help='The req\'s estimate. {error_msg}',
+)
+
+create_requirement_change_request_post_parser.add_argument(
+    'desc', dest='desc',
+    location='json', required=True,
+    #type=managemeutil.verify_projectNotExist,
+    help='The req\'s description. {error_msg}',
+)
+
+create_requirement_change_request_post_parser.add_argument(
+    'name', dest='name',
+    location='json', required=True,
+    #type=managemeutil.verify_projectNotExist,
+    help='The req\'s name. {error_msg}',
+)
+
+create_requirement_change_request_post_parser.add_argument(
+    'softcap', dest='softcap',
+    location='json', required=True,
+    #type=managemeutil.verify_projectNotExist,
+    help='The req\'s softcap. {error_msg}',
+)
+create_requirement_change_request_post_parser.add_argument(
+    'hardcap', dest='hardcap',
+    location='json', required=True,
+    #type=managemeutil.verify_projectNotExist,
+    help='The req\'s hardcap. {error_msg}',
+)
+create_requirement_change_request_post_parser.add_argument(
+    'priority', dest='priority',
+    location='json', required=True,
+    #type=managemeutil.verify_projectNotExist,
+    help='The req\'s priority. {error_msg}',
+)
+
+class createReqChangeRequest(Resource):
+	def post(self):
+		args = create_requirement_change_request_post_parser.parse_args()
+		return dbengine.createReqChangeRequest(args)
+	
+###########################################################################
+
+###########################################################################
+
+accept_req_change_request_post_parser = reqparse.RequestParser(bundle_errors=True)
+
+accept_req_change_request_post_parser.add_argument(
+    'token', dest='token',
+    location='json', required=True,
+    type=managemeutil.verify_request_token,
+    help='The user\'s token {error_msg}',
+)
+
+accept_req_change_request_post_parser.add_argument(
+    'reqID', dest='reqID',
+    location='json', required=True,
+    type=managemeutil.verify_valid_req_id,
+    help='The req\'s ID. {error_msg}',
+)
+
+class acceptReqChangeRequest(Resource):
+	def post(self):
+		args = accept_req_change_request_post_parser.parse_args()
+		return dbengine.acceptReqChangeRequest(args)
+
+###########################################################################
+
+
+###########################################################################
+
+reject_req_change_request_post_parser = reqparse.RequestParser(bundle_errors=True)
+
+reject_req_change_request_post_parser.add_argument(
+    'token', dest='token',
+    location='json', required=True,
+    type=managemeutil.verify_request_token,
+    help='The user\'s token {error_msg}',
+)
+
+reject_req_change_request_post_parser.add_argument(
+    'reqID', dest='reqID',
+    location='json', required=True,
+    type=managemeutil.verify_valid_req_id,
+    help='The req\'s ID. {error_msg}',
+)
+
+class rejectReqChangeRequest(Resource):
+	def post(self):
+		args = reject_req_change_request_post_parser.parse_args()
+		return dbengine.rejectReqChangeRequest(args)
+
+###########################################################################
