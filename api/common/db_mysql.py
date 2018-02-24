@@ -1014,15 +1014,45 @@ def updateReq(args):
 
 	
 	
-# IN: token, estimate, desc, name, softcap, hardcap, priority
+# IN: token, OldreqID, estimate, desc, name, softcap, hardcap, priority
 def createReqChangeRequest(args):
-	pass
+	checkHasPrivilage(args.token, 16)
+	db = dbConnect()
+	cur = db.cursor()
+	cur.callproc('sp_createChangeRequest',[str(args.token), str(args.estimate), str(args.desc), str(args.name), str(args.softcap), str(args.hardcap), str(args.priority), str(args.OldreqID)])
+	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+	if db:
+		cur.close()
+		db.commit()
+		db.close()
+		print(r)
+	return jsonify(r)
 	
 # IN: token, reqID
 def acceptReqChangeRequest(args):
-	pass
+	checkHasPrivilage(args.token, 16)
+	db = dbConnect()
+	cur = db.cursor()
+	cur.callproc('sp_acceptChangeRequest',[str(args.reqID)])
+	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+	if db:
+		cur.close()
+		db.commit()
+		db.close()
+		print(r)
+	return jsonify(r)
 	
 # IN: token, reqID
 def rejectReqChangeRequest(args):
-	pass
+	checkHasPrivilage(args.token, 16)
+	db = dbConnect()
+	cur = db.cursor()
+	cur.callproc('sp_rejectChangeRequest',[str(args.reqID)])
+	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+	if db:
+		cur.close()
+		db.commit()
+		db.close()
+		print(r)
+	return jsonify(r)
 	

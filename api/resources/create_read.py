@@ -437,6 +437,13 @@ create_requirement_change_request_post_parser.add_argument(
 )
 
 create_requirement_change_request_post_parser.add_argument(
+    'OldreqID', dest='OldreqID',
+    location='json', required=True,
+    type=managemeutil.verify_valid_req_id,
+    help='The req\'s ID. {error_msg}',
+)
+
+create_requirement_change_request_post_parser.add_argument(
     'estimate', dest='estimate',
     location='json', required=True,
     #type=managemeutil.verify_projectNotExist,
