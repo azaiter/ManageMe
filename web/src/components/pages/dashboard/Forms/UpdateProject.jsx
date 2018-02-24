@@ -4,15 +4,16 @@ import {Panel, Input, Button} from 'react-bootstrap';
 import { History } from 'history';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import $ from "jquery";
-import {createProject, getTeams} from "../../../../utils/HttpHelper"
+import {updateProject} from "../../../../utils/HttpHelper"
 import {getLocalToken} from "../../../../actions/Auth"
 
-class CreateProject extends React.Component{
+class UpdateProject extends React.Component{
   constructor(props) {
     super(props);
+    console.log(props);
     this.state = {
-      name: "",
-      desc: "",
+      name: props.data.name,
+      desc: props.data.desc,
       user: '',
       name_error_text: null,
       desc_error_text: null,
@@ -21,11 +22,9 @@ class CreateProject extends React.Component{
       reqName: '',
       reqTime: '',
       requirements: [{ reqName: '', reqTime: 0 }],
-      teamId: this.props.data[0].uid,
     }
+    
   }
-
-  
 
   isDisabled() {
     let name_is_valid = false;
@@ -94,31 +93,27 @@ class CreateProject extends React.Component{
     });
   }
 
-  _handleKeyPress(e) {
-      if (e.key === 'Enter') {
-          if (!this.state.disabled) {
-              this.handleLogin(e);
-          }
-      }
-  }
+  
 
-  handleProjCreation(e){
+  handleProjUpdate(e){
     
     e.preventDefault();
+    
     let token = getLocalToken();
     if(!(token)){
       return;
     }
-    createProject(token, this.state.name, this.state.desc, this.state.teamId)
+    updateProject(token, this.props.data.uid, this.state.name, this.state.desc)
     .then(res =>{
       let json = res[0];
        let status = res[1];
        if(status != 200){
           this.setState({
-            creationError: "Project exists!"
+            creationError: "Cannot Update"
           });
           return;
        }
+       console.log("I AM WORKING")
        window.location.reload();
     }).catch(err => {
         console.log("Error:",err);
@@ -127,22 +122,19 @@ class CreateProject extends React.Component{
     return false;
   }
 
+
+
   render(){
-    function getTheTeams(x){
-      if(x.name){
-        return <option value={x.uid}>{x.name}</option>
-      }
-    }
-  
+      
     return(
       <div>
-              <form role="form" onSubmit={this.handleProjCreation.bind(this)} className="ng-pristine ng-valid"> 
+              <form role="form" onSubmit={this.handleProjUpdate.bind(this)} className="ng-pristine ng-valid"> 
                 <div className="form-content"> 
                   <div className="form-group"> 
-                    <input type="text" className="form-control" placeholder="Project Name" errorText={this.state.name_error_text} onChange={(e) => this.changeValue(e, 'name')} /> 
+                    <input type="text" className="form-control" value={this.state.name} errorText={this.state.name_error_text} onChange={(e) => this.changeValue(e, 'name')} /> 
                   </div>
                   <div className="form-group"> 
-                    <textarea rows="4" className="form-control" placeholder="Project Description" errorText={this.state.desc_error_text} onChange={(e) => this.changeValue(e, 'desc')} /> 
+                    <textarea rows="4" className="form-control" value={this.state.desc} errorText={this.state.desc_error_text} onChange={(e) => this.changeValue(e, 'desc')} /> 
                   </div>
                   {this.state.requirements.map((requirement, idx) => (
                     <div className="requirement form-inline">
@@ -165,11 +157,9 @@ class CreateProject extends React.Component{
                     </div>
                   ))}
                   <button type="button" onClick={this.handleAddRequirement} className="btn btn-warning btn-small">+</button>
-                  <div><select onChange={(e) => this.changeValue(e, 'teamId')}>{this.props.data.map(getTheTeams)}</select></div>
                   <p style={{ color: "red" }}>{this.state.creationError}</p>
                 </div>
-                
-                <button className="btn btn-success" onClick={(e) => this.handleProjCreation(e)} disabled={this.state.disabled}>Submit</button>                  
+                <button className="btn btn-success" onClick={(e) => this.handleProjUpdate(e)} >Submit</button>                  
               </form> 
             </div> 
       
@@ -177,4 +167,4 @@ class CreateProject extends React.Component{
   }
 }
 
-export default CreateProject;
+export default UpdateProject;

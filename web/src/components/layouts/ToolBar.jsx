@@ -5,6 +5,8 @@ import { Route, DefaultRoute, RouteHandler } from "react-router";
 import CreateTeam from "../pages/dashboard/Forms/CreateTeam";
 import CreateProject from "../pages/dashboard/Forms/CreateProject"
 import {Modal, Button} from 'react-bootstrap';
+import {createProject, getTeams} from "../../utils/HttpHelper";
+import {getLocalToken} from "../../actions/Auth"
 
 class ToolBar extends React.Component {
 
@@ -14,7 +16,26 @@ class ToolBar extends React.Component {
     this.state = {
       projShow: false,
       teamShow: false,
+      teams: []
     };
+    this.getTeams();
+  }
+
+  getTeams(){
+    getTeams(getLocalToken()).then(res => {
+      let json = res[0];
+      let status = res[1];
+      if(status != 200){
+        this.setState({
+          creationError: "No Teams!"
+        });
+        return;
+      }
+      this.setState({
+        teams: json
+      });
+    });
+    
   }
 
   handleClose(form) {
@@ -69,7 +90,7 @@ class ToolBar extends React.Component {
                 <Modal.Title>Create Project</Modal.Title>
               </Modal.Header>
               <Modal.Body>
-                <CreateProject></CreateProject>
+                <CreateProject data={this.state.teams}></CreateProject>
               </Modal.Body>
               <Modal.Footer>
                 <Button onClick={this.handleClose.bind(this,"proj")}>Close</Button>

@@ -19,7 +19,7 @@ export async function createUser(first, last, mail, num, addr, user, pass) {
     return [json, res.status];
 }
 
-export async function createProject(tok, projectName, projectDesc) {
+export async function createProject(tok, projectName, projectDesc, teamId) {
     let res = await fetch('https://api.manageme.tech/project/create', {
         method: 'POST',
         headers: 
@@ -28,6 +28,7 @@ export async function createProject(tok, projectName, projectDesc) {
             token: tok,
             project_name: projectName,
             project_desc: projectDesc,
+            team_id: teamId,
         })
     });
     let json = await res.json();
@@ -35,6 +36,7 @@ export async function createProject(tok, projectName, projectDesc) {
 }
 
 export async function createTeam(tok, teamName, desc) {
+    console.log(teamId);
     let res = await fetch('https://api.manageme.tech/team/create', {
         method: 'POST',
         headers: 
@@ -361,5 +363,19 @@ export async function deleteProject(tok, projectId){
 }
 
 
+
+export async function getRequirementsByProjectId(tok, projectId){
+    let res = await fetch('https://api.manageme.tech/project/req/get', {
+        method: 'POST',
+        headers: 
+        {'content-type': 'application/json' },
+        body: JSON.stringify({
+            token: tok,
+            project_uid: projectId
+        })
+    });
+    let json = await res.json();
+    return [json, res.status];
+}
 
 

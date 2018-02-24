@@ -1,9 +1,9 @@
 import React, { PropTypes, Component } from 'react';
 import { Link } from "react-router";
-import {Jumbotron} from 'react-bootstrap';
+import {Jumbotron, Modal} from 'react-bootstrap';
 import ToolBar from '../../../layouts/ToolBar'
 import {getLocalToken} from '../../../../actions/Auth'
-import {clockIn, clockOut} from '../../../../utils/HttpHelper'
+import {clockIn, clockOut, getRequirementsByProjectId} from '../../../../utils/HttpHelper'
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import '../../../../../node_modules/react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 
@@ -20,18 +20,19 @@ class Project extends React.Component {
       reqClockedInto: null,
       disabled: false,
       perm: false,
-      data : [{
-          name: "Clean up legacy databases",
-          time: "5",
-        },{
-          name: "Notify dev teams about connection string change",
-          time: "6",
-        },{
-          name: "Move to Azure",
-          time: "7",
-      }]
+      data : null
     }
-    
+    getRequirementsByProjectId(getLocalToken(), this.props.location.query.id).then(res => {
+      let json = res[0];
+      let status = res[1]
+      if(status != 200){
+        return;
+      }
+      console.log(json)
+      this.setState({
+        data: res[0]
+      })
+    })
   }
 
   handleClock(e){
@@ -113,8 +114,29 @@ class Project extends React.Component {
           <h3>Requirements:</h3>
           <BootstrapTable data={this.state.data} striped={true} hover={true}  selectRow={ selectRow } options={options} pagination search searchPlaceholder='Search...' insertRow deleteRow exportCSV csvFileName={this.state.name + " " + new Date()}>
                 <TableHeaderColumn dataField="name" isKey={true} dataSort={true}>Name</TableHeaderColumn>
-                <TableHeaderColumn dataField="time" dataSort={true} width='20%'>Time Clocked In</TableHeaderColumn>
-                <TableHeaderColumn  dataFormat={ this.clock.bind(this) } width='15%'>Action</TableHeaderColumn>
+                <TableHeaderColumn dataField="desc" dataSort={true}>Description</TableHeaderColumn>
+                <TableHeaderColumn dataField="notes" dataSort={true}>Notes</TableHeaderColumn>
+                <TableHeaderColumn dataField="priority" dataSort={true}>Priority</TableHeaderColumn>
+                <TableHeaderColumn dataField="soft_cap" dataSort={true}>Soft Cap (Hr)</TableHeaderColumn>
+                <TableHeaderColumn dataField="hard_cap" dataSort={true}>Hard Cap (Hr)</TableHeaderColumn>
+                <TableHeaderColumn dataField="estimate" dataSort={true}>Estimate</TableHeaderColumn>
+                <TableHeaderColumn dataField="created_by" dataSort={true}>Created By</TableHeaderColumn>
+                <TableHeaderColumn dataField="created" dataSort={true}>Created</TableHeaderColumn>
+                <TableHeaderColumn  dataFormat={ this.clock.bind(this) } >Action</TableHeaderColumn>
+            </BootstrapTable>
+            <hr />
+            <h3>Documents:</h3>
+            <BootstrapTable data={this.state.data} striped={true} hover={true}  selectRow={ selectRow } options={options} pagination search searchPlaceholder='Search...' insertRow deleteRow exportCSV csvFileName={this.state.name + " " + new Date()}>
+                <TableHeaderColumn dataField="name" isKey={true} dataSort={true}>Name</TableHeaderColumn>
+                <TableHeaderColumn dataField="desc" dataSort={true}>Description</TableHeaderColumn>
+                <TableHeaderColumn dataField="notes" dataSort={true}>Notes</TableHeaderColumn>
+                <TableHeaderColumn dataField="priority" dataSort={true}>Priority</TableHeaderColumn>
+                <TableHeaderColumn dataField="soft_cap" dataSort={true}>Soft Cap (Hr)</TableHeaderColumn>
+                <TableHeaderColumn dataField="hard_cap" dataSort={true}>Hard Cap (Hr)</TableHeaderColumn>
+                <TableHeaderColumn dataField="estimate" dataSort={true}>Estimate</TableHeaderColumn>
+                <TableHeaderColumn dataField="created_by" dataSort={true}>Created By</TableHeaderColumn>
+                <TableHeaderColumn dataField="created" dataSort={true}>Created</TableHeaderColumn>
+                <TableHeaderColumn  dataFormat={ this.clock.bind(this) } >Action</TableHeaderColumn>
             </BootstrapTable>
         </Jumbotron> 
       </div>
