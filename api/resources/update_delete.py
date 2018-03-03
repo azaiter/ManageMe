@@ -228,7 +228,7 @@ update_user_parser.add_argument(
     help='The user\'s email {error_msg}',
 )
 update_user_parser.add_argument(
-    'phonenum', dest='phonenum',
+    'phone', dest='phone',
     location='json', required=False,
     type=managemeutil.verify_isTenDigitNum,
     help='The user\'s phonenumber {error_msg}',
@@ -314,16 +314,16 @@ update_req_parser.add_argument(
 )
 
 update_req_parser.add_argument(
-    'softcap', dest='softcap',
+    'soft_cap', dest='soft_cap',
     location='json', required=False,
     #type=managemeutil.verify_projectNotExist,
-    help='The req\'s softcap. {error_msg}',
+    help='The req\'s soft_cap. {error_msg}',
 )
 update_req_parser.add_argument(
-    'hardcap', dest='hardcap',
+    'hard_cap', dest='hard_cap',
     location='json', required=False,
     #type=managemeutil.verify_projectNotExist,
-    help='The req\'s hardcap. {error_msg}',
+    help='The req\'s hard_cap. {error_msg}',
 )
 update_req_parser.add_argument(
     'priority', dest='priority',

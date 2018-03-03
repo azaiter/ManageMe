@@ -77,6 +77,12 @@ create_requirement_post_parser.add_argument(
     #type=managemeutil.verify_projectNotExist,
     help='The req\'s priority. {error_msg}',
 )
+create_requirement_post_parser.add_argument(
+    'proj_id', dest='proj_id',
+    location='json', required=True,
+    type=managemeutil.verify_valid_project_id,
+    help='The req\'s proj_id. {error_msg}',
+)
 
 class createReq(Resource):
 	def post(self):

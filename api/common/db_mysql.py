@@ -226,13 +226,13 @@ def checkIfNotclockedIn(token, req_id):
 	cur.callproc('sp_checkClockIn',[str(token), req_id])
 	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
 	print("From clocked in: " + str(r))
+	print(len(r))
+	print(len(r) > 0)
 	if db:
 		db.close()
 	if len(r) > 0:
-		pass
-	else:
-		abort(400, message="Error: user is already clocked in.")
-	return len(r) > 0
+		abort(400, message="Error: user is already clocked in.")	
+	return len(r) == 0
 	
 def checkIfUserNeedsToClockOut(token, req_id):
 	db = dbConnect()
@@ -242,11 +242,9 @@ def checkIfUserNeedsToClockOut(token, req_id):
 	print("From clocked out: " + str(r))
 	if db:
 		db.close()
-	if len(r) > 0:
-		pass
-	else:
-		abort(400, message="Error: user is already clocked out.")
-	return len(r) > 0
+	if len(r) == 0:
+		abort(400, message="Error: user is already clocked out.")	
+	return len(r) == 0
 	
 	
 '''
@@ -503,6 +501,25 @@ def readUserByID(args):
 		print(r)
 	return jsonify(r)
 
+	
+	
+	
+	
+def readPermissionsUsers(user_id):
+	db = dbConnect()
+	cur = db.cursor()
+	r = []
+	cur = db.cursor()
+	cur.callproc('sp_readPermissionsByIDChiipi',[str(user_id)])
+	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+	cur.close()
+	if db:
+		cur.close()
+		db.commit()
+		db.close()
+		print(r)
+	return r
+
 '''
 	IN: token
 	OUT: JSON object (all user information)
@@ -518,6 +535,8 @@ def readUsers(args):
 	if db:
 		db.close()
 		print(r)
+	for x in r:
+		x['permissions'] = readPermissionsUsers(x.get('uid'))
 	return jsonify(r)
 	
 '''
@@ -528,7 +547,7 @@ def createReq(args):
 	checkHasPrivilage(args.token, 16)
 	db = dbConnect()
 	cur = db.cursor()
-	cur.callproc('sp_createReq',[str(args.token), str(args.estimate), str(args.desc), str(args.name), str(args.softcap), str(args.hardcap), str(args.priority)])
+	cur.callproc('sp_createReq',[str(args.token), str(args.estimate), str(args.desc), str(args.name), str(args.softcap), str(args.hardcap), str(args.priority), str(args.proj_id)])
 	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
 	if db:
 		cur.close()
@@ -898,7 +917,7 @@ def deleteUser(args):
 	
 '''
 IN REQUIRED: token, user_id
-IN NOT REQUIRED: first_name, last_name, email, phonenum, address
+IN NOT REQUIRED: first_name, last_name, email, phone, address
 '''
 def updateUser(args):
 	checkHasPrivilage(args.token, 11)
@@ -924,9 +943,9 @@ def updateUser(args):
 		r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
 		cur.close()
 		
-	if args.phonenum is not None:
+	if args.phone is not None:
 		cur = db.cursor()
-		cur.callproc('sp_updateUserPhone',[str(args.user_id), str(args.phonenum)])
+		cur.callproc('sp_updateUserPhone',[str(args.user_id), str(args.phone)])
 		r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
 		cur.close()
 		
@@ -986,15 +1005,15 @@ def updateReq(args):
 		r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
 		cur.close()
 
-	if args.softcap is not None:
+	if args.soft_cap is not None:
 		cur = db.cursor()
-		cur.callproc('sp_updateReqSoftCap',[str(args.req_id), str(args.softcap)])
+		cur.callproc('sp_updateReqSoftCap',[str(args.req_id), str(args.soft_cap)])
 		r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
 		cur.close()
 
-	if args.hardcap is not None:
+	if args.hard_cap is not None:
 		cur = db.cursor()
-		cur.callproc('sp_updateReqHardCap',[str(args.req_id), str(args.hardcap)])
+		cur.callproc('sp_updateReqHardCap',[str(args.req_id), str(args.hard_cap)])
 		r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
 		cur.close()
 
