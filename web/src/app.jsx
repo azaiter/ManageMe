@@ -2,61 +2,61 @@ import React from 'react';
 import { render } from 'react-dom';
 import { createHashHistory, useBasename } from 'history';
 import { Router } from 'react-router';
-import "./common/styles/app.less";
+import './common/styles/app.less';
 import NProgress from 'nprogress';
 
 NProgress.configure({ showSpinner: false });
 
 const history = useBasename(createHashHistory)({
-   queryKey: false
-})
+  queryKey: false,
+});
 
 const rootRoute = {
   path: '/',
   component: require('./components/layouts/Base'),
-  indexRoute: {component: require('./components/layouts/Dashboard')},
-  childRoutes: [ 
+  indexRoute: { component: require('./components/layouts/Dashboard') },
+  childRoutes: [
     {
       component: require('./components/layouts/Dashboard'),
-      indexRoute: {component: require('./components/pages/dashboard/Overview')},
+      indexRoute: { component: require('./components/pages/dashboard/Overview') },
       childRoutes: [
         require('./components/pages/dashboard/Overview'),
         require('./components/pages/dashboard/Reports'),
         require('./components/pages/dashboard/Projects'),
-        require('./components/pages/dashboard/Administrator')
-      ]
+        require('./components/pages/dashboard/Administrator'),
+      ],
     },
     {
       path: '/login',
       component: require('./components/pages/Login'),
       childRoutes: [
-      ]
+      ],
     },
     {
       path: '/register',
       component: require('./components/pages/Register'),
       childRoutes: [
-      ]
+      ],
     },
     {
       path: '/createProject',
       component: require('./components/pages/dashboard/Forms/CreateProject'),
       childRoutes: [
-      ]
+      ],
     },
     {
       path: '/createTeam',
       component: require('./components/pages/dashboard/Forms/CreateTeam'),
       childRoutes: [
-      ]
+      ],
     },
-  ]
-}
+  ],
+};
 
 render(
   <Router history={history} routes={rootRoute} />,
-  document.getElementById('app')
-)
+  document.getElementById('app'),
+);
 
 // /**
 //  * App entry point
@@ -116,7 +116,7 @@ render(
 //  * @param  {[Param]} params route params
 //  *
 //  * @return {Promise}        data containing responses mapped by route name
- 
+
 // /*
 // let fetchData = function(routes, params) {
 //   let data = {};
@@ -138,7 +138,6 @@ render(
 // });
 
 
-
 // /**
 //  * App entry point
 //  */
@@ -197,7 +196,7 @@ render(
 //  * @param  {[Param]} params route params
 //  *
 //  * @return {Promise}        data containing responses mapped by route name
- 
+
 // /*
 // let fetchData = function(routes, params) {
 //   let data = {};
