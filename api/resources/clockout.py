@@ -10,6 +10,13 @@ post_parser.add_argument(
     help='The user\'s token {error_msg}',
 )
 
+post_parser.add_argument(
+    'req_id', dest='req_id',
+    location='json', required=True,
+    type=managemeutil.verify_valid_req_id,
+    help='The req_id {error_msg}',
+)
+
 class clockout(Resource):
   def post(self):
     args = post_parser.parse_args()

@@ -205,10 +205,10 @@ OUT: the updated tuple (should have NULL out time.
 def clockIn(args):
 	checkHasPrivilage(args.token, 10)
 	#checkIfNotclockedIn(args.token, args.req_id)
-	checkIfNotclockedIn(args.token, 56)
+	checkIfNotclockedIn(args.token, args.req_id)
 	db = dbConnect()
 	cur = db.cursor()
-	cur.callproc('sp_clockIn',[str(args.token), str(56)])
+	cur.callproc('sp_clockIn',[str(args.token), str(args.req_id)])
 	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
 	if db:
 		cur.close()
@@ -256,11 +256,11 @@ OUT: the updated tuple
 def clockOut(args):
 	checkHasPrivilage(args.token, 10)
 	#checkIfUserNeedsToClockOut(args.token, args.req_id)
-	checkIfUserNeedsToClockOut(args.token, 56)
+	checkIfUserNeedsToClockOut(args.token, args.req_id)
 	#### check if user needs to clock out otherwise throw an error that he can't clock out twice.
 	db = dbConnect()
 	cur = db.cursor()
-	cur.callproc('sp_clockOut',[str(args.token), str(56)])
+	cur.callproc('sp_clockOut',[str(args.token), str(args.req_id)])
 	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
 	if db:
 		cur.close()
