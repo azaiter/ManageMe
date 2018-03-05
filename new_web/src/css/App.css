@@ -45,28 +45,10 @@
 }
 
 #loginCard {
-  height: 600px;
   width: 400px;
   position: fixed;
-  top: calc(50% - 500px);
+  top: calc(50% - 300px);
   left: calc(50% - 200px);
-}
-
-#loginCard .ReactFlipCard__Front {
-  height: 600px;
-  width: 400px;
-  left: -200px;
-}
-
-#loginCard .ReactFlipCard__Back {
-  height: 600px;
-  width: 400px;
-  left: -200px;
-}
-
-#loginCard .card {
-  height: 600px;
-  width: 400px;
 }
 
 #loginCard .card-header {
