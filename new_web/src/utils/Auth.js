@@ -1,4 +1,4 @@
-import { getToken, createUser } from '../utils/HttpHelper';
+import { getToken, createUser, getUserInfo } from '../utils/HttpHelper';
 
 function storeToken(token, expiration) {
   localStorage.setItem('token', token);
@@ -16,6 +16,18 @@ export function deleteStore() {
 
 export function getLocalToken() {
   return localStorage.getItem('token');
+}
+
+export function userIsLoggedIn() {
+  if (localStorage.getItem('token') === null) {
+    return false;
+  }
+  const result = getUserInfo(localStorage.getItem('token'));
+  if (result[1] === 200) {
+    return true;
+  }
+
+  return false;
 }
 
 export async function login(username, password) {

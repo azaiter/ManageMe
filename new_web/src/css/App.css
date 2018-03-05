@@ -26,3 +26,49 @@
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
+
+.navbar {
+  padding-top: 0px;
+  padding-bottom: 0px;
+  border-bottom-color: rgb(224, 224, 224);
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+}
+
+.nav-link {
+  font-size: 1.25em;
+}
+
+.navbar-brand {
+  font-size: 1.75em;
+  color:#3ca2e0!important;
+}
+
+#loginCard {
+  height: 600px;
+  width: 400px;
+  position: fixed;
+  top: calc(50% - 500px);
+  left: calc(50% - 200px);
+}
+
+#loginCard .ReactFlipCard__Front {
+  height: 600px;
+  width: 400px;
+  left: -200px;
+}
+
+#loginCard .ReactFlipCard__Back {
+  height: 600px;
+  width: 400px;
+  left: -200px;
+}
+
+#loginCard .card {
+  height: 600px;
+  width: 400px;
+}
+
+#loginCard .card-header {
+  font-size: 1.5em;
+}

@@ -1,57 +1,138 @@
 /* eslint react/no-did-mount-set-state: 0 */
 import React, { Component } from 'react';
 import { Link, Route } from 'react-router-dom';
+import { getUserInfo } from '../../utils/HttpHelper';
+import { userIsLoggedIn } from '../../utils/Auth';
 
 import Dashboard from './Dashboard';
 import Project from './Project';
 
-class Home extends Component {
-  componentWillMount() {
+import {
+  Collapse,
+  Navbar,
+  NavbarToggler,
+  NavbarBrand,
+  Nav,
+  NavItem,
+  NavLink,
+  UncontrolledDropdown,
+  DropdownToggle,
+  DropdownMenu,
+  DropdownItem,
+  Container,
+  Row,
+  Col,
+} from 'reactstrap';
 
+class Home extends Component {
+  constructor(props) {
+    super(props);
+
+    this.toggle = this.toggle.bind(this);
+    this.state = {
+      isOpen: false,
+      dashboard: true,
+      projects: false,
+      reports: false,
+      admin: false,
+      username: 'User',
+    };
+
+    if (!userIsLoggedIn()) {
+      this.props.history.push('/Login', null);
+    }
   }
 
-  componentDidMount() {
+  setActive = (link) => {
+    this.setState({
+      dashboard: false,
+      projects: false,
+      reports: false,
+      admin: false,
+    });
 
+    switch (link) {
+      case 'Dashboard':
+        this.setState({
+          dashboard: true,
+        });
+        break;
+      case 'Projects':
+        this.setState({
+          projects: true,
+        });
+        break;
+      case 'Reports':
+        this.setState({
+          reports: true,
+        });
+        break;
+      case 'Admin':
+        this.setState({
+          admin: true,
+        });
+        break;
+      default:
+
+        break;
+    }
+
+    console.log(this.state);
+  }
+
+  toggle = () => {
+    this.setState({
+      isOpen: !this.state.isOpen,
+    });
   }
 
   render() {
     return (
-      <div className="Home">
-        <nav className="navbar navbar-default navbar-fixed-top">
-          <div className="container-fluid">
-            <div className="navbar-header">
-              <button type="button" className="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-                <span className="sr-only" />
-                <span className="icon-bar" />
-                <span className="icon-bar" />
-                <span className="icon-bar" />
-              </button>
-              <a className="navbar-brand" href="#">ManageMe</a>
-            </div>
-            <div id="navbar" className="navbar-collapse collapse">
-              <ul className="nav navbar-nav">
-                <li className="active"><Link to="/Dashboard">Dashboard</Link></li>
-                <li><Link to="/Projects">Projects</Link></li>
-                <li><Link to="/Reports">Reprots</Link></li>
-                <li><Link to="/Admin">Admin</Link></li>
-              </ul>
-              {// <ul className="nav navbar-nav navbar-right">
-                  // <li><a href="../navbar/">Default</a></li>
-                  // <li><a href="../navbar-static-top/">Static top</a></li>
-                  // <li className="active"><a href="./"></a></li>
-                // </ul>
-                }
-            </div>
-          </div>
-        </nav>
-        <div className="container-fluid">
-          <div className="row">
-            <div className="col-xs-12">
+      <div>
+        <Navbar color="default" light expand="md" fixed="top">
+          <NavbarBrand href="/">ManageMe</NavbarBrand>
+          <NavbarToggler onClick={this.toggle} />
+          <Collapse isOpen={this.state.isOpen} navbar>
+            <Nav className="mr-auto" navbar>
+              <NavItem>
+                <NavLink tag={Link} to="/" active={this.state.dashboard} onMouseDown={() => this.setActive('Dashboard')}>Dashboard</NavLink>
+              </NavItem>
+              <NavItem>
+                <NavLink tag={Link} to="/Projects" active={this.state.projects} onMouseDown={() => this.setActive('Projects')} >Projects</NavLink>
+              </NavItem>
+              <NavItem>
+                <NavLink tag={Link} to="/Reports" active={this.state.reports} onMouseDown={() => this.setActive('Reports')} >Reports</NavLink>
+              </NavItem>
+              <NavItem>
+                <NavLink tag={Link} to="/Admin" active={this.state.admin} onMouseDown={() => this.setActive('Admin')} >Admin</NavLink>
+              </NavItem>
+            </Nav>
+            <Nav navbar>
+              <UncontrolledDropdown className="nav-item">
+                <DropdownToggle nav caret>
+                  {this.state.username}
+                </DropdownToggle>
+                <DropdownMenu>
+                  <DropdownItem>
+                    Option 1
+                  </DropdownItem>
+                  <DropdownItem divider />
+                  <DropdownItem>
+                    Logout
+                  </DropdownItem>
+                </DropdownMenu>
+              </UncontrolledDropdown>
+            </Nav>
+          </Collapse>
+        </Navbar>
+        <Container fluid className="Home">
+          <Row>
+            <Col span="xs-12">
               <Route exact path="/" component={Dashboard} />
               <Route path="/Project/:id" component={Project} />
-            </div>
-          </div>
-        </div>
+            </Col>
+          </Row>
+        </Container>
       </div>);
   }
 }
