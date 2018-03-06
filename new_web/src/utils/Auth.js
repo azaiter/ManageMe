@@ -18,15 +18,15 @@ export function getLocalToken() {
   return localStorage.getItem('token');
 }
 
-export function userIsLoggedIn() {
+export async function userIsLoggedIn() {
   if (localStorage.getItem('token') === null) {
     return false;
   }
-  const result = getUserInfo(localStorage.getItem('token'));
-  if (result[1] === 200) {
+  const res = await getUserInfo(localStorage.getItem('token'));
+  const status = res[1];
+  if (status === 200) {
     return true;
   }
-
   return false;
 }
 
@@ -37,6 +37,9 @@ export async function login(username, password) {
     if (status !== 200) {
       return status;
     }
+
+    console.log(res);
+
     storeToken(json.token, json.expire);
     return status;
   }).catch((err) => {

@@ -5,7 +5,7 @@ import {
   Route,
   Switch,
 } from 'react-router-dom';
-import { Container, Row, Col } from 'reactstrap'
+import { Container, Row, Col } from 'reactstrap';
 
 import Home from './components/pages/Home';
 import Login from './components/pages/Login';
@@ -23,11 +23,11 @@ class App extends Component {
     return (
       <Router>
         <div className="App">
-          <Container fluid={true}>
+          <Container fluid>
             <Row>
               <Col xs="12">
                 <Switch>
-                  <Route path="/Login" component={Login} />
+                  <Route exact path="/Login" component={Login} />
                   <Route path="/" component={Home} />
                 </Switch>
               </Col>

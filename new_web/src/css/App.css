@@ -45,12 +45,50 @@
 }
 
 #loginCard {
-  width: 400px;
+  width: 350px;
   position: fixed;
-  top: calc(50% - 300px);
-  left: calc(50% - 200px);
+  top: calc(50% - 400px);
+  left: calc(50% - 150px);
 }
 
 #loginCard .card-header {
   font-size: 1.5em;
+}
+
+#loginCard #buttonLogin {
+  width: 100px;
+}
+
+#loginCard #buttonRegister {
+  width: 100px;
+}
+
+#loginCard #buttonBack {
+  width: 100px;
+}
+
+#loginCard #buttonFlipCard {
+  width: 100px;
+}
+
+#loginCard .input-group {
+  margin-bottom: 10px;
+}
+
+#loginCard button {
+  margin-bottom: 10px;
+}
+
+#loginCard .input-group-text {
+  width: 40px;
+}
+
+.loginLoader {
+  position: absolute;
+  top:60px;
+  left:0px;
+}
+
+#loginCard .alert {
+  font-size: 14px;
 }

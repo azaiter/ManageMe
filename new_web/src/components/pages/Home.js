@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import { Link, Route } from 'react-router-dom';
 import { getUserInfo } from '../../utils/HttpHelper';
-import { userIsLoggedIn } from '../../utils/Auth';
+import { userIsLoggedIn, deleteStore } from '../../utils/Auth';
 
 import Dashboard from './Dashboard';
 import Project from './Project';
@@ -38,9 +38,11 @@ class Home extends Component {
       username: 'User',
     };
 
-    if (!userIsLoggedIn()) {
-      this.props.history.push('/Login', null);
-    }
+    userIsLoggedIn().then((res) => {
+      if (!res) {
+        this.props.history.push('/Login', null);
+      }
+    });
   }
 
   setActive = (link) => {
@@ -80,6 +82,12 @@ class Home extends Component {
     console.log(this.state);
   }
 
+  logout = () => {
+    deleteStore();
+    window.location.reload();
+  }
+
+
   toggle = () => {
     this.setState({
       isOpen: !this.state.isOpen,
@@ -117,7 +125,7 @@ class Home extends Component {
                     Option 1
                   </DropdownItem>
                   <DropdownItem divider />
-                  <DropdownItem>
+                  <DropdownItem onClick={this.logout}>
                     Logout
                   </DropdownItem>
                 </DropdownMenu>
