@@ -225,7 +225,6 @@ class Login extends React.Component {
                   <Link to="/ForgotPassword">Forgot Password?</Link>
                 </Col>
               </Row>
-
             </CardBody>
           </Card>
           <Card key="back">

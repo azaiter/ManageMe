@@ -55,24 +55,9 @@
   font-size: 1.5em;
 }
 
-#loginCard #buttonLogin {
-  width: 100px;
-}
-
-#loginCard #buttonRegister {
-  width: 100px;
-}
-
-#loginCard #buttonBack {
-  width: 100px;
-}
-
-#loginCard #buttonFlipCard {
-  width: 100px;
-}
-
 #loginCard .input-group {
   margin-bottom: 10px;
+  width: 100px;
 }
 
 #loginCard button {
