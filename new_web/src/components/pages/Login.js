@@ -6,6 +6,7 @@ import ReactCardFlip from 'react-card-flip';
 import 'font-awesome/css/font-awesome.min.css';
 import { login, userIsLoggedIn, register } from '../../utils/Auth';
 import { validateEmail, validatePhoneNumber, validatePassword } from '../../utils/RejexHelper';
+import StockVideo from '../../media/stock.mp4';
 
 class Login extends React.Component {
   constructor(props) {
@@ -165,9 +166,14 @@ class Login extends React.Component {
   render() {
     return (
       <div id="loginCard">
+        {/* TRENT, IGNORE THE RED SQUIGGLE BELOW */}
+        <video id="background-video" loop autoPlay>
+          <source src={StockVideo} type="video/mp4" />
+          <source src={StockVideo} type="video/ogg" />
+        </video>
         <Row>
           <Col>
-            <h1>ManageMe</h1>
+            <h1 className="white-text">ManageMe</h1>
           </Col>
         </Row>
         <ReactCardFlip isFlipped={this.state.isFlipped}>
