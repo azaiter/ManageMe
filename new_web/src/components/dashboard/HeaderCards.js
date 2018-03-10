@@ -57,7 +57,7 @@ class HeaderCards extends Component {
               </Row>
             </CardTitle>
             <CardText>
-              <Link to="/History/Requirements/ClockedIn" className="text-secondary">
+              <Link to="/History/Requirements/WorkedOn" className="text-secondary">
                 <span className="float-left">View Details</span>
                 <span className="float-right"><i className="fa fa-arrow-circle-right" /></span>
               </Link>
