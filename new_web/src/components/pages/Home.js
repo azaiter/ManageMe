@@ -10,6 +10,7 @@ import Project from './Project';
 import {
   Collapse,
   Navbar,
+  Button,
   NavbarToggler,
   NavbarBrand,
   Nav,
@@ -35,7 +36,10 @@ class Home extends Component {
       projects: false,
       reports: false,
       admin: false,
+      settings: false,
       username: 'User',
+      rendered: '',
+      previous: '',
     };
 
     userIsLoggedIn().then((res) => {
@@ -43,43 +47,6 @@ class Home extends Component {
         this.props.history.push('/Login', null);
       }
     });
-  }
-
-  setActive = (link) => {
-    this.setState({
-      dashboard: false,
-      projects: false,
-      reports: false,
-      admin: false,
-    });
-
-    switch (link) {
-      case 'Dashboard':
-        this.setState({
-          dashboard: true,
-        });
-        break;
-      case 'Projects':
-        this.setState({
-          projects: true,
-        });
-        break;
-      case 'Reports':
-        this.setState({
-          reports: true,
-        });
-        break;
-      case 'Admin':
-        this.setState({
-          admin: true,
-        });
-        break;
-      default:
-
-        break;
-    }
-
-    console.log(this.state);
   }
 
   logout = () => {
@@ -103,16 +70,16 @@ class Home extends Component {
           <Collapse isOpen={this.state.isOpen} navbar>
             <Nav className="mr-auto" navbar>
               <NavItem>
-                <NavLink tag={Link} to="/" active={this.state.dashboard} onMouseDown={() => this.setActive('Dashboard')}>Dashboard</NavLink>
+                <NavLink tag={Link} to="/" active={this.props.location.pathname === '/'}>Dashboard</NavLink>
               </NavItem>
               <NavItem>
-                <NavLink tag={Link} to="/Projects" active={this.state.projects} onMouseDown={() => this.setActive('Projects')} >Projects</NavLink>
+                <NavLink tag={Link} to="/Projects" active={this.props.location.pathname.indexOf('/Projects') > -1}>Projects</NavLink>
               </NavItem>
               <NavItem>
-                <NavLink tag={Link} to="/Reports" active={this.state.reports} onMouseDown={() => this.setActive('Reports')} >Reports</NavLink>
+                <NavLink tag={Link} to="/Reports" active={this.props.location.pathname.indexOf('/Reports') > -1} >Reports</NavLink>
               </NavItem>
               <NavItem>
-                <NavLink tag={Link} to="/Admin" active={this.state.admin} onMouseDown={() => this.setActive('Admin')} >Admin</NavLink>
+                <NavLink tag={Link} to="/History" active={this.props.location.pathname.indexOf('/History') > -1}>History</NavLink>
               </NavItem>
             </Nav>
             <Nav navbar>
@@ -130,6 +97,9 @@ class Home extends Component {
                   </DropdownItem>
                 </DropdownMenu>
               </UncontrolledDropdown>
+              <NavItem>
+                <NavLink tag={Link} to="/Settings" active={this.props.location.pathname.indexOf('/Settings') > -1}><i className="fa fa-cog" /></NavLink>
+              </NavItem>
             </Nav>
           </Collapse>
         </Navbar>

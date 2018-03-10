@@ -3,7 +3,6 @@ import { Card, Row, Col, Input, Button, CardHeader, CardBody, InputGroup, InputG
 import { BarLoader } from 'react-spinners';
 import { Link } from 'react-router-dom';
 import ReactCardFlip from 'react-card-flip';
-import 'font-awesome/css/font-awesome.min.css';
 import { login, userIsLoggedIn, register } from '../../utils/Auth';
 import { validateEmail, validatePhoneNumber, validatePassword } from '../../utils/RejexHelper';
 import StockVideo from '../../media/stock.mp4';

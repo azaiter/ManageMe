@@ -3,37 +3,61 @@ import React, { Component } from 'react';
 import { Link, Route } from 'react-router-dom';
 import { getUserInfo } from '../../utils/HttpHelper';
 import { userIsLoggedIn, deleteStore } from '../../utils/Auth';
+import HeaderCards from '../dashboard/HeaderCards';
+import HoursBreakdown from '../dashboard/HoursBreakdown';
+import RecentProjects from '../dashboard/RecentProjects';
+import ProjectBreakdown from '../dashboard/ProjectBreakdown';
+import MyTeams from '../dashboard/MyTeams';
+import RequirementBreakdown from '../dashboard/RequirementBreakdown';
+import RecentRequirements from '../dashboard/RecentRequirements';
+import RecentActivity from '../dashboard/RecentActivity';
 
 import {
-  Collapse,
-  Navbar,
-  NavbarToggler,
-  NavbarBrand,
-  Nav,
-  NavItem,
-  NavLink,
-  UncontrolledDropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
-  Container,
   Row,
   Col,
 } from 'reactstrap';
 
+
 class Dashboard extends Component {
   constructor(props) {
     super(props);
-    
+
     this.state = {
 
-    }; 
+    };
   }
 
   render() {
     return (
-      <div>
-        
+      <div id="page-wrapper">
+        <HeaderCards />
+        <Row>
+          <Col lg="8">
+            <Row>
+              <Col lg="12">
+                <HoursBreakdown />
+              </Col>
+            </Row>
+            <Row>
+              <Col lg="12">
+                <RecentProjects />
+              </Col>
+            </Row>
+            <Row>
+              <Col lg="6">
+                <ProjectBreakdown />
+              </Col>
+              <Col lg="6">
+                <MyTeams />
+              </Col>
+            </Row>
+          </Col>
+          <Col lg="4">
+            <RequirementBreakdown />
+            <RecentRequirements />
+            <RecentActivity />
+          </Col>
+        </Row>
       </div>);
   }
 }

@@ -33,6 +33,7 @@
   border-bottom-color: rgb(224, 224, 224);
   border-bottom-style: solid;
   border-bottom-width: 1px;
+  background: white;
 }
 
 .nav-link {
@@ -90,4 +91,25 @@
 
 .white-text{
   color: white;
+}
+
+.card-title {
+  padding: 10px;
+  text-align: left;
+}
+
+.card {
+  margin-bottom: 20px;
+}
+
+.huge {
+  font-size: 40px;
+}
+
+.top-card .card-title {
+  font-size: 1rem;
+}
+
+.card-text {
+  padding: 0px 10px 10px 10px;
 }
