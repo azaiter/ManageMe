@@ -20,32 +20,46 @@ class HoursBreakdown extends Component {
   render() {
     const data = (canvas) => {
       const ctx = canvas.getContext('2d');
+      const colors = ['#7f8c8d', '#3498db', '#16a085', '#bdc3c7', '#2980b9', '#1abc9c', '#c0392b', '#9b59b6', '#f1c40f', '#f39c12', '#e74c3c', '#2c3e50', '#8e44ad', '#27ae60', '#e67e22', '#95a5a6', '#2ecc71', '#d35400', '#34495e'];
       const datasets = [{
         label: 'Requirement 1',
-        borderColor: '#4286f4',
-        backgroundColor: '#4286f4',
+        borderColor: colors[0],
         fill: false,
         data: [
           1,
-          0,
+          6,
           3,
-          0,
+          1,
           5,
-          0,
+          2,
           7,
         ],
-      }, {
+      },
+      {
         label: 'Requirement 2',
-        borderColor: '#7a7a7a',
-        backgroundColor: '#7a7a7a',
+        borderColor: colors[1],
         fill: false,
         data: [
           0,
           6,
-          0,
+          1,
           4,
-          0,
           2,
+          2,
+          6,
+        ],
+      },
+      {
+        label: 'Requirement 2',
+        borderColor: colors[2],
+        fill: false,
+        data: [
+          3,
+          4,
+          5,
+          6,
+          2,
+          1,
           0,
         ],
       }];
