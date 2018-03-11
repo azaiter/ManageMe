@@ -1,6 +1,7 @@
 /* eslint react/no-did-mount-set-state: 0 */
 import React, { Component } from 'react';
 import { Line } from 'react-chartjs-2';
+import { BarLoader } from 'react-spinners';
 
 import {
   Card,
@@ -15,6 +16,10 @@ import {
 class HoursBreakdown extends Component {
   constructor(props) {
     super(props);
+
+    this.state = {
+      loading: false,
+    };
   }
 
   render() {
@@ -63,7 +68,7 @@ class HoursBreakdown extends Component {
           0,
         ],
       }];
-      const labels = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+      const labels = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
       return {
         label: 'Hours Breakdown',
         labels,
@@ -91,15 +96,18 @@ class HoursBreakdown extends Component {
                 <i className="fa fa-cog" />
               </DropdownToggle>
               <DropdownMenu right>
-                <DropdownItem>Refresh</DropdownItem>
+                <DropdownItem disabled={this.state.loading}>Refresh</DropdownItem>
                 <DropdownItem divider />
-                <DropdownItem>Cumulative</DropdownItem>
-                <DropdownItem>Requirments</DropdownItem>
+                <DropdownItem disabled={this.state.loading}>Overall</DropdownItem>
+                <DropdownItem disabled={this.state.loading}>By Requirment</DropdownItem>
               </DropdownMenu>
             </UncontrolledDropdown>
           </div>
         </CardTitle>
         <CardText>
+          <div className="card-loading-bar">
+            <BarLoader id="card-loading-bar" loading={this.state.loading} width="100%" height={5} color="#6D6D6D" />
+          </div>
           <Line data={data} options={options} />
         </CardText>
       </Card>);

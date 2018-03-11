@@ -10,10 +10,15 @@ import {
   DropdownMenu,
   DropdownItem,
 } from 'reactstrap';
+import { BarLoader } from 'react-spinners';
 
 class ProjectBreakdown extends Component {
   constructor(props) {
     super(props);
+
+    this.state = {
+      loading: false,
+    };
   }
 
   render() {
@@ -48,12 +53,15 @@ class ProjectBreakdown extends Component {
                 <i className="fa fa-cog" />
               </DropdownToggle>
               <DropdownMenu right>
-                <DropdownItem>Refresh</DropdownItem>
+                <DropdownItem disabled={this.state.loading}>Refresh</DropdownItem>
               </DropdownMenu>
             </UncontrolledDropdown>
           </div>
         </CardTitle>
         <CardText>
+          <div className="card-loading-bar">
+            <BarLoader id="card-loading-bar" loading={this.state.loading} width="100%" height={5} color="#6D6D6D" />
+          </div>
           <Pie data={data} />
         </CardText>
       </Card>);

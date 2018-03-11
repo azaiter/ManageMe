@@ -113,3 +113,10 @@
 .card-text {
   padding: 0px 10px 10px 10px;
 }
+
+.card-loading-bar {
+  position: absolute;
+  width: 100%;
+  top: 50px;
+  left: 0px;
+}

@@ -36,12 +36,13 @@ class Login extends React.Component {
       username: '',
       password: '',
     };
+  }
 
-    userIsLoggedIn().then((res) => {
-      if (res) {
-        this.props.history.push('/', null);
-      }
-    });
+  async componentWillMount() {
+    const res = await userIsLoggedIn();
+    if (res) {
+      this.props.history.push('/', null);
+    }
   }
 
   dismissLoginError = () => {
@@ -222,7 +223,7 @@ class Login extends React.Component {
                   <Button color="success" id="buttonLogin" disabled={this.state.frontLoading} onClick={this.tryLogin} >Login</Button>
                 </Col>
                 <Col>
-                  <Button color="primary" id="buttonFlipCard" disabled={this.state.frontLoading} onClick={this.handleClick}>register</Button>
+                  <Button color="primary" id="buttonFlipCard" disabled={this.state.frontLoading} onClick={this.handleClick}>Register</Button>
                 </Col>
               </Row>
               <Row>
@@ -346,7 +347,7 @@ class Login extends React.Component {
               </Row>
               <Row>
                 <Col>
-                  <Button color="success" id="buttonregister" disabled={this.state.backLoading} onClick={this.registerUser} >register</Button>
+                  <Button color="success" id="buttonregister" disabled={this.state.backLoading} onClick={this.registerUser} >Register</Button>
                 </Col>
                 <Col>
                   <Button color="primary" id="buttonBack" disabled={this.state.backLoading} onClick={this.handleClick}>Back</Button>

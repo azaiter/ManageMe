@@ -90,7 +90,7 @@ class HeaderCards extends Component {
             <CardTitle className="bg-info text-white card-just-header">
               <Row>
                 <Col xs="3">
-                  <i className="fa fa-stopwatch fa-4x" />
+                  <i className="fab fa-product-hunt fa-4x" />
                 </Col>
                 <Col xs="9" className="text-right">
                   <div className="huge">5</div>

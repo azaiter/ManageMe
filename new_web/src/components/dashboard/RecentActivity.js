@@ -10,14 +10,15 @@ import {
   DropdownMenu,
   DropdownItem,
 } from 'reactstrap';
+import { BarLoader } from 'react-spinners';
 
 class RecentActivity extends Component {
   constructor(props) {
     super(props);
 
-    this.setState({
-
-    });
+    this.state = {
+      loading: false,
+    };
   }
 
   render() {
@@ -31,12 +32,15 @@ class RecentActivity extends Component {
                 <i className="fa fa-cog" />
               </DropdownToggle>
               <DropdownMenu right>
-                <DropdownItem>Refresh</DropdownItem>
+                <DropdownItem diabled={this.state.loading}>Refresh</DropdownItem>
               </DropdownMenu>
             </UncontrolledDropdown>
           </div>
         </CardTitle>
         <CardText>
+          <div className="card-loading-bar">
+            <BarLoader id="card-loading-bar" loading={this.state.loading} width="100%" height={5} color="#6D6D6D" />
+          </div>
           <table className="table table-sm">
             <thead>
               <tr>

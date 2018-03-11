@@ -1,13 +1,8 @@
-import { getToken, createUser, getUserInfo } from '../utils/HttpHelper';
+import { getToken, createUser, getMyInfo } from '../utils/HttpHelper';
 
 function storeToken(token, expiration) {
   localStorage.setItem('token', token);
   localStorage.setItem('expiration', expiration);
-}
-
-function storeUserDetails(firstName, email) {
-  localStorage.setItem('name', firstName);
-  localStorage.setItem('email', email);
 }
 
 export function deleteStore() {
@@ -22,7 +17,8 @@ export async function userIsLoggedIn() {
   if (localStorage.getItem('token') === null) {
     return false;
   }
-  const res = await getUserInfo(localStorage.getItem('token'));
+  const res = await getMyInfo(localStorage.getItem('token'));
+  console.log(res);
   const status = res[1];
   if (status === 200) {
     return true;
@@ -56,7 +52,6 @@ export function register(firstName, lastName, email, phoneNum, address, username
       if (status !== 200) {
         return [json, status];
       }
-      storeUserDetails(firstName, email);
       return [json, status];
     }).catch((err) => {
       console.log('Error:', err);

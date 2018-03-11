@@ -376,3 +376,17 @@ export async function getRequirementsByProjectId(tok, projectId) {
   return [json, res.status];
 }
 
+export async function getMyInfo(tok) {
+  const res = await fetch('https://api.manageme.tech/util/custom', {
+    method: 'POST',
+    headers:
+        { 'content-type': 'application/json' },
+    body: JSON.stringify({
+      paramArr: [tok],
+      spName: 'sp_getMyInfo',
+    }),
+  });
+  const json = await res.json();
+  return [json, res.status];
+}
+
