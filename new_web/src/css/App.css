@@ -42,7 +42,6 @@
 
 .navbar-brand {
   font-size: 1.75em;
-  color:#3ca2e0!important;
 }
 
 #loginCard {
@@ -119,4 +118,15 @@
   width: 100%;
   top: 50px;
   left: 0px;
+}
+
+.modal-loading-bar {
+  position: absolute;
+  width: 100%;
+  top: 62px;
+  left: 0px;
+}
+
+#modalHome .row {
+  margin-bottom: 10px;
 }

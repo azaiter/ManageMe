@@ -35,14 +35,19 @@ class Login extends React.Component {
       backLoading: false,
       username: '',
       password: '',
+      waiting: true,
     };
-  }
 
-  async componentWillMount() {
-    const res = await userIsLoggedIn();
-    if (res) {
-      this.props.history.push('/', null);
-    }
+    userIsLoggedIn().then((res) => {
+      console.log(res);
+      if (res) {
+        this.props.history.push('/', null);
+      }
+
+      this.setState({
+        waiting: false,
+      });
+    });
   }
 
   dismissLoginError = () => {
@@ -164,6 +169,9 @@ class Login extends React.Component {
   }
 
   render() {
+    if (this.state.waiting) {
+      return null;
+    }
     return (
       <div id="loginCard">
         {/* TRENT, IGNORE THE RED SQUIGGLE BELOW */}
@@ -326,7 +334,7 @@ class Login extends React.Component {
                     </InputGroupAddon>
                     <Input invalid={!this.state.passwordValid} type="password" placeholder="Password" disabled={this.state.backLoading} value={this.state.registerPassword} onChange={(e) => { this.setState({ registerPassword: e.target.value }); }} />
                     <div className="invalid-feedback">
-                      Please enter a valid email.<br />
+                      Please enter a valid password.<br />
                       Atleast 1 lower, 1 upper, 1 special character and 1 digit
                     </div>
                   </InputGroup>

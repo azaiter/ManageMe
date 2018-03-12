@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import { Link, Route } from 'react-router-dom';
 import Avatar from 'react-avatar';
+import { BarLoader } from 'react-spinners';
 
 import { getMyInfo } from '../../utils/HttpHelper';
 import { userIsLoggedIn, deleteStore } from '../../utils/Auth';
@@ -9,6 +10,7 @@ import { userIsLoggedIn, deleteStore } from '../../utils/Auth';
 import Dashboard from './Dashboard';
 import Project from './Project';
 import UserInfo from '../layouts/UserInfo';
+import Projects from './Projects';
 
 import {
   Collapse,
@@ -41,37 +43,24 @@ class Home extends Component {
       modalIsOpen: false,
       modalSize: 'lg',
       modalTitle: 'None',
+      modalLoading: false,
       userInfo: {
         address: '',
         email: '',
-        first_name: '',
-        last_name: '',
+        firstName: '',
+        lastName: '',
         phone: '',
         uid: '',
         username: '',
-        full_name: '',
       },
-
+      waiting: true,
     };
-  }
-
-  async componentWillMount() {
-    let res = await userIsLoggedIn();
-    if (!res) {
-      this.props.history.push('/Login', null);
-    }
-    res = await getMyInfo(localStorage.getItem('token'));
-    const userInfo = res[0][0];
-    this.setState({
-      userInfo,
-    });
   }
 
   logout = () => {
     deleteStore();
     window.location.reload();
   }
-
 
   toggle = () => {
     this.setState({
@@ -80,26 +69,51 @@ class Home extends Component {
   }
 
   toggleModal = () => {
-    this.setState({
-      modalIsOpen: !this.state.modalIsOpen,
-    });
+    if (!this.state.modalLoading) {
+      this.setState({
+        modalIsOpen: !this.state.modalIsOpen,
+      });
+    }
+  }
+
+  modalLoading = (modalLoading) => {
+    this.setState({ modalLoading });
   }
 
   viewMyInfo = () => {
-    console.log(this.state.userInfo);
     this.setState({
       modalIsOpen: true,
       modalSize: 'md',
-      modalComponent: <UserInfo userInfo={this.state.userInfo} />,
-      modalTitle: this.state.first_name,
+      modalComponent: <UserInfo userInfo={this.state.userInfo} modalLoading={this.modalLoading} />,
+      modalTitle: 'My User Info',
+    });
+  }
+
+  componentWillMount() {
+    userIsLoggedIn().then(async (res) => {
+      if (!res) {
+        this.props.history.push('/Login', null);
+      } else {
+        const res2 = await getMyInfo(localStorage.getItem('token'));
+        const userInfo = res2[0][0];
+
+        this.setState({
+          userInfo,
+          waiting: false,
+        });
+      }
     });
   }
 
   render() {
+    if (this.state.waiting) {
+      console.log('Waiting');
+      return null;
+    }
     return (
       <div>
         <Navbar color="default" light expand="md" fixed="top">
-          <NavbarBrand href="/">ManageMe</NavbarBrand>
+          <NavbarBrand href="/" className="text-primary">ManageMe</NavbarBrand>
           <NavbarToggler onClick={this.toggle} />
           <Collapse isOpen={this.state.isOpen} navbar>
             <Nav className="mr-auto" navbar>
@@ -122,15 +136,15 @@ class Home extends Component {
             <Nav navbar>
               <UncontrolledDropdown className="nav-item">
                 <DropdownToggle nav caret>
-                  {`${this.state.userInfo.first_name} ${this.state.userInfo.last_name}`}
+                  {`${this.state.userInfo.firstName} ${this.state.userInfo.lastName}`}
                 </DropdownToggle>
                 <DropdownMenu>
                   <DropdownItem onClick={this.viewMyInfo}>
-                    <Avatar name={`${this.state.userInfo.first_name.toLowerCase()} ${this.state.userInfo.last_name.toLowerCase()}`} size={150} round />
+                    <Avatar name={`${this.state.userInfo.firstName.toLowerCase()} ${this.state.userInfo.lastName.toLowerCase()}`} size={150} round />
                   </DropdownItem>
                   <DropdownItem divider />
                   <DropdownItem onClick={this.logout} style={{ textAlign: 'center' }}>
-                    Logout
+                      Logout
                   </DropdownItem>
                 </DropdownMenu>
               </UncontrolledDropdown>
@@ -144,13 +158,18 @@ class Home extends Component {
           <Row>
             <Col span="xs-12">
               <Route exact path="/" component={Dashboard} />
-              <Route path="/Project/:id" component={Project} />
+              <Route exact path="/Projects" component={Projects} />
+              <Route path="/Projects/Project/:id" component={Project} />
             </Col>
           </Row>
         </Container>
 
-        <Modal isOpen={this.state.modalIsOpen} toggle={this.toggleModal} centered size={this.state.modalSize}>
-          <ModalHeader toggle={this.toggleModal}>{this.state.modalTitle}</ModalHeader>
+        <Modal id="modalHome" backdrop="static" keyboard={false} isOpen={this.state.modalIsOpen} toggle={this.toggleModal} centered size={this.state.modalSize}>
+          <div className="modal-loading-bar">
+            <BarLoader width="100%" loading={this.state.modalLoading} height={5} color="#6D6D6D" />
+          </div>
+          <ModalHeader toggle={this.toggleModal}>{this.state.modalTitle}
+          </ModalHeader>
           <ModalBody>
             {this.state.modalComponent}
           </ModalBody>

@@ -18,12 +18,7 @@ export async function userIsLoggedIn() {
     return false;
   }
   const res = await getMyInfo(localStorage.getItem('token'));
-  console.log(res);
-  const status = res[1];
-  if (status === 200) {
-    return true;
-  }
-  return false;
+  return res[0].length > 0;
 }
 
 export async function login(username, password) {
@@ -33,8 +28,6 @@ export async function login(username, password) {
     if (status !== 200) {
       return status;
     }
-
-    console.log(res);
 
     storeToken(json.token, json.expire);
     return status;

@@ -390,3 +390,16 @@ export async function getMyInfo(tok) {
   return [json, res.status];
 }
 
+export async function updateUserInfo(tok, firstName, lastName, email, phoneNumber, address, uid) {
+  const res = await fetch('https://api.manageme.tech/util/custom', {
+    method: 'POST',
+    headers:
+        { 'content-type': 'application/json' },
+    body: JSON.stringify({
+      paramArr: [tok, firstName, lastName, email, phoneNumber, address, uid],
+      spName: 'sp_updateMyInfo',
+    }),
+  });
+  const json = await res.json();
+  return [json, res.status];
+}
