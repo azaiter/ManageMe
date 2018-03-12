@@ -26,3 +26,107 @@
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
+
+.navbar {
+  padding-top: 0px;
+  padding-bottom: 0px;
+  border-bottom-color: rgb(224, 224, 224);
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+  background: white;
+}
+
+.nav-link {
+  font-size: 1.25em;
+}
+
+.navbar-brand {
+  font-size: 1.75em;
+}
+
+#loginCard {
+  width: 350px;
+  position: fixed;
+  top: calc(50% - 400px);
+  left: calc(50% - 150px);
+}
+
+#loginCard .card-header {
+  font-size: 1.5em;
+}
+
+#loginCard .input-group {
+  margin-bottom: 10px;
+}
+
+#loginCard button {
+  margin-bottom: 10px;
+}
+
+#loginCard .input-group-text {
+  width: 40px;
+}
+
+.loginLoader {
+  position: absolute;
+  top:60px;
+  left:0px;
+}
+
+#loginCard .alert {
+  font-size: 14px;
+}
+
+#background-video{
+  position: fixed;
+  right: 0; 
+  bottom: 0;
+  min-width: 100%; 
+  min-height: 100%;
+  width: auto; 
+  height: auto;
+  z-index: -100;
+}
+
+.white-text{
+  color: white;
+}
+
+.card-title {
+  padding: 10px;
+  text-align: left;
+}
+
+.card {
+  margin-bottom: 20px;
+}
+
+.huge {
+  font-size: 40px;
+}
+
+.top-card .card-title {
+  font-size: 1rem;
+}
+
+.card-text {
+  padding: 0px 10px 10px 10px;
+}
+
+.card-loading-bar {
+  position: absolute;
+  width: 100%;
+  top: 50px;
+  left: 0px;
+}
+
+.modal-loading-bar {
+  position: absolute;
+  width: 100%;
+  top: 62px;
+  left: 0px;
+}
+
+#modalHome .row {
+  margin-bottom: 10px;
+}
