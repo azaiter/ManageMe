@@ -1,0 +1,30 @@
+{
+  "name": "manageme",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node node_modules/react-native/local-cli/cli.js start",
+    "test": "jest"
+  },
+  "dependencies": {
+    "react": "16.3.0-alpha.1",
+    "react-native": "0.54.0",
+    "react-native-dropdownalert": "^3.4.0",
+    "react-native-elements": "^1.0.0-beta2",
+    "react-native-material-initials": "0.0.12",
+    "react-native-router-flux": "^4.0.0-beta.22",
+    "react-native-spinkit": "^1.1.1",
+    "react-native-user-avatar": "^1.0.3",
+    "react-native-vector-icons": "^4.5.0",
+    "react-native-video": "^2.0.0"
+  },
+  "devDependencies": {
+    "babel-jest": "22.4.1",
+    "babel-preset-react-native": "4.0.0",
+    "jest": "22.4.2",
+    "react-test-renderer": "16.3.0-alpha.1"
+  },
+  "jest": {
+    "preset": "react-native"
+  }
+}

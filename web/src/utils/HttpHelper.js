@@ -36,7 +36,6 @@ export async function createProject(tok, projectName, projectDesc, teamId) {
 }
 
 export async function createTeam(tok, teamName, desc) {
-  console.log(teamId);
   const res = await fetch('https://api.manageme.tech/team/create', {
     method: 'POST',
     headers:
@@ -100,6 +99,20 @@ export async function clockOut(tok, reqID) {
     body: JSON.stringify({
       token: tok,
       req_id: reqID,
+    }),
+  });
+  const json = await res.json();
+  return [json, res.status];
+}
+
+export async function deleteTeam(tok, teamId) {
+  const res = await fetch('https://api.manageme.tech/team/delete', {
+    method: 'POST',
+    headers:
+        { 'content-type': 'application/json' },
+    body: JSON.stringify({
+      token: tok,
+      team_id: teamId,
     }),
   });
   const json = await res.json();
@@ -293,8 +306,52 @@ export async function getRequirements(tok) {
   return [json, res.status];
 }
 
+export async function removeUserFromTeam(tok, teamId, userId) {
+  const res = await fetch('https://api.manageme.tech/team/member/delete', {
+    method: 'POST',
+    headers:
+        { 'content-type': 'application/json' },
+    body: JSON.stringify({
+      token: tok,
+      teamID: teamId,
+      user_id: userId,
+    }),
+  });
+  const json = await res.json();
+  return [json, res.status];
+}
+
+export async function addUserToTeam(tok, teamId, userId) {
+  const res = await fetch('https://api.manageme.tech/team/member/create', {
+    method: 'POST',
+    headers:
+        { 'content-type': 'application/json' },
+    body: JSON.stringify({
+      token: tok,
+      teamID: teamId,
+      user_id: userId,
+    }),
+  });
+  const json = await res.json();
+  return [json, res.status];
+}
+
 export async function getTeamById(tok, teamId) {
   const res = await fetch('https://api.manageme.tech/team/get', {
+    method: 'POST',
+    headers:
+        { 'content-type': 'application/json' },
+    body: JSON.stringify({
+      token: tok,
+      teamID: teamId,
+    }),
+  });
+  const json = await res.json();
+  return [json, res.status];
+}
+
+export async function getTeamMembers(tok, teamId) {
+  const res = await fetch('https://api.manageme.tech/team/member/get', {
     method: 'POST',
     headers:
         { 'content-type': 'application/json' },
