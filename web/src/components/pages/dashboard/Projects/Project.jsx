@@ -38,7 +38,7 @@ class Project extends React.Component {
 
 
       this.setState({
-        data: res[0],
+        data: json,
       });
     });
   }
@@ -102,12 +102,7 @@ class Project extends React.Component {
   }
 
   insertRequirement(row) {
-    createRequirement(getLocalToken(), this.state.projId, row.estimate, row.desc, row.name, row.soft_cap, row.hard_cap, row.priority);
-    const data = this.state.data;
-    data.push(row);
-    this.setState({
-      data,
-    });
+
   }
 
   createCustomDeleteButton = onClick => (
@@ -116,6 +111,15 @@ class Project extends React.Component {
       btnText="Delete Selected"
       btnContextual="btn-danger"
     />
+  )
+
+  createCustomModalHeader = (closeModal, save) => (
+    <InsertModalHeader
+      title="Add Requirement to Project"
+      beforeClose={this.beforeClose}
+      onModalClose={() => this.handleModalClose(closeModal)}
+    />
+    // hideClose={ true } to hide the close button
   )
 
 
@@ -127,12 +131,28 @@ class Project extends React.Component {
     return <a id={row.uid} className="btn btn-primary" onClick={e => this.handleClock(e)} disabled={row.uid != this.state.reqClockedInto && this.state.disabled === 'true'}>Clock in/out</a>;
   }
 
+  onAddRow(row) {
+    createRequirement(getLocalToken(), this.state.projId, row.estimate, row.desc, row.name, row.soft_cap, row.hard_cap, row.priority).then(() => {
+      getRequirementsByProjectId(getLocalToken(), this.props.location.query.id).then((res) => {
+        const json = res[0];
+        const status = res[1];
+        if (status !== 200) {
+          return;
+        }
+        this.setState({
+          data: json,
+        });
+      });
+    });
+  }
+
 
   render() {
     const options = {
       afterDeleteRow: this.deleteRequirements.bind(this),
       deleteBtn: this.createCustomDeleteButton,
-      afterInsertRow: this.insertRequirement.bind(this),
+      onAddRow: this.onAddRow.bind(this),
+      insertModalHeader: this.createCustomModalHeader,
     };
 
     const selectRow = {
@@ -160,30 +180,19 @@ class Project extends React.Component {
           <h3>Requirements:</h3>
           <p style={{ color: 'red' }}>{this.state.error}</p>
           <BootstrapTable data={this.state.data} striped cellEdit={cellEdit} hover selectRow={selectRow} options={options} pagination search searchPlaceholder="Search..." insertRow deleteRow exportCSV csvFileName={`${this.state.name} ${new Date()}`}>
-            <TableHeaderColumn dataField="uid" isKey dataSort>UID</TableHeaderColumn>
+            <TableHeaderColumn dataField="uid" isKey autoValue dataSort hiddenOnInsert>UID</TableHeaderColumn>
             <TableHeaderColumn dataField="name" dataSort>Name</TableHeaderColumn>
             <TableHeaderColumn dataField="desc" dataSort>Description</TableHeaderColumn>
             <TableHeaderColumn dataField="priority" dataSort>Priority</TableHeaderColumn>
             <TableHeaderColumn dataField="soft_cap" dataSort>Soft Cap (Hr)</TableHeaderColumn>
             <TableHeaderColumn dataField="hard_cap" dataSort>Hard Cap (Hr)</TableHeaderColumn>
             <TableHeaderColumn dataField="estimate" dataSort>Estimate</TableHeaderColumn>
-            <TableHeaderColumn dataField="created_by" dataSort>Created By</TableHeaderColumn>
-            <TableHeaderColumn dataField="created" dataSort>Created</TableHeaderColumn>
+            <TableHeaderColumn dataField="created_by" dataSort hiddenOnInsert>Created By</TableHeaderColumn>
+            <TableHeaderColumn dataField="created" dataSort hiddenOnInsert>Created</TableHeaderColumn>
             <TableHeaderColumn editable={false} dataFormat={this.clock.bind(this)} >Action</TableHeaderColumn>
           </BootstrapTable>
           <hr />
           <h3>Documents:</h3>
-          <BootstrapTable data={this.state.data} striped hover selectRow={selectRow} options={options} pagination search searchPlaceholder="Search..." insertRow deleteRow exportCSV csvFileName={`${this.state.name} ${new Date()}`}>
-            <TableHeaderColumn dataField="name" isKey dataSort>Name</TableHeaderColumn>
-            <TableHeaderColumn dataField="desc" dataSort>Description</TableHeaderColumn>
-            <TableHeaderColumn dataField="priority" dataSort>Priority</TableHeaderColumn>
-            <TableHeaderColumn dataField="soft_cap" dataSort>Soft Cap (Hr)</TableHeaderColumn>
-            <TableHeaderColumn dataField="hard_cap" dataSort>Hard Cap (Hr)</TableHeaderColumn>
-            <TableHeaderColumn dataField="estimate" dataSort>Estimate</TableHeaderColumn>
-            <TableHeaderColumn dataField="created_by" dataSort>Created By</TableHeaderColumn>
-            <TableHeaderColumn dataField="created" dataSort>Created</TableHeaderColumn>
-            <TableHeaderColumn dataFormat={this.clock.bind(this)} >Action</TableHeaderColumn>
-          </BootstrapTable>
 
 
         </Jumbotron>

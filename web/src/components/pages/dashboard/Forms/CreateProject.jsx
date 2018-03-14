@@ -32,7 +32,7 @@ class CreateProject extends React.Component {
 
     if (this.state.name.length > 0) {
       name_is_valid = true;
-    } else{
+    } else {
       name_is_valid = false;
       this.setState({
         name_error_text: 'Please enter a project name',
@@ -41,7 +41,7 @@ class CreateProject extends React.Component {
 
     if (this.state.desc.length > 0) {
       desc_is_valid = true;
-    } else{
+    } else {
       desc_is_valid = false;
       this.setState({
         desc_error_text: 'Please enter a project description',
@@ -52,7 +52,7 @@ class CreateProject extends React.Component {
       this.setState({
         disabled: false,
       });
-    }else {
+    } else {
       this.setState({
         disabled: true,
       });
@@ -62,8 +62,7 @@ class CreateProject extends React.Component {
   handleRequirementChange = idx => (evt) => {
     const newRequirements = this.state.requirements.map((requirement, sidx) => {
       if (idx !== sidx) return requirement;
-      if(Number.isInteger(parseInt(evt.target.value)))
-        return { ...requirement, reqTime: evt.target.value };
+      if (Number.isInteger(parseInt(evt.target.value))) { return { ...requirement, reqTime: evt.target.value }; }
       return { ...requirement, reqName: evt.target.value };
     });
 
@@ -133,40 +132,42 @@ class CreateProject extends React.Component {
     return (
       <div>
         <form role="form" onSubmit={this.handleProjCreation.bind(this)} className="ng-pristine ng-valid">
-                <div className="form-content">
-                  <div className="form-group">
-                    <input type="text" className="form-control" placeholder="Project Name" errorText={this.state.name_error_text} onChange={e => this.changeValue(e, 'name')} />
-                  </div>
-                  <div className="form-group">
-                    <textarea rows="4" className="form-control" placeholder="Project Description" errorText={this.state.desc_error_text} onChange={e => this.changeValue(e, 'desc')} />
-                  </div>
-                  {this.state.requirements.map((requirement, idx) => (
-                    <div className="requirement form-inline">
-                      <input
-                        type="text"
-                        placeholder={`Requirement #${idx + 1} name`}
-                        value={requirement.name}
-                        onChange={this.handleRequirementChange(idx)}
-                        className="form-control"
-                      />
-                      {'\u00A0'}
-                      <input
-                        type="number"
-                        placeholder="Time"
-                        value={requirement.time}
-                        onChange={this.handleRequirementChange(idx)}
-                        className="form-control"
-                      />{'\u00A0'}
-                      <button type="button" onClick={this.handleRemoveRequirement(idx)} className="btn btn-danger btn-small">-</button>
-                    </div>
+          <div className="form-content">
+            <div className="form-group">
+              <input type="text" className="form-control" placeholder="Project Name" errorText={this.state.name_error_text} onChange={e => this.changeValue(e, 'name')} />
+            </div>
+            <div className="form-group">
+              <textarea rows="4" className="form-control" placeholder="Project Description" errorText={this.state.desc_error_text} onChange={e => this.changeValue(e, 'desc')} />
+            </div>
+            {this.state.requirements.map((requirement, idx) => (
+              <div className="requirement form-inline">
+                <input
+                  type="text"
+                  placeholder={`Requirement #${idx + 1} name`}
+                  value={requirement.name}
+                  onChange={this.handleRequirementChange(idx)}
+                  className="form-control"
+                />
+                {'\u00A0'}
+                <input
+                  type="number"
+                  placeholder="Time"
+                  value={requirement.time}
+                  onChange={this.handleRequirementChange(idx)}
+                  className="form-control"
+                />{'\u00A0'}
+                <button type="button" onClick={this.handleRemoveRequirement(idx)} className="btn btn-danger btn-small">Delete Requirement</button>
+              </div>
                   ))}
-                  <button type="button" onClick={this.handleAddRequirement} className="btn btn-warning btn-small">+</button>
-                  <div><select onChange={e => this.changeValue(e, 'teamId')}>{this.props.data.map(getTheTeams)}</select></div>
-                  <p style={{ color: 'red' }}>{this.state.creationError}</p>
-                </div>
+            <br />
+            <button type="button" onClick={this.handleAddRequirement} className="btn btn-warning btn-small">Add New Requirement</button>
+            <br /> <br />
+            <div><select className="form-control" onChange={e => this.changeValue(e, 'teamId')}>{this.props.data.map(getTheTeams)}</select></div>
+            <p style={{ color: 'red' }}>{this.state.creationError}</p>
+          </div>
 
-                <button className="btn btn-success" onClick={e => this.handleProjCreation(e)} disabled={this.state.disabled}>Submit</button>
-              </form>
+          <button className="btn btn-success" onClick={e => this.handleProjCreation(e)} disabled={this.state.disabled}>Submit</button>
+        </form>
       </div>
 
     );
