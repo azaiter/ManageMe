@@ -33,6 +33,7 @@
   border-bottom-color: rgb(224, 224, 224);
   border-bottom-style: solid;
   border-bottom-width: 1px;
+  background: white;
 }
 
 .nav-link {
@@ -41,7 +42,6 @@
 
 .navbar-brand {
   font-size: 1.75em;
-  color:#3ca2e0!important;
 }
 
 #loginCard {
@@ -90,4 +90,43 @@
 
 .white-text{
   color: white;
+}
+
+.card-title {
+  padding: 10px;
+  text-align: left;
+}
+
+.card {
+  margin-bottom: 20px;
+}
+
+.huge {
+  font-size: 40px;
+}
+
+.top-card .card-title {
+  font-size: 1rem;
+}
+
+.card-text {
+  padding: 0px 10px 10px 10px;
+}
+
+.card-loading-bar {
+  position: absolute;
+  width: 100%;
+  top: 50px;
+  left: 0px;
+}
+
+.modal-loading-bar {
+  position: absolute;
+  width: 100%;
+  top: 62px;
+  left: 0px;
+}
+
+#modalHome .row {
+  margin-bottom: 10px;
 }

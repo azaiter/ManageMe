@@ -38,8 +38,8 @@ from resources.revoke_privilage import revoke_privilage
 from resources.read_estimate_by_project_id import read_estimate_by_project_id
 from resources.read_estimate_by_req_id import read_estimate_by_req_id
 from resources.read_timecaps_by_project_id import read_timecaps_by_project_id
-from resources.create_read import readUser, createReq, readReq, readTeam, createEstimate, readPermissions, createTeamMember, readTeamMembers, createDocument, readDocument, createProjectDocument, readProjectDocument, readDocumentFileTypes, readReqByProjID, createReqChangeRequest, acceptReqChangeRequest, rejectReqChangeRequest 
-from resources.update_delete import updateProject, deleteProject, updateTeamLead, deleteTeamMember, deleteProjectDocument, deleteUser, updateUser, deleteReq, updateReq
+from resources.create_read import readUser, createReq, readReq, readTeam, createEstimate, readPermissions, createTeamMember, readTeamMembers, createDocument, readDocument, createProjectDocument, readProjectDocument, readDocumentFileTypes, readReqByProjID, createReqChangeRequest, acceptReqChangeRequest, rejectReqChangeRequest, customCall
+from resources.update_delete import updateProject, deleteProject, updateTeamLead, deleteTeamMember, deleteProjectDocument, deleteUser, updateUser, deleteReq, updateReq, deleteTeam
 
 # define the app and run it
 app = Flask(__name__)
@@ -63,6 +63,7 @@ api.add_resource(register, '/user/create', '/user/create/')
 api.add_resource(createproject, '/project/create', '/project/create/')
 api.add_resource(getprojects, '/project/get', '/project/get/')
 api.add_resource(createteam, '/team/create', '/team/create/')
+api.add_resource(deleteTeam, '/team/delete', '/team/delete/')
 api.add_resource(viewhours, '/clock/get', '/clock/get/')
 api.add_resource(viewprojecthours, '/project/hours/get', '/project/hours/get/')
 api.add_resource(clockin, '/clock/in', '/clock/in/')
@@ -105,6 +106,8 @@ api.add_resource(updateReq, '/req/update', '/req/update/')
 api.add_resource(createReqChangeRequest, '/req/changerequest/create', '/req/changerequest/create/')
 api.add_resource(acceptReqChangeRequest, '/req/changerequest/accept', '/req/changerequest/accept/')
 api.add_resource(rejectReqChangeRequest, '/req/changerequest/reject', '/req/changerequest/reject/')
+#util
+api.add_resource(customCall, '/util/custom', '/util/custom/')
 
 # for debugging, running indivisually with -debug param
 if '-debug' in argv:

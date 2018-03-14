@@ -3,7 +3,6 @@ import { Card, Row, Col, Input, Button, CardHeader, CardBody, InputGroup, InputG
 import { BarLoader } from 'react-spinners';
 import { Link } from 'react-router-dom';
 import ReactCardFlip from 'react-card-flip';
-import 'font-awesome/css/font-awesome.min.css';
 import { login, userIsLoggedIn, register } from '../../utils/Auth';
 import { validateEmail, validatePhoneNumber, validatePassword } from '../../utils/RejexHelper';
 import StockVideo from '../../media/stock.mp4';
@@ -36,12 +35,18 @@ class Login extends React.Component {
       backLoading: false,
       username: '',
       password: '',
+      waiting: true,
     };
 
     userIsLoggedIn().then((res) => {
+      console.log(res);
       if (res) {
         this.props.history.push('/', null);
       }
+
+      this.setState({
+        waiting: false,
+      });
     });
   }
 
@@ -164,6 +169,9 @@ class Login extends React.Component {
   }
 
   render() {
+    if (this.state.waiting) {
+      return null;
+    }
     return (
       <div id="loginCard">
         {/* TRENT, IGNORE THE RED SQUIGGLE BELOW */}
@@ -223,7 +231,7 @@ class Login extends React.Component {
                   <Button color="success" id="buttonLogin" disabled={this.state.frontLoading} onClick={this.tryLogin} >Login</Button>
                 </Col>
                 <Col>
-                  <Button color="primary" id="buttonFlipCard" disabled={this.state.frontLoading} onClick={this.handleClick}>register</Button>
+                  <Button color="primary" id="buttonFlipCard" disabled={this.state.frontLoading} onClick={this.handleClick}>Register</Button>
                 </Col>
               </Row>
               <Row>
@@ -326,7 +334,7 @@ class Login extends React.Component {
                     </InputGroupAddon>
                     <Input invalid={!this.state.passwordValid} type="password" placeholder="Password" disabled={this.state.backLoading} value={this.state.registerPassword} onChange={(e) => { this.setState({ registerPassword: e.target.value }); }} />
                     <div className="invalid-feedback">
-                      Please enter a valid email.<br />
+                      Please enter a valid password.<br />
                       Atleast 1 lower, 1 upper, 1 special character and 1 digit
                     </div>
                   </InputGroup>
@@ -347,7 +355,7 @@ class Login extends React.Component {
               </Row>
               <Row>
                 <Col>
-                  <Button color="success" id="buttonregister" disabled={this.state.backLoading} onClick={this.registerUser} >register</Button>
+                  <Button color="success" id="buttonregister" disabled={this.state.backLoading} onClick={this.registerUser} >Register</Button>
                 </Col>
                 <Col>
                   <Button color="primary" id="buttonBack" disabled={this.state.backLoading} onClick={this.handleClick}>Back</Button>

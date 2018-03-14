@@ -546,3 +546,28 @@ class rejectReqChangeRequest(Resource):
 		return dbengine.rejectReqChangeRequest(args)
 
 ###########################################################################
+
+
+###########################################################################
+
+custom_call_post_parser = reqparse.RequestParser(bundle_errors=True)
+
+custom_call_post_parser.add_argument(
+    'paramArr', dest='paramArr',
+    location='json', required=True,
+    type=str, action='append',
+    help='{error_msg}',
+)
+
+custom_call_post_parser.add_argument(
+    'spName', dest='spName',
+    location='json', required=True,
+    help='{error_msg}',
+)
+
+class customCall(Resource):
+	def post(self):
+		args = custom_call_post_parser.parse_args()
+		return dbengine.customCall(args)
+
+###########################################################################

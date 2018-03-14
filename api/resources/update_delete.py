@@ -339,3 +339,30 @@ class updateReq(Resource):
 		return dbengine.updateReq(args)
 	
 ###########################################################################
+
+
+
+###########################################################################
+
+delete_team_parser = reqparse.RequestParser(bundle_errors=True)
+
+delete_team_parser.add_argument(
+    'token', dest='token',
+    location='json', required=True,
+    type=managemeutil.verify_request_token,
+    help='The user\'s token {error_msg}',
+)
+
+delete_team_parser.add_argument(
+    'team_id', dest='team_id',
+    location='json', required=True,
+    type=managemeutil.verify_valid_team_id,
+    help='The team\'s ID. {error_msg}',
+)
+
+class deleteTeam(Resource):
+	def post(self):
+		args = delete_team_parser.parse_args()
+		return dbengine.deleteTeam(args)
+	
+###########################################################################

@@ -23,6 +23,7 @@ class App extends Component {
     return (
       <Router>
         <div className="App">
+          <link href="https://use.fontawesome.com/releases/v5.0.8/css/all.css" rel="stylesheet" />
           <Container fluid>
             <Row>
               <Col xs="12">

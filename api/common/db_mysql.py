@@ -1075,3 +1075,35 @@ def rejectReqChangeRequest(args):
 		print(r)
 	return jsonify(r)
 	
+'''
+IN: token, team_id
+OUT: message
+'''
+def deleteTeam(args):
+	checkHasPrivilage(args.token, 4)
+	db = dbConnect()
+	cur = db.cursor()
+	cur.callproc('sp_deleteTeam',[str(args.team_id)])
+	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+	if db:
+		cur.close()
+		db.commit()
+		db.close()
+		print(r)
+	return jsonify(r)
+	
+	
+'''
+	IN: paramArr, spName
+	OUT: JSON object
+'''
+def customCall(args):
+	db = dbConnect()
+	cur = db.cursor()
+	cur.callproc(args.spName, args.paramArr)
+	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+	if db:
+		cur.close()
+		db.commit()
+		db.close()
+	return jsonify(r)
