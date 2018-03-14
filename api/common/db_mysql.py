@@ -751,6 +751,7 @@ def readPermissions(args):
 # IN: token, teamID, user_id
 def createTeamMember(args):
 	checkHasPrivilage(args.token, 2)
+	checkMemberInTeam(args.teamID, args.user_id)
 	db = dbConnect()
 	cur = db.cursor()
 	cur.callproc('sp_addMember',[str(args.teamID), str(args.user_id)])
@@ -761,6 +762,19 @@ def createTeamMember(args):
 		db.close()
 		print(r)
 	return jsonify(r)
+	
+def checkMemberInTeam(teamID, user_id):
+	db = dbConnect()
+	cur = db.cursor()
+	cur.callproc('sp_checkMemberInTeam',[teamID, user_id])
+	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+	print(len(r))
+	print(len(r) > 0)
+	if db:
+		db.close()
+	if len(r) > 0:
+		abort(400, message="Error: User is already in team.")	
+	return len(r) == 0
 
 #IN: token, teamID, user_id
 def updateTeamLead(args):
@@ -898,6 +912,20 @@ def readDocumentFileTypes(args):
 		print(r)
 	return jsonify(r)
 	
+	
+	
+def checkIfNotclockedInChippi(token, req_id):
+	db = dbConnect()
+	cur = db.cursor()
+	cur.callproc('sp_checkClockIn',[str(token), req_id])
+	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+	print("From clocked in: " + str(r))
+	print(len(r))
+	print(len(r) > 0)
+	if db:
+		db.close()
+	return len(r)> 0
+
 # IN: token, project_uid
 def readReqByProjID(args):
 	checkHasPrivilage(args.token, 15)
@@ -905,6 +933,11 @@ def readReqByProjID(args):
 	cur = db.cursor()
 	cur.callproc('sp_getAllReqsByProjectID', [(args.project_uid)])
 	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+	for x in r:
+		if (checkIfNotclockedInChippi(args.token, x.get('uid'))):
+			x['clocked_in'] = "Y"
+		else:
+			x['clocked_in'] = "N"
 	if db:
 		cur.close()
 		db.commit()
