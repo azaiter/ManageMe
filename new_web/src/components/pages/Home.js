@@ -8,7 +8,7 @@ import { getMyInfo } from '../../utils/HttpHelper';
 import { userIsLoggedIn, deleteStore } from '../../utils/Auth';
 
 import Dashboard from './Dashboard';
-import Project from './Project';
+// import Project from './Project';
 import UserInfo from '../layouts/UserInfo';
 import Projects from './Projects';
 
@@ -159,7 +159,8 @@ class Home extends Component {
             <Col span="xs-12">
               <Route exact path="/" component={Dashboard} />
               <Route exact path="/Projects" component={Projects} />
-              <Route path="/Projects/Project/:id" component={Project} />
+              {// <Route path="/Projects/Project/:id" component={Project} />
+              }
             </Col>
           </Row>
         </Container>

@@ -77,26 +77,42 @@ export async function getTime(tok) {
   return [json, res.status];
 }
 
-export async function clockIn(tok) {
+export async function clockIn(tok, reqID) {
   const res = await fetch('https://api.manageme.tech/clock/in', {
     method: 'POST',
     headers:
         { 'content-type': 'application/json' },
     body: JSON.stringify({
       token: tok,
+      req_id: reqID,
     }),
   });
   const json = await res.json();
   return [json, res.status];
 }
 
-export async function clockOut(tok) {
+export async function clockOut(tok, reqID) {
   const res = await fetch('https://api.manageme.tech/clock/out', {
     method: 'POST',
     headers:
         { 'content-type': 'application/json' },
     body: JSON.stringify({
       token: tok,
+      req_id: reqID,
+    }),
+  });
+  const json = await res.json();
+  return [json, res.status];
+}
+
+export async function deleteTeam(tok, teamId) {
+  const res = await fetch('https://api.manageme.tech/team/delete', {
+    method: 'POST',
+    headers:
+        { 'content-type': 'application/json' },
+    body: JSON.stringify({
+      token: tok,
+      team_id: teamId,
     }),
   });
   const json = await res.json();
@@ -243,13 +259,14 @@ export async function getUserInfo(tok) {
   return [json, res.status];
 }
 
-export async function createRequirement(tok, est, reqDesc, reqName, reqSoft, reqHard, reqPriority) {
+export async function createRequirement(tok, projId, est, reqDesc, reqName, reqSoft, reqHard, reqPriority) {
   const res = await fetch('https://api.manageme.tech/requirement/create', {
     method: 'POST',
     headers:
         { 'content-type': 'application/json' },
     body: JSON.stringify({
       token: tok,
+      proj_id: projId,
       estimate: est,
       desc: reqDesc,
       name: reqName,
@@ -289,8 +306,52 @@ export async function getRequirements(tok) {
   return [json, res.status];
 }
 
+export async function removeUserFromTeam(tok, teamId, userId) {
+  const res = await fetch('https://api.manageme.tech/team/member/delete', {
+    method: 'POST',
+    headers:
+        { 'content-type': 'application/json' },
+    body: JSON.stringify({
+      token: tok,
+      teamID: teamId,
+      user_id: userId,
+    }),
+  });
+  const json = await res.json();
+  return [json, res.status];
+}
+
+export async function addUserToTeam(tok, teamId, userId) {
+  const res = await fetch('https://api.manageme.tech/team/member/create', {
+    method: 'POST',
+    headers:
+        { 'content-type': 'application/json' },
+    body: JSON.stringify({
+      token: tok,
+      teamID: teamId,
+      user_id: userId,
+    }),
+  });
+  const json = await res.json();
+  return [json, res.status];
+}
+
 export async function getTeamById(tok, teamId) {
   const res = await fetch('https://api.manageme.tech/team/get', {
+    method: 'POST',
+    headers:
+        { 'content-type': 'application/json' },
+    body: JSON.stringify({
+      token: tok,
+      teamID: teamId,
+    }),
+  });
+  const json = await res.json();
+  return [json, res.status];
+}
+
+export async function getTeamMembers(tok, teamId) {
+  const res = await fetch('https://api.manageme.tech/team/member/get', {
     method: 'POST',
     headers:
         { 'content-type': 'application/json' },
@@ -347,6 +408,21 @@ export async function updateProject(tok, projId, projName, projDesc) {
   return [json, res.status];
 }
 
+export async function updateUser(tok, userId, cellName, cellValue) {
+  const res = await fetch('https://api.manageme.tech/user/update', {
+    method: 'POST',
+    headers:
+        { 'content-type': 'application/json' },
+    body: JSON.stringify({
+      token: tok,
+      user_id: userId,
+      [cellName]: cellValue,
+    }),
+  });
+  const json = await res.json();
+  return [json, res.status];
+}
+
 export async function deleteProject(tok, projectId) {
   const res = await fetch('https://api.manageme.tech/project/delete', {
     method: 'POST',
@@ -370,6 +446,62 @@ export async function getRequirementsByProjectId(tok, projectId) {
     body: JSON.stringify({
       token: tok,
       project_uid: projectId,
+    }),
+  });
+  const json = await res.json();
+  return [json, res.status];
+}
+
+export async function deleteReq(tok, reqId) {
+  const res = await fetch('https://api.manageme.tech/req/delete', {
+    method: 'POST',
+    headers:
+          { 'content-type': 'application/json' },
+    body: JSON.stringify({
+      token: tok,
+      req_id: reqId,
+    }),
+  });
+  const json = await res.json();
+  return [json, res.status];
+}
+
+export async function deleteUser(tok, userId) {
+  const res = await fetch('https://api.manageme.tech/user/delete', {
+    method: 'POST',
+    headers:
+            { 'content-type': 'application/json' },
+    body: JSON.stringify({
+      token: tok,
+      user_id: userId,
+    }),
+  });
+  const json = await res.json();
+  return [json, res.status];
+}
+
+export async function updateRequirement(tok, reqId, cellName, cellValue) {
+  const res = await fetch('https://api.manageme.tech/req/update', {
+    method: 'POST',
+    headers:
+          { 'content-type': 'application/json' },
+    body: JSON.stringify({
+      token: tok,
+      req_id: reqId,
+      [cellName]: cellValue,
+    }),
+  });
+  const json = await res.json();
+  return [json, res.status];
+}
+
+export async function getAllPerms(token) {
+  const res = await fetch('https://api.manageme.tech/privilage/get', {
+    method: 'POST',
+    headers:
+            { 'content-type': 'application/json' },
+    body: JSON.stringify({
+      token,
     }),
   });
   const json = await res.json();
