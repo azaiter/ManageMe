@@ -22,7 +22,7 @@ class Projects extends Component {
     return (
       <Row>
         <Col lg="8">
-          <ProjectList location={this.props.location} />
+          <ProjectList />
         </Col>
         <Col lg="4">
           <RecentProjects />

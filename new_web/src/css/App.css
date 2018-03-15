@@ -130,3 +130,15 @@
 #modalHome .row {
   margin-bottom: 10px;
 }
+
+.react-bs-table-container .btn-group-sm {
+  float: left;
+}
+
+.react-bs-table-container .dropdown {
+  float: left;
+}
+
+.react-bs-table-insert-modal .modal-header span {
+  width:100%;
+}

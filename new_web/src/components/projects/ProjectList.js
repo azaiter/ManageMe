@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
+import React, { PropTypes, Component } from 'react';
 import { Link } from 'react-router-dom';
 import { Jumbotron, Modal, Button } from 'react-bootstrap';
 import { getLocalToken } from '../../utils/Auth';
 import { getProjects, deleteProject, getProjectHours, getTeams, getTeamById, deleteTeam } from '../../utils/HttpHelper';
-import UpdateProject from '../layouts/UpdateProject';
+import UpdateProject from '../forms/UpdateProject';
 
 class Overview extends React.Component {
   constructor(props) {
@@ -17,6 +17,23 @@ class Overview extends React.Component {
       teams: [],
     };
     this.getProjs();
+  }
+
+  async getHours(uid) {
+    return getProjectHours(getLocalToken(), uid).then((res) => {
+      const json = res[0];
+      const code = res[1];
+      if (code !== 200) {
+        return;
+      }
+      const uids = this.state.uids;
+      uids[uid] = (json[0]['SUM(soft_cap)'] / json[1]['SUM(soft_cap)']) * 100;
+      this.setState({
+        uids,
+      });
+    }).catch((e) => {
+      console.log(e);
+    });
   }
 
   getProjs() {
@@ -97,23 +114,6 @@ class Overview extends React.Component {
     });
   }
 
-  async getHours(uid) {
-    return getProjectHours(getLocalToken(), uid).then((res) => {
-      const json = res[0];
-      const code = res[1];
-      if (code !== 200) {
-        return;
-      }
-      const uids = this.state.uids;
-      uids[uid] = (json[0]['SUM(soft_cap)'] / json[1]['SUM(soft_cap)']) * 100;
-      this.setState({
-        uids,
-      });
-    }).catch((e) => {
-      console.log(e);
-    });
-  }
-
   handleClose(projId) {
     const shows = this.state.shows;
     shows[projId] = false;
@@ -129,7 +129,7 @@ class Overview extends React.Component {
   render() {
     if (this.state.projects.length > 0) {
       const projects = this.state.projects.map((project) => {
-        const url = `/dashboard/project?id=${project.uid}&name=${project.name}&desc=${project.desc}&created=${project.created}`;
+        const url = `/Project/${project.uid}`;
         return (
           <div>
             <div className="btn-toolbar pull-right">
@@ -172,7 +172,7 @@ class Overview extends React.Component {
 
       const teams = this.state.teams.map((team) => {
         if (team.name) {
-          const url = `/dashboard/teams?id=${team.uid}&name=${team.name}&desc=${team.desc}`;
+          const url = `/Admin/Team/${team.uid}`;
           return (
             <div>
               <div className="btn-toolbar pull-right">
@@ -189,7 +189,6 @@ class Overview extends React.Component {
 
       return (
         <div className="overview-page" key="overview">
-          <h2>My Projects:</h2>
           <Jumbotron>
             {projects}
           </Jumbotron>
@@ -202,36 +201,8 @@ class Overview extends React.Component {
 
       );
     }
-    const teams = this.state.teams.map((team) => {
-      if (team.name) {
-        const url = `/dashboard/teams?id=${team.uid}&name=${team.name}&desc=${team.desc}`;
-        return (
-          <div>
-            <div className="btn-toolbar pull-right">
 
-              <button className="btn btn-danger" onClick={this.deleteT.bind(this, team.uid)}>Delete Team</button>
-            </div>
-            <Link to={url}><h1>{team.name}</h1> </Link>
-                  Description: {team.desc}<br />
-
-
-          </div>);
-      }
-    });
-    return (
-      <div className="overview-page" key="overview">
-
-        <h2>My Projects:</h2>
-        <Jumbotron>
-      No Projects Found
-        </Jumbotron>
-        <h2>My Teams:</h2>
-        <Jumbotron>
-          {teams.length > 1 ? teams : 'No Teams Found'}
-        </Jumbotron>
-      </div>
-
-    );
+    return (null);
   }
 }
 

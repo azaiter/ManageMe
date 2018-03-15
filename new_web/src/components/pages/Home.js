@@ -4,13 +4,17 @@ import { Link, Route } from 'react-router-dom';
 import Avatar from 'react-avatar';
 import { BarLoader } from 'react-spinners';
 
+
 import { getMyInfo } from '../../utils/HttpHelper';
 import { userIsLoggedIn, deleteStore } from '../../utils/Auth';
 
 import Dashboard from './Dashboard';
 // import Project from './Project';
-import UserInfo from '../layouts/UserInfo';
+import UserInfo from '../forms/UserInfo';
 import Projects from './Projects';
+import Admin from './Admin';
+import Project from './Project';
+import Team from '../admin/Team';
 
 import {
   Collapse,
@@ -159,8 +163,9 @@ class Home extends Component {
             <Col span="xs-12">
               <Route exact path="/" component={Dashboard} />
               <Route exact path="/Projects" component={Projects} />
-              {// <Route path="/Projects/Project/:id" component={Project} />
-              }
+              <Route exact path="/Admin" component={Admin} />
+              <Route exact path="/Admin/Team/:id" component={Team} />
+              <Route path="/Project/:id" component={Project} />
             </Col>
           </Row>
         </Container>
