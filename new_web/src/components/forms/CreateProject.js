@@ -16,7 +16,7 @@ class CreateProject extends React.Component {
       reqName: '',
       reqTime: '',
       requirements: [{ reqName: '', reqTime: 0 }],
-      teamId: this.props.data[0].uid,
+      // teamId: this.props.data[0].uid,
     };
   }
 
