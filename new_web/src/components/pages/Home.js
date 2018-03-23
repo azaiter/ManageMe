@@ -11,6 +11,7 @@ import { userIsLoggedIn, deleteStore } from '../../utils/Auth';
 import Dashboard from './Dashboard';
 // import Project from './Project';
 import UserInfo from '../forms/UserInfo';
+import CreateProject from '../forms/CreateProject';
 import Projects from './Projects';
 import Admin from './Admin';
 import Project from './Project';
@@ -76,6 +77,7 @@ class Home extends Component {
     if (!this.state.modalLoading) {
       this.setState({
         modalIsOpen: !this.state.modalIsOpen,
+        modalLoading: false,
       });
     }
   }
@@ -90,6 +92,15 @@ class Home extends Component {
       modalSize: 'md',
       modalComponent: <UserInfo userInfo={this.state.userInfo} modalLoading={this.modalLoading} />,
       modalTitle: 'My User Info',
+    });
+  }
+
+  viewCreateProject = () => {
+    this.setState({
+      modalIsOpen: true,
+      modalSize: 'lg',
+      modalComponent: <CreateProject modalLoading={this.modalLoading} toggleModal={this.toggleModal} />,
+      modalTitle: 'Create A Project',
     });
   }
 
@@ -162,7 +173,7 @@ class Home extends Component {
           <Row>
             <Col span="xs-12">
               <Route exact path="/" component={Dashboard} />
-              <Route exact path="/Projects" component={Projects} />
+              <Route exact path="/Projects" component={() => <Projects viewCreateProject={this.viewCreateProject} />} />
               <Route exact path="/Admin" component={Admin} />
               <Route exact path="/Admin/Team/:id" component={Team} />
               <Route path="/Project/:id" component={Project} />

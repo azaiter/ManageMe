@@ -157,7 +157,7 @@ class CreateProject extends React.Component {
             <br />
             <button type="button" onClick={this.handleAddRequirement} className="btn btn-warning btn-small">Add New Requirement</button>
             <br /> <br />
-            <div><select className="form-control" onChange={e => this.changeValue(e, 'teamId')}>{this.props.data.map(getTheTeams)}</select></div>
+            <div><select className="form-control" onChange={e => this.changeValue(e, 'teamId')}>{/* this.props.data.map(getTheTeams) */}</select></div>
             <p style={{ color: 'red' }}>{this.state.creationError}</p>
           </div>
 

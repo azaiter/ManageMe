@@ -2,12 +2,17 @@ import React, { Component } from 'react';
 import {
   Row,
   Col,
+  Card,
+  CardBody,
+  Button,
 } from 'reactstrap';
+import { withRouter } from 'react-router-dom';
 
 import RecentProjects from '../dashboard/RecentProjects';
 import RecentRequirements from '../dashboard/RecentRequirements';
-import ProjectList from '../projects/ProjectList';
+import MyProjects from '../projects/MyProjects';
 import ToolBar from '../projects/ToolBar';
+import PendingRequirements from '../projects/PendingRequirements';
 
 
 class Projects extends Component {
@@ -29,16 +34,31 @@ class Projects extends Component {
         </Row>
         <Row>
           <Col lg="8">
-            <ProjectList />
+            <Row>
+              <Col>
+                <PendingRequirements />
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <MyProjects />
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <Button className="float-right btn-success" onClick={() => this.props.viewCreateProject()}>Create Project</Button>
+              </Col>
+            </Row>
           </Col>
           <Col lg="4">
             <RecentProjects />
             <RecentRequirements />
           </Col>
         </Row>
+
       </div>
     );
   }
 }
 
-export default Projects;
+export default withRouter(Projects);

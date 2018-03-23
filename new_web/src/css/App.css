@@ -143,3 +143,15 @@
 .react-bs-table-insert-modal .modal-header span {
   width:100%;
 }
+
+#pageDropDown {
+  float: left;
+}
+
+table th {
+  text-align: left;
+}
+
+thead th{
+  border-top-width: 0px!important;
+}
