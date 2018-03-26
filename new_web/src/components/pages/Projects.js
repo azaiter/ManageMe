@@ -28,11 +28,6 @@ class Projects extends Component {
     return (
       <div>
         <Row>
-          <Col>
-            <ToolBar />
-          </Col>
-        </Row>
-        <Row>
           <Col lg="8">
             <Row>
               <Col>

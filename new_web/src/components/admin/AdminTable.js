@@ -6,6 +6,11 @@ import 'react-select/dist/react-select.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { getUserInfo, updateUser, deleteUser, getAllPerms, assignPrivilage } from '../../utils/HttpHelper';
 import { getLocalToken } from '../../utils/Auth';
+import CustCard from '../misc/CustCard';
+import {
+  Row,
+  Col,
+} from 'reactstrap';
 
 class AdminTable extends React.Component {
   constructor(props) {
@@ -175,6 +180,11 @@ class AdminTable extends React.Component {
 
     return (
       <div>
+        <Row>
+          <Col lg="3" md="6" >
+            <CustCard title="Total number of users" data={this.state.data.length} icon="fa-user" />
+          </Col>
+        </Row>
         <p style={{ color: 'red' }}>{this.state.error}</p>
         <BootstrapTable data={this.state.data} cellEdit={cellEdit} selectRow={selectRow} bordered={false} options={options} pagination search insertRow searchPlaceholder="Search..." deleteRow exportCSV csvFileName={`Current Userbase ${new Date()}.csv`}>
           <TableHeaderColumn dataField="uid" isKey dataSort autoValue hiddenOnInsert>UID</TableHeaderColumn>

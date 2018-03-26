@@ -149,6 +149,13 @@ class Home extends Component {
               </NavItem>
             </Nav>
             <Nav navbar>
+              <NavItem>
+                <NavLink tag={Link} to="/Projects">Create Project</NavLink>
+              </NavItem>
+              <NavItem>
+                <NavLink tag={Link} to="/Admin">Create Team</NavLink>
+              </NavItem>
+
               <UncontrolledDropdown className="nav-item">
                 <DropdownToggle nav caret>
                   {`${this.state.userInfo.firstName} ${this.state.userInfo.lastName}`}

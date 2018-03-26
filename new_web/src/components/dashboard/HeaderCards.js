@@ -24,7 +24,7 @@ class HeaderCards extends Component {
       <Row>
         <Col lg="3" md="6">
           <Card className="top-card" outline color="primary">
-            <CardTitle className="bg-primary text-white card-just-header">
+            <CardTitle style={{ marginBottom: '0px' }} className="bg-primary text-white card-just-header">
               <Row>
                 <Col xs="3">
                   <i className="fa fa-clock fa-4x" />
@@ -35,12 +35,6 @@ class HeaderCards extends Component {
                 </Col>
               </Row>
             </CardTitle>
-            <CardText>
-              <Link to="/History/Hours" className="text-primary">
-                <span className="float-left">View Details</span>
-                <span className="float-right"><i className="fa fa-arrow-circle-right" /></span>
-              </Link>
-            </CardText>
           </Card>
         </Col>
         <Col lg="3" md="6">
