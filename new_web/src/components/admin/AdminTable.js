@@ -6,6 +6,7 @@ import 'react-select/dist/react-select.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { getUserInfo, updateUser, deleteUser, getAllPerms, assignPrivilage } from '../../utils/HttpHelper';
 import { getLocalToken } from '../../utils/Auth';
+import { register } from '../../utils/Auth';
 
 
 class AdminTable extends React.Component {
@@ -136,11 +137,17 @@ class AdminTable extends React.Component {
       </div>
     );
   }
+
+  onAfterInsertRow = (row) => {
+    register(row.first_name, row.last_name, row.email, row.phone, row.address, row.username, row.password);
+  }
+
   render() {
     const options = {
       afterDeleteRow: this.deleteUser.bind(this),
       deleteBtn: this.createCustomDeleteButton,
       insertModalHeader: this.createCustomModalHeader,
+      afterInsertRow: this.onAfterInsertRow,
     };
 
     const cellEdit = {
@@ -161,12 +168,13 @@ class AdminTable extends React.Component {
         <BootstrapTable data={this.state.data} cellEdit={cellEdit} selectRow={selectRow} bordered={false} options={options} pagination search insertRow searchPlaceholder="Search..." deleteRow exportCSV csvFileName={`Current Userbase ${new Date()}.csv`}>
           <TableHeaderColumn dataField="uid" isKey dataSort autoValue hiddenOnInsert>UID</TableHeaderColumn>
           <TableHeaderColumn dataField="username" dataSort>User Name</TableHeaderColumn>
+          <TableHeaderColumn dataField="password" hidden dataSort editable={{ type: 'password' }}>Password</TableHeaderColumn>
           <TableHeaderColumn dataField="first_name" dataSort>First Name</TableHeaderColumn>
           <TableHeaderColumn dataField="last_name" dataSort>Last Name</TableHeaderColumn>
           <TableHeaderColumn dataField="email" dataSort>E-Mail</TableHeaderColumn>
           <TableHeaderColumn dataField="phone" dataSort>Phone #</TableHeaderColumn>
           <TableHeaderColumn dataField="address" dataSort>Address</TableHeaderColumn>
-          <TableHeaderColumn dataField="permissions" customEditor={{ getElement: this.customSelectField }} dataSort>Role</TableHeaderColumn>
+          <TableHeaderColumn dataField="permissions" customEditor={{ getElement: this.customSelectField }} dataSort hiddenOnInsert>Role</TableHeaderColumn>
 
         </BootstrapTable>
       </div>
