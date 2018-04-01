@@ -3,10 +3,11 @@ import BootstrapTable from 'react-bootstrap-table-next';
 import paginationFactory from 'react-bootstrap-table2-paginator';
 import { Button } from 'react-bootstrap';
 import { withRouter } from 'react-router-dom';
-import { Card, CardBody } from 'reactstrap';
+import { Card, CardBody, CardTitle } from 'reactstrap';
 import { getLocalToken } from '../../utils/Auth';
 import { getProjects, deleteProject, getProjectHours, getTeams, getTeamById, deleteTeam } from '../../utils/HttpHelper';
 import { BounceLoader } from 'react-spinners';
+
 
 class MyTeams extends React.Component {
   constructor(props) {
@@ -109,8 +110,10 @@ class MyTeams extends React.Component {
 
       return (
         <Card>
+          <CardTitle className="bg-primary text-white">
+            Teams
+          </CardTitle>
           <CardBody>
-            <h2 className="text-left">Teams</h2>
             <p style={{ color: 'red' }}>{this.state.error}</p>
             <BootstrapTable keyField="uid" bordered={false} data={this.state.teams} columns={columns} pagination={paginationFactory(options)} noDataIndication={this.indication} />
           </CardBody>

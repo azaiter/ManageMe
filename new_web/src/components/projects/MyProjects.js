@@ -3,10 +3,10 @@ import BootstrapTable from 'react-bootstrap-table-next';
 import paginationFactory from 'react-bootstrap-table2-paginator';
 import { Button } from 'react-bootstrap';
 import { withRouter } from 'react-router-dom';
-import { Card, CardBody } from 'reactstrap';
-
-import { getProjects, deleteProject, getProjectHours, getTeams, getTeamById, deleteTeam } from '../../utils/HttpHelper';
+import { Card, CardBody, CardTitle } from 'reactstrap';
+import { getProjects, deleteProject, getProjectHours, getTeams, getTeamById } from '../../utils/HttpHelper';
 import { BounceLoader } from 'react-spinners';
+import { getLocalToken } from '../../utils/Auth';
 
 class MyProjects extends React.Component {
   constructor(props) {
@@ -32,12 +32,33 @@ class MyProjects extends React.Component {
         }
         const projects = json.reverse();
         projects.forEach((element) => {
-          element.actions = <div><Button className="btn-primary" onClick={() => this.viewProject(element.uid)} >View</Button></div>;
+          element.actions = <div><Button className="btn-success" onClick={() => this.viewProject(element.uid)} >View</Button> <Button className="btn-danger" onClick={() => this.deleteProj(element.uid)} >Delete</Button></div>;
         });
         this.setState({
           projects,
         });
       });
+    }
+
+    deleteProj(projId) {
+      if (window.confirm('Are you sure you want to delete this requirement?')) {
+        deleteProject(getLocalToken(), projId).then((res) => {
+          const json = res[0];
+          const code = res[1];
+          if (code !== 200) {
+            this.setState({
+              error: json.message,
+            });
+            return;
+          }
+          const projects = this.state.projects.filter(e => e.uid !== projId);
+          this.setState({
+            projects,
+          });
+        });
+      } else {
+        // Do nothing!
+      }
     }
 
     viewProject = (projectId) => {
@@ -98,8 +119,10 @@ class MyProjects extends React.Component {
 
       return (
         <Card>
+          <CardTitle className="bg-primary text-white">
+            Projects
+          </CardTitle>
           <CardBody>
-            <h2 className="text-left">Projects</h2>
             <BootstrapTable keyField="uid" bordered={false} data={this.state.projects} columns={columns} pagination={paginationFactory(options)} noDataIndication={this.indication} />
           </CardBody>
         </Card>);

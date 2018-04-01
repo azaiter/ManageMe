@@ -11,6 +11,8 @@ import RequirementBreakdown from '../dashboard/RequirementBreakdown';
 import RecentRequirements from '../dashboard/RecentRequirements';
 import RecentActivity from '../dashboard/RecentActivity';
 import { getDashboardCardInfo } from '../../utils/HttpHelper';
+import MyProjects from '../projects/MyProjects';
+import MyTeams from '../teams/MyTeams';
 
 import {
   Row,
@@ -39,19 +41,19 @@ class Dashboard extends Component {
             </Row>
             <Row>
               <Col lg="12">
-                <RecentProjects />
+                <MyProjects />
               </Col>
             </Row>
-            <Row>
+            {/* <Row>
               <Col lg="6">
                 <ProjectBreakdown />
               </Col>
-            </Row>
+            </Row> */}
           </Col>
           <Col lg="4">
-            <RequirementBreakdown />
-            <RecentRequirements />
-            <RecentActivity />
+            <MyTeams />
+            {/* <RecentRequirements />
+            <RecentActivity /> */}
           </Col>
         </Row>
       </div>);
