@@ -1,8 +1,9 @@
 import { getToken, createUser, getMyInfo } from '../utils/HttpHelper';
 
-function storeToken(token, expiration) {
+function storeToken(token, expiration, uid) {
   localStorage.setItem('token', token);
   localStorage.setItem('expiration', expiration);
+  localStorage.setItem('uid', uid);
 }
 
 export function deleteStore() {
@@ -11,6 +12,10 @@ export function deleteStore() {
 
 export function getLocalToken() {
   return localStorage.getItem('token');
+}
+
+export function getLocalUid() {
+  return localStorage.getItem('uid');
 }
 
 export async function userIsLoggedIn() {
@@ -28,8 +33,8 @@ export async function login(username, password) {
     if (status !== 200) {
       return status;
     }
-
-    storeToken(json.token, json.expire);
+    console.log(json);
+    storeToken(json.token, json.expire, json.uid);
     return status;
   }).catch((err) => {
     console.log('Error:', err);

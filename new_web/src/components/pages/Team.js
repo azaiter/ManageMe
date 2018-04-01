@@ -1,22 +1,20 @@
 import React, { PropTypes, Component } from 'react';
 import { Link } from 'react-router';
 import { Jumbotron } from 'react-bootstrap';
-import ToolBar from '../../../layouts/ToolBar';
-import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
-import '../../../../../node_modules/react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
-import AddUser from '../Forms/AddUser';
-import { getTeamMembers, removeUserFromTeam, addUserToTeam, getUserInfo } from '../../../../utils/HttpHelper';
-import { getLocalToken } from '../../../../actions/Auth';
+import { BootstrapTable, TableHeaderColumn, InsertModalHeader, DeleteButton } from 'react-bootstrap-table';
+import { getTeamMembers, removeUserFromTeam, addUserToTeam, getUserInfo, assignPrivilage, updateUser } from '../../utils/HttpHelper';
+import { getLocalToken } from '../../utils/Auth';
 import Select from 'react-select';
 import 'react-select/dist/react-select.css';
+import { Card, CardBody } from 'reactstrap';
 
 class Team extends React.Component {
   constructor(props) {
     super(props);
-    console.log(this.props.location);
+    console.log(this.props.match);
     this.state = {
-      teamId: this.props.location.query.id,
-      name: this.props.location.query.name,
+      teamId: this.props.match.params.id,
+      name: this.props.match.params.name,
       data: [],
       error: null,
       jobTypes: [],
@@ -206,11 +204,9 @@ class Team extends React.Component {
       bgColor: '#cccccc',
     };
     return (
-      <div className="overview-page" key="overview">
-        <ToolBar />
-        <h2>{this.state.name} Members:</h2>
-
-        <Jumbotron>
+      <Card>
+        <CardBody>
+          <h2 className="text-left">{this.state.name} Members:</h2>
           <p style={{ color: 'red' }}>{this.state.error}</p>
           <BootstrapTable data={this.state.data} striped hover cellEdit={cellEdit} selectRow={selectRow} options={options} pagination search insertRow searchPlaceholder="Search..." deleteRow exportCSV csvFileName={`Current Userbase ${new Date()}.csv`}>
             <TableHeaderColumn dataField="uid" isKey dataSort autovalue hiddenOnInsert>UID</TableHeaderColumn>
@@ -219,12 +215,9 @@ class Team extends React.Component {
             <TableHeaderColumn dataField="last_name" dataSort hiddenOnInsert>Last Name</TableHeaderColumn>
             <TableHeaderColumn dataField="email" editable={{ type: 'select', options: { values: this.state.emails } }}>E-Mail</TableHeaderColumn>
             <TableHeaderColumn dataField="isLead" editable={{ type: 'checkbox', options: { values: 'Y:N' } }} dataSort>Team Lead</TableHeaderColumn>
-
           </BootstrapTable>
-        </Jumbotron>
-
-
-      </div>
+        </CardBody>
+      </Card>
 
 
     );

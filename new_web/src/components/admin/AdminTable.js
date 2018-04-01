@@ -110,7 +110,7 @@ class AdminTable extends React.Component {
 
 
   customSelectField = (onUpdate, props) => {
-    const values = [];
+    const values = props.defaultValue;
     function handleSelectChange(value) {
       values.push(value);
     }
@@ -123,8 +123,8 @@ class AdminTable extends React.Component {
           onChange={handleSelectChange}
           options={this.state.jobTypes}
           placeholder="Select roles"
-          value={this.state.selectedOption && this.state.selectedOption.value}
-          removeSelected={this.state.removeSelected}
+          value={values}
+          removeSelected={values}
           rtl={this.state.rtl}
           simpleValue
         />

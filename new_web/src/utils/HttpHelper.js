@@ -535,3 +535,17 @@ export async function updateUserInfo(tok, firstName, lastName, email, phoneNumbe
   const json = await res.json();
   return [json, res.status];
 }
+
+export async function getDashboardCardInfo(tok, uid) {
+  const res = await fetch('https://api.manageme.tech/user/systeminfo/get', {
+    method: 'POST',
+    headers:
+        { 'content-type': 'application/json' },
+    body: JSON.stringify({
+      token: tok,
+      user_uid: uid,
+    }),
+  });
+  const json = await res.json();
+  return [json, res.status];
+}

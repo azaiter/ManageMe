@@ -15,7 +15,8 @@ import CreateProject from '../forms/CreateProject';
 import Projects from './Projects';
 import Admin from './Admin';
 import Project from './Project';
-import Team from '../admin/Team';
+import Team from './Team';
+import Teams from './Teams';
 
 import {
   Collapse,
@@ -139,6 +140,9 @@ class Home extends Component {
                 <NavLink tag={Link} to="/Projects" active={this.props.location.pathname.indexOf('/Projects') === 0}>Projects</NavLink>
               </NavItem>
               <NavItem>
+                <NavLink tag={Link} to="/Teams" active={this.props.location.pathname.indexOf('/Teams') === 0}>Teams</NavLink>
+              </NavItem>
+              <NavItem>
                 <NavLink tag={Link} to="/Reports" active={this.props.location.pathname.indexOf('/Reports') === 0} >Reports</NavLink>
               </NavItem>
               <NavItem>
@@ -181,8 +185,9 @@ class Home extends Component {
             <Col span="xs-12">
               <Route exact path="/" component={Dashboard} />
               <Route exact path="/Projects" component={() => <Projects viewCreateProject={this.viewCreateProject} />} />
+              <Route exact path="/Teams" component={Teams} />
+              <Route exact path="/Team/:id/:name" component={Team} />
               <Route exact path="/Admin" component={Admin} />
-              <Route exact path="/Admin/Team/:id" component={Team} />
               <Route path="/Project/:id" component={Project} />
             </Col>
           </Row>

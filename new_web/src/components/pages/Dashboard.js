@@ -2,15 +2,15 @@
 import React, { Component } from 'react';
 import { Link, Route } from 'react-router-dom';
 import { getUserInfo } from '../../utils/HttpHelper';
-import { userIsLoggedIn, deleteStore } from '../../utils/Auth';
+import { userIsLoggedIn, deleteStore, getLocalToken, getLocalUid } from '../../utils/Auth';
 import HeaderCards from '../dashboard/HeaderCards';
 import HoursBreakdown from '../dashboard/HoursBreakdown';
 import RecentProjects from '../dashboard/RecentProjects';
 import ProjectBreakdown from '../dashboard/ProjectBreakdown';
-import MyTeams from '../dashboard/MyTeams';
 import RequirementBreakdown from '../dashboard/RequirementBreakdown';
 import RecentRequirements from '../dashboard/RecentRequirements';
 import RecentActivity from '../dashboard/RecentActivity';
+import { getDashboardCardInfo } from '../../utils/HttpHelper';
 
 import {
   Row,
@@ -23,7 +23,6 @@ class Dashboard extends Component {
     super(props);
 
     this.state = {
-
     };
   }
 
@@ -46,9 +45,6 @@ class Dashboard extends Component {
             <Row>
               <Col lg="6">
                 <ProjectBreakdown />
-              </Col>
-              <Col lg="6">
-                <MyTeams />
               </Col>
             </Row>
           </Col>
