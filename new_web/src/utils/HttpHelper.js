@@ -549,3 +549,51 @@ export async function getDashboardCardInfo(tok, uid) {
   const json = await res.json();
   return [json, res.status];
 }
+
+export async function createChangeRequest(token, OldreqID, estimate, desc, name, softcap, hardcap, priority) {
+  const res = await fetch('https://api.manageme.tech/req/changerequest/create', {
+    method: 'POST',
+    headers:
+        { 'content-type': 'application/json' },
+    body: JSON.stringify({
+      token,
+      OldreqID,
+      estimate,
+      desc,
+      name,
+      softcap,
+      hardcap,
+      priority,
+    }),
+  });
+  const json = await res.json();
+  return [json, res.status];
+}
+
+export async function acceptChangeRequest(token, reqID) {
+  const res = await fetch('https://api.manageme.tech/req/changerequest/accept', {
+    method: 'POST',
+    headers:
+        { 'content-type': 'application/json' },
+    body: JSON.stringify({
+      token,
+      reqID,
+    }),
+  });
+  const json = await res.json();
+  return [json, res.status];
+}
+
+export async function rejectChangeRequest(token, reqID) {
+  const res = await fetch('https://api.manageme.tech/req/changerequest/reject', {
+    method: 'POST',
+    headers:
+        { 'content-type': 'application/json' },
+    body: JSON.stringify({
+      token,
+      reqID,
+    }),
+  });
+  const json = await res.json();
+  return [json, res.status];
+}
