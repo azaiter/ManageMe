@@ -2,6 +2,10 @@ from flask_restful import Resource, reqparse
 from resources.__init__ import dbengine, managemeutil
 import werkzeug
 
+# zaiter reqparse patch
+from resources.__init__ import zaiterClass
+reqparse.RequestParser = zaiterClass
+
 ###########################################################################
 read_user_post_parser = reqparse.RequestParser(bundle_errors=True)
 
@@ -569,5 +573,23 @@ class customCall(Resource):
 	def post(self):
 		args = custom_call_post_parser.parse_args()
 		return dbengine.customCall(args)
+
+###########################################################################
+
+###########################################################################
+
+readUserSystemInfo_post_parser = reqparse.RequestParser(bundle_errors=True)
+
+readUserSystemInfo_post_parser.add_argument(
+    'token', dest='token',
+    location='json', required=True,
+    type=managemeutil.verify_request_token,
+    help='The user\'s token {error_msg}',
+)
+
+class readUserSystemInfo(Resource):
+	def post(self):
+		args = readUserSystemInfo_post_parser.parse_args(http_error_code=200)
+		return dbengine.readUserSystemInfo(args)
 
 ###########################################################################

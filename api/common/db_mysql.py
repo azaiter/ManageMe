@@ -1140,3 +1140,15 @@ def customCall(args):
 		db.commit()
 		db.close()
 	return jsonify(r)
+
+def readUserSystemInfo(args):
+	db = dbConnect()
+	cur = db.cursor()
+	cur.callproc('sp_readUserSysData', [(args.token)])
+	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+	if db:
+		cur.close()
+		db.commit()
+		db.close()
+	print(r)
+	return jsonify(r)

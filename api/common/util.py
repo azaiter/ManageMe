@@ -6,7 +6,11 @@ import sys
 from functools import wraps
 from functools import update_wrapper
 from datetime import timedelta
-
+from flask import Response
+from werkzeug.exceptions import HTTPException, Unauthorized, BadRequest, NotFound, _aborter
+from flask_restful.utils import http_status_message, unpack
+import json
+from werkzeug.exceptions import HTTPException
 auth = HTTPTokenAuth(scheme='Token')
 
 @auth.verify_token
@@ -20,11 +24,22 @@ def email(email_str):
 	else:
 		raise ValueError('{} is not a valid email'.format(email_str))
 
+class TokenError(ValueError):
+	data = "test"
+	message = "test"
+	code = 200
+	def __init__(self, message=None):
+		self.message = "test"
+		self.data = message
+		self.code = 200
+		
+	
 def verify_request_token(token):
 	if dbengine.checkTokenIsValid(token):
 		return token
 	else:
-		raise ValueError('{} is not a valid token'.format(token))
+		print("invalid token2")
+		raise TokenError("token is invalid")
 
 def verify_isTenDigitNum(num):
 	numStr = str(num)
