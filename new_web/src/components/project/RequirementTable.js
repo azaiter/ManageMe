@@ -12,9 +12,21 @@ class RequirementTable extends React.Component {
   constructor(props) {
     super(props);
 
+    let clockInButtonText = '';
+
+    if (localStorage.getItem('req') != '' && localStorage.getItem('req') != null) {
+      clockInButtonText = 'Clock Out';
+    } else {
+      clockInButtonText = 'Clock In';
+    }
+
     this.state = {
-      changeModalLoading: false,
+      reqClockedInto: localStorage.getItem('req'),
+      clockInButtonText,
+      disabled: localStorage.getItem('disabled'),
       changeModal: false,
+      requirementToUpdate: null,
+      changeModalLoading: false,
     };
   }
 
