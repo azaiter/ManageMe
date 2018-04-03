@@ -15,7 +15,7 @@ import {
   Button,
 } from 'reactstrap';
 
-class ProjectDocuments extends Component {
+class RequirementComments extends Component {
   constructor(props) {
     super(props);
 
@@ -28,7 +28,7 @@ class ProjectDocuments extends Component {
     return (
       <Card color="default">
         <CardTitle className="bg-primary text-white">
-      Project Documents
+      Requirement Comments
         </CardTitle>
         <CardText>
           <Row style={{ maxHeight: '500px', overflowY: 'auto' }}>
@@ -39,7 +39,8 @@ class ProjectDocuments extends Component {
           <hr />
           <Row>
             <Col>
-              <Button color="primary" className="float-right">Select Files To Upload</Button>
+              <textarea className="form-control" style={{ resize: 'none', height: '100px', marginBottom: '15px' }} />
+              <Button color="primary" className="float-right">Add Comment</Button>
             </Col>
           </Row>
         </CardText>
@@ -47,4 +48,4 @@ class ProjectDocuments extends Component {
   }
 }
 
-export default ProjectDocuments;
+export default RequirementComments;

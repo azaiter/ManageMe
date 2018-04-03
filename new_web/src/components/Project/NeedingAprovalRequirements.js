@@ -1,127 +1,179 @@
 import React, { Component } from 'react';
-import BootstrapTable2 from 'react-bootstrap-table-next';
+import BootstrapTable from 'react-bootstrap-table-next';
+import { BarLoader } from 'react-spinners';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
-import { Modal, ModalHeader, ModalBody, ModalFooter, Button, Card, CardBody } from 'reactstrap';
+import { Button, Card, CardBody, Modal, FormGroup, Input, ModalBody, ModalHeader, Row, Col, Label, ModalFooter, Table } from 'reactstrap';
 import paginationFactory from 'react-bootstrap-table2-paginator';
 import { getLocalToken } from '../../utils/Auth';
-import { clockIn, clockOut, getRequirementsByProjectId, deleteReq, createRequirement, updateRequirement } from '../../utils/HttpHelper';
+import { acceptChangeRequest, rejectChangeRequest } from '../../utils/HttpHelper';
 
 class NeedingAprovalRequirements extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      requirements: [],
+      changeModal: false,
+      changeModalLoading: false,
+      oldReq: {},
+      newReq: {},
     };
-
-    this.getRequirements();
   }
 
-  formatRequirements = (requirements) => {
-    const correctRequirements = [];
-
-    requirements.forEach((element) => {
-      if (element.status == 3) {
-        correctRequirements.push(element);
+  openChangeModal = (newReqId, oldReqId) => {
+    let newReq = {};
+    let oldReq = {};
+    this.props.newRequirements.forEach((element) => {
+      if (element.uid == newReqId) {
+        newReq = element;
       }
     });
-
-    return correctRequirements;
+    this.props.oldRequirements.forEach((element) => {
+      if (element.uid == oldReqId) {
+        oldReq = element;
+      }
+    });
+    this.setState({
+      changeModal: true,
+      oldReq,
+      newReq,
+    });
   }
 
-  getRequirements = () => {
-    getRequirementsByProjectId(getLocalToken(), this.props.projectID).then((res) => {
-      const json = res[0];
-      const status = res[1];
-      console.log(json);
-      if (status !== 200) {
-        return;
-      }
-
+  toggleChangeModal = () => {
+    if (!this.state.changeModalLoading) {
       this.setState({
-        requirements: this.formatRequirements(json),
+        changeModal: !this.state.changeModal,
       });
+    }
+  }
+
+  acceptRequirementChange = () => {
+    this.setState({ changeModalLoading: true });
+    acceptChangeRequest(localStorage.getItem('token'), this.state.newReq.uid).then((res) => {
+      this.setState({
+        changeModalLoading: false,
+        changeModal: false,
+      }, () => this.props.getRequirements());
     });
   }
 
-  indication = () => 'There are no completed requirements for this project';
+  rejectRequirementChange = () => {
+    this.setState({ changeModalLoading: true });
+    rejectChangeRequest(localStorage.getItem('token'), this.state.newReq.uid).then((res) => {
+      this.setState({
+        changeModalLoading: false,
+        changeModal: false,
+      }, () => this.props.getRequirements());
+    });
+  }
 
   render() {
-    const options2 = {
-      paginationSize: 4,
-      pageStartIndex: 0,
-      // alwaysShowAllBtns: true, // Always show next and previous button
-      // withFirstAndLast: false, // Hide the going to First and Last page button
-      // hideSizePerPage: true, // Hide the sizePerPage dropdown always
-      // hidePageListOnlyOnePage: true, // Hide the pagination list when only one page
-      firstPageText: 'First',
-      prePageText: 'Back',
-      nextPageText: 'Next',
-      lastPageText: 'Last',
-      nextPageTitle: 'First page',
-      prePageTitle: 'Pre page',
-      firstPageTitle: 'Next page',
-      lastPageTitle: 'Last page',
-      sizePerPageList: [{
-        text: '10', value: 10,
-      }, {
-        text: '25', value: 25,
-      }, {
-        text: '50', value: 50,
-      }, {
-        text: 'All', value: this.state.requirements.length,
-      }], // A numeric array is also available. the purpose of above example is custom the text
-    };
-
-    const columns2 = [{
-      dataField: 'uid',
-      text: 'ID',
-      align: 'left',
-      hidden: true,
-      isKey: true,
-    }, {
-      dataField: 'name',
-      text: 'Name',
-      align: 'left',
-    }, {
-      dataField: 'desc',
-      text: 'Description',
-      align: 'left',
-    }, {
-      dataField: 'priority',
-      text: 'Priority',
-      align: 'right',
-      headerAlign: 'right',
-    }, {
-      dataField: 'soft_cap',
-      text: 'Soft Cap (Hr)',
-      align: 'right',
-      headerAlign: 'right',
-    }, {
-      dataField: 'hard_cap',
-      text: 'Hard Cap (Hr)',
-      align: 'right',
-      headerAlign: 'right',
-    }, {
-      dataField: 'estimate',
-      text: 'Estimate',
-      align: 'right',
-      headerAlign: 'right',
-    }, {
-      dataField: 'actions',
-      text: '',
-      align: 'right',
-    }];
-
-    if (this.state.requirements == 0) {
+    if (this.props.newRequirements == 0) {
       return null;
     }
     return (
       <div>
+        <Modal isOpen={this.state.changeModal} size="lg" toggle={() => this.toggleChangeModal()} backdrop="static" >
+          <div className="modal-loading-bar">
+            <BarLoader width="100%" loading={this.state.changeModalLoading} height={5} color="#6D6D6D" />
+          </div>
+          <ModalHeader toggle={() => this.toggleChangeModal()}>Request Requirement Change</ModalHeader>
+          <ModalBody>
+            <Row>
+              <Col>
+                <Row>
+                  <Col>
+                    <Label style={{ fontWeight: 'bold', width: '120px' }}>Name:&nbsp;</Label><Label>{this.state.oldReq.name}</Label>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col>
+                    <Label style={{ fontWeight: 'bold', width: '120px' }}>Description:&nbsp;</Label><Label>{this.state.oldReq.desc}</Label>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col>
+                    <Label style={{ fontWeight: 'bold', width: '120px' }}>Priority:&nbsp;</Label><Label>{this.state.oldReq.priority}</Label>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col>
+                    <Label style={{ fontWeight: 'bold', width: '120px' }}>Soft Cap (Hr):&nbsp;</Label><Label>{this.state.oldReq.soft_cap}</Label>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col>
+                    <Label style={{ fontWeight: 'bold', width: '120px' }}>Hard Cap (Hr):&nbsp;</Label><Label>{this.state.oldReq.hard_cap}</Label>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col>
+                    <Label style={{ fontWeight: 'bold', width: '120px' }}>Estimate:&nbsp;</Label><Label>{this.state.oldReq.estimate}</Label>
+                  </Col>
+                </Row>
+              </Col>
+              <Col>
+                <Row>
+                  <Col>
+                    <Label style={{ fontWeight: 'bold', width: '120px' }}>Name:&nbsp;</Label><Label>{this.state.newReq.name}</Label>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col>
+                    <Label style={{ fontWeight: 'bold', width: '120px' }}>Description:&nbsp;</Label><Label>{this.state.newReq.desc}</Label>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col>
+                    <Label style={{ fontWeight: 'bold', width: '120px' }}>Priority:&nbsp;</Label><Label>{this.state.newReq.priority}</Label>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col>
+                    <Label style={{ fontWeight: 'bold', width: '120px' }}>Soft Cap (Hr):&nbsp;</Label><Label>{this.state.newReq.soft_cap}</Label>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col>
+                    <Label style={{ fontWeight: 'bold', width: '120px' }}>Hard Cap (Hr):&nbsp;</Label><Label>{this.state.newReq.hard_cap}</Label>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col>
+                    <Label style={{ fontWeight: 'bold', width: '120px' }}>Estimate:&nbsp;</Label><Label>{this.state.newReq.estimate}</Label>
+                  </Col>
+                </Row>
+              </Col>
+            </Row>
+          </ModalBody>
+          <ModalFooter>
+            <Button color="danger" disabled={this.state.changeModalLoading} onClick={() => this.rejectRequirementChange()}>Reject</Button>
+            <Button color="success" disabled={this.state.changeModalLoading} onClick={() => this.acceptRequirementChange()}>Accept</Button>
+          </ModalFooter>
+        </Modal>
+
         <Card>
           <CardBody>
-            <h3 className="text-left">Completed Requirements:</h3>
-            <BootstrapTable2 ref={(table) => { this.table = table; }} keyField="uid" bordered={false} data={this.state.requirements} columns={columns2} pagination={paginationFactory(options2)} noDataIndication={this.indication} />
+            <h3 className="text-left">Needs Approval</h3>
+            <Table>
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                {
+                  this.props.newRequirements.map(element => (
+                    <tr>
+                      <td>{element.name}</td>
+                      <td>{element.desc}</td>
+                      <td style={{ textAlign: 'right' }}><Button color="primary" onClick={() => this.openChangeModal(element.uid, element.changed)}>View</Button></td>
+                    </tr>
+                    ))
+                }
+              </tbody>
+            </Table>
           </CardBody>
         </Card>
       </div >

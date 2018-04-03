@@ -9,39 +9,6 @@ import { clockIn, clockOut, getRequirementsByProjectId, deleteReq, createRequire
 class CompletedRequirements extends React.Component {
   constructor(props) {
     super(props);
-
-    this.state = {
-      requirements: [],
-    };
-
-    this.getRequirements();
-  }
-
-  formatRequirements = (requirements) => {
-    const correctRequirements = [];
-
-    requirements.forEach((element) => {
-      if (element.status == 2) {
-        correctRequirements.push(element);
-      }
-    });
-
-    return correctRequirements;
-  }
-
-  getRequirements = () => {
-    getRequirementsByProjectId(getLocalToken(), this.props.projectID).then((res) => {
-      const json = res[0];
-      const status = res[1];
-      console.log(json);
-      if (status !== 200) {
-        return;
-      }
-
-      this.setState({
-        requirements: this.formatRequirements(json),
-      });
-    });
   }
 
   indication = () => 'There are no completed requirements for this project';
@@ -69,7 +36,7 @@ class CompletedRequirements extends React.Component {
       }, {
         text: '50', value: 50,
       }, {
-        text: 'All', value: this.state.requirements.length,
+        text: 'All', value: this.props.requirements,
       }], // A numeric array is also available. the purpose of above example is custom the text
     };
 
@@ -117,8 +84,8 @@ class CompletedRequirements extends React.Component {
       <div>
         <Card>
           <CardBody>
-            <h3 className="text-left">Completed Requirements:</h3>
-            <BootstrapTable2 ref={(table) => { this.table = table; }} keyField="uid" bordered={false} data={this.state.requirements} columns={columns2} pagination={paginationFactory(options2)} noDataIndication={this.indication} />
+            <h3 className="text-left">Completed Requirements</h3>
+            <BootstrapTable2 keyField="uid" bordered={false} data={this.props.requirements} columns={columns2} pagination={paginationFactory(options2)} noDataIndication={this.indication} />
           </CardBody>
         </Card>
       </div >

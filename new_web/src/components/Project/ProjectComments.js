@@ -40,7 +40,7 @@ class ProjectComments extends Component {
           <Row>
             <Col>
               <textarea className="form-control" style={{ resize: 'none', height: '100px', marginBottom: '15px' }} />
-              <Button color="success" className="float-right">Add Comment</Button>
+              <Button color="primary" className="float-right">Add Comment</Button>
             </Col>
           </Row>
         </CardText>

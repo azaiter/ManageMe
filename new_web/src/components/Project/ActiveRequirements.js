@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import { BootstrapTable, TableHeaderColumn, DeleteButton, InsertModalHeader } from 'react-bootstrap-table';
+import { BarLoader } from 'react-spinners';
 import BootstrapTable2 from 'react-bootstrap-table-next';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
-import { Modal, ModalHeader, ModalBody, ModalFooter, Button, Card, CardBody } from 'reactstrap';
+import { Modal, ModalHeader, ModalBody, ModalFooter, Button, Card, CardBody, Row, Col, Input, FormGroup, Label } from 'reactstrap';
 import paginationFactory from 'react-bootstrap-table2-paginator';
 import { getLocalToken } from '../../utils/Auth';
-import { clockIn, clockOut, getRequirementsByProjectId, deleteReq, createRequirement, updateRequirement } from '../../utils/HttpHelper';
+import { clockIn, clockOut, getRequirementsByProjectId, deleteReq, createRequirement, updateRequirement, createChangeRequest } from '../../utils/HttpHelper';
+import RequirementTable from './RequirementTable';
 
 class ActiveRequirements extends React.Component {
   constructor(props) {
@@ -26,57 +28,49 @@ class ActiveRequirements extends React.Component {
       clockInButtonText,
       disabled: localStorage.getItem('disabled'),
       perm: false,
-      data: [],
       error: '',
-      modal: false,
+      editModal: false,
+      changeModal: false,
+      requirementToUpdate: null,
+      changeModalLoading: false,
       requirements: [],
     };
+  }
 
+  componentDidMount() {
     this.getRequirements();
   }
 
-  formatRequirements = (requirements) => {
-    const correctRequirements = [];
-
-    requirements.forEach((element) => {
-      if (element.status === 1) {
-        const elementWithActions = element;
-        elementWithActions.actions = (
-          <div>
-            <Button color="primary" onClick={() => this.handleClock(element.uid)} hidden={this.state.disabled == 'true' && this.state.reqClockedInto != element.uid}>{this.state.clockInButtonText}</Button>
-            <Button style={{ marginLeft: '5px' }}>Request Change</Button>
-          </div>
-        );
-        correctRequirements.push(element);
-      }
-    });
-
-    return correctRequirements;
-  }
-
-  requestRequirementChange = () => {
-
-  }
 
   getRequirements = () => {
     getRequirementsByProjectId(getLocalToken(), this.props.projectID).then((res) => {
       const json = res[0];
       const status = res[1];
-      console.log(json);
       if (status !== 200) {
         return;
       }
 
+      const activeRequirements = [];
+
+      json.forEach((element) => {
+        switch (element.status) {
+          case 1:
+            activeRequirements.push(element);
+            break;
+          default:
+
+            break;
+        }
+      });
+
       this.setState({
-        requirements: this.formatRequirements(json),
+        requirements: activeRequirements,
       });
     });
   }
 
-  forceTableButtonUpdate = () => {
-    this.setState({
-      requirements: this.formatRequirements(this.state.requirements),
-    });
+  requestRequirementChange = () => {
+
   }
 
   isClockedIn = req => this.state.reqClockedInto === req
@@ -100,14 +94,14 @@ class ActiveRequirements extends React.Component {
     updateRequirement(localStorage.getItem('token'), row.uid, cellName, cellValue).then((res) => {
       const json = res[0];
       const status = res[1];
-      const requirements = this.state.requirements;
+      const requirements = this.props.requirements;
       if (status !== 200) {
         this.setState({
           error: Object.values(json.message),
         });
         return false;
       }
-      getRequirementsByProjectId(getLocalToken(), this.props.match.params.id).then((resp) => {
+      getRequirementsByProjectId(getLocalToken(), this.props.projectID).then((resp) => {
         if (resp[1] !== 200) {
           return;
         }
@@ -143,7 +137,7 @@ class ActiveRequirements extends React.Component {
 
   deleteRequirements(rows) {
     deleteReq(getLocalToken(), rows[0]);
-    const requirements = this.state.requirements.filter(i => rows.indexOf(i.uid) === -1);
+    const requirements = this.props.requirements.filter(i => rows.indexOf(i.uid) === -1);
     this.setState({
       requirements,
     });
@@ -163,8 +157,6 @@ class ActiveRequirements extends React.Component {
         disabled: false,
         reqClockedInto: null,
         clockInButtonText: 'Clock In',
-      }, () => {
-        this.forceTableButtonUpdate();
       });
       return;
     }
@@ -176,16 +168,35 @@ class ActiveRequirements extends React.Component {
       disabled: 'true',
       reqClockedInto: id,
       clockInButtonText: 'Clock Out',
-    }, () => {
-      this.forceTableButtonUpdate();
     });
     clockIn(localStorage.getItem('token'), id);
   }
 
-  toggle() {
+  toggleEditModal = () => {
     this.setState({
-      modal: !this.state.modal,
+      editModal: !this.state.editModal,
     });
+  }
+
+
+  formatRequirements = (requirements) => {
+    const correctRequirements = [];
+
+    requirements.forEach((element) => {
+      if (element.status == 1) {
+        const elementWithActions = element;
+        elementWithActions.actions = (
+          <div>
+            <Button color="primary" onClick={() => this.handleClock(element.uid)} hidden={this.state.disabled == 'true' && this.state.reqClockedInto != element.uid}>{this.state.clockInButtonText}</Button>
+            <Button onClick={() => this.openChangeModal(element.uid)} style={{ marginLeft: '5px' }}>Request Change</Button>
+            <Button color="success" style={{ marginLeft: '5px' }}>Complete</Button>
+          </div>
+        );
+        correctRequirements.push(element);
+      }
+    });
+
+    return correctRequirements;
   }
 
   indication = () => 'There are no requirements for this project';
@@ -231,7 +242,7 @@ class ActiveRequirements extends React.Component {
       }, {
         text: '50', value: 50,
       }, {
-        text: 'All', value: this.state.requirements.length,
+        text: 'All', value: this.props.requirements.length,
       }], // A numeric array is also available. the purpose of above example is custom the text
     };
 
@@ -279,16 +290,95 @@ class ActiveRequirements extends React.Component {
       <div>
         <Card>
           <CardBody>
-            <h3 className="text-left">Active Requirements:</h3>
+            <h3 className="text-left">Active Requirements</h3>
             <div className="top-right-edit">
-              <Button onClick={() => this.toggle()}><i className="fa fa-edit" /></Button>
+              <Button onClick={() => this.toggleEditModal()}><i className="fa fa-edit" /></Button>
             </div>
-            <BootstrapTable2 ref={(table) => { this.table = table; }} keyField="uid" bordered={false} data={this.state.requirements} columns={columns2} pagination={paginationFactory(options2)} noDataIndication={this.indication} />
+            <BootstrapTable2 keyField="uid" bordered={false} data={this.formatRequirements(this.props.requirements)} columns={columns2} pagination={paginationFactory(options2)} noDataIndication={this.indication} />
+            <RequirementTable requirements={this.props.requirements} />
           </CardBody>
         </Card>
 
-        <Modal isOpen={this.state.modal} toggle={() => this.toggle()} className="modal-xl" backdrop="static" >
-          <ModalHeader toggle={() => this.toggle()}>Edit Requirements</ModalHeader>
+        <Modal isOpen={this.state.changeModal} toggle={() => this.toggleChangeModal()} backdrop="static" >
+          <div className="modal-loading-bar">
+            <BarLoader width="100%" loading={this.state.changeModalLoading} height={5} color="#6D6D6D" />
+          </div>
+          <ModalHeader toggle={() => this.toggleChangeModal()}>Request Requirement Change</ModalHeader>
+          <ModalBody>
+            <Row>
+              <Col>
+                <FormGroup>
+                  <Label>Name</Label>
+                  <Input placeholder="Name" disabled={this.state.changeModalLoading} value={this.state.changeModalName} onChange={(e) => { this.setState({ changeModalName: e.target.value }); }} />
+                  <div className="invalid-feedback">
+                      Please enter a valid name.
+                  </div>
+                </FormGroup>
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <FormGroup>
+                  <Label>Description</Label>
+                  <Input placeholder="Description" disabled={this.state.changeModalLoading} value={this.state.changeModalDescription} onChange={(e) => { this.setState({ changeModalDescription: e.target.value }); }} />
+                  <div className="invalid-feedback">
+                      Please enter a valid description.
+                  </div>
+                </FormGroup>
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <FormGroup>
+                  <Label>Priority</Label>
+                  <Input placeholder="Priority" disabled={this.state.changeModalLoading} value={this.state.changeModalPriority} onChange={(e) => { this.setState({ changeModalPriority: e.target.value }); }} />
+                  <div className="invalid-feedback">
+                      Please enter a valid numerical priority.
+                  </div>
+                </FormGroup>
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <FormGroup>
+                  <Label>Soft Cap (Hr)</Label>
+                  <Input placeholder="Soft Cap (Hr)" disabled={this.state.changeModalLoading} value={this.state.changeModalSoftCap} onChange={(e) => { this.setState({ changeModalSoftCap: e.target.value }); }} />
+                  <div className="invalid-feedback">
+                      Please enter a valid numerical soft cap.
+                  </div>
+                </FormGroup>
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <FormGroup>
+                  <Label>Hard Cap (Hr)</Label>
+                  <Input placeholder="Soft Cap (Hr)" disabled={this.state.changeModalLoading} value={this.state.changeModalHardCap} onChange={(e) => { this.setState({ changeModalHardCap: e.target.value }); }} />
+                  <div className="invalid-feedback">
+                      Please enter a valid numerical hard cap.
+                  </div>
+                </FormGroup>
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <FormGroup>
+                  <Label>Estimate</Label>
+                  <Input placeholder="Estimate" disabled={this.state.changeModalLoading} value={this.state.changeModalEstimate} onChange={(e) => { this.setState({ changeModalEstimate: e.target.value }); }} />
+                  <div className="invalid-feedback">
+                      Please enter a valid numeric estimate.
+                  </div>
+                </FormGroup>
+              </Col>
+            </Row>
+          </ModalBody>
+          <ModalFooter>
+            <Button color="success" disabled={this.state.changeModalLoading} onClick={() => this.sendRequirmentChangeForApproval()}>Send For Approval</Button>
+          </ModalFooter>
+        </Modal>
+
+        <Modal isOpen={this.state.editModal} toggle={() => this.toggleEditModal()} className="modal-xl" backdrop="static" >
+          <ModalHeader toggle={() => this.toggleEditModal()}>Edit Requirements</ModalHeader>
           <ModalBody>
             <BootstrapTable data={this.state.requirements} striped cellEdit={cellEdit} hover selectRow={selectRow} options={options} pagination search searchPlaceholder="Search..." insertRow deleteRow exportCSV csvFileName={`${this.state.name} ${new Date()}`}>
               <TableHeaderColumn dataField="uid" isKey autoValue dataSort hiddenOnInsert>UID</TableHeaderColumn>

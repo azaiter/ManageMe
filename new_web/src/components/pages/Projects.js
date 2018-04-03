@@ -14,7 +14,6 @@ import MyProjects from '../projects/MyProjects';
 import ToolBar from '../projects/ToolBar';
 import PendingRequirements from '../projects/PendingRequirements';
 
-
 class Projects extends Component {
   constructor(props) {
     super(props);
