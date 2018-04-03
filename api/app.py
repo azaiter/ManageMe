@@ -17,6 +17,7 @@ from sys import argv
 import sys
 from flask import Flask
 from flask_restful import Api
+import flask_restful
 from flask_cors import CORS
 
 # routing classes
@@ -38,12 +39,23 @@ from resources.revoke_privilage import revoke_privilage
 from resources.read_estimate_by_project_id import read_estimate_by_project_id
 from resources.read_estimate_by_req_id import read_estimate_by_req_id
 from resources.read_timecaps_by_project_id import read_timecaps_by_project_id
-from resources.create_read import readUser, createReq, readReq, readTeam, createEstimate, readPermissions, createTeamMember, readTeamMembers, createDocument, readDocument, createProjectDocument, readProjectDocument, readDocumentFileTypes, readReqByProjID, createReqChangeRequest, acceptReqChangeRequest, rejectReqChangeRequest, customCall
+from resources.create_read import readUserSystemInfo, readUser, createReq, readReq, readTeam, createEstimate, readPermissions, createTeamMember, readTeamMembers, createDocument, readDocument, createProjectDocument, readProjectDocument, readDocumentFileTypes, readReqByProjID, createReqChangeRequest, acceptReqChangeRequest, rejectReqChangeRequest, customCall
 from resources.update_delete import updateProject, deleteProject, updateTeamLead, deleteTeamMember, deleteProjectDocument, deleteUser, updateUser, deleteReq, updateReq, deleteTeam
+from werkzeug.exceptions import HTTPException, Unauthorized, BadRequest, NotFound, _aborter
+from flask_restful.utils import http_status_message, unpack
+
+
 
 # define the app and run it
+errors = {
+    'TokenError': {
+        'message': "'something' is required if 'anotherthing' is set.",
+        'status': 200
+    },
+}
+
 app = Flask(__name__)
-api = Api(app)
+api = flask_restful.Api(app, errors=errors)
 CORS(app)
 #CORS(app, resources={r"/*": {"origins": "*"}})
 
@@ -106,6 +118,7 @@ api.add_resource(updateReq, '/req/update', '/req/update/')
 api.add_resource(createReqChangeRequest, '/req/changerequest/create', '/req/changerequest/create/')
 api.add_resource(acceptReqChangeRequest, '/req/changerequest/accept', '/req/changerequest/accept/')
 api.add_resource(rejectReqChangeRequest, '/req/changerequest/reject', '/req/changerequest/reject/')
+api.add_resource(readUserSystemInfo, '/user/systeminfo/get', '/user/systeminfo/get/')
 #util
 api.add_resource(customCall, '/util/custom', '/util/custom/')
 

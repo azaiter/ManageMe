@@ -1,6 +1,11 @@
 from flask_restful import Resource, reqparse
 from resources.__init__ import dbengine, managemeutil
 
+# zaiter reqparse patch
+from resources.__init__ import zaiterClass
+reqparse.RequestParser = zaiterClass
+
+
 
 #############################
 updateProject_parser = reqparse.RequestParser(bundle_errors=True)
