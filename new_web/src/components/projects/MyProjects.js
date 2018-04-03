@@ -119,9 +119,6 @@ class MyProjects extends React.Component {
 
       return (
         <Card>
-          <CardTitle className="bg-primary text-white">
-            Projects
-          </CardTitle>
           <CardBody>
             <BootstrapTable keyField="uid" bordered={false} data={this.state.projects} columns={columns} pagination={paginationFactory(options)} noDataIndication={this.indication} />
           </CardBody>

@@ -114,7 +114,7 @@ class RequirementTable extends React.Component {
           </thead>
           <tbody>
             <tr>
-              <td style={{ textAlign: 'center', columnSpan: '3' }}>
+              <td style={{ textAlign: 'center' }} colSpan="3">
                 {this.props.emptyTableMessage}
               </td>
             </tr>
