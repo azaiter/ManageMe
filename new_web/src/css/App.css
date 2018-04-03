@@ -174,3 +174,11 @@ thead th{
 .ReactModal__Overlay {
   z-index: 2000!important;
 }
+
+.recents-table tbody :nth-child(1) :first-child {
+  border-top: 0px solid white;
+}
+
+.recents-table tbody :nth-child(1) :nth-child(2) {
+  border-top: 0px solid white;
+}

@@ -40,20 +40,21 @@ class Dashboard extends Component {
               </Col>
             </Row>
             <Row>
-              <Col lg="12">
-                <MyProjects />
+              <Col xs="12" sm="12" md="6" lg="6">
+                <RecentRequirements />
+              </Col>
+              <Col xs="12" sm="12" md="6" lg="6">
+                <RecentProjects />
               </Col>
             </Row>
-            {/* <Row>
-              <Col lg="6">
-                <ProjectBreakdown />
-              </Col>
-            </Row> */}
+            <Row>
+              <Col lg="6" />
+            </Row>
           </Col>
           <Col lg="4">
+            <ProjectBreakdown />
+            <RecentActivity />
             <MyTeams />
-            {/* <RecentRequirements />
-            <RecentActivity /> */}
           </Col>
         </Row>
       </div>);

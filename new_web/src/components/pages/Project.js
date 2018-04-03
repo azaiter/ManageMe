@@ -102,9 +102,11 @@ class Project extends React.Component {
             <CardTitle className="bg-primary text-white">Project Information
             </CardTitle>
             <CardBody>
-              <h3>Project: {this.state.name}</h3>
+              <h3>{this.state.name}</h3>
               <hr />
-              Description: {this.state.desc}<br />
+              <span style={{ fontSize: '18px' }}>{this.state.desc}</span>
+              <br />
+              <br />
               Created: {this.state.created}
             </CardBody>
           </Card>

@@ -1,7 +1,10 @@
 /* eslint react/no-did-mount-set-state: 0 */
 import React, { Component } from 'react';
+import { BarLoader } from 'react-spinners';
+import { withRouter } from 'react-router-dom';
 
 import {
+  Button,
   Card,
   CardTitle,
   UncontrolledDropdown,
@@ -9,22 +12,62 @@ import {
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
+  Table,
 } from 'reactstrap';
-import { BarLoader } from 'react-spinners';
 
-class RecentProjects extends Component {
+import { getRecentProjects } from '../../utils/HttpHelper';
+
+class RecentRequirements extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
       loading: false,
+      data: [],
     };
+  }
+
+  componentDidMount() {
+    this.getdata();
+  }
+
+  getdata = () => {
+    this.setState({ loading: true });
+    getRecentProjects(localStorage.getItem('token')).then((res) => {
+      const data = res[0];
+      const status = res[1];
+      if (status == 200) {
+        this.setState({
+          data: this.formatData(data),
+          loading: false,
+        });
+      } else {
+        this.setState({ loading: false });
+      }
+    });
+  }
+
+  formatData = (data) => {
+    const alreadyFound = [];
+    const filteredData = [];
+    data.forEach((element) => {
+      if (alreadyFound.indexOf(element.projID) == -1 && filteredData.length < 11) {
+        alreadyFound.push(element.projID);
+        filteredData.push(element);
+      }
+    });
+
+    return filteredData;
+  }
+
+  viewProject = (projectId) => {
+    this.props.history.push(`/Project/${projectId}`, null);
   }
 
   render() {
     return (
       <Card color="default">
-        <CardTitle className="bg-primary text-white">
+        <CardTitle className="bg-primary text-white" style={{ marginBottom: '0px' }}>
           Recent Projects
           <div className="float-right">
             <UncontrolledDropdown size="sm">
@@ -37,54 +80,26 @@ class RecentProjects extends Component {
             </UncontrolledDropdown>
           </div>
         </CardTitle>
-        <CardText>
+        <CardText style={{ paddingBottom: '0px' }}>
           <div className="card-loading-bar">
             <BarLoader id="card-loading-bar" loading={this.state.loading} width="100%" height={5} color="#6D6D6D" />
           </div>
-          <table className="table table-sm">
-            <thead>
-              <tr>
-                <th scope="col">#</th>
-                <th scope="col">First</th>
-                <th scope="col">Last</th>
-                <th scope="col">Handle</th>
-              </tr>
-            </thead>
+          <Table className="recents-table" style={{ paddingBottom: '0px', marginBottom: '0px' }}>
+            <thead />
             <tbody>
+              {
+            this.state.data.map(data => (
               <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>@mdo</td>
+                <td style={{ textAlign: 'left', verticalAlign: 'middle' }}>{data.projName}</td>
+                <td style={{ textAlign: 'right' }} onClick={() => this.viewProject(data.projID)}><Button size="sm" color="success">View</Button></td>
               </tr>
-              <tr>
-                <th scope="row">2</th>
-                <td>Jacob</td>
-                <td>Thornton</td>
-                <td>@fat</td>
-              </tr>
-              <tr>
-                <th scope="row">2</th>
-                <td>Jacob</td>
-                <td>Thornton</td>
-                <td>@fat</td>
-              </tr>
-              <tr>
-                <th scope="row">2</th>
-                <td>Jacob</td>
-                <td>Thornton</td>
-                <td>@fat</td>
-              </tr>
-              <tr>
-                <th scope="row">3</th>
-                <td colSpan="2">Larry the Bird</td>
-                <td>@twitter</td>
-              </tr>
+              ))
+          }
             </tbody>
-          </table>
+          </Table>
         </CardText>
       </Card>);
   }
 }
 
-export default RecentProjects;
+export default withRouter(RecentRequirements);

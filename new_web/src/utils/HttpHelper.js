@@ -508,6 +508,48 @@ export async function getAllPerms(token) {
   return [json, res.status];
 }
 
+export async function getRecentRequirements(tok) {
+  const res = await fetch('https://api.manageme.tech/util/custom', {
+    method: 'POST',
+    headers:
+        { 'content-type': 'application/json' },
+    body: JSON.stringify({
+      paramArr: [tok],
+      spName: 'sp_getRecentReqs',
+    }),
+  });
+  const json = await res.json();
+  return [json, res.status];
+}
+
+export async function getRecentProjects(tok) {
+  const res = await fetch('https://api.manageme.tech/util/custom', {
+    method: 'POST',
+    headers:
+        { 'content-type': 'application/json' },
+    body: JSON.stringify({
+      paramArr: [tok],
+      spName: 'sp_getRecentProjects',
+    }),
+  });
+  const json = await res.json();
+  return [json, res.status];
+}
+
+export async function getRecentActivity(tok) {
+  const res = await fetch('https://api.manageme.tech/util/custom', {
+    method: 'POST',
+    headers:
+        { 'content-type': 'application/json' },
+    body: JSON.stringify({
+      paramArr: [tok],
+      spName: 'sp_getRecentActivity',
+    }),
+  });
+  const json = await res.json();
+  return [json, res.status];
+}
+
 export async function getMyInfo(tok) {
   const res = await fetch('https://api.manageme.tech/util/custom', {
     method: 'POST',
