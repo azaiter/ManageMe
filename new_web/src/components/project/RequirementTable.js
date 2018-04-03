@@ -134,7 +134,16 @@ class RequirementTable extends React.Component {
         <tbody>
           {
             this.props.requirements.map(req => (
-              <RequirementRow showChangeModalFunction={this.openChangeModal} req={req} clockActionText={this.state.clockInButtonText} clockActionFunction={this.handleClock} />
+              <RequirementRow
+                showChangeModalFunction={this.openChangeModal}
+                req={req}
+                hideClockActionButton={this.state.disabled == 'true' && this.state.reqClockedInto != req.uid}
+                clockActionText={this.state.clockInButtonText}
+                clockActionFunction={this.handleClock}
+                showClockActionButton={this.props.showClockActionButton}
+                showCompleteButton={this.props.showCompleteButton}
+                showRequestChangeButton={this.props.showRequestChangeButton}
+              />
               ))
           }
         </tbody>

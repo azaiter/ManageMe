@@ -143,35 +143,6 @@ class ActiveRequirements extends React.Component {
     });
   }
 
-  handleClock(id) {
-    console.log(id);
-
-    const tok = getLocalToken();
-    const req = localStorage.getItem('req');
-    if (this.state.disabled === 'true') {
-      localStorage.setItem('req', '');
-      localStorage.setItem('disabled', false);
-      clockOut(localStorage.getItem('token'), id);
-      this.setState({
-        status: null,
-        disabled: false,
-        reqClockedInto: null,
-        clockInButtonText: 'Clock In',
-      });
-      return;
-    }
-
-    localStorage.setItem('req', id);
-    localStorage.setItem('disabled', true);
-    this.setState({
-      status: 'You are clocked in for this requirement!',
-      disabled: 'true',
-      reqClockedInto: id,
-      clockInButtonText: 'Clock Out',
-    });
-    clockIn(localStorage.getItem('token'), id);
-  }
-
   toggleEditModal = () => {
     this.setState({
       editModal: !this.state.editModal,
@@ -220,72 +191,6 @@ class ActiveRequirements extends React.Component {
       beforeSaveCell: this.beforeSaveCell.bind(this),
     };
 
-    const options2 = {
-      paginationSize: 4,
-      pageStartIndex: 0,
-      // alwaysShowAllBtns: true, // Always show next and previous button
-      // withFirstAndLast: false, // Hide the going to First and Last page button
-      // hideSizePerPage: true, // Hide the sizePerPage dropdown always
-      // hidePageListOnlyOnePage: true, // Hide the pagination list when only one page
-      firstPageText: 'First',
-      prePageText: 'Back',
-      nextPageText: 'Next',
-      lastPageText: 'Last',
-      nextPageTitle: 'First page',
-      prePageTitle: 'Pre page',
-      firstPageTitle: 'Next page',
-      lastPageTitle: 'Last page',
-      sizePerPageList: [{
-        text: '10', value: 10,
-      }, {
-        text: '25', value: 25,
-      }, {
-        text: '50', value: 50,
-      }, {
-        text: 'All', value: this.props.requirements.length,
-      }], // A numeric array is also available. the purpose of above example is custom the text
-    };
-
-    const columns2 = [{
-      dataField: 'uid',
-      text: 'ID',
-      align: 'left',
-      hidden: true,
-      isKey: true,
-    }, {
-      dataField: 'name',
-      text: 'Name',
-      align: 'left',
-    }, {
-      dataField: 'desc',
-      text: 'Description',
-      align: 'left',
-    }, {
-      dataField: 'priority',
-      text: 'Priority',
-      align: 'right',
-      headerAlign: 'right',
-    }, {
-      dataField: 'soft_cap',
-      text: 'Soft Cap (Hr)',
-      align: 'right',
-      headerAlign: 'right',
-    }, {
-      dataField: 'hard_cap',
-      text: 'Hard Cap (Hr)',
-      align: 'right',
-      headerAlign: 'right',
-    }, {
-      dataField: 'estimate',
-      text: 'Estimate',
-      align: 'right',
-      headerAlign: 'right',
-    }, {
-      dataField: 'actions',
-      text: '',
-      align: 'right',
-    }];
-
     return (
       <div>
         <Card>
@@ -294,88 +199,9 @@ class ActiveRequirements extends React.Component {
             <div className="top-right-edit">
               <Button onClick={() => this.toggleEditModal()}><i className="fa fa-edit" /></Button>
             </div>
-            <BootstrapTable2 keyField="uid" bordered={false} data={this.formatRequirements(this.props.requirements)} columns={columns2} pagination={paginationFactory(options2)} noDataIndication={this.indication} />
-            <RequirementTable requirements={this.props.requirements} />
+            <RequirementTable requirements={this.props.requirements} emptyTableMessage="There are no active requirements for this project." />
           </CardBody>
         </Card>
-
-        <Modal isOpen={this.state.changeModal} toggle={() => this.toggleChangeModal()} backdrop="static" >
-          <div className="modal-loading-bar">
-            <BarLoader width="100%" loading={this.state.changeModalLoading} height={5} color="#6D6D6D" />
-          </div>
-          <ModalHeader toggle={() => this.toggleChangeModal()}>Request Requirement Change</ModalHeader>
-          <ModalBody>
-            <Row>
-              <Col>
-                <FormGroup>
-                  <Label>Name</Label>
-                  <Input placeholder="Name" disabled={this.state.changeModalLoading} value={this.state.changeModalName} onChange={(e) => { this.setState({ changeModalName: e.target.value }); }} />
-                  <div className="invalid-feedback">
-                      Please enter a valid name.
-                  </div>
-                </FormGroup>
-              </Col>
-            </Row>
-            <Row>
-              <Col>
-                <FormGroup>
-                  <Label>Description</Label>
-                  <Input placeholder="Description" disabled={this.state.changeModalLoading} value={this.state.changeModalDescription} onChange={(e) => { this.setState({ changeModalDescription: e.target.value }); }} />
-                  <div className="invalid-feedback">
-                      Please enter a valid description.
-                  </div>
-                </FormGroup>
-              </Col>
-            </Row>
-            <Row>
-              <Col>
-                <FormGroup>
-                  <Label>Priority</Label>
-                  <Input placeholder="Priority" disabled={this.state.changeModalLoading} value={this.state.changeModalPriority} onChange={(e) => { this.setState({ changeModalPriority: e.target.value }); }} />
-                  <div className="invalid-feedback">
-                      Please enter a valid numerical priority.
-                  </div>
-                </FormGroup>
-              </Col>
-            </Row>
-            <Row>
-              <Col>
-                <FormGroup>
-                  <Label>Soft Cap (Hr)</Label>
-                  <Input placeholder="Soft Cap (Hr)" disabled={this.state.changeModalLoading} value={this.state.changeModalSoftCap} onChange={(e) => { this.setState({ changeModalSoftCap: e.target.value }); }} />
-                  <div className="invalid-feedback">
-                      Please enter a valid numerical soft cap.
-                  </div>
-                </FormGroup>
-              </Col>
-            </Row>
-            <Row>
-              <Col>
-                <FormGroup>
-                  <Label>Hard Cap (Hr)</Label>
-                  <Input placeholder="Soft Cap (Hr)" disabled={this.state.changeModalLoading} value={this.state.changeModalHardCap} onChange={(e) => { this.setState({ changeModalHardCap: e.target.value }); }} />
-                  <div className="invalid-feedback">
-                      Please enter a valid numerical hard cap.
-                  </div>
-                </FormGroup>
-              </Col>
-            </Row>
-            <Row>
-              <Col>
-                <FormGroup>
-                  <Label>Estimate</Label>
-                  <Input placeholder="Estimate" disabled={this.state.changeModalLoading} value={this.state.changeModalEstimate} onChange={(e) => { this.setState({ changeModalEstimate: e.target.value }); }} />
-                  <div className="invalid-feedback">
-                      Please enter a valid numeric estimate.
-                  </div>
-                </FormGroup>
-              </Col>
-            </Row>
-          </ModalBody>
-          <ModalFooter>
-            <Button color="success" disabled={this.state.changeModalLoading} onClick={() => this.sendRequirmentChangeForApproval()}>Send For Approval</Button>
-          </ModalFooter>
-        </Modal>
 
         <Modal isOpen={this.state.editModal} toggle={() => this.toggleEditModal()} className="modal-xl" backdrop="static" >
           <ModalHeader toggle={() => this.toggleEditModal()}>Edit Requirements</ModalHeader>
