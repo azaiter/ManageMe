@@ -1,22 +1,19 @@
 import React, { PropTypes, Component } from 'react';
-import { Link } from 'react-router';
 import { Jumbotron } from 'react-bootstrap';
-import ToolBar from '../../../layouts/ToolBar';
-import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
-import '../../../../../node_modules/react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
-import AddUser from '../Forms/AddUser';
-import { getTeamMembers, removeUserFromTeam, addUserToTeam, getUserInfo } from '../../../../utils/HttpHelper';
-import { getLocalToken } from '../../../../actions/Auth';
+import { BootstrapTable, TableHeaderColumn, DeleteButton, InsertModalHeader } from 'react-bootstrap-table';
+import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import Select from 'react-select';
 import 'react-select/dist/react-select.css';
+
+import { getTeamMembers, removeUserFromTeam, addUserToTeam, getUserInfo, updateUser, assignPrivilage } from '../../utils/HttpHelper';
+import { getLocalToken } from '../../utils/Auth';
 
 class Team extends React.Component {
   constructor(props) {
     super(props);
-    console.log(this.props.location);
     this.state = {
-      teamId: this.props.location.query.id,
-      name: this.props.location.query.name,
+      teamId: this.props.match.params.id,
+      name: this.props.match.params.name,
       data: [],
       error: null,
       jobTypes: [],
@@ -134,11 +131,6 @@ class Team extends React.Component {
     }
   }
 
-  addUser(row) {
-
-  }
-
-
   customSelectField = (onUpdate, props) => {
     const values = [];
     function handleSelectChange(value) {
@@ -207,7 +199,6 @@ class Team extends React.Component {
     };
     return (
       <div className="overview-page" key="overview">
-        <ToolBar />
         <h2>{this.state.name} Members:</h2>
 
         <Jumbotron>

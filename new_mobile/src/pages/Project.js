@@ -101,6 +101,7 @@ export default class Project extends Component {
               
               <ListItem
                 roundAvatar
+                style = {{backgroundColor: (i.clocked_in === 'Y') ? 'green' : null}}
                 key={i.name}
                 title={i.name}
                 subtitle={"Description: "+i.desc}

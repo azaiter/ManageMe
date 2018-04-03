@@ -90,19 +90,6 @@ class HoursBreakdown extends Component {
       <Card color="default">
         <CardTitle className="bg-primary text-white">
         Hours Breakdown
-          <div className="float-right">
-            <UncontrolledDropdown size="sm">
-              <DropdownToggle caret className="float-right">
-                <i className="fa fa-cog" />
-              </DropdownToggle>
-              <DropdownMenu right>
-                <DropdownItem disabled={this.state.loading}>Refresh</DropdownItem>
-                <DropdownItem divider />
-                <DropdownItem disabled={this.state.loading}>Overall</DropdownItem>
-                <DropdownItem disabled={this.state.loading}>By Requirment</DropdownItem>
-              </DropdownMenu>
-            </UncontrolledDropdown>
-          </div>
         </CardTitle>
         <CardText>
           <div className="card-loading-bar">
