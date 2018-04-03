@@ -13,7 +13,7 @@ import ProjectDocuments from '../project/ProjectDocuments';
 import CompletedRequirements from '../project/CompletedRequirements';
 import NeedingAprovalRequirements from '../project/NeedingAprovalRequirements';
 
-import { clockIn, clockOut, getRequirementsByProjectId, deleteReq, createRequirement, updateRequirement } from '../../utils/HttpHelper';
+import { clockIn, clockOut, getRequirementsByProjectId, getProjects, deleteReq, createRequirement, updateRequirement } from '../../utils/HttpHelper';
 import { getLocalToken } from '../../utils/Auth';
 
 class Project extends React.Component {
@@ -21,15 +21,36 @@ class Project extends React.Component {
     super(props);
 
     this.state = {
+      projectId: this.props.match.params.id,
       activeRequirements: [],
       completedRequirements: [],
       needingAprovalRequirements: [],
       loaded: false,
+      created: '',
+      desc: '',
+      name: '',
     };
   }
 
   componentDidMount() {
     this.getRequirements();
+    this.getProjectInformation();
+  }
+
+  getProjectInformation = () => {
+    getProjects(getLocalToken()).then((res) => {
+      const json = res[0];
+      const status = res[1];
+      if (status !== 200) {
+        return;
+      }
+      const project = json.filter(i => parseInt(this.state.projectId) === i.uid)[0];
+      this.setState({
+        name: project.name,
+        desc: project.desc,
+        created: project.created,
+      });
+    });
   }
 
   getRequirements = () => {
@@ -81,8 +102,7 @@ class Project extends React.Component {
             <CardTitle className="bg-primary text-white">Project Information
             </CardTitle>
             <CardBody>
-              <h2>Project:</h2>
-              <h1>{this.state.name}</h1>
+              <h3>Project: {this.state.name}</h3>
               <hr />
               Description: {this.state.desc}<br />
               Created: {this.state.created}
