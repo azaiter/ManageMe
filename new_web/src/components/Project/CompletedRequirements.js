@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import BootstrapTable2 from 'react-bootstrap-table-next';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
-import RequirementTable from './RequirementTable';
+import RequirementTable from '../project/RequirementTable';
 import { Modal, ModalHeader, ModalBody, ModalFooter, Button, Card, CardBody } from 'reactstrap';
 import paginationFactory from 'react-bootstrap-table2-paginator';
 import { getLocalToken } from '../../utils/Auth';
