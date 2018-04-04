@@ -16,7 +16,6 @@ class CreateProject extends React.Component {
       reqName: '',
       reqTime: '',
       requirements: [{ reqName: '', reqTime: 0 }],
-      // teamId: this.props.data[0].uid,
     };
   }
 
@@ -141,29 +140,6 @@ class CreateProject extends React.Component {
             <div className="form-group">
               <textarea rows="4" className="form-control" placeholder="Project Description" errortext={this.state.desc_error_text} onChange={e => this.changeValue(e, 'desc')} />
             </div>
-            {this.state.requirements.map((requirement, idx) => (
-              <div className="requirement form-inline">
-                <input
-                  type="text"
-                  placeholder={`Requirement #${idx + 1} name`}
-                  value={requirement.name}
-                  onChange={this.handleRequirementChange(idx)}
-                  className="form-control"
-                />
-                {'\u00A0'}
-                <input
-                  type="number"
-                  placeholder="Time"
-                  value={requirement.time}
-                  onChange={this.handleRequirementChange(idx)}
-                  className="form-control"
-                />{'\u00A0'}
-                <button type="button" onClick={this.handleRemoveRequirement(idx)} className="btn btn-danger btn-small">Delete Requirement</button>
-              </div>
-                  ))}
-            <br />
-            <button type="button" onClick={this.handleAddRequirement} className="btn btn-warning btn-small">Add New Requirement</button>
-            <br /> <br />
             <div>
               <select className="form-control" onChange={e => this.changeValue(e, 'teamId')}>
                 {this.props.teams.map(team => (<option id={team.uid}>{team.name}</option>))}

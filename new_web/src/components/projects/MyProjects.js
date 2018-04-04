@@ -65,7 +65,6 @@ class MyProjects extends React.Component {
       this.props.history.push(`/Project/${projectId}`, null);
     }
 
-
     indication = () => 'You have no projects to work on'
 
     render() {
