@@ -2,8 +2,8 @@
 import React, { Component } from 'react';
 import { Line } from 'react-chartjs-2';
 import { BarLoader } from 'react-spinners';
-import { getWeeklyHours, getUserInfoByUserId } from '../../utils/HttpHelper';
-import { getLocalToken, getLocalUid } from '../../utils/Auth';
+import { getWeeklyHours } from '../../utils/HttpHelper';
+import { getLocalToken } from '../../utils/Auth';
 
 import {
   Card,
@@ -22,13 +22,7 @@ class HoursBreakdown extends Component {
     this.state = {
       loading: false,
       hours: [],
-      name: '',
     };
-    getUserInfoByUserId(getLocalToken(), getLocalUid()).then((res) => {
-      this.setState({
-        name: res[0][0].first_name,
-      });
-    });
     getWeeklyHours(getLocalToken()).then((res) => {
       const json = res[0];
       const status = res[1];
@@ -59,7 +53,7 @@ class HoursBreakdown extends Component {
       const ctx = canvas.getContext('2d');
       const colors = ['#7f8c8d', '#3498db', '#16a085', '#bdc3c7', '#2980b9', '#1abc9c', '#c0392b', '#9b59b6', '#f1c40f', '#f39c12', '#e74c3c', '#2c3e50', '#8e44ad', '#27ae60', '#e67e22', '#95a5a6', '#2ecc71', '#d35400', '#34495e'];
       const datasets = [{
-        label: `${this.state.name}'s Hours`,
+        label: 'Your Hours',
         borderColor: colors[Math.floor(Math.random() * colors.length) + 0],
         fill: false,
         data: this.state.hours,
