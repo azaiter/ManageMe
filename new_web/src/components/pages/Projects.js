@@ -67,6 +67,10 @@ class Projects extends Component {
     });
   }
 
+  viewProject = (projectId) => {
+    this.props.history.push(`/Project/${projectId}`, null);
+  }
+
   toggleModal = () => {
     if (!this.state.modalLoading) {
       this.setState({
