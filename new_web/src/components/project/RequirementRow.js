@@ -44,9 +44,9 @@ class RequirementRow extends React.Component {
     return (
       <React.Fragment>
         <tr>
-          <td>{req.name}</td>
-          <td>{req.desc}</td>
-          <td style={{ textAlign: 'right' }}><Button onClick={() => this.props.clockActionFunction(req.uid)} hidden={!this.state.showClockActionButton} hidden={this.props.hideClockActionButton} color="primary">{clockActionText}</Button><Button onClick={() => this.toggleRecDetails()} style={{ marginLeft: '10px' }}><i className={this.state.chevron} /></Button></td>
+          <td style={{ verticalAlign: 'middle' }}>{req.name}</td>
+          <td style={{ verticalAlign: 'middle' }}>{req.desc}</td>
+          <td style={{ textAlign: 'right', verticalAlign: 'middle' }}><Button onClick={() => this.props.clockActionFunction(req.uid)} hidden={!this.state.showClockActionButton} hidden={this.props.hideClockActionButton} color="primary">{clockActionText}</Button><Button onClick={() => this.toggleRecDetails()} style={{ marginLeft: '10px' }}><i className={this.state.chevron} /></Button></td>
         </tr>
         <tr style={this.state.showReqDetails}>
           <td colSpan="3">

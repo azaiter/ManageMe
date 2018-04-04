@@ -9,19 +9,9 @@ import { BounceLoader } from 'react-spinners';
 import { getLocalToken } from '../../utils/Auth';
 
 class MyProjects extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      projects: [],
-      error: '',
-    };
-
-    this.getProjs();
-  }
-
-    getProjs = () => {
-      getProjects(localStorage.getItem('token')).then((res) => {
+  deleteProj(projId) {
+    if (window.confirm('Are you sure you want to delete this requirement?')) {
+      deleteProject(getLocalToken(), projId).then((res) => {
         const json = res[0];
         const code = res[1];
         if (code !== 200) {
@@ -30,41 +20,15 @@ class MyProjects extends React.Component {
           });
           return;
         }
-        const projects = json.reverse();
-        projects.forEach((element) => {
-          element.actions = <div><Button className="btn-success" onClick={() => this.viewProject(element.uid)} >View</Button> <Button className="btn-danger" onClick={() => this.deleteProj(element.uid)} >Delete</Button></div>;
-        });
+        const projects = this.state.projects.filter(e => e.uid !== projId);
         this.setState({
           projects,
         });
       });
+    } else {
+      // Do nothing!
     }
-
-    deleteProj(projId) {
-      if (window.confirm('Are you sure you want to delete this requirement?')) {
-        deleteProject(getLocalToken(), projId).then((res) => {
-          const json = res[0];
-          const code = res[1];
-          if (code !== 200) {
-            this.setState({
-              error: json.message,
-            });
-            return;
-          }
-          const projects = this.state.projects.filter(e => e.uid !== projId);
-          this.setState({
-            projects,
-          });
-        });
-      } else {
-        // Do nothing!
-      }
-    }
-
-    viewProject = (projectId) => {
-      this.props.history.push(`/Project/${projectId}`, null);
-    }
-
+  }
 
     indication = () => 'You have no projects to work on'
 
@@ -91,7 +55,7 @@ class MyProjects extends React.Component {
         }, {
           text: '50', value: 50,
         }, {
-          text: 'All', value: this.state.projects.length,
+          text: 'All', value: this.props.projects.length,
         }], // A numeric array is also available. the purpose of above example is custom the text
       };
 
@@ -120,7 +84,7 @@ class MyProjects extends React.Component {
       return (
         <Card>
           <CardBody>
-            <BootstrapTable keyField="uid" bordered={false} data={this.state.projects} columns={columns} pagination={paginationFactory(options)} noDataIndication={this.indication} />
+            <BootstrapTable keyField="uid" bordered={false} data={this.props.projects} columns={columns} pagination={paginationFactory(options)} noDataIndication={this.indication} />
           </CardBody>
         </Card>);
     }
