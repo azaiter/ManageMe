@@ -593,3 +593,138 @@ class readUserSystemInfo(Resource):
 		return dbengine.readUserSystemInfo(args)
 
 ###########################################################################
+
+###########################################################################
+
+getProjectComments_post_parser = reqparse.RequestParser(bundle_errors=True)
+
+getProjectComments_post_parser.add_argument(
+    'token', dest='token',
+    location='json', required=True,
+    type=managemeutil.verify_request_token,
+    help='The user\'s token {error_msg}',
+)
+
+getProjectComments_post_parser.add_argument(
+    'projID', dest='projID',
+    location='json', required=True,
+    type=managemeutil.verify_valid_project_id,
+    help='The projID. {error_msg}',
+)
+
+class getProjectComments(Resource):
+	def post(self):
+		args = getProjectComments_post_parser.parse_args()
+		return dbengine.getProjectComments(args)
+
+###########################################################################
+
+###########################################################################
+
+addProjectComments_post_parser = reqparse.RequestParser(bundle_errors=True)
+
+addProjectComments_post_parser.add_argument(
+    'token', dest='token',
+    location='json', required=True,
+    type=managemeutil.verify_request_token,
+    help='The user\'s token {error_msg}',
+)
+
+addProjectComments_post_parser.add_argument(
+    'projID', dest='projID',
+    location='json', required=True,
+    type=managemeutil.verify_valid_project_id,
+    help='The projID. {error_msg}',
+)
+
+addProjectComments_post_parser.add_argument(
+    'comment', dest='comment',
+    location='json', required=True,
+    type=str,
+    help='The comment. {error_msg}',
+)
+
+
+class addProjectComments(Resource):
+	def post(self):
+		args = addProjectComments_post_parser.parse_args()
+		return dbengine.addProjectComments(args)
+
+###########################################################################
+
+###########################################################################
+
+getReqComments_post_parser = reqparse.RequestParser(bundle_errors=True)
+
+getReqComments_post_parser.add_argument(
+    'token', dest='token',
+    location='json', required=True,
+    type=managemeutil.verify_request_token,
+    help='The user\'s token {error_msg}',
+)
+
+getReqComments_post_parser.add_argument(
+    'reqID', dest='reqID',
+    location='json', required=True,
+    type=managemeutil.verify_valid_req_id,
+    help='The reqID. {error_msg}',
+)
+
+
+class getReqComments(Resource):
+	def post(self):
+		args = getReqComments_post_parser.parse_args()
+		return dbengine.getReqComments(args)
+
+###########################################################################
+
+###########################################################################
+
+addReqComments_post_parser = reqparse.RequestParser(bundle_errors=True)
+
+addReqComments_post_parser.add_argument(
+    'token', dest='token',
+    location='json', required=True,
+    type=managemeutil.verify_request_token,
+    help='The user\'s token {error_msg}',
+)
+
+addReqComments_post_parser.add_argument(
+    'reqID', dest='reqID',
+    location='json', required=True,
+    type=managemeutil.verify_valid_req_id,
+    help='The reqID. {error_msg}',
+)
+
+addReqComments_post_parser.add_argument(
+    'comment', dest='comment',
+    location='json', required=True,
+    type=str,
+    help='The comment. {error_msg}',
+)
+
+class addReqComments(Resource):
+	def post(self):
+		args = addReqComments_post_parser.parse_args()
+		return dbengine.addReqComments(args)
+
+###########################################################################
+
+###########################################################################
+
+getWeeklyHours_post_parser = reqparse.RequestParser(bundle_errors=True)
+
+getWeeklyHours_post_parser.add_argument(
+    'token', dest='token',
+    location='json', required=True,
+    type=managemeutil.verify_request_token,
+    help='The user\'s token {error_msg}',
+)
+
+class getWeeklyHours(Resource):
+	def post(self):
+		args = getWeeklyHours_post_parser.parse_args()
+		return dbengine.getWeeklyHours(args)
+
+###########################################################################
+
