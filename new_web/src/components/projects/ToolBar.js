@@ -1,6 +1,6 @@
 import React from 'react';
 import CreateTeam from '../forms/CreateTeam';
-import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
+import { Modal, ModalHeader, ModalBody, ModalFooter, Button, Row, Col } from 'reactstrap';
 
 class ToolBar extends React.Component {
   constructor(props) {
@@ -36,7 +36,11 @@ class ToolBar extends React.Component {
   render() {
   	return (
     <div>
-      <button className="pull-right btn btn-primary btn-outline btn-rounded" onClick={e => this.handleShow('team')}>Create Team</button>
+      <Row>
+        <Col>
+          <button className="float-right btn btn-success" onClick={e => this.handleShow('team')}>Create Team</button>
+        </Col>
+      </Row><br />
       <Modal isOpen={this.state.teamShow} onHide={e => this.handleClose('team')}>
         <ModalHeader closeButton>
           Create Team
