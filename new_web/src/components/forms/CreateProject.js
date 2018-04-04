@@ -16,6 +16,7 @@ class CreateProject extends React.Component {
       reqName: '',
       reqTime: '',
       requirements: [{ reqName: '', reqTime: 0 }],
+      teamId: this.props.teams[0].uid == null ? null : this.props.teams[0].uid,
     };
   }
 
@@ -76,6 +77,7 @@ class CreateProject extends React.Component {
 
   changeValue(e, type) {
     const value = e.target.value;
+    console.log(value);
     const next_state = {};
     next_state[type] = value;
     this.setState(next_state, () => {
@@ -108,9 +110,7 @@ class CreateProject extends React.Component {
           this.setState({
             creationError: 'Project exists!',
           });
-          return;
         }
-        window.location.reload();
       }).catch((err) => {
         console.log('Error:', err);
       });
@@ -132,24 +132,22 @@ class CreateProject extends React.Component {
     return (
 
       <div>
-        <form role="form" onSubmit={this.handleProjCreation.bind(this)} className="ng-pristine ng-valid">
-          <div className="form-content">
-            <div className="form-group">
-              <input type="text" className="form-control" placeholder="Project Name" errortext={this.state.name_error_text} onChange={e => this.changeValue(e, 'name')} />
-            </div>
-            <div className="form-group">
-              <textarea rows="4" className="form-control" placeholder="Project Description" errortext={this.state.desc_error_text} onChange={e => this.changeValue(e, 'desc')} />
-            </div>
-            <div>
-              <select className="form-control" onChange={e => this.changeValue(e, 'teamId')}>
-                {this.props.teams.map(team => (<option id={team.uid}>{team.name}</option>))}
-              </select>
-            </div>
-            <p style={{ color: 'red' }}>{this.state.creationError}</p>
+        <div className="form-content">
+          <div className="form-group">
+            <input type="text" className="form-control" placeholder="Project Name" errortext={this.state.name_error_text} onChange={e => this.changeValue(e, 'name')} />
           </div>
+          <div className="form-group">
+            <textarea rows="4" className="form-control" placeholder="Project Description" errortext={this.state.desc_error_text} onChange={e => this.changeValue(e, 'desc')} />
+          </div>
+          <div>
+            <select className="form-control" onChange={e => this.changeValue(e, 'teamId')}>
+              {this.props.teams.map(team => (<option value={team.uid}>{team.name}</option>))}
+            </select>
+          </div>
+          <p style={{ color: 'red' }}>{this.state.creationError}</p>
+        </div>
 
-          <button className="btn btn-success" onClick={e => this.handleProjCreation(e)} disabled={this.state.disabled}>Submit</button>
-        </form>
+        <button className="btn btn-success" onClick={e => this.handleProjCreation(e)} disabled={this.state.disabled}>Submit</button>
       </div>
 
     );

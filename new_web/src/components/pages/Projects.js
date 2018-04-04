@@ -20,7 +20,7 @@ import ToolBar from '../projects/ToolBar';
 import PendingRequirements from '../projects/PendingRequirements';
 import CreateProject from '../forms/CreateProject';
 
-import { getTeams } from '../../utils/HttpHelper';
+import { getTeams, getProjects } from '../../utils/HttpHelper';
 
 class Projects extends Component {
   constructor(props) {
@@ -30,6 +30,7 @@ class Projects extends Component {
       modalIsOpen: false,
       modalLoading: false,
       teams: [],
+      projects: [],
     };
   }
 
@@ -43,6 +44,27 @@ class Projects extends Component {
         });
       }
     });
+    this.getProjs();
+  }
+
+  getProjs = () => {
+    getProjects(localStorage.getItem('token')).then((res) => {
+      const json = res[0];
+      const code = res[1];
+      if (code !== 200) {
+        this.setState({
+          error: json.message,
+        });
+        return;
+      }
+      const projects = json.reverse();
+      projects.forEach((element) => {
+        element.actions = <div><Button className="btn-success" onClick={() => this.viewProject(element.uid)} >View</Button> <Button className="btn-danger" onClick={() => this.deleteProj(element.uid)} >Delete</Button></div>;
+      });
+      this.setState({
+        projects,
+      });
+    });
   }
 
   toggleModal = () => {
@@ -52,6 +74,7 @@ class Projects extends Component {
         modalLoading: false,
       });
     }
+    this.getProjs();
   }
 
   updateModalLoading = (loading) => {
@@ -72,7 +95,7 @@ class Projects extends Component {
             </Row>
             <Row>
               <Col>
-                <MyProjects />
+                <MyProjects projects={this.state.projects} />
               </Col>
             </Row>
             <Row>
