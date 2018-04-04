@@ -22,7 +22,7 @@ class ToolBar extends React.Component {
     getTeams(getLocalToken()).then((res) => {
       const json = res[0];
       const status = res[1];
-      if (status != 200) {
+      if (status !== 200) {
         this.setState({
           creationError: 'No Teams!',
         });
@@ -77,7 +77,6 @@ class ToolBar extends React.Component {
           <Button onClick={this.handleClose.bind(this, 'team')}>Close</Button>
         </Modal.Footer>
       </Modal>
-
 
       <Modal show={this.state.projShow} onHide={this.handleClose.bind(this, 'proj')}>
         <Modal.Header closeButton>

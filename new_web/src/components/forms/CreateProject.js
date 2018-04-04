@@ -129,10 +129,10 @@ class CreateProject extends React.Component {
         <form role="form" onSubmit={this.handleProjCreation.bind(this)} className="ng-pristine ng-valid">
           <div className="form-content">
             <div className="form-group">
-              <input type="text" className="form-control" placeholder="Project Name" errorText={this.state.name_error_text} onChange={e => this.changeValue(e, 'name')} />
+              <input type="text" className="form-control" placeholder="Project Name" errortext={this.state.name_error_text} onChange={e => this.changeValue(e, 'name')} />
             </div>
             <div className="form-group">
-              <textarea rows="4" className="form-control" placeholder="Project Description" errorText={this.state.desc_error_text} onChange={e => this.changeValue(e, 'desc')} />
+              <textarea rows="4" className="form-control" placeholder="Project Description" errortext={this.state.desc_error_text} onChange={e => this.changeValue(e, 'desc')} />
             </div>
             {this.state.requirements.map((requirement, idx) => (
               <div className="requirement form-inline">

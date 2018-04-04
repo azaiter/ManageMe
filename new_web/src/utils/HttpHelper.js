@@ -639,3 +639,16 @@ export async function rejectChangeRequest(token, reqID) {
   const json = await res.json();
   return [json, res.status];
 }
+
+export async function getWeeklyHours(token) {
+  const res = await fetch('https://api.manageme.tech/clock/weeklyhrs/get', {
+    method: 'POST',
+    headers:
+        { 'content-type': 'application/json' },
+    body: JSON.stringify({
+      token,
+    }),
+  });
+  const json = await res.json();
+  return [json, res.status];
+}
