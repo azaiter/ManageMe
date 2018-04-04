@@ -81,6 +81,8 @@ class NeedingAprovalRequirements extends React.Component {
           <ModalBody>
             <Row>
               <Col>
+                <h3 style={{ textAlign: 'center' }}>Old</h3>
+                <hr />
                 <Row>
                   <Col>
                     <Label style={{ fontWeight: 'bold', width: '120px' }}>Name:&nbsp;</Label><Label>{this.state.oldReq.name}</Label>
@@ -113,6 +115,8 @@ class NeedingAprovalRequirements extends React.Component {
                 </Row>
               </Col>
               <Col>
+                <h3 style={{ textAlign: 'center' }}>New</h3>
+                <hr />
                 <Row>
                   <Col>
                     <Label style={{ fontWeight: 'bold', width: '120px' }}>Name:&nbsp;</Label><Label>{this.state.newReq.name}</Label>

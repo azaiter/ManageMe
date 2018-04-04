@@ -75,7 +75,7 @@ class RecentRequirements extends Component {
                 <i className="fa fa-cog" />
               </DropdownToggle>
               <DropdownMenu right>
-                <DropdownItem disabled={this.state.loading}>Refresh</DropdownItem>
+                <DropdownItem disabled={this.state.loading} onClick={() => this.getdata()}>Refresh</DropdownItem>
               </DropdownMenu>
             </UncontrolledDropdown>
           </div>
