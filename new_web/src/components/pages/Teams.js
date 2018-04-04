@@ -18,15 +18,12 @@ class Teams extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      work: [],
-      comp: null,
+      comp: <MyTeams show />,
     };
   }
 
   refresh = () => {
-    this.setState({
-      comp: <MyTeams work={this.state.work} show />,
-    });
+    window.location.reload();
   }
 
   render() {
