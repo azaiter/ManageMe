@@ -12,6 +12,7 @@ import RecentProjects from '../dashboard/RecentProjects';
 import RecentRequirements from '../dashboard/RecentRequirements';
 import { getTeams } from '../../utils/HttpHelper';
 import MyTeams from '../teams/MyTeams';
+import ToolBar from '../projects/ToolBar';
 
 class Teams extends Component {
   constructor(props) {
