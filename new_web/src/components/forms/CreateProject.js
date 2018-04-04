@@ -20,7 +20,6 @@ class CreateProject extends React.Component {
     };
   }
 
-
   isDisabled() {
     let name_is_valid = false;
     let desc_is_valid = false;
@@ -95,6 +94,9 @@ class CreateProject extends React.Component {
 
   handleProjCreation(e) {
     e.preventDefault();
+
+    this.props.updateModalLoading(true);
+
     const token = getLocalToken();
     if (!(token)) {
       return;
@@ -114,6 +116,10 @@ class CreateProject extends React.Component {
         console.log('Error:', err);
       });
 
+    this.props.updateModalLoading(false);
+
+    this.props.toggleModal();
+
     return false;
   }
 
@@ -125,6 +131,7 @@ class CreateProject extends React.Component {
     }
 
     return (
+
       <div>
         <form role="form" onSubmit={this.handleProjCreation.bind(this)} className="ng-pristine ng-valid">
           <div className="form-content">
@@ -157,7 +164,11 @@ class CreateProject extends React.Component {
             <br />
             <button type="button" onClick={this.handleAddRequirement} className="btn btn-warning btn-small">Add New Requirement</button>
             <br /> <br />
-            <div><select className="form-control" onChange={e => this.changeValue(e, 'teamId')}>{/* this.props.data.map(getTheTeams) */}</select></div>
+            <div>
+              <select className="form-control" onChange={e => this.changeValue(e, 'teamId')}>
+                {this.props.teams.map(team => (<option id={team.uid}>{team.name}</option>))}
+              </select>
+            </div>
             <p style={{ color: 'red' }}>{this.state.creationError}</p>
           </div>
 

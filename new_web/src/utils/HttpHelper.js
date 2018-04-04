@@ -522,6 +522,20 @@ export async function getRecentRequirements(tok) {
   return [json, res.status];
 }
 
+export async function getAllTeams(tok) {
+  const res = await fetch('https://api.manageme.tech/util/custom', {
+    method: 'POST',
+    headers:
+        { 'content-type': 'application/json' },
+    body: JSON.stringify({
+      paramArr: [tok],
+      spName: 'sp_getAllTeams2',
+    }),
+  });
+  const json = await res.json();
+  return [json, res.status];
+}
+
 export async function getRecentProjects(tok) {
   const res = await fetch('https://api.manageme.tech/util/custom', {
     method: 'POST',
