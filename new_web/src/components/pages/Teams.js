@@ -17,15 +17,22 @@ import ToolBar from '../projects/ToolBar';
 class Teams extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
+      work: [],
     };
+  }
+
+  refresh = () => {
+    this.setState({
+      work: 'asdf',
+    });
   }
 
   render() {
     return (
       <div>
-        <MyTeams show />
+        <ToolBar refresh={e => this.refresh()} />
+        <MyTeams work={this.state.work} show />
 
       </div>
     );

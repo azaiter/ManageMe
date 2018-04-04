@@ -83,7 +83,7 @@ class CreateTeam extends React.Component {
           });
           return;
         }
-        window.location.reload();
+        this.props.close();
       }).catch((err) => {
         console.log('Error:', err);
       });
@@ -98,10 +98,10 @@ class CreateTeam extends React.Component {
         <form role="form" onSubmit={this.handleTeamCreation.bind(this)} className="ng-pristine ng-valid">
           <div className="form-content">
             <div className="form-group">
-              <input className="form-control" placeholder="Team Name" errorText={this.state.name_error_text} onChange={e => this.changeValue(e, 'name')} />
+              <input className="form-control" placeholder="Team Name" errortext={this.state.name_error_text} onChange={e => this.changeValue(e, 'name')} />
             </div>
             <div className="form-group">
-              <textarea rows="4" className="form-control" placeholder="Description" errorText={this.state.desc_error_text} onChange={e => this.changeValue(e, 'desc')} />
+              <textarea rows="4" className="form-control" placeholder="Description" errortext={this.state.desc_error_text} onChange={e => this.changeValue(e, 'desc')} />
             </div>
             <p style={{ color: 'red' }}>{this.state.creationError}</p>
           </div>
