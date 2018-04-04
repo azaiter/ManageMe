@@ -29,7 +29,9 @@ class MyTeams extends React.Component {
       }
       teams = teams.reverse();
       teams.forEach((element) => {
-        element.actions = <div><Button className="btn-success" onClick={() => this.viewTeam(element.uid, element.name)} >View</Button> <Button className="btn-danger" onClick={() => this.deleteTeam(element.uid)} >Delete</Button></div>;
+        if (this.props.show) {
+          element.actions = <div><Button className="btn-success" onClick={() => this.viewTeam(element.uid, element.name)} >View</Button> <Button className="btn-danger" onClick={() => this.deleteTeam(element.uid)} >Delete</Button></div>;
+        }
       });
       this.setState({
         teams,
