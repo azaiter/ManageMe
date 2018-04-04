@@ -25,7 +25,7 @@ class Teams extends Component {
   render() {
     return (
       <div>
-        <MyTeams />
+        <MyTeams show />
 
       </div>
     );
