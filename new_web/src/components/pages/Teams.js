@@ -19,21 +19,21 @@ class Teams extends Component {
     super(props);
     this.state = {
       work: [],
+      comp: null,
     };
   }
 
   refresh = () => {
     this.setState({
-      work: 'asdf',
+      comp: <MyTeams work={this.state.work} show />,
     });
   }
 
   render() {
     return (
       <div>
-        <ToolBar refresh={e => this.refresh()} />
-        <MyTeams work={this.state.work} show />
-
+        <ToolBar refresh={this.refresh} />
+        {this.state.comp}
       </div>
     );
   }
