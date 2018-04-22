@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { View, Text, FlatList, ActivityIndicator, ScrollView, StyleSheet, Image, TouchableOpacity, RefreshControl } from "react-native";
 import { List, ListItem, SearchBar, Overlay, h1 } from "react-native-elements";
 import {getProjects, getMyInfo} from '../utils/HttpHelper';
-import {getLocalToken} from '../utils/Auth';
+import {getLocalToken, removeLocalToken} from '../utils/Auth';
 import {Actions} from 'react-native-router-flux';
 import Avatar from 'react-native-user-avatar';
 import Spinner from 'react-native-spinkit';
@@ -31,19 +31,17 @@ export default class Dashboard extends Component {
     const { page, seed } = this.state;
     const t = await getLocalToken();
     const res = await getProjects(t);
-        if(res[1] !== 200){
-          this.setState({
-            loading: false,
-            refreshing: false,
-          });
-          return
-        }
-        this.setState({
-          data: res[0],
-          error: res.error || null,
-          loading: false,
-          refreshing: false
-        });
+    if(res[1] !== 200){
+      await removeLocalToken();
+      console.error("Restart the app please");
+      return;
+    }
+    this.setState({
+      data: res[0],
+      error: res.error || null,
+      loading: false,
+      refreshing: false
+    });
 
   }
 
@@ -74,7 +72,7 @@ export default class Dashboard extends Component {
       return (
       
         <View style={{backgroundColor: '#455a64', flex: 1, resizeMode: 'cover'}}>
-        <ScrollView style={{top: '-4%'}} refreshControl={
+        <ScrollView style={{marginTop: '-6%'}} contentContainerStyle={{flexGrow: 1}} refreshControl={
           <RefreshControl
             refreshing={this.state.refreshing}
             onRefresh={this._onRefresh.bind(this)}
