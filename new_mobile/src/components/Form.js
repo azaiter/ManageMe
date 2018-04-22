@@ -25,8 +25,8 @@ export default class Form extends Component {
           <TextInput style={styles.inputBox} 
               underlineColorAndroid='rgba(0,0,0,0)' 
               placeholder="Username"
-              placeholderTextColor = "#ffffff"
-              selectionColor="#fff"
+              placeholderTextColor = "#000"
+              selectionColor="#000"
               onChangeText={(value) => this.setState({username: value})}
               value={this.state.username}
               />
@@ -34,7 +34,7 @@ export default class Form extends Component {
               underlineColorAndroid='rgba(0,0,0,0)' 
               placeholder="Password"
               secureTextEntry={true}
-              placeholderTextColor = "#ffffff"
+              placeholderTextColor = "#000"
               onChangeText={(value) => this.setState({password: value})}
               value={this.state.password}
               />  
@@ -48,26 +48,31 @@ export default class Form extends Component {
 
 const styles = StyleSheet.create({
   container : {
-    flexGrow: 1,
     justifyContent:'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    backgroundColor: '#ffffffb3',
+    borderRadius: 10,
+    paddingHorizontal: 10
   },
 
   inputBox: {
-    width:300,
-    backgroundColor:'rgba(255, 255,255,0.2)',
-    borderRadius: 25,
+    width: 275,
+    outline: 0,
+    borderBottomWidth: 1,
+    borderBottomHeight: 1,
+    borderColor: '#000',
     paddingHorizontal:16,
     fontSize:16,
-    color:'#ffffff',
-    marginVertical: 10
+    color:'#000',
+    marginVertical: 10,
+    zIndex: 999,
   },
   button: {
-    width:300,
+    width: 300,
     backgroundColor:'#00ff7f',
-    borderRadius: 15,
+    borderRadius: 10,
     marginVertical: 10,
-    paddingVertical: 13
+    padding: 10
   },
   buttonText: {
     fontSize:16,

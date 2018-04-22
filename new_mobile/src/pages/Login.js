@@ -15,7 +15,7 @@ import Form from '../components/Form';
 import {Actions} from 'react-native-router-flux';
 import {saveItem} from '../utils/Auth';
 import DropdownAlert from 'react-native-dropdownalert';
-
+import {getLocalToken, removeLocalToken} from '../utils/Auth';
 
 export default class Login extends Component {
 
@@ -26,35 +26,26 @@ export default class Login extends Component {
     }
     
   }
-
-	signup() {
-		Actions.signup()
-  }
   
-  signIn(username, password){
-    getToken(username, password).then(res =>{
-      const json = res[0];
-      const status = res[1];
-      if(status !== 200){
-        this.dropdown.alertWithType('error', 'Wrong Username or Password', 'You entered invalid credentials!');
-      }
-      if(json.token){
-        saveItem('@app:session', json.token);
-        Actions.dashboard();
-      }
-      
-    })
+  async signIn(username, password) {
+    const res = await getToken(username, password);
+    const json = res[0];
+    const status = res[1];
+    if(status !== 200){
+      this.dropdown.alertWithType('error', 'Wrong Username or Password');
+    }
+    if(json.token){
+      saveItem('@app:session', json.token).then(() => {
+        Actions.reset("dashboard");
+      });
+    }
   }
 
 	render() {
 		return(
 			<View style={styles.container}>
-                <Video repeat source={Background} resizeMode="cover" style={StyleSheet.absoluteFill} />
-				<Form type="Login" buttonClick={this.signIn}/>
-				<View style={styles.signupTextCont}>
-					<Text style={styles.signupText}>Don't have an account yet?</Text>
-					<TouchableOpacity onPress={this.signup}><Text style={styles.signupButton}> Signup</Text></TouchableOpacity>
-				</View>
+        <Video repeat source={Background} resizeMode="cover" style={StyleSheet.absoluteFill} />
+				<Form type="Login" buttonClick={this.signIn.bind(this)}/>
         <DropdownAlert closeInterval={1500} ref={ref => this.dropdown = ref} />
 			</View>	
 			)

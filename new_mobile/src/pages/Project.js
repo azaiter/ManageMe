@@ -19,7 +19,6 @@ export default class Project extends Component {
       page: 1,
       seed: 1,
       error: null,
-      refreshing: false
     };
   }
 
@@ -35,7 +34,6 @@ export default class Project extends Component {
           data: res[0],
           error: res.error || null,
           loading: false,
-          refreshing: false
         });
       });
   }
@@ -45,10 +43,12 @@ export default class Project extends Component {
       clockIn(token, id).then(values =>{
         if(values[1] === 200){
           this.dropdown.alertWithType('success', 'Clocked In!', 'You are now clocked in!');
+          this._onRefresh()
         }else{
           clockOut(token, id).then(res => {    
             if(res[1] === 200){
               this.dropdown.alertWithType('info', 'Clocked Out!', 'You are now clocked out!');
+              this._onRefresh()
             }else{
               this.dropdown.alertWithType('error', 'Error', res[0].message);
             }
@@ -60,13 +60,11 @@ export default class Project extends Component {
 
   async _onRefresh() {
     let token = await getLocalToken();
-    this.setState({refreshing: true});
     getRequirementsByProjectId(token,this.props.projID).then((res) => {
       this.setState({
         data: res[0],
         error: res.error || null,
         loading: false,
-        refreshing: false
       });
     });
   }
@@ -78,7 +76,7 @@ export default class Project extends Component {
       return (<View style={{backgroundColor: '#455a64', flex: 1, resizeMode: 'cover'}}>
       <ScrollView style={{top: '-4%'}} refreshControl={
           <RefreshControl
-            refreshing={this.state.refreshing}
+            refreshing={false}
             onRefresh={this._onRefresh.bind(this)}
           />
         }>
@@ -88,20 +86,35 @@ export default class Project extends Component {
     }else{
       return (
         <View style={{backgroundColor: '#455a64', flex: 1, resizeMode: 'cover'}}>
-        <ScrollView style={{top: '-4%'}} refreshControl={
+        <ScrollView style={{marginTop: '-6%'}} contentContainerStyle={{flexGrow: 1}} refreshControl={
           <RefreshControl
-            refreshing={this.state.refreshing}
+            refreshing={false}
             onRefresh={this._onRefresh.bind(this)}
+            colors={'#fff'}
           />
         }>
           
           <List >
           {
             this.state.data.map((i) => (
-              
+              (i.clocked_in === 'Y') ?
+                <ListItem
+                roundAvatar
+                rightIcon={{name: 'alarm-on'}}
+                chevronColor='#00FF00'
+                key={i.name}
+                title={i.name}
+                subtitle={"Description: "+i.desc}
+                onPress={() => {this.clockInOut(i.uid)}}
+                avatar={<Avatar size="50" name={i.name.toLowerCase()}/>}
+              />
+
+              :
+
               <ListItem
                 roundAvatar
-                style = {{backgroundColor: (i.clocked_in === 'Y') ? 'green' : null}}
+                rightIcon={{name: 'alarm-off'}}
+                chevronColor='#f00'
                 key={i.name}
                 title={i.name}
                 subtitle={"Description: "+i.desc}

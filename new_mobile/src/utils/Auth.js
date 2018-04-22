@@ -5,6 +5,10 @@ export async function getLocalToken() {
     return token;
 }
 
+export async function removeLocalToken() {
+  await AsyncStorage.removeItem('@app:session');
+}
+
 export async function saveItem(item, selectedValue) {
     try {
       await AsyncStorage.setItem(item, selectedValue);
