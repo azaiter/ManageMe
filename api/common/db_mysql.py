@@ -1152,3 +1152,63 @@ def readUserSystemInfo(args):
 		db.close()
 	print(r)
 	return jsonify(r)
+	
+def getProjectComments(args):
+	db = dbConnect()
+	cur = db.cursor()
+	cur.callproc('getProjectComments', [(args.projID)])
+	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+	if db:
+		cur.close()
+		db.commit()
+		db.close()
+	print(r)
+	return jsonify(r)
+	
+def addProjectComments(args):
+	db = dbConnect()
+	cur = db.cursor()
+	cur.callproc('sp_addProjectComments', [(args.token, args.comment, args.projID)])
+	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+	if db:
+		cur.close()
+		db.commit()
+		db.close()
+	print(r)
+	return jsonify(r)
+
+def getReqComments(args):
+	db = dbConnect()
+	cur = db.cursor()
+	cur.callproc('getReqComments', [(args.reqID)])
+	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+	if db:
+		cur.close()
+		db.commit()
+		db.close()
+	print(r)
+	return jsonify(r)
+	
+def addReqComments(args):
+	db = dbConnect()
+	cur = db.cursor()
+	cur.callproc('sp_addReqComments', [(args.token, args.comment, args.reqID)])
+	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+	if db:
+		cur.close()
+		db.commit()
+		db.close()
+	print(r)
+	return jsonify(r)
+	
+def getWeeklyHours(args):
+	db = dbConnect()
+	cur = db.cursor()
+	cur.callproc('sp_getWeeklyHours', [(args.token)])
+	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+	if db:
+		cur.close()
+		db.commit()
+		db.close()
+	print(r)
+	return jsonify(r)

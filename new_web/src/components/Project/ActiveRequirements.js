@@ -7,7 +7,7 @@ import { Modal, ModalHeader, ModalBody, ModalFooter, Button, Card, CardBody, Row
 import paginationFactory from 'react-bootstrap-table2-paginator';
 import { getLocalToken } from '../../utils/Auth';
 import { clockIn, clockOut, getRequirementsByProjectId, deleteReq, createRequirement, updateRequirement, createChangeRequest } from '../../utils/HttpHelper';
-import RequirementTable from './RequirementTable';
+import RequirementTable from '../project/RequirementTable';
 
 class ActiveRequirements extends React.Component {
   constructor(props) {
