@@ -1144,7 +1144,7 @@ def customCall(args):
 def readUserSystemInfo(args):
 	db = dbConnect()
 	cur = db.cursor()
-	cur.callproc('sp_readUserSysData', [(args.token)])
+	cur.callproc('sp_readUserSysData', [args.token])
 	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
 	if db:
 		cur.close()
@@ -1156,7 +1156,7 @@ def readUserSystemInfo(args):
 def getProjectComments(args):
 	db = dbConnect()
 	cur = db.cursor()
-	cur.callproc('getProjectComments', [(args.projID)])
+	cur.callproc('sp_getProjectComments', [args.projID])
 	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
 	if db:
 		cur.close()
@@ -1168,7 +1168,7 @@ def getProjectComments(args):
 def addProjectComments(args):
 	db = dbConnect()
 	cur = db.cursor()
-	cur.callproc('sp_addProjectComments', [(args.token, args.comment, args.projID)])
+	cur.callproc('sp_addProjectComment', [args.token, args.comment, args.projID])
 	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
 	if db:
 		cur.close()
@@ -1180,7 +1180,7 @@ def addProjectComments(args):
 def getReqComments(args):
 	db = dbConnect()
 	cur = db.cursor()
-	cur.callproc('getReqComments', [(args.reqID)])
+	cur.callproc('sp_getReqComments', [args.reqID])
 	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
 	if db:
 		cur.close()
@@ -1192,7 +1192,7 @@ def getReqComments(args):
 def addReqComments(args):
 	db = dbConnect()
 	cur = db.cursor()
-	cur.callproc('sp_addReqComments', [(args.token, args.comment, args.reqID)])
+	cur.callproc('sp_addReqComment', [args.token, args.comment, args.reqID])
 	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
 	if db:
 		cur.close()
@@ -1204,7 +1204,7 @@ def addReqComments(args):
 def getWeeklyHours(args):
 	db = dbConnect()
 	cur = db.cursor()
-	cur.callproc('sp_getWeeklyHours', [(args.token)])
+	cur.callproc('sp_getWeeklyHours', [args.token])
 	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
 	if db:
 		cur.close()
