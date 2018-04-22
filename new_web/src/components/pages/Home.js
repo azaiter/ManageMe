@@ -17,6 +17,7 @@ import Admin from './Admin';
 import Project from './Project';
 import Team from './Team';
 import Teams from './Teams';
+import { checkPermissions } from '../../utils/Auth';
 
 import {
   Collapse,
@@ -60,7 +61,21 @@ class Home extends Component {
         username: '',
       },
       waiting: true,
+      admin: null,
     };
+  }
+
+  componentDidMount() {
+    this.checkPerms();
+  }
+
+  checkPerms = () => {
+    Promise.all([checkPermissions('add a team')]).then((res) => {
+      const admin = res[0];
+      this.setState({
+        admin,
+      });
+    });
   }
 
   logout = () => {

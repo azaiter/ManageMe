@@ -16,7 +16,6 @@ class ToolBar extends React.Component {
     switch (form) {
       case 'team':
         this.setState({ teamShow: false });
-        this.props.refresh();
         break;
       default:
         break;
@@ -46,7 +45,7 @@ class ToolBar extends React.Component {
           Create Team
         </ModalHeader>
         <ModalBody>
-          <CreateTeam close={e => this.handleClose('team')} />
+          <CreateTeam refresh={this.props.refresh} close={e => this.handleClose('team')} />
         </ModalBody>
         <ModalFooter>
           <Button onClick={e => this.handleClose('team')}>Close</Button>

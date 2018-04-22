@@ -4,9 +4,10 @@ import paginationFactory from 'react-bootstrap-table2-paginator';
 import { Button } from 'react-bootstrap';
 import { withRouter } from 'react-router-dom';
 import { Card, CardBody, CardTitle } from 'reactstrap';
-import { getLocalToken } from '../../utils/Auth';
+import { getLocalToken, checkPermissions } from '../../utils/Auth';
 import { getProjects, deleteProject, getProjectHours, getTeams, getTeamById, deleteTeam } from '../../utils/HttpHelper';
 import { BounceLoader } from 'react-spinners';
+import ToolBar from '../projects/ToolBar';
 
 
 class MyTeams extends React.Component {
@@ -16,12 +17,16 @@ class MyTeams extends React.Component {
     this.state = {
       teams: [],
       error: '',
+      createTeam: false,
     };
+  }
+
+  componentDidMount() {
     this.getTeams();
   }
 
   getTeams = () => {
-    Promise.all([getTeams(getLocalToken())]).then((res) => {
+    Promise.all([getTeams(getLocalToken()), checkPermissions(1)]).then((res) => {
       let teams = res[0][0];
       const teamResp = res[0][1];
       if (teamResp !== 200) {
@@ -35,6 +40,7 @@ class MyTeams extends React.Component {
       });
       this.setState({
         teams,
+        createTeam: res[1],
       });
     });
   }
@@ -111,15 +117,18 @@ class MyTeams extends React.Component {
       }];
 
       return (
-        <Card>
-          <CardTitle className="bg-primary text-white">
+        <div>
+          {this.state.createTeam ? <ToolBar className="float-right" refresh={this.getTeams} /> : null }
+          <Card>
+            <CardTitle className="bg-primary text-white">
             Teams
-          </CardTitle>
-          <CardBody>
-            <p style={{ color: 'red' }}>{this.state.error}</p>
-            <BootstrapTable keyField="uid" bordered={false} data={this.state.teams} columns={columns} pagination={paginationFactory(options)} noDataIndication={this.indication} />
-          </CardBody>
-        </Card>);
+            </CardTitle>
+            <CardBody>
+              <p style={{ color: 'red' }}>{this.state.error}</p>
+              <BootstrapTable keyField="uid" bordered={false} data={this.state.teams} columns={columns} pagination={paginationFactory(options)} noDataIndication={this.indication} />
+            </CardBody>
+          </Card>
+        </div>);
     }
 }
 

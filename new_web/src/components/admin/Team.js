@@ -199,6 +199,7 @@ class Team extends React.Component {
     };
     return (
       <div className="overview-page" key="overview">
+
         <h2>{this.state.name} Members:</h2>
 
         <Jumbotron>

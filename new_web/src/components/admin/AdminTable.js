@@ -139,7 +139,23 @@ class AdminTable extends React.Component {
   }
 
   onAfterInsertRow = (row) => {
-    register(row.first_name, row.last_name, row.email, row.phone, row.address, row.username, row.password);
+    register(row.first_name, row.last_name, row.email, row.phone, row.address, row.username, row.password, row.wage).then((res) => {
+      if (res[1] !== 200) {
+        return;
+      }
+      getUserInfo(localStorage.getItem('token')).then((res) => {
+        const json = res[0];
+        const status = res[1];
+        if (status !== 200) {
+          return;
+        }
+        json.map(person => person.permissions = person.permissions.map(role => role.desc));
+        this.setState({
+          data: json,
+          error: null,
+        });
+      });
+    });
   }
 
   render() {
@@ -161,6 +177,11 @@ class AdminTable extends React.Component {
       bgColor: '#cccccc',
     };
 
+
+    function priceFormatter(cell, row) {
+      return `$${cell}`;
+    }
+
     return (
       <div>
 
@@ -174,6 +195,7 @@ class AdminTable extends React.Component {
           <TableHeaderColumn dataField="email" dataSort>E-Mail</TableHeaderColumn>
           <TableHeaderColumn dataField="phone" dataSort>Phone #</TableHeaderColumn>
           <TableHeaderColumn dataField="address" dataSort>Address</TableHeaderColumn>
+          <TableHeaderColumn dataField="wage" dataFormat={priceFormatter} dataSort>Wage</TableHeaderColumn>
           <TableHeaderColumn dataField="permissions" customEditor={{ getElement: this.customSelectField }} dataSort hiddenOnInsert>Role</TableHeaderColumn>
 
         </BootstrapTable>

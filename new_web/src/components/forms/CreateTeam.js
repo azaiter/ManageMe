@@ -84,6 +84,7 @@ class CreateTeam extends React.Component {
           return;
         }
         this.props.close();
+        this.props.refresh();
       }).catch((err) => {
         console.log('Error:', err);
       });

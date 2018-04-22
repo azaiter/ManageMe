@@ -1,6 +1,6 @@
 import 'babel-polyfill';
 
-export async function createUser(first, last, mail, num, addr, user, pass) {
+export async function createUser(first, last, mail, num, addr, user, pass, wage = null) {
   const res = await fetch('https://api.manageme.tech/user/create', {
     method: 'POST',
     headers:
@@ -13,6 +13,7 @@ export async function createUser(first, last, mail, num, addr, user, pass) {
       address: addr,
       username: user,
       password: pass,
+      wage,
     }),
   });
   const json = await res.json();
@@ -661,6 +662,36 @@ export async function getWeeklyHours(token) {
         { 'content-type': 'application/json' },
     body: JSON.stringify({
       token,
+    }),
+  });
+  const json = await res.json();
+  return [json, res.status];
+}
+
+export async function makeTeamLead(token, teamId, userId) {
+  const res = await fetch('https://api.manageme.tech/team/member/lead', {
+    method: 'POST',
+    headers:
+        { 'content-type': 'application/json' },
+    body: JSON.stringify({
+      token,
+      teamID: teamId,
+      user_id: userId,
+    }),
+  });
+  const json = await res.json();
+  return [json, res.status];
+}
+
+
+export async function getUserPerms(token, userId) {
+  const res = await fetch('https://api.manageme.tech/privilage/get', {
+    method: 'POST',
+    headers:
+        { 'content-type': 'application/json' },
+    body: JSON.stringify({
+      token,
+      user_id: userId,
     }),
   });
   const json = await res.json();
