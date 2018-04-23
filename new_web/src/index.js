@@ -5,6 +5,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 
 import './css/index.css';
 import './css/App.css';
+import 'react-notifications/lib/notifications.css';
 
 import App from './App';
 import registerServiceWorker from './registerServiceWorker';

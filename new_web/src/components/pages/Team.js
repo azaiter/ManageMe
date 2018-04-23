@@ -7,6 +7,7 @@ import { getLocalToken, checkPermissions } from '../../utils/Auth';
 import Select from 'react-select';
 import 'react-select/dist/react-select.css';
 import { Card, CardBody } from 'reactstrap';
+import { NotificationContainer, NotificationManager } from 'react-notifications';
 
 class Team extends React.Component {
   constructor(props) {
@@ -39,10 +40,16 @@ class Team extends React.Component {
       const users = res[1][0];
       const userInfoStatus = res[1][1];
       const editTeam = res[2];
+      const emails = users.map(u => u.email);
       if (teamMemberStatus !== 200 || userInfoStatus !== 200) {
+        this.setState({
+          users,
+          emails,
+          editTeam,
+        });
         return;
       }
-      const emails = users.map(u => u.email);
+
       if (json.length > 0) {
         json.map((i) => { if (i.isLead === 0) { i.isLead = 'F'; } else { i.isLead = 'T'; } });
         this.setState({
@@ -51,13 +58,7 @@ class Team extends React.Component {
           emails,
           editTeam,
         });
-        return;
       }
-      this.setState({
-        users,
-        emails,
-        editTeam,
-      });
     });
   }
 
@@ -81,6 +82,7 @@ class Team extends React.Component {
     if (cellName === 'isLead') {
       makeTeamLead(getLocalToken(), this.state.teamId, row.uid).then((res) => {
         if (res[1] !== 200) {
+          NotificationManager.error(Object.values(res[0].message), 'Error', 3000);
           return;
         }
         this.getData();
@@ -93,8 +95,8 @@ class Team extends React.Component {
       const status = res[1];
       const data = this.state.data;
       if (status !== 200) {
+        NotificationManager.error(Object.values(res[0].message), 'Error', 3000);
         this.setState({
-          error: Object.values(json.message),
           data,
         });
       }
@@ -151,11 +153,13 @@ class Team extends React.Component {
     const obj = this.state.users.find(u => u.email === row.email);
     addUserToTeam(getLocalToken(), this.state.teamId, obj.uid).then((resp) => {
       if (resp[1] !== 200) {
+        NotificationManager.error(Object.values(resp[0].message), 'Error', 3000);
         return;
       }
       if (row.isLead === 'Y') {
         makeTeamLead(getLocalToken(), this.state.teamId, obj.uid).then((res) => {
           if (res[1] !== 200) {
+            NotificationManager.error(Object.values(res[0].message), 'Error', 3000);
             return;
           }
           this.getData();
@@ -198,12 +202,11 @@ class Team extends React.Component {
       <Card>
         <CardBody>
           <h2 className="text-left">{this.state.name} Members:</h2>
-          <p style={{ color: 'red' }}>{this.state.error}</p>
           {this.state.editTeam ?
             <BootstrapTable data={this.state.data} striped hover cellEdit={cellEdit} selectRow={selectRow} options={options} pagination search insertRow searchPlaceholder="Search..." deleteRow exportCSV csvFileName={`Current Userbase ${new Date()}.csv`}>
               <TableHeaderColumn dataField="uid" isKey dataSort autovalue hiddenOnInsert>UID</TableHeaderColumn>
               <TableHeaderColumn dataField="username" editable={false} dataSort hiddenOnInsert>User Name</TableHeaderColumn>
-              <TableHeaderColumn dataField="first_name" editable={false} dataSort hiddenOnInsert>First Name</TableHeaderColumn>
+              <TableHeaderColumn dataField="first_name`" editable={false} dataSort hiddenOnInsert>First Name</TableHeaderColumn>
               <TableHeaderColumn dataField="last_name" editable={false} dataSort hiddenOnInsert>Last Name</TableHeaderColumn>
               <TableHeaderColumn dataField="email" editable={{ type: 'select', options: { values: this.state.emails } }}>E-Mail</TableHeaderColumn>
               <TableHeaderColumn dataField="isLead" editable={{ type: 'checkbox', options: { values: 'Y:N' } }} dataSort>Team Lead&nbsp;</TableHeaderColumn>
@@ -225,6 +228,7 @@ class Team extends React.Component {
         }
 
         </CardBody>
+        <NotificationContainer />
       </Card>
 
 
