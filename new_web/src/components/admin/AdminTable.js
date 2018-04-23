@@ -28,12 +28,17 @@ class AdminTable extends React.Component {
   }
 
   deleteUser(rows) {
-    deleteUser(getLocalToken(), rows[0]);
-    const data = this.state.data.filter(i => rows.indexOf(i.uid) === -1);
-    this.setState({
-      data,
+    deleteUser(getLocalToken(), rows[0]).then((res) => {
+      if (res[1] !== 200) {
+        NotificationManager.error(Object.values(res[0].message), 'Error', 3000);
+        return;
+      }
+      const data = this.state.data.filter(i => rows.indexOf(i.uid) === -1);
+      this.setState({
+        data,
+      });
+      NotificationManager.success(null, 'Success', 3000);
     });
-    NotificationManager.success(null, 'Success', 3000);
   }
 
   createCustomDeleteButton = onClick => (

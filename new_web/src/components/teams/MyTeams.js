@@ -134,7 +134,6 @@ class MyTeams extends React.Component {
             Teams
             </CardTitle>
             <CardBody>
-              <p style={{ color: 'red' }}>{this.state.error}</p>
               <BootstrapTable keyField="uid" bordered={false} data={this.state.teams} columns={columns} pagination={paginationFactory(options)} noDataIndication={this.indication} />
             </CardBody>
           </Card>
