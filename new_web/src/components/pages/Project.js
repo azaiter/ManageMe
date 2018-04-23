@@ -5,6 +5,7 @@ import {
   Card,
   CardTitle,
   CardBody,
+  Button,
 } from 'reactstrap';
 
 import ProjectComments from '../project/ProjectComments';
@@ -13,7 +14,7 @@ import ProjectDocuments from '../project/ProjectDocuments';
 import CompletedRequirements from '../project/CompletedRequirements';
 import NeedingAprovalRequirements from '../project/NeedingAprovalRequirements';
 
-import { clockIn, clockOut, getRequirementsByProjectId, getProjects, deleteReq, createRequirement, updateRequirement } from '../../utils/HttpHelper';
+import { getRequirementsByProjectId, getProjects, deleteProject, AddProjectComment, GetProjectComments } from '../../utils/HttpHelper';
 import { getLocalToken } from '../../utils/Auth';
 
 class Project extends React.Component {
@@ -45,11 +46,16 @@ class Project extends React.Component {
         return;
       }
       const project = json.filter(i => parseInt(this.state.projectId) === i.uid)[0];
-      this.setState({
-        name: project.name,
-        desc: project.desc,
-        created: project.created,
-      });
+      if (project) {
+        this.setState({
+          name: project.name,
+          desc: project.desc,
+          created: project.created,
+          loaded: true,
+        });
+        return;
+      }
+      this.props.history.push('/Projects', null);
     });
   }
 
@@ -94,7 +100,28 @@ class Project extends React.Component {
     });
   }
 
+  deleteProj = (projId) => {
+    if (window.confirm('Are you sure you want to delete this requirement?')) {
+      deleteProject(getLocalToken(), projId).then((res) => {
+        const json = res[0];
+        const code = res[1];
+        if (code !== 200) {
+          this.setState({
+            error: json.message,
+          });
+          return;
+        }
+        this.props.history.push('/Projects', null);
+      });
+    } else {
+      // Do nothing!
+    }
+  }
+
   render() {
+    if (!this.state.loaded) {
+      return null;
+    }
     return (
       <Row style={{ textAlign: 'left' }}>
         <Col xs="12" sm="12" md="12" lg="4" >
@@ -110,8 +137,9 @@ class Project extends React.Component {
               Created: {this.state.created}
             </CardBody>
           </Card>
-          <ProjectComments />
+          <ProjectComments projectID={this.state.projectId} />
           <ProjectDocuments />
+          <Button onClick={() => this.deleteProj(this.state.projectId)} color="danger">Delete Project</Button>
         </Col>
         <Col xs="12" sm="12" md="12" lg="8" >
           <NeedingAprovalRequirements oldRequirements={this.state.activeRequirements} newRequirements={this.state.needingAprovalRequirements} getRequirements={this.getRequirements} />
