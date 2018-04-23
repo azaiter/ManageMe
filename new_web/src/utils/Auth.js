@@ -66,3 +66,14 @@ export async function checkPermissions(permissionUId) {
   }
   return false;
 }
+
+export async function checkAdmin() {
+  const resp = await getUserPerms(getLocalToken(), getLocalUid());
+  if (resp[1] !== 200) {
+    return false;
+  }
+  if (resp[0].length === 23) {
+    return true;
+  }
+  return false;
+}

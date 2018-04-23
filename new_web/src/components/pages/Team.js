@@ -24,6 +24,7 @@ class Team extends React.Component {
       rtl: false,
       users: [],
       emails: [],
+      editTeam: false,
     };
   }
 
@@ -32,33 +33,33 @@ class Team extends React.Component {
   }
 
   getData() {
-    getTeamMembers(getLocalToken(), this.state.teamId).then((res) => {
-      const json = res[0];
-      const status = res[1];
-      getUserInfo(getLocalToken()).then((resp) => {
-        const users = resp[0];
-        const respStatus = resp[1];
-        if (respStatus !== 200) {
-          return;
-        }
-        const emails = users.map(u => u.email);
-        if (json.length > 0) {
-          json.map((i) => { if (i.isLead === 0) { i.isLead = 'F'; } else { i.isLead = 'T'; } });
-          this.setState({
-            data: json,
-            users,
-            emails,
-          });
-          return;
-        }
+    Promise.all([getTeamMembers(getLocalToken(), this.state.teamId), getUserInfo(getLocalToken()), checkPermissions(2)]).then((res) => {
+      const json = res[0][0];
+      const teamMemberStatus = res[0][1];
+      const users = res[1][0];
+      const userInfoStatus = res[1][1];
+      const editTeam = res[2];
+      if (teamMemberStatus !== 200 || userInfoStatus !== 200) {
+        return;
+      }
+      const emails = users.map(u => u.email);
+      if (json.length > 0) {
+        json.map((i) => { if (i.isLead === 0) { i.isLead = 'F'; } else { i.isLead = 'T'; } });
         this.setState({
+          data: json,
           users,
           emails,
+          editTeam,
         });
+        return;
+      }
+      this.setState({
+        users,
+        emails,
+        editTeam,
       });
     });
   }
-
 
   deleteUser(rows) {
     removeUserFromTeam(getLocalToken(), this.state.teamId, rows[0]);
@@ -175,16 +176,13 @@ class Team extends React.Component {
   )
 
   render() {
-    console.log(this.state.data);
     const options = {
       afterDeleteRow: this.deleteUser.bind(this),
       deleteBtn: this.createCustomDeleteButton,
-
       onAddRow: this.onAddRow,
       noDataText: 'There are no users part of this team!',
       insertModalHeader: this.createCustomModalHeader,
     };
-
     const cellEdit = {
       mode: 'click', // click cell to edit
       blurToSave: true,
@@ -195,19 +193,37 @@ class Team extends React.Component {
       mode: 'radio',
       bgColor: '#cccccc',
     };
+
     return (
       <Card>
         <CardBody>
           <h2 className="text-left">{this.state.name} Members:</h2>
           <p style={{ color: 'red' }}>{this.state.error}</p>
-          <BootstrapTable data={this.state.data} striped hover cellEdit={cellEdit} selectRow={selectRow} options={options} pagination search insertRow searchPlaceholder="Search..." deleteRow exportCSV csvFileName={`Current Userbase ${new Date()}.csv`}>
-            <TableHeaderColumn dataField="uid" isKey dataSort autovalue hiddenOnInsert>UID</TableHeaderColumn>
-            <TableHeaderColumn dataField="username" editable={false} dataSort hiddenOnInsert>User Name</TableHeaderColumn>
-            <TableHeaderColumn dataField="first_name" editable={false} dataSort hiddenOnInsert>First Name</TableHeaderColumn>
-            <TableHeaderColumn dataField="last_name" editable={false} dataSort hiddenOnInsert>Last Name</TableHeaderColumn>
-            <TableHeaderColumn dataField="email" editable={false} >E-Mail</TableHeaderColumn>
-            <TableHeaderColumn dataField="isLead" editable={{ type: 'checkbox', options: { values: 'Y:N' } }} dataSort>Team Lead</TableHeaderColumn>
-          </BootstrapTable>
+          {this.state.editTeam ?
+            <BootstrapTable data={this.state.data} striped hover cellEdit={cellEdit} selectRow={selectRow} options={options} pagination search insertRow searchPlaceholder="Search..." deleteRow exportCSV csvFileName={`Current Userbase ${new Date()}.csv`}>
+              <TableHeaderColumn dataField="uid" isKey dataSort autovalue hiddenOnInsert>UID</TableHeaderColumn>
+              <TableHeaderColumn dataField="username" editable={false} dataSort hiddenOnInsert>User Name</TableHeaderColumn>
+              <TableHeaderColumn dataField="first_name" editable={false} dataSort hiddenOnInsert>First Name</TableHeaderColumn>
+              <TableHeaderColumn dataField="last_name" editable={false} dataSort hiddenOnInsert>Last Name</TableHeaderColumn>
+              <TableHeaderColumn dataField="email" editable={{ type: 'select', options: { values: this.state.emails } }}>E-Mail</TableHeaderColumn>
+              <TableHeaderColumn dataField="isLead" editable={{ type: 'checkbox', options: { values: 'Y:N' } }} dataSort>Team Lead&nbsp;</TableHeaderColumn>
+            </BootstrapTable>
+
+
+        :
+
+            <BootstrapTable data={this.state.data} striped hover pagination search searchPlaceholder="Search..." exportCSV csvFileName={`Current Userbase ${new Date()}.csv`}>
+              <TableHeaderColumn dataField="uid" isKey dataSort autovalue hiddenOnInsert>UID</TableHeaderColumn>
+              <TableHeaderColumn dataField="username" editable={false} dataSort hiddenOnInsert>User Name</TableHeaderColumn>
+              <TableHeaderColumn dataField="first_name" editable={false} dataSort hiddenOnInsert>First Name</TableHeaderColumn>
+              <TableHeaderColumn dataField="last_name" editable={false} dataSort hiddenOnInsert>Last Name</TableHeaderColumn>
+              <TableHeaderColumn dataField="email" editable={false}>E-Mail</TableHeaderColumn>
+              <TableHeaderColumn dataField="isLead" editable={false} dataSort>Team Lead&nbsp;</TableHeaderColumn>
+            </BootstrapTable>
+
+
+        }
+
         </CardBody>
       </Card>
 

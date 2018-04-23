@@ -18,6 +18,7 @@ class MyTeams extends React.Component {
       teams: [],
       error: '',
       createTeam: false,
+      showCreateButton: this.props.show,
     };
   }
 
@@ -26,21 +27,23 @@ class MyTeams extends React.Component {
   }
 
   getTeams = () => {
-    Promise.all([getTeams(getLocalToken()), checkPermissions(1)]).then((res) => {
+    Promise.all([getTeams(getLocalToken()), checkPermissions(1), checkPermissions(23)]).then((res) => {
       let teams = res[0][0];
       const teamResp = res[0][1];
+      const createTeam = res[1];
+      const delTeam = res[2];
       if (teamResp !== 200) {
         return;
       }
       teams = teams.reverse();
       teams.forEach((element) => {
         if (this.props.show) {
-          element.actions = <div><Button className="btn-success" onClick={() => this.viewTeam(element.uid, element.name)} >View</Button> <Button className="btn-danger" onClick={() => this.deleteTeam(element.uid)} >Delete</Button></div>;
+          element.actions = <div><Button className="btn-success" onClick={() => this.viewTeam(element.uid, element.name)} >View</Button> {delTeam ? <Button className="btn-danger" onClick={() => this.deleteTeam(element.uid)} >Delete</Button> : null }</div>;
         }
       });
       this.setState({
         teams,
-        createTeam: res[1],
+        createTeam,
       });
     });
   }
@@ -118,7 +121,7 @@ class MyTeams extends React.Component {
 
       return (
         <div>
-          {this.state.createTeam ? <ToolBar className="float-right" refresh={this.getTeams} /> : null }
+          {this.state.createTeam && this.state.showCreateButton ? <ToolBar className="float-right" refresh={this.getTeams} /> : null }
           <Card>
             <CardTitle className="bg-primary text-white">
             Teams

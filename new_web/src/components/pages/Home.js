@@ -17,7 +17,7 @@ import Admin from './Admin';
 import Project from './Project';
 import Team from './Team';
 import Teams from './Teams';
-import { checkPermissions } from '../../utils/Auth';
+import { checkPermissions, checkAdmin } from '../../utils/Auth';
 
 import {
   Collapse,
@@ -70,9 +70,11 @@ class Home extends Component {
   }
 
   checkPerms = () => {
-    Promise.all([checkPermissions('add a team')]).then((res) => {
-      const admin = res[0];
+    Promise.all([checkPermissions(7), checkAdmin()]).then((res) => {
+      const reports = res[0];
+      const admin = res[1];
       this.setState({
+        reports,
         admin,
       });
     });
@@ -157,15 +159,11 @@ class Home extends Component {
               <NavItem>
                 <NavLink tag={Link} to="/Teams" active={this.props.location.pathname.indexOf('/Teams') === 0}>Teams</NavLink>
               </NavItem>
-              <NavItem>
-                <NavLink tag={Link} to="/Reports" active={this.props.location.pathname.indexOf('/Reports') === 0} >Reports</NavLink>
-              </NavItem>
+              {this.state.reports ? <NavItem> <NavLink tag={Link} to="/Reports" active={this.props.location.pathname.indexOf('/Reports') === 0} >Reports</NavLink></NavItem> : null}
               <NavItem>
                 <NavLink tag={Link} to="/History" active={this.props.location.pathname.indexOf('/History') === 0}>History</NavLink>
               </NavItem>
-              <NavItem>
-                <NavLink tag={Link} to="/Admin" active={this.props.location.pathname.indexOf('/Admin') === 0}>Admin</NavLink>
-              </NavItem>
+              {this.state.admin ? <NavItem><NavLink tag={Link} to="/Admin" active={this.props.location.pathname.indexOf('/Admin') === 0}>Admin</NavLink></NavItem> : null }
             </Nav>
             <Nav navbar>
               <UncontrolledDropdown className="nav-item">

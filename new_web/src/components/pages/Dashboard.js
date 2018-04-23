@@ -54,7 +54,7 @@ class Dashboard extends Component {
           <Col lg="4">
             <ProjectBreakdown />
             <RecentActivity />
-            <MyTeams />
+            <MyTeams showCreateButton={false} />
           </Col>
         </Row>
       </div>);
