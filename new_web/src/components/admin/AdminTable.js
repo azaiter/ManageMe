@@ -7,6 +7,7 @@ import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { getUserInfo, updateUser, deleteUser, getAllPerms, assignPrivilage } from '../../utils/HttpHelper';
 import { getLocalToken } from '../../utils/Auth';
 import { register } from '../../utils/Auth';
+import { NotificationContainer, NotificationManager } from 'react-notifications';
 
 
 class AdminTable extends React.Component {
@@ -32,6 +33,7 @@ class AdminTable extends React.Component {
     this.setState({
       data,
     });
+    NotificationManager.success(null, 'Success', 3000);
   }
 
   createCustomDeleteButton = onClick => (
@@ -49,6 +51,7 @@ class AdminTable extends React.Component {
         const json = res[0];
         const status = res[1];
         if (status !== 200) {
+          NotificationManager.error(Object.values(res[0].message), 'Error', 3000);
           return;
         }
         json.map(person => person.permissions = person.permissions.map(role => role.desc));
@@ -56,6 +59,7 @@ class AdminTable extends React.Component {
           data: json,
           error: null,
         });
+        NotificationManager.success(null, 'Success', 3000);
       })));
     } else {
       updateUser(localStorage.getItem('token'), row.uid, cellName, cellValue).then((res) => {
@@ -63,6 +67,7 @@ class AdminTable extends React.Component {
         const status = res[1];
         const data = this.state.data;
         if (status !== 200) {
+          NotificationManager.error(Object.values(res[0].message), 'Error', 3000);
           this.setState({
             error: Object.values(json.message),
             data,
@@ -72,6 +77,7 @@ class AdminTable extends React.Component {
           const json = res[0];
           const status = res[1];
           if (status !== 200) {
+            NotificationManager.error(Object.values(res[0].message), 'Error', 3000);
             return;
           }
           json.map(person => person.permissions = person.permissions.map(role => role.desc));
@@ -79,6 +85,7 @@ class AdminTable extends React.Component {
             data: json,
             error: null,
           });
+          NotificationManager.success(null, 'Success', 3000);
         });
       });
     }
@@ -141,12 +148,14 @@ class AdminTable extends React.Component {
   onAfterInsertRow = (row) => {
     register(row.first_name, row.last_name, row.email, row.phone, row.address, row.username, row.password, row.wage).then((res) => {
       if (res[1] !== 200) {
+        NotificationManager.error(Object.values(res[0].message), 'Error', 3000);
         return;
       }
       getUserInfo(localStorage.getItem('token')).then((res) => {
         const json = res[0];
         const status = res[1];
         if (status !== 200) {
+          NotificationManager.error(Object.values(res[0].message), 'Error', 3000);
           return;
         }
         json.map(person => person.permissions = person.permissions.map(role => role.desc));
@@ -154,6 +163,7 @@ class AdminTable extends React.Component {
           data: json,
           error: null,
         });
+        NotificationManager.success(null, 'Success', 3000);
       });
     });
   }
@@ -199,6 +209,7 @@ class AdminTable extends React.Component {
           <TableHeaderColumn dataField="permissions" customEditor={{ getElement: this.customSelectField }} dataSort hiddenOnInsert>Role</TableHeaderColumn>
 
         </BootstrapTable>
+        <NotificationContainer />
       </div>
 
 
