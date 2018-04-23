@@ -63,10 +63,16 @@ class Team extends React.Component {
   }
 
   deleteUser(rows) {
-    removeUserFromTeam(getLocalToken(), this.state.teamId, rows[0]);
-    const data = this.state.data.filter(i => rows.indexOf(i.uid) === -1);
-    this.setState({
-      data,
+    removeUserFromTeam(getLocalToken(), this.state.teamId, rows[0]).then((res) => {
+      if (res[1] !== 200) {
+        NotificationManager.error(Object.values(res[0].message), 'Error', 3000);
+        return;
+      }
+      const data = this.state.data.filter(i => rows.indexOf(i.uid) === -1);
+      this.setState({
+        data,
+      });
+      NotificationManager.success(null, 'Success', 3000);
     });
   }
 
@@ -87,7 +93,7 @@ class Team extends React.Component {
         }
         this.getData();
       });
-
+      NotificationManager.success(null, 'Success', 3000);
       return true;
     }
     updateUser(getLocalToken(), row.uid, cellName, cellValue).then((res) => {
@@ -99,10 +105,11 @@ class Team extends React.Component {
         this.setState({
           data,
         });
+        return;
       }
       this.getData();
     });
-
+    NotificationManager.success(null, 'Success', 3000);
     return true;
   }
 
@@ -167,6 +174,7 @@ class Team extends React.Component {
       } else {
         this.getData();
       }
+      NotificationManager.success(null, 'Success', 3000);
     });
   }
 
@@ -206,7 +214,7 @@ class Team extends React.Component {
             <BootstrapTable data={this.state.data} striped hover cellEdit={cellEdit} selectRow={selectRow} options={options} pagination search insertRow searchPlaceholder="Search..." deleteRow exportCSV csvFileName={`Current Userbase ${new Date()}.csv`}>
               <TableHeaderColumn dataField="uid" isKey dataSort autovalue hiddenOnInsert>UID</TableHeaderColumn>
               <TableHeaderColumn dataField="username" editable={false} dataSort hiddenOnInsert>User Name</TableHeaderColumn>
-              <TableHeaderColumn dataField="first_name`" editable={false} dataSort hiddenOnInsert>First Name</TableHeaderColumn>
+              <TableHeaderColumn dataField="first_name" editable={false} dataSort hiddenOnInsert>First Name</TableHeaderColumn>
               <TableHeaderColumn dataField="last_name" editable={false} dataSort hiddenOnInsert>Last Name</TableHeaderColumn>
               <TableHeaderColumn dataField="email" editable={{ type: 'select', options: { values: this.state.emails } }}>E-Mail</TableHeaderColumn>
               <TableHeaderColumn dataField="isLead" editable={{ type: 'checkbox', options: { values: 'Y:N' } }} dataSort>Team Lead&nbsp;</TableHeaderColumn>
