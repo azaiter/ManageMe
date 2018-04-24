@@ -9,27 +9,6 @@ import { BounceLoader } from 'react-spinners';
 import { getLocalToken } from '../../utils/Auth';
 
 class MyProjects extends React.Component {
-  deleteProj(projId) {
-    if (window.confirm('Are you sure you want to delete this requirement?')) {
-      deleteProject(getLocalToken(), projId).then((res) => {
-        const json = res[0];
-        const code = res[1];
-        if (code !== 200) {
-          this.setState({
-            error: json.message,
-          });
-          return;
-        }
-        const projects = this.state.projects.filter(e => e.uid !== projId);
-        this.setState({
-          projects,
-        });
-      });
-    } else {
-      // Do nothing!
-    }
-  }
-
     indication = () => 'You have no projects to work on'
 
     render() {

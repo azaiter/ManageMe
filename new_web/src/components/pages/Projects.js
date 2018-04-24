@@ -59,7 +59,7 @@ class Projects extends Component {
       }
       const projects = json.reverse();
       projects.forEach((element) => {
-        element.actions = <div><Button className="btn-success" onClick={() => this.viewProject(element.uid)} >View</Button> <Button className="btn-danger" onClick={() => this.deleteProj(element.uid)} >Delete</Button></div>;
+        element.actions = <div><Button className="btn-success" onClick={() => this.viewProject(element.uid)} >View</Button></div>;
       });
       this.setState({
         projects,

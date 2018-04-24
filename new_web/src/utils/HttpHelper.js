@@ -757,3 +757,17 @@ export async function getReqComments(token, reqID) {
   const json = await res.json();
   return [json, res.status];
 }
+
+export async function completeRequirement(token, reqID) {
+  const res = await fetch('https://api.manageme.tech/req/complete', {
+    method: 'POST',
+    headers:
+        { 'content-type': 'application/json' },
+    body: JSON.stringify({
+      token,
+      reqID,
+    }),
+  });
+  const json = await res.json();
+  return [json, res.status];
+}

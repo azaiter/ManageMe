@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import { BootstrapTable, TableHeaderColumn, DeleteButton, InsertModalHeader } from 'react-bootstrap-table';
+import { BootstrapTable, TableHeaderColumn, DeleteButton, InsertModalHeader,InsertButton } from 'react-bootstrap-table';
 import { BarLoader } from 'react-spinners';
 import BootstrapTable2 from 'react-bootstrap-table-next';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { Modal, ModalHeader, ModalBody, ModalFooter, Button, Card, CardBody, Row, Col, Input, FormGroup, Label } from 'reactstrap';
 import paginationFactory from 'react-bootstrap-table2-paginator';
-import { getLocalToken } from '../../utils/Auth';
+import { getLocalToken, checkPermissions } from '../../utils/Auth';
 import { clockIn, clockOut, getRequirementsByProjectId, deleteReq, createRequirement, updateRequirement, createChangeRequest } from '../../utils/HttpHelper';
 import RequirementTable from '../project/RequirementTable';
 
@@ -34,16 +34,26 @@ class ActiveRequirements extends React.Component {
       requirementToUpdate: null,
       changeModalLoading: false,
       requirements: [],
+      canEdit: false,
+      canCreate: false,
     };
   }
 
   componentDidMount() {
-    this.getRequirements();
+    this.getData();
   }
 
+  getData = () => {
+    Promise.all([getRequirementsByProjectId(getLocalToken(), this.props.projectID),checkPermissions(16),checkPermissions(22)]).then((res) => {
+      this.getRequirements(res[0]);
+      this.setState({
+        canCreate: res[1],
+        canEdit: res[2],
+      })
+    });
+  }
 
-  getRequirements = () => {
-    getRequirementsByProjectId(getLocalToken(), this.props.projectID).then((res) => {
+  getRequirements = (res) => {
       const json = res[0];
       const status = res[1];
       if (status !== 200) {
@@ -66,7 +76,6 @@ class ActiveRequirements extends React.Component {
       this.setState({
         requirements: activeRequirements,
       });
-    });
   }
 
   requestRequirementChange = () => {
@@ -116,6 +125,7 @@ class ActiveRequirements extends React.Component {
 
   createCustomDeleteButton = onClick => (
     <DeleteButton
+      hidden={!this.state.canEdit}
       disabled={this.state.perm}
       btnText="Delete Selected"
       btnContextual="btn-danger"
@@ -170,6 +180,16 @@ class ActiveRequirements extends React.Component {
     return correctRequirements;
   }
 
+  createCustomInsertButton = () => {
+    return (
+      <InsertButton
+        btnText='Add'
+        btnContextual='btn-primary'
+        btnGlyphicon='fa-plus'
+        hidden={!this.state.canCreate}/>
+    );
+  }
+
   indication = () => 'There are no requirements for this project';
 
   render() {
@@ -178,6 +198,7 @@ class ActiveRequirements extends React.Component {
       deleteBtn: this.createCustomDeleteButton,
       onAddRow: this.onAddRow.bind(this),
       insertModalHeader: this.createCustomModalHeader,
+      insertBtn: this.createCustomInsertButton
     };
 
     const selectRow = {
@@ -186,7 +207,7 @@ class ActiveRequirements extends React.Component {
     };
 
     const cellEdit = {
-      mode: 'click', // click cell to edit
+      mode: this.state.canEdit ? 'click' : '', // click cell to edit
       blurToSave: true,
       beforeSaveCell: this.beforeSaveCell.bind(this),
     };
@@ -197,7 +218,7 @@ class ActiveRequirements extends React.Component {
           <CardBody>
             <h3 className="text-left">Active Requirements</h3>
             <div className="top-right-edit">
-              <Button onClick={() => this.toggleEditModal()}><i className="fa fa-edit" /></Button>
+              <Button hidden={!(this.state.canCreate || this.state.canEdit)} onClick={() => this.toggleEditModal()}><i className="fa fa-edit" /></Button>
             </div>
             <RequirementTable requirements={this.props.requirements} emptyTableMessage="There are no active requirements for this project." />
           </CardBody>
