@@ -145,7 +145,9 @@ class Project extends React.Component {
               </CardBody>
           </Card>
             <ProjectComments projectID={this.state.projectId} />
-              <ProjectDocuments />
+          {
+              // <ProjectDocuments />
+              }
                 <Button hidden={!this.state.canDelete} onClick={() => this.deleteProj(this.state.projectId)} color="danger">Delete Project</Button>
         </Col>
           <Col xs="12" sm="12" md="12" lg="8" >

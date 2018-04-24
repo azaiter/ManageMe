@@ -90,75 +90,77 @@ class UserInfo extends Component {
               <InputGroupAddon addonType="prepend">
                 <span className="input-group-text"><i className="fa fa-user" /></span>
               </InputGroupAddon>
-              <Input invalid={!this.state.firstNameValid} placeholder="First Name" disabled={this.state.loading} value={this.state.firstName} onChange={(e) => { this.setState({ firstName: e.target.value }); }} />
-              <div className="invalid-feedback">
+                <Input invalid={!this.state.firstNameValid} placeholder="First Name" disabled={this.state.loading} value={this.state.firstName} onChange={(e) => { this.setState({ firstName: e.target.value }); }} />
+                  <div className="invalid-feedback">
                       Please enter a first name.
-              </div>
+                  </div>
             </InputGroup>
           </Col>
         </Row>
-        <Row>
-          <Col>
-            <InputGroup>
-              <InputGroupAddon addonType="prepend">
-                <span className="input-group-text"><i className="fa fa-user" /></span>
-              </InputGroupAddon>
-              <Input invalid={!this.state.lastNameValid} placeholder="Last Name" disabled={this.state.loading} value={this.state.lastName} onChange={(e) => { this.setState({ lastName: e.target.value }); }} />
-              <div className="invalid-feedback">
+          <Row>
+            <Col>
+              <InputGroup>
+                <InputGroupAddon addonType="prepend">
+                  <span className="input-group-text"><i className="fa fa-user" /></span>
+                </InputGroupAddon>
+                  <Input invalid={!this.state.lastNameValid} placeholder="Last Name" disabled={this.state.loading} value={this.state.lastName} onChange={(e) => { this.setState({ lastName: e.target.value }); }} />
+                    <div className="invalid-feedback">
                       Please enter a last name.
-              </div>
-            </InputGroup>
-          </Col>
-        </Row>
-        <Row>
-          <Col>
-            <InputGroup>
-              <InputGroupAddon addonType="prepend">
-                <span className="input-group-text"><i className="fa fa-envelope" /></span>
-              </InputGroupAddon>
-              <Input invalid={!this.state.emailValid} placeholder="Email" disabled={this.state.loading} value={this.state.email} onChange={(e) => { this.setState({ email: e.target.value }); }} />
-              <div className="invalid-feedback">
+                    </div>
+              </InputGroup>
+            </Col>
+          </Row>
+            <Row>
+              <Col>
+                <InputGroup>
+                  <InputGroupAddon addonType="prepend">
+                    <span className="input-group-text"><i className="fa fa-envelope" /></span>
+                  </InputGroupAddon>
+                    <Input invalid={!this.state.emailValid} placeholder="Email" disabled={this.state.loading} value={this.state.email} onChange={(e) => { this.setState({ email: e.target.value }); }} />
+                      <div className="invalid-feedback">
                       Please enter a valid email.
-              </div>
-            </InputGroup>
-          </Col>
-        </Row>
-        <Row>
-          <Col>
-            <InputGroup>
-              <InputGroupAddon addonType="prepend">
-                <span className="input-group-text"><i className="fa fa-phone" /></span>
-              </InputGroupAddon>
-              <Input invalid={!this.state.phoneValid} placeholder="Phone Number" disabled={this.state.loading} value={this.state.phone} onChange={(e) => { this.setState({ phone: e.target.value }); }} />
-              <div className="invalid-feedback">
+                      </div>
+                </InputGroup>
+              </Col>
+            </Row>
+              <Row>
+                <Col>
+                  <InputGroup>
+                    <InputGroupAddon addonType="prepend">
+                      <span className="input-group-text"><i className="fa fa-phone" /></span>
+                    </InputGroupAddon>
+                      <Input invalid={!this.state.phoneValid} placeholder="Phone Number" disabled={this.state.loading} value={this.state.phone} onChange={(e) => { this.setState({ phone: e.target.value }); }} />
+                        <div className="invalid-feedback">
                       Please enter a valid phone number in the formart 1112223333.
-              </div>
-            </InputGroup>
-          </Col>
-        </Row>
-        <Row>
-          <Col>
-            <InputGroup>
-              <InputGroupAddon addonType="prepend">
-                <span className="input-group-text"><i className="fa fa-home" /></span>
-              </InputGroupAddon>
-              <Input invalid={!this.state.addressValid} placeholder="Address" disabled={this.state.loading} value={this.state.address} onChange={(e) => { this.setState({ address: e.target.value }); }} />
-              <div className="invalid-feedback">
+                        </div>
+                  </InputGroup>
+                </Col>
+              </Row>
+                <Row>
+                  <Col>
+                    <InputGroup>
+                      <InputGroupAddon addonType="prepend">
+                        <span className="input-group-text"><i className="fa fa-home" /></span>
+                      </InputGroupAddon>
+                        <Input invalid={!this.state.addressValid} placeholder="Address" disabled={this.state.loading} value={this.state.address} onChange={(e) => { this.setState({ address: e.target.value }); }} />
+                          <div className="invalid-feedback">
                       Please enter a valid address.
-              </div>
-            </InputGroup>
-          </Col>
-        </Row>
-        <Row>
-          <Col style={{ fontSize: '14px' }}>
-            <label>Created:&nbsp;</label>{this.state.created}
-          </Col>
-        </Row>
-        <Row>
-          <Col style={{ fontSize: '14px' }}>
-            <Button color="success" className="float-right" onClick={this.UpdateUser}>Update</Button>
-          </Col>
-        </Row>
+                          </div>
+                    </InputGroup>
+                  </Col>
+                </Row>
+                  <Row>
+                    <Col style={{ fontSize: '14px' }}>
+                      <label>Created:&nbsp;</label>{this.state.created}
+                    </Col>
+                  </Row>
+                    <Row>
+                      <Col style={{ fontSize: '14px' }}>
+                        {
+            // <Button color="success" className="float-right" onClick={this.UpdateUser}>Update</Button>
+          }
+                      </Col>
+                    </Row>
       </div>
     );
   }

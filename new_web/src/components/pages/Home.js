@@ -160,9 +160,11 @@ class Home extends Component {
                 <NavLink tag={Link} to="/Teams" active={this.props.location.pathname.indexOf('/Teams') === 0}>Teams</NavLink>
               </NavItem>
               {this.state.reports ? <NavItem> <NavLink tag={Link} to="/Reports" active={this.props.location.pathname.indexOf('/Reports') === 0} >Reports</NavLink></NavItem> : null}
-              <NavItem>
-                <NavLink tag={Link} to="/History" active={this.props.location.pathname.indexOf('/History') === 0}>History</NavLink>
-              </NavItem>
+              {
+              //<NavItem>
+                //<NavLink tag={Link} to="/History" active={this.props.location.pathname.indexOf('/History') === 0}>History</NavLink>
+              //</NavItem>
+              }
               {this.state.admin ? <NavItem><NavLink tag={Link} to="/Admin" active={this.props.location.pathname.indexOf('/Admin') === 0}>Admin</NavLink></NavItem> : null }
             </Nav>
             <Nav navbar>
@@ -180,9 +182,11 @@ class Home extends Component {
                   </DropdownItem>
                 </DropdownMenu>
               </UncontrolledDropdown>
-              <NavItem>
-                <NavLink tag={Link} to="/Settings" active={this.props.location.pathname.indexOf('/Settings') > -1}><i className="fa fa-cog" /></NavLink>
-              </NavItem>
+              {
+              //<NavItem>
+                //<NavLink tag={Link} to="/Settings" active={this.props.location.pathname.indexOf('/Settings') > -1}><i className="fa fa-cog" /></NavLink>
+              //</NavItem>
+              }
             </Nav>
           </Collapse>
         </Navbar>

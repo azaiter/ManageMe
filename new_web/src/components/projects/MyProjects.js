@@ -51,10 +51,6 @@ class MyProjects extends React.Component {
         text: 'Project Description',
         align: 'left',
       }, {
-        dataField: 'created',
-        text: 'Created',
-        align: 'left',
-      }, {
         dataField: 'actions',
         text: '',
         align: 'right',
