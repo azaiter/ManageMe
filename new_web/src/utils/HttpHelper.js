@@ -799,3 +799,17 @@ export async function completeRequirement(token, reqID) {
   const json = await res.json();
   return [json, res.status];
 }
+
+export async function getTeamReport(token, teamId) {
+  const res = await fetch('https://api.manageme.tech/user/wage/get', {
+    method: 'POST',
+    headers:
+        { 'content-type': 'application/json' },
+    body: JSON.stringify({
+      token,
+      teamID: teamId,
+    }),
+  });
+  const json = await res.json();
+  return [json, res.status];
+}
