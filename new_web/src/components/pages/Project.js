@@ -8,13 +8,13 @@ import {
   Button,
 } from 'reactstrap';
 
-import ProjectComments from '../Project/ProjectComments';
-import ActiveRequirements from '../Project/ActiveRequirements';
-import ProjectDocuments from '../Project/ProjectDocuments';
-import CompletedRequirements from '../Project/CompletedRequirements';
-import NeedingAprovalRequirements from '../Project/NeedingAprovalRequirements';
+import ProjectComments from '../project/ProjectComments';
+import ActiveRequirements from '../project/ActiveRequirements';
+import ProjectDocuments from '../project/ProjectDocuments';
+import CompletedRequirements from '../project/CompletedRequirements';
+import NeedingAprovalRequirements from '../project/NeedingAprovalRequirements';
 
-import { getRequirementsByProjectId, getProjects, deleteProject, AddProjectComment, GetProjectComments } from '../../utils/HttpHelper';
+import { getRequirementsByProjectId, deleteProject, getProjectInfo } from '../../utils/HttpHelper';
 import { getLocalToken, checkPermissions } from '../../utils/Auth';
 
 class Project extends React.Component {
@@ -39,7 +39,7 @@ class Project extends React.Component {
   }
 
   getData = () => {
-    Promise.all([getProjects(getLocalToken()),
+    Promise.all([getProjectInfo(getLocalToken(), this.props.match.params.id),
       getRequirementsByProjectId(getLocalToken(), this.props.match.params.id),
       checkPermissions(4)]).then((res) => {
       this.getProjectInformation(res[0]);
@@ -49,22 +49,24 @@ class Project extends React.Component {
   }
 
   getProjectInformation = (res) => {
-    const json = res[0];
+    const json = res[0][0];
     const status = res[1];
     if (status !== 200) {
-      return;
-    }
-    const project = json.filter(i => parseInt(this.state.projectId) === i.uid)[0];
-    if (project) {
       this.setState({
-        name: project.name,
-        desc: project.desc,
-        created: project.created,
         loaded: true,
       });
       return;
     }
-    this.props.history.push('/Projects', null);
+    if (json === undefined) {
+      this.props.history.push('/Projects', null);
+      return;
+    }
+    this.setState({
+      name: json.name,
+      desc: json.desc,
+      created: json.created,
+      loaded: true,
+    });
   }
 
   getRequirements = (res) => {
@@ -151,9 +153,9 @@ class Project extends React.Component {
                 <Button hidden={!this.state.canDelete} onClick={() => this.deleteProj(this.state.projectId)} color="danger">Delete Project</Button>
         </Col>
           <Col xs="12" sm="12" md="12" lg="8" >
-            <NeedingAprovalRequirements oldRequirements={this.state.activeRequirements} newRequirements={this.state.needingAprovalRequirements} getRequirements={this.getRequirements} />
-              <ActiveRequirements requirements={this.state.activeRequirements} projectID={this.props.match.params.id} getRequirements={this.getRequirements} />
-                <CompletedRequirements requirements={this.state.completedRequirements} getRequirements={this.getRequirements} />
+            <NeedingAprovalRequirements oldRequirements={this.state.activeRequirements} newRequirements={this.state.needingAprovalRequirements} getRequirements={this.getData} />
+              <ActiveRequirements requirements={this.state.activeRequirements} projectID={this.props.match.params.id} getRequirements={this.getData} />
+                <CompletedRequirements requirements={this.state.completedRequirements} getRequirements={this.getData} />
           </Col>
             <div />
       </Row>

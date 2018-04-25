@@ -60,13 +60,13 @@ export async function checkPermissions(permissionUId) {
   if (resp[1] !== 200) {
     return false;
   }
-  if (resp[0]) {
+  if (resp[0] !== null || typeof resp[0] !== 'undefined') {
     const hasPerm = resp[0].filter(p => p.permission_uid === permissionUId);
     if (hasPerm.length > 0) {
       return true;
     }
-    return false;
   }
+  return false;
 }
 
 export async function checkAdmin() {

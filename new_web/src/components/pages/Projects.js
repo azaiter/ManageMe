@@ -20,7 +20,8 @@ import ToolBar from '../projects/ToolBar';
 import PendingRequirements from '../projects/PendingRequirements';
 import CreateProject from '../forms/CreateProject';
 
-import { getTeams, getProjects } from '../../utils/HttpHelper';
+import { getTeams, getProjects, getProjectsWithApproval } from '../../utils/HttpHelper';
+import { NotificationContainer, NotificationManager } from 'react-notifications';
 
 class Projects extends Component {
   constructor(props) {
@@ -31,39 +32,59 @@ class Projects extends Component {
       modalLoading: false,
       teams: [],
       projects: [],
+      projectsWithApproval: [],
     };
   }
 
   componentDidMount() {
-    getTeams(localStorage.getItem('token')).then((res) => {
-      const data = res[0];
-      const result = res[1];
-      if (result == 200) {
-        this.setState({
-          teams: data,
-        });
-      }
-    });
-    this.getProjs();
+    this.getData();
   }
 
-  getProjs = () => {
-    getProjects(localStorage.getItem('token')).then((res) => {
-      const json = res[0];
-      const code = res[1];
-      if (code !== 200) {
-        this.setState({
-          error: json.message,
-        });
-        return;
-      }
-      const projects = json.reverse();
-      projects.forEach((element) => {
-        element.actions = <div><Button className="btn-success" onClick={() => this.viewProject(element.uid)} >View</Button></div>;
-      });
+  getData = () => {
+    Promise.all([getProjects(localStorage.getItem('token')), getTeams(localStorage.getItem('token')), getProjectsWithApproval(localStorage.getItem('token'))]).then((res) => {
+      this.getProjs(res[0]);
+      this.getTeams(res[1]);
+      this.getProjsWithApproval(res[2]);
+    });
+  }
+
+  getProjsWithApproval = (res) => {
+    const data = res[0];
+    const result = res[1];
+    const projects = data.reverse();
+    projects.forEach((element) => {
+      element.actions = <div><Button className="btn-success" onClick={() => this.viewProject(element.Uid)} >View</Button></div>;
+    });
+    this.setState({
+      projectsWithApproval: projects,
+    });
+  }
+
+  getTeams = (res) => {
+    const data = res[0];
+    const result = res[1];
+    if (result == 200) {
       this.setState({
-        projects,
+        teams: data,
       });
+    }
+  }
+
+  getProjs = (res) => {
+    const json = res[0];
+    const code = res[1];
+    if (code !== 200) {
+      this.setState({
+        error: json.message,
+      });
+      return;
+    }
+    const projects = json.reverse();
+    projects.forEach((element) => {
+      element.actions = <div><Button className="btn-success" onClick={() => this.viewProject(element.uid)} >View</Button></div>;
+    });
+    this.setState({
+      projects,
     });
   }
 
@@ -78,13 +99,17 @@ class Projects extends Component {
         modalLoading: false,
       });
     }
-    this.getProjs();
+    this.getData();
   }
 
   updateModalLoading = (loading) => {
     this.setState({
       modalLoading: loading,
     });
+  }
+
+  createSuccessNotification = () => {
+    NotificationManager.success(null, 'Success', 3000);
   }
 
   render() {
@@ -94,36 +119,37 @@ class Projects extends Component {
           <Col lg="8">
             <Row>
               <Col>
-                <PendingRequirements />
+                <PendingRequirements projects={this.state.projectsWithApproval} />
               </Col>
             </Row>
-            <Row>
-              <Col>
-                <MyProjects projects={this.state.projects} />
-              </Col>
-            </Row>
-            <Row>
-              <Col>
-                <Button className="float-right btn-success" onClick={() => this.toggleModal()}>Create Project</Button>
-              </Col>
-            </Row>
+              <Row>
+                <Col>
+                  <MyProjects projects={this.state.projects} />
+                </Col>
+              </Row>
+                <Row>
+                  <Col>
+                    <Button className="float-right btn-success" onClick={() => this.toggleModal()}>Create Project</Button>
+                  </Col>
+                </Row>
           </Col>
-          <Col lg="4">
-            <RecentProjects />
-            <RecentRequirements />
-          </Col>
+            <Col lg="4">
+              <RecentProjects />
+                <RecentRequirements />
+            </Col>
         </Row>
 
-        <Modal backdrop="static" keyboard={false} isOpen={this.state.modalIsOpen} toggle={this.toggleModal} centered size={this.state.modalSize}>
-          <div className="modal-loading-bar">
-            <BarLoader width="100%" loading={this.state.modalLoading} height={5} color="#6D6D6D" />
-          </div>
-          <ModalHeader toggle={this.toggleModal}>Create A Project
-          </ModalHeader>
-          <ModalBody>
-            <CreateProject toggleModal={this.toggleModal} updateModalLoading={this.updateModalLoading} teams={this.state.teams} />
-          </ModalBody>
-        </Modal>
+          <Modal backdrop="static" keyboard={false} isOpen={this.state.modalIsOpen} toggle={this.toggleModal} centered size={this.state.modalSize}>
+            <div className="modal-loading-bar">
+              <BarLoader width="100%" loading={this.state.modalLoading} height={5} color="#6D6D6D" />
+            </div>
+              <ModalHeader toggle={this.toggleModal}>Create A Project
+              </ModalHeader>
+                <ModalBody>
+                  <CreateProject success={this.createSuccessNotification} toggleModal={this.toggleModal} updateModalLoading={this.updateModalLoading} teams={this.state.teams} getProjects={this.getData} />
+                </ModalBody>
+          </Modal>
+            <NotificationContainer />
       </div>
     );
   }
