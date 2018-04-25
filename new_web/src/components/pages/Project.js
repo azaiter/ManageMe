@@ -57,13 +57,16 @@ class Project extends React.Component {
       });
       return;
     }
+    if (json === undefined) {
+      this.props.history.push('/Projects', null);
+      return;
+    }
     this.setState({
       name: json.name,
       desc: json.desc,
       created: json.created,
       loaded: true,
     });
-    // this.props.history.push('/Projects', null);
   }
 
   getRequirements = (res) => {
