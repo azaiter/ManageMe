@@ -56,11 +56,16 @@ export function register(firstName, lastName, email, phoneNum, address, username
 }
 
 export async function checkPermissions(permissionUId) {
-  const resp = await getUserPerms(getLocalToken(), getLocalUid());
+  const localToken = getLocalToken();
+  const localUid = getLocalUid();
+  if (localToken === null || localUid === null) {
+    return false;
+  }
+  const resp = await getUserPerms(localToken, localUid);
   if (resp[1] !== 200) {
     return false;
   }
-  if (resp[0] !== null || typeof resp[0] !== 'undefined') {
+  if (resp[0] !== null || typeof resp[0] !== 'undefined' || typeof resp[0].filter !== 'undefined') {
     const hasPerm = resp[0].filter(p => p.permission_uid === permissionUId);
     if (hasPerm.length > 0) {
       return true;

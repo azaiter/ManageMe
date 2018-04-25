@@ -5,7 +5,7 @@ import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { Button, Card, CardBody, Modal, FormGroup, Input, ModalBody, ModalHeader, Row, Col, Label, ModalFooter, Table } from 'reactstrap';
 import paginationFactory from 'react-bootstrap-table2-paginator';
 import { getLocalToken, checkPermissions } from '../../utils/Auth';
-import { acceptChangeRequest, rejectChangeRequest, createChangeRequest, clockIn, clockOut } from '../../utils/HttpHelper';
+import { acceptChangeRequest, completeReq, createChangeRequest, clockIn, clockOut } from '../../utils/HttpHelper';
 import RequirementRow from './RequirementRow';
 
 class RequirementTable extends React.Component {
@@ -74,10 +74,6 @@ class RequirementTable extends React.Component {
       changeModalHardCap: req.hard_cap,
       changeModalEstimate: req.estimate,
     });
-  }
-
-  completeRequirement = () => {
-
   }
 
   sendRequirmentChangeForApproval = () => {

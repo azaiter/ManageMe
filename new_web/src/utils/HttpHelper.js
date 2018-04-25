@@ -523,6 +523,20 @@ export async function getRecentRequirements(tok) {
   return [json, res.status];
 }
 
+export async function completeReq(req) {
+  const res = await fetch('https://api.manageme.tech/util/custom', {
+    method: 'POST',
+    headers:
+        { 'content-type': 'application/json' },
+    body: JSON.stringify({
+      paramArr: [req],
+      spName: 'sp_completeReq',
+    }),
+  });
+  const json = await res.json();
+  return [json, res.status];
+}
+
 export async function getProjectInfo(tok, proj_id) {
   const res = await fetch('https://api.manageme.tech/util/custom', {
     method: 'POST',
@@ -774,20 +788,6 @@ export async function getProjectComments(token, projID) {
 
 export async function getReqComments(token, reqID) {
   const res = await fetch('https://api.manageme.tech/req/comments/get', {
-    method: 'POST',
-    headers:
-        { 'content-type': 'application/json' },
-    body: JSON.stringify({
-      token,
-      reqID,
-    }),
-  });
-  const json = await res.json();
-  return [json, res.status];
-}
-
-export async function completeRequirement(token, reqID) {
-  const res = await fetch('https://api.manageme.tech/req/complete', {
     method: 'POST',
     headers:
         { 'content-type': 'application/json' },

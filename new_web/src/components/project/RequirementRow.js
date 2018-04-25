@@ -5,7 +5,7 @@ import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { Button, Card, CardBody, Modal, FormGroup, Input, ModalBody, ModalHeader, Row, Col, Label, ModalFooter, Table, Jumbotron } from 'reactstrap';
 import paginationFactory from 'react-bootstrap-table2-paginator';
 import { getLocalToken } from '../../utils/Auth';
-import { acceptChangeRequest, rejectChangeRequest } from '../../utils/HttpHelper';
+import { acceptChangeRequest, rejectChangeRequest, completeReq } from '../../utils/HttpHelper';
 import RequirementComments from './RequirementComments';
 import { checkPermissions } from '../../utils/Auth';
 
@@ -36,6 +36,12 @@ class RequirementRow extends React.Component {
     });
   }
 
+  completeReq = (req) => {
+    completeReq(req).then((res) => {
+      window.location.reload();
+    });
+  }
+
   toggleRecDetails = () => {
     if (this.state.reqDetailsVisible) {
       this.setState({
@@ -60,7 +66,7 @@ class RequirementRow extends React.Component {
         <tr>
           <td style={{ verticalAlign: 'middle' }}>{req.name}</td>
             <td style={{ verticalAlign: 'middle' }}>{req.desc}</td>
-              <td style={{ textAlign: 'right', verticalAlign: 'middle' }}><Button hidden={!this.state.canClock} onClick={() => this.props.clockActionFunction(req.uid)} hidden={!this.state.showClockActionButton} hidden={this.props.hideClockActionButton} color="primary">{clockActionText}</Button><Button hidden={!this.state.canViewData} onClick={() => this.toggleRecDetails()} style={{ marginLeft: '10px' }}><i className={this.state.chevron} /></Button></td>
+              <td style={{ textAlign: 'right', verticalAlign: 'middle' }}><Button hidden={!this.state.canClock} onClick={() => this.props.clockActionFunction(req.uid)} hidden={!this.state.showClockActionButton && !this.props.hideClockActionButton} color="primary">{clockActionText}</Button><Button hidden={!this.state.canViewData} onClick={() => this.toggleRecDetails()} style={{ marginLeft: '10px' }}><i className={this.state.chevron} /></Button></td>
         </tr>
           <tr style={this.state.showReqDetails}>
             <td colSpan="3">
@@ -102,7 +108,7 @@ class RequirementRow extends React.Component {
                 </Row>
                   <Row stye={{ textAlign: 'right' }}>
                     <Col>
-                      <Button hidden={!this.state.showCompleteButton} className="float-right" color="success" style={{ marginLeft: '5px' }}>Complete</Button>
+                      <Button hidden={!this.state.showCompleteButton} onClick={() => this.completeReq(req.uid)} className="float-right" color="success" style={{ marginLeft: '5px' }}>Complete</Button>
                         <Button hidden={!this.state.showRequestChangeButton} onClick={() => this.props.showChangeModalFunction(req.uid)} className="float-right">Request Change</Button>
                     </Col>
                   </Row>
