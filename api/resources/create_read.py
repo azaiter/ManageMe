@@ -741,10 +741,10 @@ getWageInfo_post_parser.add_argument(
 )
 
 getWageInfo_post_parser.add_argument(
-    'userID', dest='userID',
+    'teamID', dest='teamID',
     location='json', required=True,
-    type=managemeutil.verify_userIDNotExist,
-    help='The userID. {error_msg}',
+    type=managemeutil.verify_valid_team_id,
+    help='The teamID. {error_msg}',
 )
 
 

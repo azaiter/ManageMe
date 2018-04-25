@@ -1239,7 +1239,7 @@ def getWeeklyHours(args):
 def getWageInfo(args):
 	db = dbConnect()
 	cur = db.cursor()
-	cur.callproc('sp_getWageInfo', [args.userID])
+	cur.callproc('sp_getWageInfo', [args.teamID])
 	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
 	if db:
 		cur.close()

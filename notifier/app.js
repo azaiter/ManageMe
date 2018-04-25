@@ -155,7 +155,7 @@ async function runTask(){
                       out_time = rangeRow.out_time;
                     }
                     //console.log("range row: ", rangeRow);
-                    console.log("clock_in ", in_time, "clock out: ", out_time, "diff: ", out_time-in_time);
+                    //console.log("clock_in ", in_time, "clock out: ", out_time, "diff: ", out_time-in_time);
                     totalHours += (out_time-in_time)/1000/60/60;
                   }
                   //console.log("total hours for a req:", totalHours);
@@ -163,7 +163,7 @@ async function runTask(){
                   usersStates[userData.uid][req.uid]["time_spent"] = totalHours;
                   changeNotiedRow(userData.uid, req.uid, "time_spent", totalHours);
       
-                  if((usersStates[userData.uid][req.uid]["soft_cap"]-totalHours) < 0 && usersStates[userData.uid][req.uid]["soft_cap_notified"]){
+                  if((usersStates[userData.uid][req.uid]["soft_cap"]-totalHours) < 0 && !(usersStates[userData.uid][req.uid]["soft_cap_notified"])){
                     console.log(`Soft cap notification: user ${userData.uid} , requirement: ${req.uid} We are now notifing them of this soft cap...`);
                     usersStates[userData.uid][req.uid]["soft_cap_notified"] = true;
                     changeNotiedRow(userData.uid, req.uid, "soft_cap_notified", 1);
@@ -185,12 +185,12 @@ async function runTask(){
         }
       });
 
-      console.log("state Obj : ", usersStates);
+      //console.log("state Obj : ", usersStates);
 
       //Repeat after the delay
       setTimeout(function() {
         next();
-      }, 30000)
+      }, 5000)
     },
     function(err) {
         console.error(err);
