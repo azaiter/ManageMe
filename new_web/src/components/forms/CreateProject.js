@@ -112,6 +112,7 @@ class CreateProject extends React.Component {
           });
         }
         this.props.getProjects();
+        this.props.success();
       }).catch((err) => {
         console.log('Error:', err);
       });
@@ -141,11 +142,11 @@ class CreateProject extends React.Component {
               <textarea rows="4" className="form-control" placeholder="Project Description" errortext={this.state.desc_error_text} onChange={e => this.changeValue(e, 'desc')} />
             </div>
               <div>
-              <select className="form-control" onChange={e => this.changeValue(e, 'teamId')}>
-                {this.props.teams.map(team => (<option value={team.uid}>{team.name}</option>))}
-              </select>
-            </div>
-              <p style={{ color: 'red' }}>{this.state.creationError}</p>
+                <select className="form-control" onChange={e => this.changeValue(e, 'teamId')}>
+                  {this.props.teams.map(team => (<option value={team.uid}>{team.name}</option>))}
+                </select>
+              </div>
+                <p style={{ color: 'red' }}>{this.state.creationError}</p>
         </div>
 
           <button className="btn btn-success" onClick={e => this.handleProjCreation(e)} disabled={this.state.disabled}>Submit</button>

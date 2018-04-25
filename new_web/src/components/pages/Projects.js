@@ -21,6 +21,7 @@ import PendingRequirements from '../projects/PendingRequirements';
 import CreateProject from '../forms/CreateProject';
 
 import { getTeams, getProjects, getProjectsWithApproval } from '../../utils/HttpHelper';
+import { NotificationContainer, NotificationManager } from 'react-notifications';
 
 class Projects extends Component {
   constructor(props) {
@@ -107,6 +108,10 @@ class Projects extends Component {
     });
   }
 
+  createSuccessNotification = () => {
+    NotificationManager.success(null, 'Success', 3000);
+  }
+
   render() {
     return (
       <div>
@@ -141,9 +146,10 @@ class Projects extends Component {
               <ModalHeader toggle={this.toggleModal}>Create A Project
               </ModalHeader>
                 <ModalBody>
-                  <CreateProject toggleModal={this.toggleModal} updateModalLoading={this.updateModalLoading} teams={this.state.teams} getProjects={this.getData} />
+                  <CreateProject success={this.createSuccessNotification} toggleModal={this.toggleModal} updateModalLoading={this.updateModalLoading} teams={this.state.teams} getProjects={this.getData} />
                 </ModalBody>
           </Modal>
+            <NotificationContainer />
       </div>
     );
   }
