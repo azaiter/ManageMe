@@ -131,11 +131,13 @@ async function runTask(){
                     usersStates[userData.uid][req.uid]["clocked_in"] = true;
                     changeNotiedRow(userData.uid, req.uid, "clocked_in", 1);
                     console.log(`clock in event: user ${userData.uid} , requirement: ${req.uid}`);
+                    // PUT your code here for any notification system
                   }
                   else if(resultsTimeEntries.length == 0 && current_clocked_in_state) { // clocked out event
                     usersStates[userData.uid][req.uid]["clocked_in"] = false;
                     changeNotiedRow(userData.uid, req.uid, "clocked_in", 1);
                     console.log(`clock out event: user ${userData.uid} , requirement: ${req.uid}`);
+                    // PUT your code here for any notification system
                   }
                 });
       
@@ -161,17 +163,19 @@ async function runTask(){
                   usersStates[userData.uid][req.uid]["time_spent"] = totalHours;
                   changeNotiedRow(userData.uid, req.uid, "time_spent", totalHours);
       
-                  if((usersStates[userData.uid][req.uid]["soft_cap"]-totalHours) < 0){
-                    console.log(`Soft cap notification: user ${userData.uid} , requirement: ${req.uid}`);
+                  if((usersStates[userData.uid][req.uid]["soft_cap"]-totalHours) < 0 && usersStates[userData.uid][req.uid]["soft_cap_notified"]){
+                    console.log(`Soft cap notification: user ${userData.uid} , requirement: ${req.uid} We are now notifing them of this soft cap...`);
                     usersStates[userData.uid][req.uid]["soft_cap_notified"] = true;
                     changeNotiedRow(userData.uid, req.uid, "soft_cap_notified", 1);
+                    // PUT your code here for any notification system
                   }
       
-                  if((usersStates[userData.uid][req.uid]["hard_cap"]-totalHours) < 0){
-                    console.log(`Hard cap notification: user ${userData.uid} , requirement: ${req.uid}`);
+                  if((usersStates[userData.uid][req.uid]["hard_cap"]-totalHours) < 0 && !(usersStates[userData.uid][req.uid]["hard_cap_notified"])){
+                    console.log(`Hard cap notification: user ${userData.uid} , requirement: ${req.uid} We are now clocking them out!`);
                     usersStates[userData.uid][req.uid]["hard_cap_notified"] = true;
                     changeNotiedRow(userData.uid, req.uid, "hard_cap_notified", 1);
-                    // code to clock them out
+                    connection.query(`UPDATE TimeEntry SET out_time=Now() WHERE req_uid = ? and user_uid = ? and out_time is null;`, [req.uid, userData.uid], function (error, results, fields) {});
+                    // PUT your code here for any notification system
                   }
 
                 });
