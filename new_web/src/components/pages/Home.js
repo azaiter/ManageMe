@@ -17,7 +17,9 @@ import Admin from './Admin';
 import Project from './Project';
 import Team from './Team';
 import Teams from './Teams';
+import Reports from './Reports';
 import { checkPermissions, checkAdmin } from '../../utils/Auth';
+
 
 import {
   Collapse,
@@ -197,6 +199,7 @@ class Home extends Component {
               <Route exact path="/Projects" component={() => <Projects viewCreateProject={this.viewCreateProject} />} />
               <Route exact path="/Teams" component={Teams} />
               <Route exact path="/Team/:id/:name" component={Team} />
+              <Route exact path="/Reports/" component={Reports} />
               <Route exact path="/Admin" component={Admin} />
               <Route path="/Project/:id" component={Project} />
             </Col>

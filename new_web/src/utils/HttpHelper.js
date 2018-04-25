@@ -706,7 +706,7 @@ export async function addProjectComment(token, projID, comment) {
     body: JSON.stringify({
       token,
       projID,
-      comment
+      comment,
     }),
   });
   const json = await res.json();
@@ -722,7 +722,7 @@ export async function addReqComment(token, reqID, comment) {
     body: JSON.stringify({
       token,
       reqID,
-      comment
+      comment,
     }),
   });
   const json = await res.json();
@@ -766,6 +766,20 @@ export async function completeRequirement(token, reqID) {
     body: JSON.stringify({
       token,
       reqID,
+    }),
+  });
+  const json = await res.json();
+  return [json, res.status];
+}
+
+export async function getTeamReport(token, teamId) {
+  const res = await fetch('https://api.manageme.tech/user/wage/get', {
+    method: 'POST',
+    headers:
+        { 'content-type': 'application/json' },
+    body: JSON.stringify({
+      token,
+      teamID: teamId,
     }),
   });
   const json = await res.json();
