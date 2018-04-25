@@ -523,6 +523,20 @@ export async function getRecentRequirements(tok) {
   return [json, res.status];
 }
 
+export async function getProjectsWithApproval() {
+  const res = await fetch('https://api.manageme.tech/util/custom', {
+    method: 'POST',
+    headers:
+        { 'content-type': 'application/json' },
+    body: JSON.stringify({
+      paramArr: [''],
+      spName: 'sp_getProjectsWithPendingApprovalReqs',
+    }),
+  });
+  const json = await res.json();
+  return [json, res.status];
+}
+
 export async function getAllTeams(tok) {
   const res = await fetch('https://api.manageme.tech/util/custom', {
     method: 'POST',
@@ -706,7 +720,7 @@ export async function addProjectComment(token, projID, comment) {
     body: JSON.stringify({
       token,
       projID,
-      comment
+      comment,
     }),
   });
   const json = await res.json();
@@ -722,7 +736,7 @@ export async function addReqComment(token, reqID, comment) {
     body: JSON.stringify({
       token,
       reqID,
-      comment
+      comment,
     }),
   });
   const json = await res.json();
