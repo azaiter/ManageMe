@@ -40,12 +40,22 @@ class Projects extends Component {
   }
 
   getData = () => {
-    Promise.all([getProjects(localStorage.getItem('token')), getTeams(localStorage.getItem('token')), getProjectsWithApproval()]).then((res) => {
+    Promise.all([getProjects(localStorage.getItem('token')), getTeams(localStorage.getItem('token')), getProjectsWithApproval(localStorage.getItem('token'))]).then((res) => {
       this.getProjs(res[0]);
       this.getTeams(res[1]);
-      this.setState({
-        projectsWithApproval: res[2][0],
-      });
+      this.getProjsWithApproval(res[2]);
+    });
+  }
+
+  getProjsWithApproval = (res) => {
+    const data = res[0];
+    const result = res[1];
+    const projects = data.reverse();
+    projects.forEach((element) => {
+      element.actions = <div><Button className="btn-success" onClick={() => this.viewProject(element.Uid)} >View</Button></div>;
+    });
+    this.setState({
+      projectsWithApproval: projects,
     });
   }
 
@@ -104,7 +114,7 @@ class Projects extends Component {
           <Col lg="8">
             <Row>
               <Col>
-                <PendingRequirements />
+                <PendingRequirements projects={this.state.projectsWithApproval} />
               </Col>
             </Row>
               <Row>
@@ -120,7 +130,7 @@ class Projects extends Component {
           </Col>
             <Col lg="4">
               <RecentProjects />
-                <RecentRequirements projects={this.state.projectsWithApproval} />
+                <RecentRequirements />
             </Col>
         </Row>
 

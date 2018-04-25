@@ -523,13 +523,27 @@ export async function getRecentRequirements(tok) {
   return [json, res.status];
 }
 
-export async function getProjectsWithApproval() {
+export async function getProjectInfo(tok, proj_id) {
   const res = await fetch('https://api.manageme.tech/util/custom', {
     method: 'POST',
     headers:
         { 'content-type': 'application/json' },
     body: JSON.stringify({
-      paramArr: [''],
+      paramArr: [tok, proj_id],
+      spName: 'sp_getProjectInfo',
+    }),
+  });
+  const json = await res.json();
+  return [json, res.status];
+}
+
+export async function getProjectsWithApproval(tok) {
+  const res = await fetch('https://api.manageme.tech/util/custom', {
+    method: 'POST',
+    headers:
+        { 'content-type': 'application/json' },
+    body: JSON.stringify({
+      paramArr: [tok],
       spName: 'sp_getProjectsWithPendingApprovalReqs',
     }),
   });

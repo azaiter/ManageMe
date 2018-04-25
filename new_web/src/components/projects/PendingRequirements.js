@@ -40,27 +40,27 @@ class PendingRequirements extends React.Component {
     };
 
     const columns = [{
-      dataField: 'id',
+      dataField: 'Uid',
       text: 'Project ID',
+      align: 'left',
     }, {
-      dataField: 'name',
+      dataField: 'Name',
       text: 'Project Name',
-    }, {
-      dataField: 'description',
-      text: 'Project Description',
+      align: 'left',
     }, {
       dataField: 'actions',
+      align: 'right',
       text: '',
     }];
 
-    if (this.state.projects.length === 0) {
+    if (this.props.projects.length == 0) {
       return null;
     }
     return (
       <Card>
         <CardBody>
           <h2 className="text-left">Pending Requirements</h2>
-            <BootstrapTable keyField="id" data={this.state.projects} columns={columns} pagination={paginationFactory(options)} />
+            <BootstrapTable keyField="Uid" bordered={false} data={this.props.projects} columns={columns} />
         </CardBody>
       </Card>
     );

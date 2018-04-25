@@ -14,7 +14,7 @@ import ProjectDocuments from '../project/ProjectDocuments';
 import CompletedRequirements from '../project/CompletedRequirements';
 import NeedingAprovalRequirements from '../project/NeedingAprovalRequirements';
 
-import { getRequirementsByProjectId, getProjects, deleteProject, AddProjectComment, GetProjectComments } from '../../utils/HttpHelper';
+import { getRequirementsByProjectId, deleteProject, getProjectInfo } from '../../utils/HttpHelper';
 import { getLocalToken, checkPermissions } from '../../utils/Auth';
 
 class Project extends React.Component {
@@ -39,7 +39,7 @@ class Project extends React.Component {
   }
 
   getData = () => {
-    Promise.all([getProjects(getLocalToken()),
+    Promise.all([getProjectInfo(getLocalToken(), this.props.match.params.id),
       getRequirementsByProjectId(getLocalToken(), this.props.match.params.id),
       checkPermissions(4)]).then((res) => {
       this.getProjectInformation(res[0]);
@@ -49,22 +49,21 @@ class Project extends React.Component {
   }
 
   getProjectInformation = (res) => {
-    const json = res[0];
+    const json = res[0][0];
     const status = res[1];
     if (status !== 200) {
-      return;
-    }
-    const project = json.filter(i => parseInt(this.state.projectId) === i.uid)[0];
-    if (project) {
       this.setState({
-        name: project.name,
-        desc: project.desc,
-        created: project.created,
         loaded: true,
       });
       return;
     }
-    this.props.history.push('/Projects', null);
+    this.setState({
+      name: json.name,
+      desc: json.desc,
+      created: json.created,
+      loaded: true,
+    });
+    // this.props.history.push('/Projects', null);
   }
 
   getRequirements = (res) => {
