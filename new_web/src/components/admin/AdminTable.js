@@ -210,7 +210,7 @@ class AdminTable extends React.Component {
           <TableHeaderColumn dataField="email" dataSort>E-Mail</TableHeaderColumn>
           <TableHeaderColumn dataField="phone" dataSort>Phone #</TableHeaderColumn>
           <TableHeaderColumn dataField="address" dataSort>Address</TableHeaderColumn>
-          <TableHeaderColumn dataField="wage" dataFormat={priceFormatter} dataSort>Wage</TableHeaderColumn>
+          <TableHeaderColumn dataField="wage" dataFormat={priceFormatter} dataSort>Wage (hr)</TableHeaderColumn>
           <TableHeaderColumn dataField="permissions" customEditor={{ getElement: this.customSelectField }} dataSort hiddenOnInsert>Role</TableHeaderColumn>
 
         </BootstrapTable>
