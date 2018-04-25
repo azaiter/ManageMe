@@ -1,6 +1,6 @@
 import 'babel-polyfill';
 
-export async function createUser(first, last, mail, num, addr, user, pass) {
+export async function createUser(first, last, mail, num, addr, user, pass, wage = null) {
   const res = await fetch('https://api.manageme.tech/user/create', {
     method: 'POST',
     headers:
@@ -13,6 +13,7 @@ export async function createUser(first, last, mail, num, addr, user, pass) {
       address: addr,
       username: user,
       password: pass,
+      wage,
     }),
   });
   const json = await res.json();
@@ -661,6 +662,110 @@ export async function getWeeklyHours(token) {
         { 'content-type': 'application/json' },
     body: JSON.stringify({
       token,
+    }),
+  });
+  const json = await res.json();
+  return [json, res.status];
+}
+
+export async function makeTeamLead(token, teamId, userId) {
+  const res = await fetch('https://api.manageme.tech/team/member/lead', {
+    method: 'POST',
+    headers:
+        { 'content-type': 'application/json' },
+    body: JSON.stringify({
+      token,
+      teamID: teamId,
+      user_id: userId,
+    }),
+  });
+  const json = await res.json();
+  return [json, res.status];
+}
+
+
+export async function getUserPerms(token, userId) {
+  const res = await fetch('https://api.manageme.tech/privilage/get', {
+    method: 'POST',
+    headers:
+        { 'content-type': 'application/json' },
+    body: JSON.stringify({
+      token,
+      user_id: userId,
+    }),
+  });
+  const json = await res.json();
+  return [json, res.status];
+}
+
+export async function addProjectComment(token, projID, comment) {
+  const res = await fetch('https://api.manageme.tech/project/comments/add', {
+    method: 'POST',
+    headers:
+        { 'content-type': 'application/json' },
+    body: JSON.stringify({
+      token,
+      projID,
+      comment
+    }),
+  });
+  const json = await res.json();
+  return [json, res.status];
+}
+
+
+export async function addReqComment(token, reqID, comment) {
+  const res = await fetch('https://api.manageme.tech/req/comments/add', {
+    method: 'POST',
+    headers:
+        { 'content-type': 'application/json' },
+    body: JSON.stringify({
+      token,
+      reqID,
+      comment
+    }),
+  });
+  const json = await res.json();
+  return [json, res.status];
+}
+
+export async function getProjectComments(token, projID) {
+  const res = await fetch('https://api.manageme.tech/project/comments/get', {
+    method: 'POST',
+    headers:
+        { 'content-type': 'application/json' },
+    body: JSON.stringify({
+      token,
+      projID,
+    }),
+  });
+  const json = await res.json();
+  return [json, res.status];
+}
+
+
+export async function getReqComments(token, reqID) {
+  const res = await fetch('https://api.manageme.tech/req/comments/get', {
+    method: 'POST',
+    headers:
+        { 'content-type': 'application/json' },
+    body: JSON.stringify({
+      token,
+      reqID,
+    }),
+  });
+  const json = await res.json();
+  return [json, res.status];
+}
+
+export async function completeRequirement(token, reqID) {
+  const res = await fetch('https://api.manageme.tech/req/complete', {
+    method: 'POST',
+    headers:
+        { 'content-type': 'application/json' },
+    body: JSON.stringify({
+      token,
+      reqID,
     }),
   });
   const json = await res.json();

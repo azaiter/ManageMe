@@ -4,10 +4,11 @@ import paginationFactory from 'react-bootstrap-table2-paginator';
 import { Button } from 'react-bootstrap';
 import { withRouter } from 'react-router-dom';
 import { Card, CardBody, CardTitle } from 'reactstrap';
-import { getLocalToken } from '../../utils/Auth';
+import { getLocalToken, checkPermissions } from '../../utils/Auth';
 import { getProjects, deleteProject, getProjectHours, getTeams, getTeamById, deleteTeam } from '../../utils/HttpHelper';
 import { BounceLoader } from 'react-spinners';
-
+import ToolBar from '../projects/ToolBar';
+import { NotificationContainer, NotificationManager } from 'react-notifications';
 
 class MyTeams extends React.Component {
   constructor(props) {
@@ -16,25 +17,37 @@ class MyTeams extends React.Component {
     this.state = {
       teams: [],
       error: '',
+      createTeam: false,
+      showCreateButton: this.props.show,
     };
+  }
+
+  componentDidMount() {
     this.getTeams();
   }
 
   getTeams = () => {
-    Promise.all([getTeams(getLocalToken())]).then((res) => {
+    Promise.all([getTeams(getLocalToken()), checkPermissions(1), checkPermissions(23)]).then((res) => {
       let teams = res[0][0];
       const teamResp = res[0][1];
+      const createTeam = res[1];
+      const delTeam = res[2];
       if (teamResp !== 200) {
+        this.setState({
+          teams,
+          createTeam,
+        });
         return;
       }
       teams = teams.reverse();
       teams.forEach((element) => {
         if (this.props.show) {
-          element.actions = <div><Button className="btn-success" onClick={() => this.viewTeam(element.uid, element.name)} >View</Button> <Button className="btn-danger" onClick={() => this.deleteTeam(element.uid)} >Delete</Button></div>;
+          element.actions = <div><Button className="btn-success" onClick={() => this.viewTeam(element.uid, element.name)} >View</Button> {delTeam ? <Button className="btn-danger" onClick={() => { this.deleteTeam(element.uid); }} >Delete</Button> : null }</div>;
         }
       });
       this.setState({
         teams,
+        createTeam,
       });
     });
   }
@@ -44,11 +57,10 @@ class MyTeams extends React.Component {
       const json = res[0];
       const code = res[1];
       if (code !== 200) {
-        this.setState({
-          error: json.message,
-        });
+        NotificationManager.error(Object.values(res[0].message), 'Error', 3000);
         return;
       }
+      NotificationManager.success(null, 'Success', 3000);
       const teams = this.state.teams.filter(e => e.uid !== teamId);
       this.setState({
         teams,
@@ -64,8 +76,12 @@ class MyTeams extends React.Component {
 
     indication = () => 'You are part of zero teams'
 
+    refresh = () => {
+      this.getTeams();
+      NotificationManager.success(null, 'Success', 3000);
+    }
+
     render() {
-      console.log(this.state.teams);
       const options = {
         paginationSize: 4,
         pageStartIndex: 0,
@@ -111,15 +127,18 @@ class MyTeams extends React.Component {
       }];
 
       return (
-        <Card>
-          <CardTitle className="bg-primary text-white">
+        <div>
+          {this.state.createTeam && this.state.showCreateButton ? <ToolBar className="float-right" refresh={this.refresh} /> : null }
+          <Card>
+            <CardTitle className="bg-primary text-white">
             Teams
-          </CardTitle>
-          <CardBody>
-            <p style={{ color: 'red' }}>{this.state.error}</p>
-            <BootstrapTable keyField="uid" bordered={false} data={this.state.teams} columns={columns} pagination={paginationFactory(options)} noDataIndication={this.indication} />
-          </CardBody>
-        </Card>);
+            </CardTitle>
+            <CardBody>
+              <BootstrapTable keyField="uid" bordered={false} data={this.state.teams} columns={columns} pagination={paginationFactory(options)} noDataIndication={this.indication} />
+            </CardBody>
+          </Card>
+          <NotificationContainer />
+        </div>);
     }
 }
 

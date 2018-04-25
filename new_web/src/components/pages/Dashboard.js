@@ -32,31 +32,30 @@ class Dashboard extends Component {
     return (
       <div id="page-wrapper">
         <HeaderCards />
-        <Row>
-          <Col lg="8">
-            <Row>
-              <Col lg="12">
-                <HoursBreakdown />
+          <Row>
+            <Col lg="8">
+              <Row>
+                <Col lg="12">
+                  <HoursBreakdown />
+                </Col>
+              </Row>
+                <Row>
+                  <Col xs="12" sm="12" md="6" lg="6">
+                    <RecentRequirements />
+                  </Col>
+                    <Col xs="12" sm="12" md="6" lg="6">
+                      <RecentProjects />
+                    </Col>
+                </Row>
+                  <Row>
+                    <Col lg="6" />
+                  </Row>
+            </Col>
+              <Col lg="4">
+                <RecentActivity />
+                  <MyTeams showCreateButton={false} />
               </Col>
-            </Row>
-            <Row>
-              <Col xs="12" sm="12" md="6" lg="6">
-                <RecentRequirements />
-              </Col>
-              <Col xs="12" sm="12" md="6" lg="6">
-                <RecentProjects />
-              </Col>
-            </Row>
-            <Row>
-              <Col lg="6" />
-            </Row>
-          </Col>
-          <Col lg="4">
-            <ProjectBreakdown />
-            <RecentActivity />
-            <MyTeams />
-          </Col>
-        </Row>
+          </Row>
       </div>);
   }
 }

@@ -37,16 +37,18 @@ class HoursBreakdown extends Component {
   }
 
   render() {
-    const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saterday', 'Sunday'];
+    const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
     const goBackDays = 7;
 
-    const today = new Date();
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
     const daysSorted = [];
 
     for (let i = 0; i < goBackDays; i++) {
-      const newDate = new Date(today.setDate(today.getDate() - 2));
+      const newDate = new Date(yesterday.setDate(yesterday.getDate() - 1));
       daysSorted.push(days[newDate.getDay()]);
     }
+
     daysSorted.reverse();
 
     const data = (canvas) => {

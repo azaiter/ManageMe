@@ -4,7 +4,7 @@ import { BarLoader } from 'react-spinners';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { Button, Card, CardBody, Modal, FormGroup, Input, ModalBody, ModalHeader, Row, Col, Label, ModalFooter, Table } from 'reactstrap';
 import paginationFactory from 'react-bootstrap-table2-paginator';
-import { getLocalToken } from '../../utils/Auth';
+import { getLocalToken, checkPermissions } from '../../utils/Auth';
 import { acceptChangeRequest, rejectChangeRequest, createChangeRequest, clockIn, clockOut } from '../../utils/HttpHelper';
 import RequirementRow from './RequirementRow';
 
@@ -27,6 +27,7 @@ class RequirementTable extends React.Component {
       changeModal: false,
       requirementToUpdate: null,
       changeModalLoading: false,
+      canClock: false,
     };
   }
 
@@ -75,6 +76,10 @@ class RequirementTable extends React.Component {
     });
   }
 
+  completeRequirement = () => {
+
+  }
+
   sendRequirmentChangeForApproval = () => {
     this.setState({ changeModalLoading: true });
     createChangeRequest(localStorage.getItem('token'),
@@ -108,17 +113,17 @@ class RequirementTable extends React.Component {
           <thead>
             <tr>
               <th>Name</th>
-              <th>Description</th>
-              <th />
+                <th>Description</th>
+                  <th />
             </tr>
           </thead>
-          <tbody>
-            <tr>
-              <td style={{ textAlign: 'center' }} colSpan="3">
-                {this.props.emptyTableMessage}
-              </td>
-            </tr>
-          </tbody>
+            <tbody>
+              <tr>
+                <td style={{ textAlign: 'center' }} colSpan="3">
+                  {this.props.emptyTableMessage}
+                </td>
+              </tr>
+            </tbody>
         </Table>
       );
     }
@@ -127,12 +132,12 @@ class RequirementTable extends React.Component {
         <thead>
           <tr>
             <th>Name</th>
-            <th>Description</th>
-            <th />
+              <th>Description</th>
+                <th />
           </tr>
         </thead>
-        <tbody>
-          {
+          <tbody>
+            {
             this.props.requirements.map(req => (
               <RequirementRow
                 showChangeModalFunction={this.openChangeModal}
@@ -146,85 +151,85 @@ class RequirementTable extends React.Component {
               />
               ))
           }
-        </tbody>
+          </tbody>
 
-        <Modal isOpen={this.state.changeModal} toggle={() => this.toggleChangeModal()} backdrop="static" >
-          <div className="modal-loading-bar">
-            <BarLoader width="100%" loading={this.state.changeModalLoading} height={5} color="#6D6D6D" />
-          </div>
-          <ModalHeader toggle={() => this.toggleChangeModal()}>Request Requirement Change</ModalHeader>
-          <ModalBody>
-            <Row>
-              <Col>
-                <FormGroup>
-                  <Label>Name</Label>
-                  <Input placeholder="Name" disabled={this.state.changeModalLoading} value={this.state.changeModalName} onChange={(e) => { this.setState({ changeModalName: e.target.value }); }} />
-                  <div className="invalid-feedback">
+            <Modal isOpen={this.state.changeModal} toggle={() => this.toggleChangeModal()} backdrop="static" >
+              <div className="modal-loading-bar">
+                <BarLoader width="100%" loading={this.state.changeModalLoading} height={5} color="#6D6D6D" />
+              </div>
+                <ModalHeader toggle={() => this.toggleChangeModal()}>Request Requirement Change</ModalHeader>
+                  <ModalBody>
+                    <Row>
+                      <Col>
+                        <FormGroup>
+                          <Label>Name</Label>
+                            <Input placeholder="Name" disabled={this.state.changeModalLoading} value={this.state.changeModalName} onChange={(e) => { this.setState({ changeModalName: e.target.value }); }} />
+                              <div className="invalid-feedback">
                       Please enter a valid name.
-                  </div>
-                </FormGroup>
-              </Col>
-            </Row>
-            <Row>
-              <Col>
-                <FormGroup>
-                  <Label>Description</Label>
-                  <Input placeholder="Description" disabled={this.state.changeModalLoading} value={this.state.changeModalDescription} onChange={(e) => { this.setState({ changeModalDescription: e.target.value }); }} />
-                  <div className="invalid-feedback">
+                              </div>
+                        </FormGroup>
+                      </Col>
+                    </Row>
+                      <Row>
+                        <Col>
+                          <FormGroup>
+                            <Label>Description</Label>
+                              <Input placeholder="Description" disabled={this.state.changeModalLoading} value={this.state.changeModalDescription} onChange={(e) => { this.setState({ changeModalDescription: e.target.value }); }} />
+                                <div className="invalid-feedback">
                       Please enter a valid description.
-                  </div>
-                </FormGroup>
-              </Col>
-            </Row>
-            <Row>
-              <Col>
-                <FormGroup>
-                  <Label>Priority</Label>
-                  <Input placeholder="Priority" disabled={this.state.changeModalLoading} value={this.state.changeModalPriority} onChange={(e) => { this.setState({ changeModalPriority: e.target.value }); }} />
-                  <div className="invalid-feedback">
+                                </div>
+                          </FormGroup>
+                        </Col>
+                      </Row>
+                        <Row>
+                          <Col>
+                            <FormGroup>
+                              <Label>Priority</Label>
+                                <Input placeholder="Priority" disabled={this.state.changeModalLoading} value={this.state.changeModalPriority} onChange={(e) => { this.setState({ changeModalPriority: e.target.value }); }} />
+                                  <div className="invalid-feedback">
                       Please enter a valid numerical priority.
-                  </div>
-                </FormGroup>
-              </Col>
-            </Row>
-            <Row>
-              <Col>
-                <FormGroup>
-                  <Label>Soft Cap (Hr)</Label>
-                  <Input placeholder="Soft Cap (Hr)" disabled={this.state.changeModalLoading} value={this.state.changeModalSoftCap} onChange={(e) => { this.setState({ changeModalSoftCap: e.target.value }); }} />
-                  <div className="invalid-feedback">
+                                  </div>
+                            </FormGroup>
+                          </Col>
+                        </Row>
+                          <Row>
+                            <Col>
+                              <FormGroup>
+                                <Label>Soft Cap (Hr)</Label>
+                                  <Input placeholder="Soft Cap (Hr)" disabled={this.state.changeModalLoading} value={this.state.changeModalSoftCap} onChange={(e) => { this.setState({ changeModalSoftCap: e.target.value }); }} />
+                                    <div className="invalid-feedback">
                       Please enter a valid numerical soft cap.
-                  </div>
-                </FormGroup>
-              </Col>
-            </Row>
-            <Row>
-              <Col>
-                <FormGroup>
-                  <Label>Hard Cap (Hr)</Label>
-                  <Input placeholder="Soft Cap (Hr)" disabled={this.state.changeModalLoading} value={this.state.changeModalHardCap} onChange={(e) => { this.setState({ changeModalHardCap: e.target.value }); }} />
-                  <div className="invalid-feedback">
+                                    </div>
+                              </FormGroup>
+                            </Col>
+                          </Row>
+                            <Row>
+                              <Col>
+                                <FormGroup>
+                                  <Label>Hard Cap (Hr)</Label>
+                                    <Input placeholder="Soft Cap (Hr)" disabled={this.state.changeModalLoading} value={this.state.changeModalHardCap} onChange={(e) => { this.setState({ changeModalHardCap: e.target.value }); }} />
+                                      <div className="invalid-feedback">
                       Please enter a valid numerical hard cap.
-                  </div>
-                </FormGroup>
-              </Col>
-            </Row>
-            <Row>
-              <Col>
-                <FormGroup>
-                  <Label>Estimate</Label>
-                  <Input placeholder="Estimate" disabled={this.state.changeModalLoading} value={this.state.changeModalEstimate} onChange={(e) => { this.setState({ changeModalEstimate: e.target.value }); }} />
-                  <div className="invalid-feedback">
+                                      </div>
+                                </FormGroup>
+                              </Col>
+                            </Row>
+                              <Row>
+                                <Col>
+                                  <FormGroup>
+                                    <Label>Estimate</Label>
+                                      <Input placeholder="Estimate" disabled={this.state.changeModalLoading} value={this.state.changeModalEstimate} onChange={(e) => { this.setState({ changeModalEstimate: e.target.value }); }} />
+                                        <div className="invalid-feedback">
                       Please enter a valid numeric estimate.
-                  </div>
-                </FormGroup>
-              </Col>
-            </Row>
-          </ModalBody>
-          <ModalFooter>
-            <Button color="success" disabled={this.state.changeModalLoading} onClick={() => this.sendRequirmentChangeForApproval()}>Send For Approval</Button>
-          </ModalFooter>
-        </Modal>
+                                        </div>
+                                  </FormGroup>
+                                </Col>
+                              </Row>
+                  </ModalBody>
+                    <ModalFooter>
+                      <Button color="success" disabled={this.state.changeModalLoading} onClick={() => this.sendRequirmentChangeForApproval()}>Send For Approval</Button>
+                    </ModalFooter>
+            </Modal>
       </Table>
     );
   }

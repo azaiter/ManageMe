@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { View, Text, FlatList, ActivityIndicator, StyleSheet, TouchableOpacity, ScrollView, RefreshControl  } from "react-native";
+import { View, Text, FlatList, ActivityIndicator, StyleSheet, TouchableOpacity, ScrollView, RefreshControl, AppState  } from "react-native";
 import { List, ListItem, SearchBar, Card } from "react-native-elements";
 import {getRequirementsByProjectId, clockIn, clockOut} from '../utils/HttpHelper';
-import {getLocalToken} from '../utils/Auth';
+import {getLocalToken, removeLocalToken} from '../utils/Auth';
 import MaterialInitials from 'react-native-material-initials/native';
 import Avatar from 'react-native-user-avatar';
 import Spinner from 'react-native-spinkit';
@@ -29,13 +29,17 @@ export default class Project extends Component {
   async getRequirements(){
     const { page, seed } = this.state;
     let token = await getLocalToken();
-    getRequirementsByProjectId(token,this.props.projID).then(res => {
+    const res = await getRequirementsByProjectId(token,this.props.projID)
+    if(res[1] !== 200 || res[0].token){
+      await removeLocalToken();
+      Actions.reset('login');
+      return;
+    }
         this.setState({
           data: res[0],
           error: res.error || null,
           loading: false,
         });
-      });
   }
 
   async clockInOut(id){

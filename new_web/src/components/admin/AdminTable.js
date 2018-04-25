@@ -7,6 +7,7 @@ import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { getUserInfo, updateUser, deleteUser, getAllPerms, assignPrivilage } from '../../utils/HttpHelper';
 import { getLocalToken } from '../../utils/Auth';
 import { register } from '../../utils/Auth';
+import { NotificationContainer, NotificationManager } from 'react-notifications';
 
 
 class AdminTable extends React.Component {
@@ -27,10 +28,16 @@ class AdminTable extends React.Component {
   }
 
   deleteUser(rows) {
-    deleteUser(getLocalToken(), rows[0]);
-    const data = this.state.data.filter(i => rows.indexOf(i.uid) === -1);
-    this.setState({
-      data,
+    deleteUser(getLocalToken(), rows[0]).then((res) => {
+      if (res[1] !== 200) {
+        NotificationManager.error(Object.values(res[0].message), 'Error', 3000);
+        return;
+      }
+      const data = this.state.data.filter(i => rows.indexOf(i.uid) === -1);
+      this.setState({
+        data,
+      });
+      NotificationManager.success(null, 'Success', 3000);
     });
   }
 
@@ -49,6 +56,7 @@ class AdminTable extends React.Component {
         const json = res[0];
         const status = res[1];
         if (status !== 200) {
+          NotificationManager.error(Object.values(res[0].message), 'Error', 3000);
           return;
         }
         json.map(person => person.permissions = person.permissions.map(role => role.desc));
@@ -56,6 +64,7 @@ class AdminTable extends React.Component {
           data: json,
           error: null,
         });
+        NotificationManager.success(null, 'Success', 3000);
       })));
     } else {
       updateUser(localStorage.getItem('token'), row.uid, cellName, cellValue).then((res) => {
@@ -63,6 +72,7 @@ class AdminTable extends React.Component {
         const status = res[1];
         const data = this.state.data;
         if (status !== 200) {
+          NotificationManager.error(Object.values(res[0].message), 'Error', 3000);
           this.setState({
             error: Object.values(json.message),
             data,
@@ -72,6 +82,7 @@ class AdminTable extends React.Component {
           const json = res[0];
           const status = res[1];
           if (status !== 200) {
+            NotificationManager.error(Object.values(res[0].message), 'Error', 3000);
             return;
           }
           json.map(person => person.permissions = person.permissions.map(role => role.desc));
@@ -79,6 +90,7 @@ class AdminTable extends React.Component {
             data: json,
             error: null,
           });
+          NotificationManager.success(null, 'Success', 3000);
         });
       });
     }
@@ -139,7 +151,26 @@ class AdminTable extends React.Component {
   }
 
   onAfterInsertRow = (row) => {
-    register(row.first_name, row.last_name, row.email, row.phone, row.address, row.username, row.password);
+    register(row.first_name, row.last_name, row.email, row.phone, row.address, row.username, row.password, row.wage).then((res) => {
+      if (res[1] !== 200) {
+        NotificationManager.error(Object.values(res[0].message), 'Error', 3000);
+        return;
+      }
+      getUserInfo(localStorage.getItem('token')).then((res) => {
+        const json = res[0];
+        const status = res[1];
+        if (status !== 200) {
+          NotificationManager.error(Object.values(res[0].message), 'Error', 3000);
+          return;
+        }
+        json.map(person => person.permissions = person.permissions.map(role => role.desc));
+        this.setState({
+          data: json,
+          error: null,
+        });
+        NotificationManager.success(null, 'Success', 3000);
+      });
+    });
   }
 
   render() {
@@ -161,6 +192,11 @@ class AdminTable extends React.Component {
       bgColor: '#cccccc',
     };
 
+
+    function priceFormatter(cell, row) {
+      return `$${cell}`;
+    }
+
     return (
       <div>
 
@@ -174,9 +210,11 @@ class AdminTable extends React.Component {
           <TableHeaderColumn dataField="email" dataSort>E-Mail</TableHeaderColumn>
           <TableHeaderColumn dataField="phone" dataSort>Phone #</TableHeaderColumn>
           <TableHeaderColumn dataField="address" dataSort>Address</TableHeaderColumn>
+          <TableHeaderColumn dataField="wage" dataFormat={priceFormatter} dataSort>Wage</TableHeaderColumn>
           <TableHeaderColumn dataField="permissions" customEditor={{ getElement: this.customSelectField }} dataSort hiddenOnInsert>Role</TableHeaderColumn>
 
         </BootstrapTable>
+        <NotificationContainer />
       </div>
 
 

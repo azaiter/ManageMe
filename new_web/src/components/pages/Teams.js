@@ -29,7 +29,7 @@ class Teams extends Component {
   render() {
     return (
       <div>
-        <ToolBar className="float-right" refresh={this.refresh} />
+
         {this.state.comp}
       </div>
     );

@@ -49,9 +49,6 @@ class PendingRequirements extends React.Component {
       dataField: 'description',
       text: 'Project Description',
     }, {
-      dataField: 'created',
-      text: 'Created',
-    }, {
       dataField: 'actions',
       text: '',
     }];
@@ -63,7 +60,7 @@ class PendingRequirements extends React.Component {
       <Card>
         <CardBody>
           <h2 className="text-left">Pending Requirements</h2>
-          <BootstrapTable keyField="id" data={this.state.projects} columns={columns} pagination={paginationFactory(options)} />
+            <BootstrapTable keyField="id" data={this.state.projects} columns={columns} pagination={paginationFactory(options)} />
         </CardBody>
       </Card>
     );

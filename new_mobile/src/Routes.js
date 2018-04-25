@@ -22,35 +22,25 @@ export default class Routes extends Component{
 			getProjects(t).then(res => {
 				if(res[1] !== 200 || res[0].token){
 					removeLocalToken();
-					this.setState({authenticated: false, loaded: true})
 					return
 				}
-				this.setState({authenticated: true, loaded: true})
+				Actions.reset('dashboard');
 				return;
 			});
 		})
 	}
 
 	render() {
-		if(this.state.loaded && this.state.authenticated){
 			return(
 				<Router>
 					<Stack key="root" hideNavBar={false}>
-						<Scene key="dashboard" component={Dashboard} title="Projects" initial={true}/>
+						<Scene key="dashboard" component={Dashboard} title="Projects" />
+						<Scene key="login" component={Login} title="Login" initial={true}/>
 						<Scene key="project" component={Project} title="Requirements"/>
 					</Stack>
 				 </Router>
 				)
-		}else if(this.state.loaded && !this.state.authenticated){
-			return (<Router>
-					<Stack key="root" hideNavBar={false}>
-						<Scene key="login" component={Login} title="Login" initial={true}/>
-						<Scene key="dashboard" component={Dashboard} title="Projects"/>
-						<Scene key="project" component={Project} title="Requirements"/>
-					</Stack>
-				 </Router>)
 		}
-		return  (null);
 		
-	}
+	
 }

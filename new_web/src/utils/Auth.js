@@ -1,4 +1,4 @@
-import { getToken, createUser, getMyInfo } from '../utils/HttpHelper';
+import { getToken, createUser, getMyInfo, getUserInfo, getUserPerms } from '../utils/HttpHelper';
 
 function storeToken(token, expiration, uid) {
   localStorage.setItem('token', token);
@@ -41,9 +41,8 @@ export async function login(username, password) {
   });
 }
 
-
-export function register(firstName, lastName, email, phoneNum, address, username, password) {
-  return createUser(firstName, lastName, email, phoneNum, address, username, password)
+export function register(firstName, lastName, email, phoneNum, address, username, password, wage = null) {
+  return createUser(firstName, lastName, email, phoneNum, address, username, password, wage)
     .then((res) => {
       const json = res[0];
       const status = res[1];
@@ -56,3 +55,27 @@ export function register(firstName, lastName, email, phoneNum, address, username
     });
 }
 
+export async function checkPermissions(permissionUId) {
+  const resp = await getUserPerms(getLocalToken(), getLocalUid());
+  if (resp[1] !== 200) {
+    return false;
+  }
+  if (resp[0]) {
+    const hasPerm = resp[0].filter(p => p.permission_uid === permissionUId);
+    if (hasPerm.length > 0) {
+      return true;
+    }
+    return false;
+  }
+}
+
+export async function checkAdmin() {
+  const resp = await getUserPerms(getLocalToken(), getLocalUid());
+  if (resp[1] !== 200) {
+    return false;
+  }
+  if (resp[0].length === 23) {
+    return true;
+  }
+  return false;
+}

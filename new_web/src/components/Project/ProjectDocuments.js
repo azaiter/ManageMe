@@ -1,18 +1,15 @@
 /* eslint react/no-did-mount-set-state: 0 */
 import React, { Component } from 'react';
-import { BarLoader } from 'react-spinners';
 
 import {
   Card,
   CardTitle,
-  UncontrolledDropdown,
   CardText,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
   Row,
   Col,
-  Button,
+  FormGroup,
+  Input,
+  FormText, Button,
 } from 'reactstrap';
 
 class ProjectDocuments extends Component {
@@ -21,6 +18,17 @@ class ProjectDocuments extends Component {
 
     this.state = {
       loading: false,
+    };
+  }
+
+  uploadFile = () => {
+    const file = document.getElementById('uploadFile').files[0];
+    const read = new FileReader();
+
+    read.readAsBinaryString(file);
+
+    read.onloadend = function () {
+      console.log(read.result);
     };
   }
 
@@ -39,7 +47,17 @@ class ProjectDocuments extends Component {
           <hr />
           <Row>
             <Col>
-              <Button color="primary" className="float-right">Select Files To Upload</Button>
+              <FormGroup>
+                <Input type="file" name="file" id="uploadFile" />
+                <FormText color="muted">
+                Please select a file to add to the project.
+                </FormText>
+              </FormGroup>
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <Button color="success" className="float-right" onClick={() => this.uploadFile()}>Upload</Button>
             </Col>
           </Row>
         </CardText>

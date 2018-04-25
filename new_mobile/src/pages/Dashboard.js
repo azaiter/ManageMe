@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, FlatList, ActivityIndicator, ScrollView, StyleSheet, Image, TouchableOpacity, RefreshControl } from "react-native";
+import { View, Text, FlatList, ActivityIndicator, ScrollView, StyleSheet, Image, TouchableOpacity, RefreshControl, AppState } from "react-native";
 import { List, ListItem, SearchBar, Overlay, h1 } from "react-native-elements";
 import {getProjects, getMyInfo} from '../utils/HttpHelper';
 import {getLocalToken, removeLocalToken} from '../utils/Auth';
@@ -12,7 +12,6 @@ export default class Dashboard extends Component {
 
   constructor(props) {
     super(props);
-
     this.state = {
       loading: true,
       data: [],
@@ -31,9 +30,9 @@ export default class Dashboard extends Component {
     const { page, seed } = this.state;
     const t = await getLocalToken();
     const res = await getProjects(t);
-    if(res[1] !== 200){
+    if(res[1] !== 200 || res[0].token){
       await removeLocalToken();
-      console.error("Restart the app please");
+      Actions.reset('login');
       return;
     }
     this.setState({
