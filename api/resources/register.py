@@ -46,7 +46,12 @@ post_parser.add_argument(
     type=str,
     help='The user\'s address {error_msg}',
 )
-
+post_parser.add_argument(
+    'wage', dest='wage',
+    location='json', required=False,
+    #type=str,
+    help='The user\'s wage {error_msg}',
+)
 post_parser.add_argument(
     'username', dest='username',
     location='json', required=True,

@@ -4,6 +4,8 @@ import MySQLdb
 import sys
 import common.settings as settings
 import simplejson as json
+import re
+from decimal import Decimal
 
 # returns a mySQL connection object.
 def dbConnect():
@@ -62,11 +64,23 @@ def login(args):
   
 def register(args):
 	db = dbConnect()
-	cur = db.cursor()
-	cur.callproc('sp_registerUser', [(str(args.first_name)), (str(args.last_name)), (str(args.email)), (str(args.phonenum)), (str(args.address)), (str(args.username)), (str(args.password))])
-	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
-	if db:
+	
+	if args.wage is not None:
+		if re.match("^\d+?\.\d+?$", args.wage) is None and re.match("\d+", args.wage) is None:
+			args.wage = 0
+		print("wage: " + str(args.wage))
+		cur = db.cursor()
+		cur.callproc('sp_createUser', [(str(args.first_name)), (str(args.last_name)), (str(args.email)), (str(args.phonenum)), (str(args.address)), (Decimal(args.wage)), (str(args.username)), (str(args.password))])
+		r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
 		cur.close()
+	else:
+		cur = db.cursor()
+		cur.callproc('sp_registerUser', [(str(args.first_name)), (str(args.last_name)), (str(args.email)), (str(args.phonenum)), (str(args.address)), (str(args.username)), (str(args.password))])
+		r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+		cur.close()
+
+	
+	if db:
 		db.commit()
 		db.close()
 	return jsonify(r[0])
@@ -987,6 +1001,15 @@ def updateUser(args):
 		cur.callproc('sp_updateUserAddress',[str(args.user_id), str(args.address)])
 		r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
 		cur.close()
+
+	if args.wage is not None: 
+		if re.match("^\d+?\.\d+?$", args.wage) is None and re.match("\d+", args.wage) is None:
+			args.wage = 0
+		print("wage: " + str(args.wage))
+		cur = db.cursor()
+		cur.callproc('sp_updateUserWage',[str(args.user_id), Decimal(args.wage)])
+		r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+		cur.close()
 		
 	if len(r) == 0:
 		abort(400, message='No Users are found with that ID!')
@@ -1205,6 +1228,30 @@ def getWeeklyHours(args):
 	db = dbConnect()
 	cur = db.cursor()
 	cur.callproc('sp_getWeeklyHours', [args.token])
+	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+	if db:
+		cur.close()
+		db.commit()
+		db.close()
+	print(r)
+	return jsonify(r)
+	
+def getWageInfo(args):
+	db = dbConnect()
+	cur = db.cursor()
+	cur.callproc('sp_getWageInfo', [args.userID])
+	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+	if db:
+		cur.close()
+		db.commit()
+		db.close()
+	print(r)
+	return jsonify(r)
+	
+def getReqHours(args):
+	db = dbConnect()
+	cur = db.cursor()
+	cur.callproc('sp_getReqHours', [args.reqID])
 	r = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
 	if db:
 		cur.close()

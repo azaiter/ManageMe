@@ -39,7 +39,7 @@ from resources.revoke_privilage import revoke_privilage
 from resources.read_estimate_by_project_id import read_estimate_by_project_id
 from resources.read_estimate_by_req_id import read_estimate_by_req_id
 from resources.read_timecaps_by_project_id import read_timecaps_by_project_id
-from resources.create_read import getWeeklyHours, addReqComments, addProjectComments, getReqComments, getProjectComments, readUserSystemInfo, readUser, createReq, readReq, readTeam, createEstimate, readPermissions, createTeamMember, readTeamMembers, createDocument, readDocument, createProjectDocument, readProjectDocument, readDocumentFileTypes, readReqByProjID, createReqChangeRequest, acceptReqChangeRequest, rejectReqChangeRequest, customCall
+from resources.create_read import getReqHours, getWageInfo, getWeeklyHours, addReqComments, addProjectComments, getReqComments, getProjectComments, readUserSystemInfo, readUser, createReq, readReq, readTeam, createEstimate, readPermissions, createTeamMember, readTeamMembers, createDocument, readDocument, createProjectDocument, readProjectDocument, readDocumentFileTypes, readReqByProjID, createReqChangeRequest, acceptReqChangeRequest, rejectReqChangeRequest, customCall
 from resources.update_delete import updateProject, deleteProject, updateTeamLead, deleteTeamMember, deleteProjectDocument, deleteUser, updateUser, deleteReq, updateReq, deleteTeam
 from werkzeug.exceptions import HTTPException, Unauthorized, BadRequest, NotFound, _aborter
 from flask_restful.utils import http_status_message, unpack
@@ -125,6 +125,9 @@ api.add_resource(addProjectComments, '/project/comments/add', '/project/comments
 api.add_resource(getWeeklyHours, '/clock/weeklyhrs/get', '/clock/weeklyhrs/get/')
 api.add_resource(getReqComments, '/req/comments/get', '/req/comments/get/')
 api.add_resource(getProjectComments, '/project/comments/get', '/project/comments/get/')
+# getReqHours, getWageInfo
+api.add_resource(getReqHours, '/req/hours/get', '/req/hours/get')
+api.add_resource(getWageInfo, '/user/wage/get', '/user/wage/get')
 
 #util
 api.add_resource(customCall, '/util/custom', '/util/custom/')

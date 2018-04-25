@@ -244,6 +244,12 @@ update_user_parser.add_argument(
     type=str,
     help='The user\'s address {error_msg}',
 )
+update_user_parser.add_argument(
+    'wage', dest='wage',
+    location='json', required=False,
+    #type=str,
+    help='The user\'s wage {error_msg}',
+)
 
 class updateUser(Resource):
 	def post(self):

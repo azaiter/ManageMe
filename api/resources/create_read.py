@@ -728,3 +728,58 @@ class getWeeklyHours(Resource):
 
 ###########################################################################
 
+
+###########################################################################
+
+getWageInfo_post_parser = reqparse.RequestParser(bundle_errors=True)
+
+getWageInfo_post_parser.add_argument(
+    'token', dest='token',
+    location='json', required=True,
+    type=managemeutil.verify_request_token,
+    help='The user\'s token {error_msg}',
+)
+
+getWageInfo_post_parser.add_argument(
+    'userID', dest='userID',
+    location='json', required=True,
+    type=managemeutil.verify_userIDNotExist,
+    help='The userID. {error_msg}',
+)
+
+
+class getWageInfo(Resource):
+	def post(self):
+		args = getWageInfo_post_parser.parse_args()
+		return dbengine.getWageInfo(args)
+
+###########################################################################
+
+###########################################################################
+
+getReqHours_post_parser = reqparse.RequestParser(bundle_errors=True)
+
+getReqHours_post_parser.add_argument(
+    'token', dest='token',
+    location='json', required=True,
+    type=managemeutil.verify_request_token,
+    help='The user\'s token {error_msg}',
+)
+
+getReqHours_post_parser.add_argument(
+    'reqID', dest='reqID',
+    location='json', required=True,
+    type=managemeutil.verify_valid_req_id,
+    help='The reqID. {error_msg}',
+)
+
+
+class getReqHours(Resource):
+	def post(self):
+		args = getReqHours_post_parser.parse_args()
+		return dbengine.getReqHours(args)
+
+###########################################################################
+
+
+
