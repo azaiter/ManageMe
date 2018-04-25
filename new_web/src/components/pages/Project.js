@@ -151,9 +151,9 @@ class Project extends React.Component {
                 <Button hidden={!this.state.canDelete} onClick={() => this.deleteProj(this.state.projectId)} color="danger">Delete Project</Button>
         </Col>
           <Col xs="12" sm="12" md="12" lg="8" >
-            <NeedingAprovalRequirements oldRequirements={this.state.activeRequirements} newRequirements={this.state.needingAprovalRequirements} getRequirements={this.getRequirements} />
-              <ActiveRequirements requirements={this.state.activeRequirements} projectID={this.props.match.params.id} getRequirements={this.getRequirements} />
-                <CompletedRequirements requirements={this.state.completedRequirements} getRequirements={this.getRequirements} />
+            <NeedingAprovalRequirements oldRequirements={this.state.activeRequirements} newRequirements={this.state.needingAprovalRequirements} getRequirements={this.getData} />
+              <ActiveRequirements requirements={this.state.activeRequirements} projectID={this.props.match.params.id} getRequirements={this.getData} />
+                <CompletedRequirements requirements={this.state.completedRequirements} getRequirements={this.getData} />
           </Col>
             <div />
       </Row>

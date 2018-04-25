@@ -111,6 +111,7 @@ class CreateProject extends React.Component {
             creationError: 'Project exists!',
           });
         }
+        this.props.getProjects();
       }).catch((err) => {
         console.log('Error:', err);
       });
@@ -136,18 +137,18 @@ class CreateProject extends React.Component {
           <div className="form-group">
             <input type="text" className="form-control" placeholder="Project Name" errortext={this.state.name_error_text} onChange={e => this.changeValue(e, 'name')} />
           </div>
-          <div className="form-group">
-            <textarea rows="4" className="form-control" placeholder="Project Description" errortext={this.state.desc_error_text} onChange={e => this.changeValue(e, 'desc')} />
-          </div>
-          <div>
-            <select className="form-control" onChange={e => this.changeValue(e, 'teamId')}>
-              {this.props.teams.map(team => (<option value={team.uid}>{team.name}</option>))}
-            </select>
-          </div>
-          <p style={{ color: 'red' }}>{this.state.creationError}</p>
+            <div className="form-group">
+              <textarea rows="4" className="form-control" placeholder="Project Description" errortext={this.state.desc_error_text} onChange={e => this.changeValue(e, 'desc')} />
+            </div>
+              <div>
+              <select className="form-control" onChange={e => this.changeValue(e, 'teamId')}>
+                {this.props.teams.map(team => (<option value={team.uid}>{team.name}</option>))}
+              </select>
+            </div>
+              <p style={{ color: 'red' }}>{this.state.creationError}</p>
         </div>
 
-        <button className="btn btn-success" onClick={e => this.handleProjCreation(e)} disabled={this.state.disabled}>Submit</button>
+          <button className="btn btn-success" onClick={e => this.handleProjCreation(e)} disabled={this.state.disabled}>Submit</button>
       </div>
 
     );

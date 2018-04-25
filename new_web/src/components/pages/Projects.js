@@ -97,33 +97,33 @@ class Projects extends Component {
                 <PendingRequirements />
               </Col>
             </Row>
-            <Row>
-              <Col>
-                <MyProjects projects={this.state.projects} />
-              </Col>
-            </Row>
-            <Row>
-              <Col>
-                <Button className="float-right btn-success" onClick={() => this.toggleModal()}>Create Project</Button>
-              </Col>
-            </Row>
+              <Row>
+                <Col>
+                  <MyProjects projects={this.state.projects} />
+                </Col>
+              </Row>
+                <Row>
+                  <Col>
+                    <Button className="float-right btn-success" onClick={() => this.toggleModal()}>Create Project</Button>
+                  </Col>
+                </Row>
           </Col>
-          <Col lg="4">
-            <RecentProjects />
-            <RecentRequirements />
-          </Col>
+            <Col lg="4">
+              <RecentProjects />
+                <RecentRequirements />
+            </Col>
         </Row>
 
-        <Modal backdrop="static" keyboard={false} isOpen={this.state.modalIsOpen} toggle={this.toggleModal} centered size={this.state.modalSize}>
-          <div className="modal-loading-bar">
-            <BarLoader width="100%" loading={this.state.modalLoading} height={5} color="#6D6D6D" />
-          </div>
-          <ModalHeader toggle={this.toggleModal}>Create A Project
-          </ModalHeader>
-          <ModalBody>
-            <CreateProject toggleModal={this.toggleModal} updateModalLoading={this.updateModalLoading} teams={this.state.teams} />
-          </ModalBody>
-        </Modal>
+          <Modal backdrop="static" keyboard={false} isOpen={this.state.modalIsOpen} toggle={this.toggleModal} centered size={this.state.modalSize}>
+            <div className="modal-loading-bar">
+              <BarLoader width="100%" loading={this.state.modalLoading} height={5} color="#6D6D6D" />
+            </div>
+              <ModalHeader toggle={this.toggleModal}>Create A Project
+              </ModalHeader>
+                <ModalBody>
+                  <CreateProject toggleModal={this.toggleModal} updateModalLoading={this.updateModalLoading} teams={this.state.teams} getProjects={this.getProjs} />
+                </ModalBody>
+          </Modal>
       </div>
     );
   }
