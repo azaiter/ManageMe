@@ -8,11 +8,11 @@ import {
   Button,
 } from 'reactstrap';
 
-import ProjectComments from '../project/ProjectComments';
-import ActiveRequirements from '../project/ActiveRequirements';
-import ProjectDocuments from '../project/ProjectDocuments';
-import CompletedRequirements from '../project/CompletedRequirements';
-import NeedingAprovalRequirements from '../project/NeedingAprovalRequirements';
+import ProjectComments from '../Project/ProjectComments';
+import ActiveRequirements from '../Project/ActiveRequirements';
+import ProjectDocuments from '../Project/ProjectDocuments';
+import CompletedRequirements from '../Project/CompletedRequirements';
+import NeedingAprovalRequirements from '../Project/NeedingAprovalRequirements';
 
 import { getRequirementsByProjectId, getProjects, deleteProject, AddProjectComment, GetProjectComments } from '../../utils/HttpHelper';
 import { getLocalToken, checkPermissions } from '../../utils/Auth';
