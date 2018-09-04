@@ -4,7 +4,7 @@ services:
     container_name: manageme-mysql
     image: mysql:5.7.22
     volumes:
-     - ./manageme-mysql-docker/:/docker-entrypoint-initdb.d/
+     - ./mysql/:/docker-entrypoint-initdb.d/
     ports:
      - "3306:3306"
     environment:
@@ -14,7 +14,7 @@ services:
     depends_on:
      - mysql
     container_name: manageme-api
-    build: ./manageme-api-docker
+    build: ./api
     volumes:
      - ./settings.py/:/src/common/settings.py
     ports:
@@ -29,7 +29,7 @@ services:
      - "8080:8080"
   web:
     container_name: manageme-web
-    build: ./manageme-web-docker
+    build: ./web
     volumes:
      - ./managemeSettings.js/:/usr/src/app/src/utils/managemeSettings.js
     ports:
@@ -38,6 +38,6 @@ services:
     depends_on:
      - mysql
     container_name: manageme-notifier
-    build: ./manageme-notifier-docker
+    build: ./notifier
     volumes:
      - ./managemeSettings.js/:/usr/src/app/managemeSettings.js
