@@ -1,5 +1,0 @@
-dbEngineFileName = "db_mysql"
-dbHost = "mysql.manageme.tech"
-dbUser = "managemeadmin"
-dbPasswd = "UAdg*5Zi"
-dbDBName = "manageme_tech"

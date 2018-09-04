@@ -1,11 +1,24 @@
 var mysql      = require('mysql');
 var async = require("async");
+const ManageMeSettings = require("./managemeSettings.js");
+
+function wait(ms) {
+  var start = Date.now(),
+      now = start;
+  while (now - start < ms) {
+    now = Date.now();
+  }
+}
+
+console.log("waiting for 120 seconds to launch the notifier ....")
+wait(120000);
+
 
 var connection = mysql.createConnection({
-  host     : 'mysql.manageme.tech',
-  user     : 'managemeadmin',
-  password : 'UAdg*5Zi',
-  database : 'manageme_tech'
+  host     : ManageMeSettings.dbHost,
+  user     : ManageMeSettings.dbUser,
+  password : ManageMeSettings.dbPasswd,
+  database : ManageMeSettings.dbDBName
 });
 
 connection.connect();

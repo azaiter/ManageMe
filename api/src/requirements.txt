@@ -1,0 +1,9 @@
+flask
+flask-restful
+mysqlclient
+validate_email
+Flask-HTTPAuth
+flask-cors
+flask-WTF
+simplejson
+Werkzeug

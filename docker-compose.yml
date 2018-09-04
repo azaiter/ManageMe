@@ -1,0 +1,43 @@
+version: '3'
+services:
+  mysql:
+    container_name: manageme-mysql
+    image: mysql:5.7.22
+    volumes:
+     - ./manageme-mysql-docker/:/docker-entrypoint-initdb.d/
+    ports:
+     - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+     #sudo docker-compose stop manageme-mysql; docker-compose rm manageme-mysql; docker-compose build manageme-mysql; docker-compose up manageme-mysql
+  api:
+    depends_on:
+     - mysql
+    container_name: manageme-api
+    build: ./manageme-api-docker
+    volumes:
+     - ./settings.py/:/src/common/settings.py
+    ports:
+     - "8321:8321"
+     #sudo docker-compose stop manageme-api; docker-compose rm manageme-api; docker-compose build manageme-api; docker-compose up manageme-api
+  adminer:
+    depends_on:
+     - mysql
+    container_name: manageme-adminer
+    image: adminer
+    ports:
+     - "8080:8080"
+  web:
+    container_name: manageme-web
+    build: ./manageme-web-docker
+    volumes:
+     - ./managemeSettings.js/:/usr/src/app/src/utils/managemeSettings.js
+    ports:
+     - "8081:8081"
+  notifier:
+    depends_on:
+     - mysql
+    container_name: manageme-notifier
+    build: ./manageme-notifier-docker
+    volumes:
+     - ./managemeSettings.js/:/usr/src/app/managemeSettings.js
