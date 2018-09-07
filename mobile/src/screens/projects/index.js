@@ -11,8 +11,13 @@ import {
   Text
 } from "native-base";
 import styles from "./styles";
-
+const Auth = require("../../util/Auth");
 class Projects extends Component {
+  constructor(props){
+    super(props);
+    Auth.setIsLoginStateOnScreenEntry(this, {navigate:"Projects"});
+  }
+
   render() {
     return (
       <Container style={styles.container}>
