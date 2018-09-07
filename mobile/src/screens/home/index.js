@@ -9,7 +9,7 @@ const launchscreenLogo = require("../../../assets/logo-kitchen-sink.png");
 const ApiCalls = require("../../util/ApiCalls");
 const Auth = require("../../util/Auth");
 
-class Home extends Component {
+class Home extends Component { 
   constructor(props) {
     super(props);
     this.state = {
