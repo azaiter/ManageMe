@@ -28,7 +28,7 @@ class Home extends Component {
     let apiResult = await ApiCalls.getToken(this.state.username, this.state.password);
     let handledApiResults = await ApiCalls.handleAPICallResult(apiResult, this);
     if (handledApiResults){
-      await Auth.saveItem("loginTokenObj", handledApiResults);
+      await Auth.setLocalToken(handledApiResults);
       this.setState({loggedIn: true});
       this.props.navigation.navigate("Projects");
     }
