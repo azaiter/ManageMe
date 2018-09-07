@@ -1,8 +1,14 @@
 import { AsyncStorage } from "react-native";
 
+export const loginTokenASKey = "@app:loginTokenObj";
+
 export async function getLocalToken() {
-    let token = await AsyncStorage.getItem("@app:session");
+    let token = await AsyncStorage.getItem(loginTokenASKey);
     return token;
+}
+
+export async function setLocalToken(token) {
+    await saveItem(loginTokenASKey, token);
 }
 
 export async function getItem(key) {
@@ -20,7 +26,7 @@ export async function getItem(key) {
 }
 
 export async function setIsLoginStateOnScreenEntry(component, opts) {
-    let sessionObj = await getItem("loginTokenObj");
+    let sessionObj = await getItem(loginTokenASKey);
     let needToLogin = true;
     // console.log("session obj:", sessionObj);
     if (sessionObj) {
@@ -32,6 +38,7 @@ export async function setIsLoginStateOnScreenEntry(component, opts) {
             if (opts.navigate){
                 component.props.navigation.navigate(opts.navigate);
             }
+            // console.log("tok:", await getLocalToken());
         }
     }
     if (needToLogin){
@@ -40,7 +47,7 @@ export async function setIsLoginStateOnScreenEntry(component, opts) {
 }
 
 export async function removeLocalToken() {
-    await AsyncStorage.removeItem("@app:session");
+    await AsyncStorage.removeItem(loginTokenASKey);
 }
 
 export async function saveItem(item, selectedValue) {
