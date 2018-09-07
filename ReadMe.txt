@@ -4,7 +4,7 @@ Dockerized ManageMe software package includes:
 3- ManageMe Notification background service
 4- ManageMe Web interface
 5- Adminer to manage the MySQL database using a gui
-
+6- DELETE ME
 
 to install:
 - Install Docker package
