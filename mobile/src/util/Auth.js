@@ -7,6 +7,11 @@ export async function getLocalToken() {
     return token;
 }
 
+export async function logout(component) {
+    await removeLocalToken();
+    component.setState({ loggedIn: false });
+}
+
 export async function setLocalToken(token) {
     await saveItem(loginTokenASKey, token);
 }
@@ -25,25 +30,37 @@ export async function getItem(key) {
         });
 }
 
-export async function setIsLoginStateOnScreenEntry(component, opts) {
-    let sessionObj = await getItem(loginTokenASKey);
-    let needToLogin = true;
-    // console.log("session obj:", sessionObj);
-    if (sessionObj) {
-        let expirationDate = new Date(sessionObj.expire);
-        if (new Date().getTime() < expirationDate.getTime()) {
-            needToLogin = false;
-            // console.log("valid token");
-            component.setState({ loggedIn: true });
-            if (opts.navigate){
-                component.props.navigation.navigate(opts.navigate);
-            }
-            // console.log("tok:", await getLocalToken());
+export async function setIsLoginStateOnScreenEntry(component, opts={}) {
+    let isClientLoggedIn = await isLoggedIn();
+    if (isClientLoggedIn){
+        component.setState({ loggedIn: true });
+        if (opts.navigate){
+            component.props.navigation.navigate(opts.navigate);
         }
     }
-    if (needToLogin){
-        component.props.navigation.navigate("Home");
+    else {
+        if (!opts.dontGoHome){
+            component.props.navigation.navigate("Home");
+        }
     }
+}
+
+export async function isLoggedIn() {
+    return new Promise(async (resolve, reject)=>{
+        let sessionObj = await getItem(loginTokenASKey);
+        if (sessionObj) {
+            let expirationDate = new Date(sessionObj.expire);
+            if (new Date().getTime() < expirationDate.getTime()) {
+                resolve(true);
+            }
+            else {
+                resolve(false);
+            }
+        }
+        else {
+            resolve(false);
+        }
+    });
 }
 
 export async function removeLocalToken() {
