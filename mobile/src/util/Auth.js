@@ -1,15 +1,20 @@
 import { AsyncStorage } from "react-native";
 
+const ApiCalls = require("./ApiCalls");
+
 export const loginTokenASKey = "@app:loginTokenObj";
+export const userPermissionsASKey = "@app:userPermissions";
 
 export async function getLocalToken() {
-    let token = await AsyncStorage.getItem(loginTokenASKey);
+    let token = await getItem(loginTokenASKey);
     return token;
 }
 
 export async function logout(component) {
     await removeLocalToken();
+    await AsyncStorage.removeItem(userPermissionsASKey);
     component.setState({ loggedIn: false });
+    component.setState({ userPermissions: false });
 }
 
 export async function setLocalToken(token) {
@@ -33,14 +38,48 @@ export async function getItem(key) {
 export async function setIsLoginStateOnScreenEntry(component, opts={}) {
     let isClientLoggedIn = await isLoggedIn();
     if (isClientLoggedIn){
-        component.setState({ loggedIn: true });
+        if (component && component.state && !component.state.loggedIn){
+            component.setState({ loggedIn: true }); // only update state when needed
+            if (opts.setUserPermissions){
+                setUserPermissionsOnComponent(component);
+            }
+        }
         if (opts.navigate){
             component.props.navigation.navigate(opts.navigate);
         }
     }
     else {
+        if (component && component.state && component.state.loggedIn){
+            component.setState({ loggedIn: false }); // only update state when needed
+            if (opts.setUserPermissions){
+                setUserPermissionsOnComponent(component);
+            }
+        }
         if (!opts.dontGoHome){
             component.props.navigation.navigate("Home");
+        }
+    }
+}
+
+export async function setUserPermissionsOnComponent(component) {
+    let isClientLoggedIn = await isLoggedIn();
+    if (isClientLoggedIn){
+        let localToken = await getLocalToken();
+        let apiResult = await ApiCalls.getUserPerms(localToken.token, localToken.uid);
+        let handledApiResults = await ApiCalls.handleAPICallResult(apiResult, component);
+        if (handledApiResults){
+            //console.log("UserPermissions: ", handledApiResults);
+            await saveItem(userPermissionsASKey, handledApiResults);
+            if (component && component.state && !component.state.userPermissions){
+                //console.log("setting state main");
+                component.setState({ userPermissions: handledApiResults }); // only update state when needed
+            }
+        }
+    }
+    else {
+        if (component && component.state && component.state.userPermissions){
+            //console.log("setting state else");
+            component.setState({ userPermissions: false }); // only update state when needed
         }
     }
 }

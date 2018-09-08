@@ -419,7 +419,7 @@ CREATE PROCEDURE `sp_readPermissions` ()  NO SQL
 SELECT `uid` AS `value`, `desc` as `label` FROM Permission$$
 
 CREATE PROCEDURE `sp_readPermissionsByID` (IN `u_id` INT)  NO SQL
-SELECT * FROM UserPermission WHERE user_uid = u_id$$
+SELECT * FROM Permission WHERE uid in (select permission_uid from UserPermission where user_uid = u_id)$$
 
 CREATE PROCEDURE `sp_readPermissionsByIDChiipi` (IN `u_id` INT)  NO SQL
 SELECT * FROM Permission WHERE uid in (select permission_uid from UserPermission where user_uid = u_id)$$
