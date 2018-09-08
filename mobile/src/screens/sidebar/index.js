@@ -14,6 +14,7 @@ import {
 } from "native-base";
 import styles from "./style";
 const Auth = require("../../util/Auth");
+const ApiCalls = require("../../util/ApiCalls");
 
 const drawerCover = require("../../../assets/drawer-cover.png");
 const drawerImage = require("../../../assets/logo-kitchen-sink.png");
@@ -224,7 +225,6 @@ class SideBar extends Component {
       shadowOffsetWidth: 1,
       shadowRadius: 4
     };
-    Auth.setIsLoginStateOnScreenEntry(this, {dontGoHome: true});
   }
 
   handleAction = async (actionType) => {
@@ -252,7 +252,8 @@ class SideBar extends Component {
   }
 
   render() {
-    Auth.setIsLoginStateOnScreenEntry(this, {dontGoHome: true});
+    Auth.setIsLoginStateOnScreenEntry(this, {dontGoHome: true, setUserPermissions :true});
+    // here you add permissions logic to edit menu if needed
     let dataListToShow = [];
     if (this.state.loggedIn){
       dataListToShow = datas;
