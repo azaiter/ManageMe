@@ -13,17 +13,21 @@ import {
   Separator
 } from "native-base";
 import styles from "./style";
+const Auth = require("../../util/Auth");
 
 const drawerCover = require("../../../assets/drawer-cover.png");
 const drawerImage = require("../../../assets/logo-kitchen-sink.png");
 
-const datas = [
+const dataOnlyLogin = [
   {
     name: "Login",
     route: "Home",
     icon: "ios-log-in",
     bg: "#C5F442"
-  },
+  }
+];
+
+const datas = [
   {
     name: "Admin",
     route: "Admin",
@@ -46,6 +50,13 @@ const datas = [
     name: "Teams",
     route: "Teams",
     icon: "ios-people",
+    bg: "#C5F442"
+  },
+  {
+    name: "Logout",
+    route: false,
+    action: "logout",
+    icon: "ios-log-out",
     bg: "#C5F442"
   }
 ];
@@ -213,9 +224,42 @@ class SideBar extends Component {
       shadowOffsetWidth: 1,
       shadowRadius: 4
     };
+    Auth.setIsLoginStateOnScreenEntry(this, {dontGoHome: true});
+  }
+
+  handleAction = async (actionType) => {
+    switch (actionType) {
+      case "logout":
+        await Auth.logout(this);
+        Auth.setIsLoginStateOnScreenEntry(this);
+        break;
+      default:
+        break;
+    }
+  }
+
+  handleNavigation = (screen) => {
+    this.props.navigation.navigate(screen);
+  }
+
+  handleSideBarDataObj = (data) => {
+    if (data.route){
+      this.handleNavigation(data.route);
+    }
+    else if ("action" in data && data.action){
+      this.handleAction(data.action);
+    }
   }
 
   render() {
+    Auth.setIsLoginStateOnScreenEntry(this, {dontGoHome: true});
+    let dataListToShow = [];
+    if (this.state.loggedIn){
+      dataListToShow = datas;
+    }
+    else {
+      dataListToShow = dataOnlyLogin;
+    }
     return (
       <Container>
         <Content
@@ -228,12 +272,12 @@ class SideBar extends Component {
             <Text>Main Program</Text>
           </Separator>
           <List
-            dataArray={datas}
+            dataArray={dataListToShow}
             renderRow={data =>
               <ListItem
                 button
                 noBorder
-                onPress={() => this.props.navigation.navigate(data.route)}
+                onPress={()=> this.handleSideBarDataObj(data)}
               >
                 <Left>
                   <Icon
@@ -271,7 +315,7 @@ class SideBar extends Component {
               <ListItem
                 button
                 noBorder
-                onPress={() => this.props.navigation.navigate(data.route)}
+                onPress={()=> this.handleSideBarDataObj(data)}
               >
                 <Left>
                   <Icon
