@@ -33,6 +33,9 @@ class Projects extends Component {
           <Button onPress={() => this.props.navigation.goBack()}>
             <Text>Back</Text>
           </Button>
+          <Button onPress={() => alert("This is Card Header")}> 
+            <Text>Click Me ... </Text>
+          </Button>
         </Content>
       </Container>
     );
