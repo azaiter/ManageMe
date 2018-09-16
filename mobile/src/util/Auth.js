@@ -66,7 +66,7 @@ export async function setUserPermissionsOnComponent(component) {
     let isClientLoggedIn = await isLoggedIn();
     if (isClientLoggedIn){
         let localToken = await getLocalToken();
-        let apiResult = await ApiCalls.getUserPerms(localToken.token, localToken.uid);
+        let apiResult = await ApiCalls.getUserPerms(localToken.uid);
         let handledApiResults = await ApiCalls.handleAPICallResult(apiResult, component);
         if (handledApiResults){
             //console.log("UserPermissions: ", handledApiResults);
