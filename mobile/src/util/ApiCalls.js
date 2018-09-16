@@ -1,5 +1,4 @@
 const apiURL = "https://api.manageme.tech";
-// const apiURL = "https://192.168.1.2";
 const Auth = require("../util/Auth");
 
 import { Toast } from "native-base";
@@ -217,9 +216,12 @@ export async function getAllPerms() {
 import "babel-polyfill";
 
 export async function createUser(first, last, mail, num, addr, user, pass, wage = null) {
-    return await callFetch({
-        url: "/user/create",
-        body: {
+    // callFetch incompatible
+    const res = await fetch(apiURL + "/user/create", {
+        method: "POST",
+        headers:
+            { "content-type": "application/json" },
+        body: JSON.stringify({
             first_name: first,
             last_name: last,
             email: mail,
@@ -228,8 +230,10 @@ export async function createUser(first, last, mail, num, addr, user, pass, wage 
             username: user,
             password: pass,
             wage
-        }
+        }),
     });
+    const json = await res.json();
+    return [json, res.status];
 }
 
 export async function createProject(projectName, projectDesc, teamId) {
