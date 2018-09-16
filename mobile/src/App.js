@@ -125,12 +125,14 @@ import Admin from "./screens/admin";
 import Projects from "./screens/projects";
 import Reports from "./screens/reports";
 import Teams from "./screens/teams";
+import Permissions from "./screens/permissions";
 
 const Drawer = DrawerNavigator(
   {
     // app screens
     Admin: { screen: Admin },
     Projects: { screen: Projects },
+    Permissions: { screen: Permissions },
     Reports: { screen: Reports },
     Teams: { screen: Teams },
     Home: { screen: Home },
@@ -162,7 +164,7 @@ const Drawer = DrawerNavigator(
     Actionsheet: { screen: Actionsheet }
   },
   {
-    initialRouteName: "Home",
+    initialRouteName: "Projects",
     contentOptions: {
       activeTintColor: "#e91e63"
     },

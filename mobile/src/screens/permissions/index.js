@@ -9,16 +9,27 @@ import {
   Right,
   Body,
   Text,
-  Icon
+  Icon,
+  List,
+  ListItem
 } from "native-base";
 import styles from "./styles";
 const Auth = require("../../util/Auth");
-class Projects extends Component {
+class Permissions extends Component {
   constructor(props){
     super(props);
-    Auth.setIsLoginStateOnScreenEntry(this, {navigate:"Projects"});
+    this.state = {};
+    Auth.setIsLoginStateOnScreenEntry(this, {navigate:"Permissions", setUserPermissions: true});
+    this.getPermissions.bind(this);
   }
-
+  getPermissions(){
+    if (this.state && this.state.userPermissions){
+      return this.state.userPermissions;
+    }
+    else {
+      return [];
+    }
+  }
   render() {
     return (
       <Container style={styles.container}>
@@ -32,12 +43,23 @@ class Projects extends Component {
             </Button>
           </Left>
           <Body>
-            <Title>Projects</Title>
+            <Title>My Permissions</Title>
           </Body>
           <Right />
         </Header>
 
         <Content padder>
+        <List
+            dataArray={this.getPermissions()}
+            renderRow={data =>
+              <ListItem>
+                <Left>
+                  <Text>
+                    {data.desc}
+                  </Text>
+                </Left>
+              </ListItem>}
+          />
           <Button onPress={() => this.props.navigation.goBack()}>
             <Text>Back</Text>
           </Button>
@@ -47,4 +69,4 @@ class Projects extends Component {
   }
 }
 
-export default Projects;
+export default Permissions;

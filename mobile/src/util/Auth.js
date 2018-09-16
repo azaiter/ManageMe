@@ -39,7 +39,8 @@ export async function setIsLoginStateOnScreenEntry(component, opts={}) {
     let isClientLoggedIn = await isLoggedIn();
     if (isClientLoggedIn){
         if (component && component.state && !component.state.loggedIn){
-            component.setState({ loggedIn: true }); // only update state when needed
+            let userToken = await getLocalToken();
+            component.setState({ loggedIn: true, userTokenObj: userToken }); // only update state when needed
             if (opts.setUserPermissions){
                 setUserPermissionsOnComponent(component);
             }
