@@ -18,6 +18,7 @@ const ApiCalls = require("../../util/ApiCalls");
 
 const drawerCover = require("../../../assets/drawer-cover.png");
 const drawerImage = require("../../../assets/logo-kitchen-sink.png");
+const UserInfo = require("../../components/UserInfo");
 
 const dataOnlyLogin = [
   {
@@ -51,6 +52,12 @@ const datas = [
     name: "Teams",
     route: "Teams",
     icon: "ios-people",
+    bg: "#C5F442"
+  },
+  {
+    name: "My Permissions",
+    route: "Permissions",
+    icon: "ios-wifi",
     bg: "#C5F442"
   },
   {
@@ -268,7 +275,15 @@ class SideBar extends Component {
           style={{ flex: 1, backgroundColor: "#fff", top: -1 }}
         >
           <Image source={drawerCover} style={styles.drawerCover} />
-          <Image square style={styles.drawerImage} source={drawerImage} />
+          {
+            this.state.loggedIn?
+              <UserInfo
+                style={styles.userInfo}
+                username={this.state.userTokenObj.first_name + " " + this.state.userTokenObj.last_name}
+                email={this.state.userTokenObj.email}
+              />:
+              <Image square style={styles.drawerImage} source={drawerImage} />
+          }
           <Separator bordered>
             <Text>Main Program</Text>
           </Separator>

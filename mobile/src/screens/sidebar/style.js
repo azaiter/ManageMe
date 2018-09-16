@@ -20,6 +20,11 @@ export default {
     height: 27,
     resizeMode: "cover"
   },
+  userInfo: {
+    position: "absolute",
+    left: Platform.OS === "android" ? deviceWidth / 13 : deviceWidth / 12,
+    top: Platform.OS === "android" ? deviceHeight / 15 : deviceHeight / 14,
+  },
   text: {
     fontWeight: Platform.OS === "ios" ? "500" : "400",
     fontSize: 16,

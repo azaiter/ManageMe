@@ -8,7 +8,8 @@ import {
   Left,
   Right,
   Body,
-  Text
+  Text,
+  Icon
 } from "native-base";
 import styles from "./styles";
 
@@ -17,7 +18,14 @@ class Reports extends Component {
     return (
       <Container style={styles.container}>
         <Header>
-          <Left />
+          <Left>
+            <Button
+              transparent
+              onPress={() => this.props.navigation.navigate("DrawerOpen")}
+            >
+              <Icon name="menu" />
+            </Button>
+          </Left>
           <Body>
             <Title>Reports</Title>
           </Body>
