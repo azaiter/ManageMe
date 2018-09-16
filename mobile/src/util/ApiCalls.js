@@ -18,7 +18,7 @@ callFetch = async function (params) {
             bodyObj.token = tok.token;
         }
         if(params.body) {
-            Object.assigUn(bodyObj, params.body);
+            Object.assign(bodyObj, params.body);
         }
         const res = await fetch(apiURL + params.url, {
             method: params.method || "POST",
