@@ -1,6 +1,34 @@
 const apiURL = "https://api.manageme.tech";
+// const apiURL = "https://192.168.1.2";
+const Auth = require("../util/Auth");
 
 import { Toast } from "native-base";
+
+callFetch = async function (params) {
+    if(params.url) {
+        let tok = await Auth.getLocalToken();
+        let bodyObj = {};
+        if(params.paramArr) {
+            if(params.paramArr.constructor === Array) {
+                bodyObj.paramArr = [tok.token].concat(params.paramArr);
+            } else {
+                bodyObj.paramArr = [tok.token];
+            }
+        } else {
+            bodyObj.token = tok.token;
+        }
+        if(params.body) {
+            Object.assigUn(bodyObj, params.body);
+        }
+        const res = await fetch(apiURL + params.url, {
+            method: params.method || "POST",
+            headers: { "content-type": params.contentType || "application/json" },
+            body: JSON.stringify(bodyObj)
+        });
+        const json = await res.json();
+        return [json, res.status];
+    }
+}
 
 export function getErrorsListFromObj(obj) {
     let arrToReturn = [];
@@ -51,246 +79,147 @@ export async function getToken(user, pass) {
     return [json, res.status];
 }
 
-export async function getTime(tok) {
-    const res = await fetch(apiURL + "/clock/get", {
-        method: "POST",
-        headers:
-            { "content-type": "application/json" },
-        body: JSON.stringify({
-            token: tok,
-        }),
+export async function getTime() {
+    return await callFetch({
+        url: "/clock/get"
     });
-    const json = await res.json();
-    return [json, res.status];
 }
 
-export async function clockIn(tok, reqID) {
-    const res = await fetch(apiURL + "/clock/in", {
-        method: "POST",
-        headers:
-            { "content-type": "application/json" },
-        body: JSON.stringify({
-            token: tok,
-            req_id: reqID,
-        }),
+export async function clockIn(reqID) {    
+    return this.callFetch({
+        url: "/clock/in",
+        body: {
+            req_id: reqID
+        }
     });
-    const json = await res.json();
-    return [json, res.status];
 }
 
-export async function clockOut(tok, reqID) {
-    const res = await fetch(apiURL + "/clock/out", {
-        method: "POST",
-        headers:
-            { "content-type": "application/json" },
-        body: JSON.stringify({
-            token: tok,
-            req_id: reqID,
-        }),
+export async function clockOut(reqID) {
+    return await callFetch({
+        url: "/clock/out",
+        body: {
+            req_id: reqID
+        }
     });
-    const json = await res.json();
-    return [json, res.status];
 }
 
-export async function getEstimate(tok, projId) {
-    const res = await fetch(apiURL + "/project/estimate/get", {
-        method: "POST",
-        headers:
-            { "content-type": "application/json" },
-        body: JSON.stringify({
-            token: tok,
-            project_id: projId,
-        }),
+export async function getEstimate(projId) {
+    return this.callFetch({
+        url: "/project/estimate/get",
+        body: {
+            project_id: projId
+        }
     });
-    const json = await res.json();
-    return [json, res.status];
 }
 
-export async function getRequirementEstimates(tok, reqId) {
-    const res = await fetch(apiURL + "/requirement/estimate/get", {
-        method: "POST",
-        headers:
-            { "content-type": "application/json" },
-        body: JSON.stringify({
-            token: tok,
-            req_id: reqId,
-        }),
+export async function getRequirementEstimates(reqId) {
+    return this.callFetch({
+        url: "/requirement/estimate/get",
+        body: {
+            req_id: reqId
+        }
     });
-    const json = await res.json();
-    return [json, res.status];
 }
 
-export async function getTimeCaps(tok, projId) {
-    const res = await fetch(apiURL + "/project/timecaps/get", {
-        method: "POST",
-        headers:
-            { "content-type": "application/json" },
-        body: JSON.stringify({
-            token: tok,
-            project_id: projId,
-        }),
+export async function getTimeCaps(projId) {
+    return this.callFetch({
+        url: "/project/timecaps/get",
+        body: {
+            project_id: projId
+        }
     });
-    const json = await res.json();
-    return [json, res.status];
 }
 
-export async function getProjects(tok) {
-    const res = await fetch(apiURL + "/project/get", {
-        method: "POST",
-        headers:
-            { "content-type": "application/json" },
-        body: JSON.stringify({
-            token: tok,
-        }),
+export async function getProjects() {
+    return await callFetch({
+        url: "/project/get"
     });
-    const json = await res.json();
-    return [json, res.status];
 }
 
-export async function getProjectHours(tok, projId) {
-    const res = await fetch(apiURL + "/project/hours/get", {
-        method: "POST",
-        headers:
-            { "content-type": "application/json" },
-        body: JSON.stringify({
-            token: tok,
-            uid: projId,
-        }),
+export async function getProjectHours(projId) {
+    return await callFetch({
+        url: "/project/hours/get",
+        body: {
+            uid: projId
+        }
     });
-    const json = await res.json();
-    return [json, res.status];
 }
 
-export async function getMyInfo(tok) {
-    const res = await fetch(apiURL + "/util/custom", {
-        method: "POST",
-        headers:
-            { "content-type": "application/json" },
-        body: JSON.stringify({
-            paramArr: [tok],
-            spName: "sp_getMyInfo",
-        }),
+export async function getMyInfo() {
+    return await callFetch({
+        url: "/util/custom",
+        body: {
+            spName: "sp_getMyInfo"
+        }
     });
-    const json = await res.json();
-    return [json, res.status];
 }
 
-export async function getUserInfoByUserId(tok, userId) {
-    const res = await fetch(apiURL + "/user/get", {
-        method: "POST",
-        headers:
-            { "content-type": "application/json" },
-        body: JSON.stringify({
-            token: tok,
-            userID: userId,
-        }),
+export async function getUserInfoByUserId(userId) {
+    return await callFetch({
+        url: "/user/get",
+        body: {
+            userID: userId
+        }
     });
-    const json = await res.json();
-    return [json, res.status];
 }
 
-export async function getUserInfo(tok) {
-    const res = await fetch(apiURL + "/user/get", {
-        method: "POST",
-        headers:
-            { "content-type": "application/json" },
-        body: JSON.stringify({
-            token: tok,
-        }),
+export async function getUserInfo() {
+    return await callFetch({
+        url: "/user/get"
     });
-    const json = await res.json();
-    return [json, res.status];
 }
 
-export async function getRequirementById(tok, reqId) {
-    const res = await fetch(apiURL + "/requirement/get", {
-        method: "POST",
-        headers:
-            { "content-type": "application/json" },
-        body: JSON.stringify({
-            token: tok,
-            reqID: reqId,
-        }),
+export async function getRequirementById(reqId) {
+    return await callFetch({
+        url: "/requirement/get",
+        body: {
+            reqID: reqId
+        }
     });
-    const json = await res.json();
-    return [json, res.status];
 }
 
-export async function getRequirements(tok) {
-    const res = await fetch(apiURL + "/requirement/get", {
-        method: "POST",
-        headers:
-            { "content-type": "application/json" },
-        body: JSON.stringify({
-            token: tok,
-        }),
+export async function getRequirements() {
+    return await callFetch({
+        url: "/requirement/get"
     });
-    const json = await res.json();
-    return [json, res.status];
 }
 
-export async function getTeamById(tok, teamId) {
-    const res = await fetch(apiURL + "/team/get", {
-        method: "POST",
-        headers:
-            { "content-type": "application/json" },
-        body: JSON.stringify({
-            token: tok,
-            teamID: teamId,
-        }),
+export async function getTeamById(teamId) {
+    return await callFetch({
+        url: "/team/get",
+        body: {
+            teamID: teamId
+        }
     });
-    const json = await res.json();
-    return [json, res.status];
 }
 
-export async function getTeams(tok) {
-    const res = await fetch(apiURL + "/team/get", {
-        method: "POST",
-        headers:
-            { "content-type": "application/json" },
-        body: JSON.stringify({
-            token: tok,
-        }),
+export async function getTeams() {
+    return await callFetch({
+        url: "/team/get"
     });
-    const json = await res.json();
-    return [json, res.status];
 }
 
-export async function getRequirementsByProjectId(tok, projectId) {
-    const res = await fetch(apiURL + "/project/req/get", {
-        method: "POST",
-        headers:
-            { "content-type": "application/json" },
-        body: JSON.stringify({
-            token: tok,
-            project_uid: projectId,
-        }),
+export async function getRequirementsByProjectId(projectId) {
+    return await callFetch({
+        url: "/project/req/get",
+        body: {
+            project_uid: projectId
+        }
     });
-    const json = await res.json();
-    return [json, res.status];
 }
 
-export async function getAllPerms(token) {
-    const res = await fetch(apiURL + "/privilage/get", {
-        method: "POST",
-        headers:
-            { "content-type": "application/json" },
-        body: JSON.stringify({
-            token,
-        }),
+export async function getAllPerms() {
+    return await callFetch({
+        url: "/privilage/get"
     });
-    const json = await res.json();
-    return [json, res.status];
 }
 
 import "babel-polyfill";
 
 export async function createUser(first, last, mail, num, addr, user, pass, wage = null) {
-    const res = await fetch(apiURL + "/user/create", {
-        method: "POST",
-        headers:
-            { "content-type": "application/json" },
-        body: JSON.stringify({
+    return await callFetch({
+        url: "/user/create",
+        body: {
             first_name: first,
             last_name: last,
             email: mail,
@@ -298,286 +227,193 @@ export async function createUser(first, last, mail, num, addr, user, pass, wage 
             address: addr,
             username: user,
             password: pass,
-            wage,
-        }),
+            wage
+        }
     });
-    const json = await res.json();
-    return [json, res.status];
 }
 
-export async function createProject(tok, projectName, projectDesc, teamId) {
-    const res = await fetch(apiURL + "/project/create", {
-        method: "POST",
-        headers:
-            { "content-type": "application/json" },
-        body: JSON.stringify({
-            token: tok,
+export async function createProject(projectName, projectDesc, teamId) {
+    return await callFetch({
+        url: "/project/create",
+        body: {
             project_name: projectName,
             project_desc: projectDesc,
-            team_id: teamId,
-        }),
+            team_id: teamId
+        }
     });
-    const json = await res.json();
-    return [json, res.status];
 }
 
-export async function createTeam(tok, teamName, desc) {
-    const res = await fetch(apiURL + "/team/create", {
-        method: "POST",
-        headers:
-            { "content-type": "application/json" },
-        body: JSON.stringify({
-            token: tok,
+export async function createTeam(teamName, desc) {
+    return await callFetch({
+        url: "/team/create",
+        body: {
             team_name: teamName,
             team_desc: desc,
-        }),
+        }
     });
-    const json = await res.json();
-    return [json, res.status];
 }
 
-
-export async function deleteTeam(tok, teamId) {
-    const res = await fetch(apiURL + "/team/delete", {
-        method: "POST",
-        headers:
-            { "content-type": "application/json" },
-        body: JSON.stringify({
-            token: tok,
-            team_id: teamId,
-        }),
+export async function deleteTeam(teamId) {
+    return await callFetch({
+        url: "/team/delete",
+        body: {
+            team_id: teamId
+        }
     });
-    const json = await res.json();
-    return [json, res.status];
 }
 
-export async function assignPrivilage(tok, privilageId, affectedUserId) {
-    const res = await fetch(apiURL + "/privilage/assign", {
-        method: "POST",
-        headers:
-            { "content-type": "application/json" },
-        body: JSON.stringify({
-            token: tok,
+export async function assignPrivilage(privilageId, affectedUserId) {
+    return await callFetch({
+        url: "/privilage/assign",
+        body: {
             privilage_id: privilageId,
             affected_user_id: affectedUserId,
-        }),
+        }
     });
-    const json = await res.json();
-    return [json, res.status];
 }
 
-export async function revokePrivilage(tok, privilageId, affectedUserId) {
-    const res = await fetch(apiURL + "/privilage/revoke", {
-        method: "POST",
-        headers:
-            { "content-type": "application/json" },
-        body: JSON.stringify({
-            token: tok,
+export async function revokePrivilage(privilageId, affectedUserId) {
+    return await callFetch({
+        url: "/privilage/revoke",
+        body: {
             privilage_id: privilageId,
             affected_user_id: affectedUserId,
-        }),
+        }
     });
-    const json = await res.json();
-    return [json, res.status];
 }
 
-export async function disableUser(tok, userId) {
-    const res = await fetch(apiURL + "/user/disable", {
-        method: "POST",
-        headers:
-            { "content-type": "application/json" },
-        body: JSON.stringify({
-            token: tok,
-            user_id: userId,
-        }),
+export async function disableUser(userId) {
+    return await callFetch({
+        url: "/user/disable",
+        body: {
+            user_id: userId
+        }
     });
-    const json = await res.json();
-    return [json, res.status];
 }
 
-export async function createRequirement(tok, projId, est, reqDesc, reqName, reqSoft, reqHard, reqPriority) {
-    const res = await fetch(apiURL + "/requirement/create", {
-        method: "POST",
-        headers:
-            { "content-type": "application/json" },
-        body: JSON.stringify({
-            token: tok,
+export async function createRequirement(projId, est, reqDesc, reqName, reqSoft, reqHard, reqPriority) {
+    return await callFetch({
+        url: "/requirement/create",
+        body: {
             proj_id: projId,
             estimate: est,
             desc: reqDesc,
             name: reqName,
             softcap: reqSoft,
             hardcap: reqHard,
-            priority: reqPriority,
-        }),
+            priority: reqPriority
+        }
     });
-    const json = await res.json();
-    return [json, res.status];
 }
 
-
-export async function removeUserFromTeam(tok, teamId, userId) {
-    const res = await fetch(apiURL + "/team/member/delete", {
-        method: "POST",
-        headers:
-            { "content-type": "application/json" },
-        body: JSON.stringify({
-            token: tok,
+export async function removeUserFromTeam(teamId, userId) {
+    return await callFetch({
+        url: "/team/member/delete",
+        body: {
             teamID: teamId,
-            user_id: userId,
-        }),
+            user_id: userId
+        }
     });
-    const json = await res.json();
-    return [json, res.status];
 }
 
-export async function addUserToTeam(tok, teamId, userId) {
-    const res = await fetch(apiURL + "/team/member/create", {
-        method: "POST",
-        headers:
-            { "content-type": "application/json" },
-        body: JSON.stringify({
-            token: tok,
+export async function addUserToTeam(teamId, userId) {
+    return await callFetch({
+        url: "/team/member/create",
+        body: {
             teamID: teamId,
-            user_id: userId,
-        }),
+            user_id: userId
+        }
     });
-    const json = await res.json();
-    return [json, res.status];
 }
 
-export async function getTeamMembers(tok, teamId) {
-    const res = await fetch(apiURL + "/team/member/get", {
-        method: "POST",
-        headers:
-            { "content-type": "application/json" },
-        body: JSON.stringify({
-            token: tok,
-            teamID: teamId,
-        }),
+export async function getTeamMembers(teamId) {
+    return await callFetch({
+        url: "/team/member/get",
+        body: {
+            teamID: teamId
+        }
     });
-    const json = await res.json();
-    return [json, res.status];
 }
 
-export async function createRequirementEstimate(tok, reqId, estAmt) {
-    const res = await fetch(apiURL + "/requirement/estimate/create", {
-        method: "POST",
-        headers:
-            { "content-type": "application/json" },
-        body: JSON.stringify({
-            token: tok,
+export async function createRequirementEstimate(reqId, estAmt) {
+    return await callFetch({
+        url: "/requirement/estimate/create",
+        body: {
             reqID: reqId,
-            estimateAmt: estAmt,
-        }),
+            estimateAmt: estAmt
+        }
     });
-    const json = await res.json();
-    return [json, res.status];
 }
 
-export async function updateProject(tok, projId, projName, projDesc) {
-    const res = await fetch(apiURL + "/project/update ", {
-        method: "POST",
-        headers:
-            { "content-type": "application/json" },
-        body: JSON.stringify({
-            token: tok,
+export async function updateProject(projId, projName, projDesc) {
+    return await callFetch({
+        url: "/project/update",
+        body: {
             project_id: projId,
             project_name: projName,
-            project_desc: projDesc,
-        }),
+            project_desc: projDesc
+        }
     });
-    const json = await res.json();
-    return [json, res.status];
 }
 
-export async function updateUser(tok, userId, cellName, cellValue) {
-    const res = await fetch(apiURL + "/user/update", {
-        method: "POST",
-        headers:
-            { "content-type": "application/json" },
-        body: JSON.stringify({
-            token: tok,
+export async function updateUser(userId, cellName, cellValue) {
+    return await callFetch({
+        url: "/user/update",
+        body: {
             user_id: userId,
-            [cellName]: cellValue,
-        }),
+            [cellName]: cellValue
+        }
     });
-    const json = await res.json();
-    return [json, res.status];
 }
 
-export async function deleteProject(tok, projectId) {
-    const res = await fetch(apiURL + "/project/delete", {
-        method: "POST",
-        headers:
-            { "content-type": "application/json" },
-        body: JSON.stringify({
-            token: tok,
-            project_id: projectId,
-        }),
+export async function deleteProject(projectId) {
+    return await callFetch({
+        url: "/project/delete",
+        body: {
+            project_id: projectId
+        }
     });
-    const json = await res.json();
-    return [json, res.status];
 }
 
-export async function deleteReq(tok, reqId) {
-    const res = await fetch(apiURL + "/req/delete", {
-        method: "POST",
-        headers:
-            { "content-type": "application/json" },
-        body: JSON.stringify({
-            token: tok,
+export async function deleteReq(reqId) {
+    return await callFetch({
+        url: "/req/delete",
+        body: {
+            req_id: reqId
+        }
+    });
+}
+
+export async function deleteUser(userId) {
+    return await callFetch({
+        url: "/user/delete",
+        body: {
+            user_id: userId
+        }
+    });
+}
+
+export async function updateRequirement(reqId, cellName, cellValue) {
+    return await callFetch({
+        url: "/req/update",
+        body: {
             req_id: reqId,
-        }),
+            [cellName]: cellValue
+        }
     });
-    const json = await res.json();
-    return [json, res.status];
 }
 
-export async function deleteUser(tok, userId) {
-    const res = await fetch(apiURL + "/user/delete", {
-        method: "POST",
-        headers:
-            { "content-type": "application/json" },
-        body: JSON.stringify({
-            token: tok,
-            user_id: userId,
-        }),
+export async function getRecentRequirements() {
+    return await callFetch({
+        url: "/util/custom",
+        body: {
+            spName: "sp_getRecentReqs"
+        }
     });
-    const json = await res.json();
-    return [json, res.status];
-}
-
-export async function updateRequirement(tok, reqId, cellName, cellValue) {
-    const res = await fetch(apiURL + "/req/update", {
-        method: "POST",
-        headers:
-            { "content-type": "application/json" },
-        body: JSON.stringify({
-            token: tok,
-            req_id: reqId,
-            [cellName]: cellValue,
-        }),
-    });
-    const json = await res.json();
-    return [json, res.status];
-}
-
-export async function getRecentRequirements(tok) {
-    const res = await fetch(apiURL + "/util/custom", {
-        method: "POST",
-        headers:
-            { "content-type": "application/json" },
-        body: JSON.stringify({
-            paramArr: [tok],
-            spName: "sp_getRecentReqs",
-        }),
-    });
-    const json = await res.json();
-    return [json, res.status];
 }
 
 export async function completeReq(req) {
+    // callFetch incompatible
     const res = await fetch(apiURL + "/util/custom", {
         method: "POST",
         headers:
@@ -591,265 +427,176 @@ export async function completeReq(req) {
     return [json, res.status];
 }
 
-export async function getProjectInfo(tok, proj_id) {
-    const res = await fetch(apiURL + "/util/custom", {
-        method: "POST",
-        headers:
-            { "content-type": "application/json" },
-        body: JSON.stringify({
-            paramArr: [tok, proj_id],
+export async function getProjectInfo(proj_id) {
+    return await callFetch({
+        url: "/util/custom",
+        body: {
+            paramArr: [proj_id],
             spName: "sp_getProjectInfo",
-        }),
+        }
     });
-    const json = await res.json();
-    return [json, res.status];
 }
 
-export async function getProjectsWithApproval(tok) {
-    const res = await fetch(apiURL + "/util/custom", {
-        method: "POST",
-        headers:
-            { "content-type": "application/json" },
-        body: JSON.stringify({
-            paramArr: [tok],
+export async function getProjectsWithApproval() {
+    return await callFetch({
+        url: "/util/custom",
+        body: {
+            paramArr: true,
             spName: "sp_getProjectsWithPendingApprovalReqs",
-        }),
+        }
     });
-    const json = await res.json();
-    return [json, res.status];
 }
 
-export async function getAllTeams(tok) {
-    const res = await fetch(apiURL + "/util/custom", {
-        method: "POST",
-        headers:
-            { "content-type": "application/json" },
-        body: JSON.stringify({
-            paramArr: [tok],
+export async function getAllTeams() {
+    return await callFetch({
+        url: "/util/custom",
+        body: {
+            paramArr: true,
             spName: "sp_getAllTeams2",
-        }),
+        }
     });
-    const json = await res.json();
-    return [json, res.status];
 }
 
-export async function getRecentProjects(tok) {
-    const res = await fetch(apiURL + "/util/custom", {
-        method: "POST",
-        headers:
-            { "content-type": "application/json" },
-        body: JSON.stringify({
-            paramArr: [tok],
+export async function getRecentProjects() {
+    return await callFetch({
+        url: "/util/custom",
+        body: {
+            paramArr: true,
             spName: "sp_getRecentProjects",
-        }),
+        }
     });
-    const json = await res.json();
-    return [json, res.status];
 }
 
-export async function getRecentActivity(tok) {
-    const res = await fetch(apiURL + "/util/custom", {
-        method: "POST",
-        headers:
-            { "content-type": "application/json" },
-        body: JSON.stringify({
-            paramArr: [tok],
+export async function getRecentActivity() {
+    return await callFetch({
+        url: "/util/custom",
+        body: {
+            paramArr: true,
             spName: "sp_getRecentActivity",
-        }),
+        }
     });
-    const json = await res.json();
-    return [json, res.status];
 }
 
-export async function updateUserInfo(tok, firstName, lastName, email, phoneNumber, address, uid) {
-    const res = await fetch(apiURL + "/util/custom", {
-        method: "POST",
-        headers:
-            { "content-type": "application/json" },
-        body: JSON.stringify({
-            paramArr: [tok, firstName, lastName, email, phoneNumber, address, uid],
-            spName: "sp_updateMyInfo",
-        }),
+export async function updateUserInfo(firstName, lastName, email, phoneNumber, address, uid) {
+    return await callFetch({
+        url: "/util/custom",
+        body: {
+            paramArr: [firstName, lastName, email, phoneNumber, address, uid],
+            spName: "sp_updateMyInfo"
+        }
     });
-    const json = await res.json();
-    return [json, res.status];
 }
 
-export async function getDashboardCardInfo(tok, uid) {
-    const res = await fetch(apiURL + "/user/systeminfo/get", {
-        method: "POST",
-        headers:
-            { "content-type": "application/json" },
-        body: JSON.stringify({
-            token: tok,
-            user_uid: uid,
-        }),
+export async function getDashboardCardInfo(uid) {
+    return await callFetch({
+        url: "/user/systeminfo/get",
+        body: {
+            user_uid: uid
+        }
     });
-    const json = await res.json();
-    return [json, res.status];
 }
 
-export async function createChangeRequest(token, OldreqID, estimate, desc, name, softcap, hardcap, priority) {
-    const res = await fetch(apiURL + "/req/changerequest/create", {
-        method: "POST",
-        headers:
-            { "content-type": "application/json" },
-        body: JSON.stringify({
-            token,
+export async function createChangeRequest(OldreqID, estimate, desc, name, softcap, hardcap, priority) {
+    return await callFetch({
+        url: "/req/changerequest/create",
+        body: {
             OldreqID,
             estimate,
             desc,
             name,
             softcap,
             hardcap,
-            priority,
-        }),
+            priority
+        }
     });
-    const json = await res.json();
-    return [json, res.status];
 }
 
-export async function acceptChangeRequest(token, reqID) {
-    const res = await fetch(apiURL + "/req/changerequest/accept", {
-        method: "POST",
-        headers:
-            { "content-type": "application/json" },
-        body: JSON.stringify({
-            token,
-            reqID,
-        }),
+export async function acceptChangeRequest(reqID) {
+    return await callFetch({
+        url: "/req/changerequest/accept",
+        body: {
+            reqID
+        }
     });
-    const json = await res.json();
-    return [json, res.status];
 }
 
-export async function rejectChangeRequest(token, reqID) {
-    const res = await fetch(apiURL + "/req/changerequest/reject", {
-        method: "POST",
-        headers:
-            { "content-type": "application/json" },
-        body: JSON.stringify({
-            token,
-            reqID,
-        }),
+export async function rejectChangeRequest(reqID) {
+    return await callFetch({
+        url: "/req/changerequest/reject",
+        body: {
+            reqID
+        }
     });
-    const json = await res.json();
-    return [json, res.status];
 }
 
-export async function getWeeklyHours(token) {
-    const res = await fetch(apiURL + "/clock/weeklyhrs/get", {
-        method: "POST",
-        headers:
-            { "content-type": "application/json" },
-        body: JSON.stringify({
-            token,
-        }),
+export async function getWeeklyHours() {
+    return await callFetch({
+        url: "/clock/weeklyhrs/get"
     });
-    const json = await res.json();
-    return [json, res.status];
 }
 
-export async function makeTeamLead(token, teamId, userId) {
-    const res = await fetch(apiURL + "/team/member/lead", {
-        method: "POST",
-        headers:
-            { "content-type": "application/json" },
-        body: JSON.stringify({
-            token,
+export async function makeTeamLead(teamId, userId) {
+    return await callFetch({
+        url: "/team/member/lead",
+        body: {
             teamID: teamId,
-            user_id: userId,
-        }),
+            user_id: userId
+        }
     });
-    const json = await res.json();
-    return [json, res.status];
 }
 
-
-export async function getUserPerms(token, userId) {
-    const res = await fetch(apiURL + "/privilage/get", {
-        method: "POST",
-        headers:
-            { "content-type": "application/json" },
-        body: JSON.stringify({
-            token,
-            user_id: userId,
-        }),
+export async function getUserPerms(userId) {
+    return await callFetch({
+        url: "/privilage/get",
+        body: {
+            user_id: userId
+        }
     });
-    const json = await res.json();
-    return [json, res.status];
 }
 
-export async function addProjectComment(token, projID, comment) {
-    const res = await fetch(apiURL + "/project/comments/add", {
-        method: "POST",
-        headers:
-            { "content-type": "application/json" },
-        body: JSON.stringify({
-            token,
+export async function addProjectComment(projID, comment) {
+    return await callFetch({
+        url: "/project/comments/add",
+        body: {
             projID,
-            comment,
-        }),
+            comment
+        }
     });
-    const json = await res.json();
-    return [json, res.status];
 }
 
-
-export async function addReqComment(token, reqID, comment) {
-    const res = await fetch(apiURL + "/req/comments/add", {
-        method: "POST",
-        headers:
-            { "content-type": "application/json" },
-        body: JSON.stringify({
-            token,
+export async function addReqComment(reqID, comment) {
+    return await callFetch({
+        url: "/req/comments/add",
+        body: {
             reqID,
-            comment,
-        }),
+            comment
+        }
     });
-    const json = await res.json();
-    return [json, res.status];
 }
 
-export async function getProjectComments(token, projID) {
-    const res = await fetch(apiURL + "/project/comments/get", {
-        method: "POST",
-        headers:
-            { "content-type": "application/json" },
-        body: JSON.stringify({
-            token,
-            projID,
-        }),
+export async function getProjectComments(projID) {
+    return await callFetch({
+        url: "/project/comments/get",
+        body: {
+            projID
+        }
     });
-    const json = await res.json();
-    return [json, res.status];
 }
 
-
-export async function getReqComments(token, reqID) {
-    const res = await fetch(apiURL + "/req/comments/get", {
-        method: "POST",
-        headers:
-            { "content-type": "application/json" },
-        body: JSON.stringify({
-            token,
-            reqID,
-        }),
+export async function getReqComments(reqID) {
+    return await callFetch({
+        url: "/req/comments/get",
+        body: {
+            reqID
+        }
     });
-    const json = await res.json();
-    return [json, res.status];
 }
 
 export async function getTeamReport(token, teamId) {
-    const res = await fetch(apiURL + "/user/wage/get", {
-        method: "POST",
-        headers:
-            { "content-type": "application/json" },
-        body: JSON.stringify({
-            token,
-            teamID: teamId,
-        }),
+    return await callFetch({
+        url: "/user/wage/get",
+        body: {
+            teamID: teamId
+        }
     });
-    const json = await res.json();
-    return [json, res.status];
 }
