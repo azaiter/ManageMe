@@ -126,6 +126,8 @@ import Projects from "./screens/projects";
 import Reports from "./screens/reports";
 import Teams from "./screens/teams";
 import Permissions from "./screens/permissions";
+import Requirements from "./screens/projects";
+import CreateProject from "./screens/projects/create";
 
 const Drawer = DrawerNavigator(
   {
@@ -186,6 +188,9 @@ const AppNavigator = StackNavigator(
     Header8: { screen: Header8 },
     HeaderSpan: { screen: HeaderSpan },
     HeaderNoShadow: { screen: HeaderNoShadow },
+
+    Requirements: {screen: Requirements},
+    CreateProject: {screen: CreateProject},
 
     BasicFooter: { screen: BasicFooter },
     IconFooter: { screen: IconFooter },

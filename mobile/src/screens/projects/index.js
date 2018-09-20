@@ -11,27 +11,26 @@ import {
   Text,
   Icon,
   List,
-  ListItem,
-  Card,
-  CardItem
+  View,
 } from "native-base";
 import styles from "./styles";
 const Auth = require("../../util/Auth");
 const ApiCalls = require("../../util/ApiCalls");
+
 class Projects extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {};
-    Auth.setIsLoginStateOnScreenEntry(this, {navigate:"Projects"});
+    Auth.setIsLoginStateOnScreenEntry(this, { navigate: "Projects" });
   }
 
-  assignProjectsToState(opts={refresh:false}){
-    if (!this.state.projectsList || opts.refresh){
-      ApiCalls.getProjects().then(response=>{
-        ApiCalls.handleAPICallResult(response).then(apiResults=>{
-          if (apiResults){
+  assignProjectsToState(opts = { refresh: false }) {
+    if (!this.state.projectsList || opts.refresh) {
+      ApiCalls.getProjects().then(response => {
+        ApiCalls.handleAPICallResult(response).then(apiResults => {
+          if (apiResults) {
             this.setState({
-              projectsList:apiResults
+              projectsList: apiResults
             });
           }
         });
@@ -39,14 +38,19 @@ class Projects extends Component {
     }
   }
 
-  getProjectsFromState(){
-    if (this.state && this.state.projectsList){
+  getProjectsFromState() {
+    if (this.state && this.state.projectsList) {
       return this.state.projectsList;
     }
     else {
       return [];
     }
   }
+
+  trunc(text) {
+    return text.length > 40 ? `${text.substr(0, 40)}...` : text;
+  }
+  
 
   render() {
     this.assignProjectsToState();
@@ -64,10 +68,16 @@ class Projects extends Component {
           <Body>
             <Title>Projects</Title>
           </Body>
-          <Right>
+          <Right style={styles.flex}>
             <Button
               transparent
-              onPress={() => this.assignProjectsToState({refresh:true})}
+              onPress={() => this.props.navigation.navigate("CreateProject")}
+            >
+              <Icon name="add" />
+            </Button>
+            <Button
+              transparent
+              onPress={() => this.assignProjectsToState({ refresh: true })}
             >
               <Icon name="refresh" />
             </Button>
@@ -76,33 +86,33 @@ class Projects extends Component {
 
         <Content padder>
           <List
-              dataArray={this.getProjectsFromState()}
-              renderRow={data =>
-                <ListItem>
-                  <Card style={styles.mb}>
-                    <CardItem bordered>
-                      <Left>
-                        <Body>
-                          <Text>{data.uid} - {data.name}</Text>
-                          <Text note>{data.created}</Text>
-                        </Body>
-                      </Left>
-                    </CardItem>
-
-                    <CardItem>
-                      <Body>
-                        <Text>
-                          Description: {data.desc}
-                        </Text>
-                      </Body>
-                    </CardItem>
-                  </Card>
-                </ListItem>}
+            dataArray={this.getProjectsFromState()}
+            renderRow={data =>
+              <Button transparent
+              style={styles.project_item}>
+                <View style={styles.text}>
+                  <Text style={styles.title}>{data.uid} - {data.name}</Text>
+                  <Text style={styles.body}>
+                    {this.trunc(data.desc)}
+                  </Text>
+                  <View style={styles.flex}>
+                    <Icon style={styles.time} name="time" />
+                    <Text style={styles.time}>
+                      {"  "}{data.created}
+                    </Text>
+                  </View>
+                </View>
+                <View>
+                  <Button transparent onPress={() =>
+                    this.props.navigation.goBack()}>
+                    <Icon style={styles.icon} name="more" />
+                  </Button>
+                </View>
+              </Button>}
           />
         </Content>
       </Container>
     );
   }
 }
-
 export default Projects;
