@@ -13,15 +13,21 @@ import {
   List,
   ListItem
 } from "native-base";
+import { connect } from "react-redux";
+import { listPermissions } from "../../reducers/permissions";
+
 import styles from "./styles";
 const Auth = require("../../util/Auth");
 class Permissions extends Component {
-  constructor(props){
-    super(props);
-    this.state = {};
-    Auth.setIsLoginStateOnScreenEntry(this, {navigate:"Permissions", setUserPermissions: true});
-    this.getPermissions.bind(this);
+  componentDidMount() {
+    this.props.listPermissions(84);
   }
+  // constructor(props){
+  //   super(props);
+  //   this.state = {};
+  //   Auth.setIsLoginStateOnScreenEntry(this, {navigate:"Permissions", setUserPermissions: true});
+  //   this.getPermissions.bind(this);
+  // }
   getPermissions(){
     if (this.state && this.state.userPermissions){
       return this.state.userPermissions;
@@ -31,6 +37,7 @@ class Permissions extends Component {
     }
   }
   render() {
+    const { permissions } = this.props;
     return (
       <Container style={styles.container}>
         <Header>
@@ -50,7 +57,7 @@ class Permissions extends Component {
 
         <Content padder>
         <List
-            dataArray={this.getPermissions()}
+            dataArray={permissions}
             renderRow={data =>
               <ListItem>
                 <Left>
@@ -69,4 +76,18 @@ class Permissions extends Component {
   }
 }
 
-export default Permissions;
+//export default Permissions;
+
+
+const mapStateToProps = state => {
+  let storedPermissions = state.permissions.permissions;
+  return {
+    permissions: storedPermissions
+  };
+};
+
+const mapDispatchToProps = {
+  listPermissions
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Permissions);

@@ -1,6 +1,20 @@
-import React from "react";
+import React, { Component } from "react";
 import { Root } from "native-base";
 import { StackNavigator, DrawerNavigator } from "react-navigation";
+
+import { createStore, applyMiddleware } from "redux";
+import { Provider, connect } from "react-redux";
+import axios from "axios";
+import axiosMiddleware from "redux-axios-middleware";
+
+const client = axios.create({
+  baseURL: "https://api.manageme.tech",
+  responseType: "json"
+});
+
+import reducers from "./reducers";
+const store = createStore(reducers, applyMiddleware(axiosMiddleware(client)));
+
 
 import Header from "./screens/Header/";
 import Header1 from "./screens/Header/1";
@@ -290,7 +304,19 @@ const AppNavigator = StackNavigator(
   }
 );
 
-export default () =>
-  <Root>
-    <AppNavigator />
-  </Root>;
+// export default () =>
+//   <Root>
+//     <AppNavigator />
+//   </Root>;
+
+export default class App extends Component {
+  render() {
+      return (
+          <Provider store={store}>
+            <Root>
+              <AppNavigator />
+            </Root>
+          </Provider>
+      );
+  }
+}
