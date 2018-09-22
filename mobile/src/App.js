@@ -126,6 +126,7 @@ import Projects from "./screens/projects";
 import Reports from "./screens/reports";
 import Teams from "./screens/teams";
 import Permissions from "./screens/permissions";
+import AddUser from "./screens/adduser";
 
 const Drawer = DrawerNavigator(
   {
@@ -133,6 +134,7 @@ const Drawer = DrawerNavigator(
     Admin: { screen: Admin },
     Projects: { screen: Projects },
     Permissions: { screen: Permissions },
+    AddUser: { screen: AddUser },
     Reports: { screen: Reports },
     Teams: { screen: Teams },
     Home: { screen: Home },

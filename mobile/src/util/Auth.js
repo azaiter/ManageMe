@@ -35,6 +35,20 @@ export async function getItem(key) {
         });
 }
 
+export function getPermissions(component) {
+    if (component.state && component.state.userPermissions) {
+        //console.log(component.state.userPermissions)
+        return component.state.userPermissions;
+    }
+    else {
+        return [];
+    }
+}
+
+export function userHasPermission(component, permissionID){
+    return getPermissions(component).filter(perm => perm.uid === permissionID).length > 0;
+}
+
 export async function setIsLoginStateOnScreenEntry(component, opts={}) {
     let isClientLoggedIn = await isLoggedIn();
     if (isClientLoggedIn){

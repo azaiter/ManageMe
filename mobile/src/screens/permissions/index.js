@@ -20,15 +20,7 @@ class Permissions extends Component {
     super(props);
     this.state = {};
     Auth.setIsLoginStateOnScreenEntry(this, {navigate:"Permissions", setUserPermissions: true});
-    this.getPermissions.bind(this);
-  }
-  getPermissions(){
-    if (this.state && this.state.userPermissions){
-      return this.state.userPermissions;
-    }
-    else {
-      return [];
-    }
+    Auth.getPermissions.bind(this);
   }
   render() {
     return (
@@ -50,7 +42,7 @@ class Permissions extends Component {
 
         <Content padder>
         <List
-            dataArray={this.getPermissions()}
+            dataArray={Auth.getPermissions(this)}
             renderRow={data =>
               <ListItem>
                 <Left>

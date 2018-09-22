@@ -419,10 +419,10 @@ CREATE PROCEDURE `sp_readPermissions` ()  NO SQL
 SELECT `uid` AS `value`, `desc` as `label` FROM Permission$$
 
 CREATE PROCEDURE `sp_readPermissionsByID` (IN `u_id` INT)  NO SQL
-SELECT * FROM Permission WHERE uid in (select permission_uid from UserPermission where user_uid = u_id)$$
+SELECT * FROM Permission WHERE uid in (select permission_uid from UserPermission where user_uid = u_id) ORDER BY `desc`$$
 
 CREATE PROCEDURE `sp_readPermissionsByIDChiipi` (IN `u_id` INT)  NO SQL
-SELECT * FROM Permission WHERE uid in (select permission_uid from UserPermission where user_uid = u_id)$$
+SELECT * FROM Permission WHERE uid in (select permission_uid from UserPermission where user_uid = u_id) ORDER BY `desc`$$
 
 CREATE PROCEDURE `sp_readProjectFiles` (IN `p_id` INT)  NO SQL
 SELECT * FROM ProjectFiles where project_uid = p_id$$
@@ -711,7 +711,8 @@ INSERT INTO `Permission` (`uid`, `desc`) VALUES
 (20, 'Create Files'),
 (21, 'Remove files'),
 (22, 'Edit a Req'),
-(23, 'Remove a team');
+(23, 'Remove a team'),
+(24, 'Add a User');
 
 -- --------------------------------------------------------
 
