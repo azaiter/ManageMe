@@ -6,10 +6,10 @@ import { Toast } from "native-base";
 callFetch = async function (params) {
     if(params.url) {
         let tok = await Auth.getLocalToken();
-        let bodyObj = {};
-        if(params.paramArr) {
-            if(params.paramArr.constructor === Array) {
-                bodyObj.paramArr = [tok.token].concat(params.paramArr);
+        let bodyObj = params.body;
+        if(bodyObj.paramArr) {
+            if(bodyObj.paramArr.constructor === Array) {
+                bodyObj.paramArr = [tok.token].concat(bodyObj.paramArr);
             } else {
                 bodyObj.paramArr = [tok.token];
             }
