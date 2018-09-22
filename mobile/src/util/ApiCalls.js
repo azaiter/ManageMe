@@ -19,7 +19,6 @@ callFetch = async function (params) {
         if(params.body) {
             Object.assign(bodyObj, params.body);
         }
-        console.log("Body Object",bodyObj);
         const res = await fetch(apiURL + params.url, {
             method: params.method || "POST",
             headers: { "content-type": params.contentType || "application/json" },
