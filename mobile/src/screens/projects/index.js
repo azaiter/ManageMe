@@ -49,7 +49,9 @@ class Projects extends Component {
   }
 
   render() {
-    this.assignProjectsToState();
+    if (this.state && this.state.loggedIn){
+      this.assignProjectsToState();
+    }
     return (
       <Container style={styles.container}>
         <Header>
