@@ -6,10 +6,10 @@ import { Toast } from "native-base";
 callFetch = async function (params) {
     if(params.url) {
         let tok = await Auth.getLocalToken();
-        let bodyObj = {};
-        if(params.paramArr) {
-            if(params.paramArr.constructor === Array) {
-                bodyObj.paramArr = [tok.token].concat(params.paramArr);
+        let bodyObj = params.body;
+        if(bodyObj.paramArr) {
+            if(bodyObj.paramArr.constructor === Array) {
+                bodyObj.paramArr = [tok.token].concat(bodyObj.paramArr);
             } else {
                 bodyObj.paramArr = [tok.token];
             }
@@ -19,6 +19,7 @@ callFetch = async function (params) {
         if(params.body) {
             Object.assign(bodyObj, params.body);
         }
+        console.log("Body Object",bodyObj);
         const res = await fetch(apiURL + params.url, {
             method: params.method || "POST",
             headers: { "content-type": params.contentType || "application/json" },
