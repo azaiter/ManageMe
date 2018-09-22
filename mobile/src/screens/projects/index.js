@@ -26,7 +26,7 @@ class Projects extends Component {
   }
 
   assignProjectsToState(opts={refresh:false}){
-    if (!this.state.projectsList || opts.refresh){
+    if ((this.state && this.state.loggedIn) && (!this.state.projectsList || opts.refresh)){
       ApiCalls.getProjects().then(response=>{
         ApiCalls.handleAPICallResult(response).then(apiResults=>{
           if (apiResults){
