@@ -61,7 +61,6 @@ class Projects extends Component {
 
   // Closes the modal.
   closeModal(projectData) {
-    console.log("hit");
     projectData.modalVisible = false;
     this.setState(JSON.parse(JSON.stringify(this.state)));
   }
@@ -157,7 +156,6 @@ class Projects extends Component {
   _renderModal(projectData) { return (
     <Modal isVisible={projectData.modalVisible}>
       <View style={styles.modalContent}>
-        
         <Text>{projectData.name}</Text>
         {this._renderModalButton(projectData,"Apples")}
         {this._renderModalButton(projectData,"Banans")}
