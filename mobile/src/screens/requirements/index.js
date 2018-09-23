@@ -1,28 +1,22 @@
 import React, { Component } from "react";
 import {
-    Container,
-    Header,
-    Title,
-    Content,
-    Button,
-    Footer,
-    FooterTab,
-    Left,
-    Right,
-    Body,
-    Text,
-    FlatList,
-    View,
-    Icon
+  Container,
+  Header,
+  Title,
+  Content,
+  Button,
+  Left,
+  Right,
+  Body,
+  Text,
+  Icon
 } from "native-base";
 import styles from "./styles";
-const ApiCalls = require("../../util/ApiCalls");
-const Auth = require("../../util/Auth");
 
-class Requirements extends React.Component {
-    render() {
-        return (
-            <Container style={styles.container}>
+class Requirements extends Component {
+  render() {
+    return (
+      <Container style={styles.container}>
         <Header>
           <Left>
             <Button
@@ -37,14 +31,13 @@ class Requirements extends React.Component {
           </Body>
           <Right />
         </Header>
-
         <Content padder>
           <Button onPress={() => this.props.navigation.goBack()}>
             <Text>Back</Text>
           </Button>
         </Content>
       </Container>
-        );
-    }
+    );
+  }
 }
 export default Requirements;

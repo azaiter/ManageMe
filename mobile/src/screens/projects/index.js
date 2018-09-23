@@ -13,8 +13,8 @@ import {
   View
 } from "native-base";
 import styles from "./styles";
-import { TouchableOpacity, FlatList } from 'react-native';
-import Modal from 'react-native-modal';
+import { TouchableOpacity, FlatList } from "react-native";
+import Modal from "react-native-modal";
 const Auth = require("../../util/Auth");
 const ApiCalls = require("../../util/ApiCalls");
 
@@ -60,7 +60,7 @@ class Projects extends Component {
   // Handles the onClick event for the modal buttons.
   onModalButtonClick(projectData, buttonText) {
     this.closeModal(projectData);
-    if (buttonText == "Project Info") {
+    if (buttonText === "Project Info") {
       return this.props.navigation.navigate("ProjectInfo");
     } else {
       return this.props.navigation.navigate("Requirements");
@@ -171,10 +171,10 @@ class Projects extends Component {
       <Modal isVisible={projectData.modalVisible}>
         <View style={styles.modalContent}>
           <Text style={styles.modalTitle}>{projectData.name}</Text>
-          <View style = {styles.modalFlex}>
-          {this._renderModalButton(projectData, "Project Info")}
-          {this._renderModalButton(projectData, "Requirements")}
-        </View>
+          <View style={styles.modalFlex}>
+            {this._renderModalButton(projectData, "Project Info")}
+            {this._renderModalButton(projectData, "Requirements")}
+          </View>
         </View>
       </Modal>
     );
