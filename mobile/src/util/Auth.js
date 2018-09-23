@@ -78,17 +78,22 @@ export async function setIsLoginStateOnScreenEntry(component, opts={}) {
 
 export async function setUserPermissionsOnComponent(component) {
     let isClientLoggedIn = await isLoggedIn();
+    let permissionsObj = await getPermissionsObject();
     if (isClientLoggedIn){
-        let localToken = await getLocalToken();
-        let apiResult = await ApiCalls.getUserPerms(localToken.uid);
-        let handledApiResults = await ApiCalls.handleAPICallResult(apiResult, component);
-        if (handledApiResults){
-            //console.log("UserPermissions: ", handledApiResults);
-            await saveItem(userPermissionsASKey, handledApiResults);
-            if (component && component.state && !component.state.userPermissions){
-                //console.log("setting state main");
-                component.setState({ userPermissions: handledApiResults }); // only update state when needed
+        if (!permissionsObj){
+            let localToken = await getLocalToken();
+            //console.log("doing api call permissions")
+            let apiResult = await ApiCalls.getUserPerms(localToken.uid);
+            let handledApiResults = await ApiCalls.handleAPICallResult(apiResult, component);
+            if (handledApiResults){
+                //console.log("UserPermissions: ", handledApiResults);
+                permissionsObj = handledApiResults;
             }
+        }
+        if (component && component.state && !component.state.userPermissions){
+            //console.log("setting state main");
+            await saveItem(userPermissionsASKey, permissionsObj);
+            component.setState({ userPermissions: permissionsObj }); // only update state when needed
         }
     }
     else {
@@ -97,6 +102,14 @@ export async function setUserPermissionsOnComponent(component) {
             component.setState({ userPermissions: false }); // only update state when needed
         }
     }
+}
+
+export async function getPermissionsObject(){
+    return new Promise(async (resolve, reject)=>{
+        let permissionsObj = await getItem(userPermissionsASKey);
+        //console.log(permissionsObj);
+        resolve(permissionsObj ? permissionsObj : false);
+    });
 }
 
 export async function isLoggedIn() {
