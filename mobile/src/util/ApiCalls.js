@@ -46,7 +46,8 @@ export function showToastsInArr(arr, params = {}) {
             text: message,
             buttonText: params.buttonText || "okay",
             type: params.type || "warning",
-            position: params.position || "top"
+            position: params.position || "top",
+            duration: params.duration || 5000
         });
     });
 }
