@@ -94,7 +94,7 @@ class Projects extends Component {
       <Left>
         <Button
           transparent
-          onPress={() => thix.props.navigation.navigate("DrawerOpen")}
+          onPress={() => this.props.navigation.navigate("DrawerOpen")}
         >
           <Icon name="menu" />
         </Button>
