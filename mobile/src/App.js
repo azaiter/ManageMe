@@ -127,6 +127,9 @@ import Reports from "./screens/reports";
 import Teams from "./screens/teams";
 import Permissions from "./screens/permissions";
 import AddUser from "./screens/adduser";
+import Requirements from "./screens/requirements";
+import CreateProject from "./screens/createProject";
+import ProjectInfo from "./screens/projectInfo";
 
 const Drawer = DrawerNavigator(
   {
@@ -177,6 +180,10 @@ const Drawer = DrawerNavigator(
 const AppNavigator = StackNavigator(
   {
     Drawer: { screen: Drawer },
+
+    Requirements: {screen: Requirements},
+    CreateProject: {screen: CreateProject},
+    ProjectInfo: {screen: ProjectInfo},
 
     Header1: { screen: Header1 },
     Header2: { screen: Header2 },

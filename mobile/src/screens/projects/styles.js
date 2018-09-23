@@ -18,11 +18,6 @@ export default {
     height: "100%"
   },
 
-  button:{
-    flex:1,
-    
-  },
-
   text:{
     flex:3,
   },
@@ -37,12 +32,30 @@ export default {
     color: "#008000",
   },
 
+  modalTitle: {
+    fontSize: 30,
+    fontWeight: 'bold',
+    color: 'white',
+  },
+
+  modalText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: 'black',
+  },
+
   flex: {
     flex: 1,
     flexDirection: 'row',
     paddingTop: 10,
-    paddingBottom: 10
+    paddingBottom: 10,
   },
+
+  modalFlex: {
+    flexDirection: 'row',
+  },
+
+
   time: {
     fontSize: 17.5,
     fontStyle: 'italic',
@@ -58,23 +71,18 @@ export default {
     color: 'black',
   },
 
-  button: {
-    backgroundColor: 'lightblue',
+  modalButton: {
+    backgroundColor: 'lightskyblue',
     padding: 12,
     margin: 16,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 4,
-    borderColor: 'rgba(0, 0, 0, 0.1)',
   },
   
   modalContent: {
-    backgroundColor: 'white',
     padding: 22,
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 4,
-    borderColor: 'rgba(0, 0, 0, 0.1)',
   },
-
 };
