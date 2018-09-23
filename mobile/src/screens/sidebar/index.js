@@ -61,6 +61,13 @@ const datas = [
     bg: "#C5F442"
   },
   {
+    name: "Add User",
+    route: "AddUser",
+    icon: "ios-add",
+    bg: "#C5F442",
+    permissionID: 24
+  },
+  {
     name: "Logout",
     route: false,
     action: "logout",
@@ -232,6 +239,7 @@ class SideBar extends Component {
       shadowOffsetWidth: 1,
       shadowRadius: 4
     };
+    Auth.userHasPermission.bind(this);
   }
 
   handleAction = async (actionType) => {
@@ -263,7 +271,9 @@ class SideBar extends Component {
     // here you add permissions logic to edit menu if needed
     let dataListToShow = [];
     if (this.state.loggedIn){
-      dataListToShow = datas;
+      dataListToShow = datas.filter(x => {
+        return ((x.permissionID && Auth.userHasPermission(this, x.permissionID)) || !("permissionID" in x));
+      });
     }
     else {
       dataListToShow = dataOnlyLogin;
