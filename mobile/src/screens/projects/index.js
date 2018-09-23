@@ -22,7 +22,10 @@ class Projects extends Component {
   constructor(props) {
     super(props);
     this.state = {};
-    Auth.setIsLoginStateOnScreenEntry(this, { navigate: "Projects" });
+    Auth.setIsLoginStateOnScreenEntry(this, {
+      navigate: "Projects",
+      setUserPermissions: true
+    });
   }
 
   // Retrieve project list from API and assign to state.
@@ -76,9 +79,7 @@ class Projects extends Component {
 
   // Render
   render() {
-    if (this.state && this.state.loggedIn){
-      this.assignProjectsToState();
-    }
+    this.assignProjectsToState();
     return (
       <Container style={styles.container}>
         {this._renderHeader()}
@@ -153,6 +154,7 @@ class Projects extends Component {
   );}
 
   // Render Modal
+  // @TODO: Implement proper buttons menu and polish the UI
   _renderModal(projectData) { return (
     <Modal isVisible={projectData.modalVisible}>
       <View style={styles.modalContent}>
@@ -165,6 +167,7 @@ class Projects extends Component {
   );}
 
   // Render Modal Button
+  // @TODO: Implement OnClose
   _renderModalButton(projectData,buttonText) { return (
     <TouchableOpacity onPress={() => { 
       this.onModalButtonClick(projectData,buttonText);
