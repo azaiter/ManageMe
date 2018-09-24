@@ -32,6 +32,11 @@ class Projects extends Component {
     this.assignProjectsToState.bind(this);
   }
 
+  // Refresh the page when coming from a back navigation event.
+  willFocus = this.props.navigation.addListener("willFocus", payload => {
+    this.assignProjectsToState({refresh:true});
+  });
+
   // Retrieve project list from API and assign to state.
   assignProjectsToState(opts = { refresh: false }) {
     if ((this.state && this.state.loggedIn) && (!this.state.projectsList || opts.refresh)) {
@@ -42,7 +47,6 @@ class Projects extends Component {
               result.modalVisible = false;
               result.key = result.uid.toString() + "_" + result.modalVisible.toString();
             });
-            console.log("setting the state.");
             this.setState({
               projectsList: apiResults
             });
