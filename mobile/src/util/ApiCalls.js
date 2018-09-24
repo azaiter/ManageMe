@@ -3,7 +3,7 @@ const Auth = require("../util/Auth");
 
 import { Toast } from "native-base";
 
-callFetch = async function (params) {
+let callFetch = async function (params) {
     if(params.url) {
         let tok = await Auth.getLocalToken();
         let bodyObj = (params.body)?params.body:params;
@@ -86,7 +86,7 @@ export async function getTime() {
 }
 
 export async function clockIn(reqID) {    
-    return this.callFetch({
+    return await callFetch({
         url: "/clock/in",
         body: {
             req_id: reqID
@@ -104,7 +104,7 @@ export async function clockOut(reqID) {
 }
 
 export async function getEstimate(projId) {
-    return this.callFetch({
+    return await callFetch({
         url: "/project/estimate/get",
         body: {
             project_id: projId
@@ -113,7 +113,7 @@ export async function getEstimate(projId) {
 }
 
 export async function getRequirementEstimates(reqId) {
-    return this.callFetch({
+    return await callFetch({
         url: "/requirement/estimate/get",
         body: {
             req_id: reqId
@@ -122,7 +122,7 @@ export async function getRequirementEstimates(reqId) {
 }
 
 export async function getTimeCaps(projId) {
-    return this.callFetch({
+    return await callFetch({
         url: "/project/timecaps/get",
         body: {
             project_id: projId
