@@ -49,7 +49,7 @@ export function userHasPermission(component, permissionID){
     return getPermissions(component).filter(perm => perm.uid === permissionID).length > 0;
 }
 
-export async function setIsLoginStateOnScreenEntry(component, opts={}) {
+export async function setIsLoginStateOnScreenEntry(component, opts = {}) {
     let isClientLoggedIn = await isLoggedIn();
     if (isClientLoggedIn){
         if (component && component.state && !component.state.loggedIn){
