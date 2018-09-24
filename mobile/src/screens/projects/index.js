@@ -21,12 +21,15 @@ const ApiCalls = require("../../util/ApiCalls");
 class Projects extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      refresh: true
+    };
     Auth.setIsLoginStateOnScreenEntry(this, {
       navigate: "Projects",
       setUserPermissions: true
     });
     Auth.userHasPermission.bind(this);
+    this.assignProjectsToState.bind(this);
   }
 
   // Retrieve project list from API and assign to state.
@@ -39,6 +42,7 @@ class Projects extends Component {
               result.modalVisible = false;
               result.key = result.uid.toString() + "_" + result.modalVisible.toString();
             });
+            console.log("setting the state.");
             this.setState({
               projectsList: apiResults
             });
@@ -111,7 +115,7 @@ class Projects extends Component {
         <Right style={styles.flex}>
           <Button
             transparent
-            onPress={() => this.props.navigation.navigate("CreateProject")}
+            onPress={() => this.props.navigation.navigate("CreateProject", { assignProjectsToState: this.assignProjectsToState })}
           >
             <Icon name="add" />
           </Button>
