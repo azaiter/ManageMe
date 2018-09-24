@@ -21,9 +21,7 @@ const ApiCalls = require("../../util/ApiCalls");
 class Projects extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      refresh: true
-    };
+    this.state = {};
     Auth.setIsLoginStateOnScreenEntry(this, {
       navigate: "Projects",
       setUserPermissions: true
@@ -119,7 +117,7 @@ class Projects extends Component {
         <Right style={styles.flex}>
           <Button
             transparent
-            onPress={() => this.props.navigation.navigate("CreateProject", { assignProjectsToState: this.assignProjectsToState })}
+            onPress={() => this.props.navigation.navigate("CreateProject")}
           >
             <Icon name="add" />
           </Button>
