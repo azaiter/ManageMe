@@ -155,6 +155,7 @@ class CreateProject extends Component {
         </Body>
         <Right>
           <Button
+            transparent
             onPress={() => this.props.navigation.goBack()}
           >
             <Icon name="arrow-back" />
