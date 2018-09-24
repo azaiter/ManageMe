@@ -4,11 +4,11 @@ const Auth = require("../util/Auth");
 import { Toast } from "native-base";
 
 let callFetch = async function (params) {
-    if(params.url) {
+    if (params.url) {
         let tok = await Auth.getLocalToken();
-        let bodyObj = (params.body)?params.body:params;
-        if(bodyObj.paramArr) {
-            if(bodyObj.paramArr.constructor === Array) {
+        let bodyObj = (params.body) ? params.body : params;
+        if (bodyObj.paramArr) {
+            if (bodyObj.paramArr.constructor === Array) {
                 bodyObj.paramArr = [tok.token].concat(bodyObj.paramArr);
             } else {
                 bodyObj.paramArr = [tok.token];
@@ -16,7 +16,7 @@ let callFetch = async function (params) {
         } else {
             bodyObj.token = tok.token;
         }
-        if(params.body) {
+        if (params.body) {
             Object.assign(bodyObj, params.body);
         }
         const res = await fetch(apiURL + params.url, {
@@ -27,7 +27,7 @@ let callFetch = async function (params) {
         const json = await res.json();
         return [json, res.status];
     }
-}
+};
 
 export function getErrorsListFromObj(obj) {
     let arrToReturn = [];
@@ -85,7 +85,7 @@ export async function getTime() {
     });
 }
 
-export async function clockIn(reqID) {    
+export async function clockIn(reqID) {
     return await callFetch({
         url: "/clock/in",
         body: {

@@ -27,7 +27,13 @@ class Projects extends Component {
       setUserPermissions: true
     });
     Auth.userHasPermission.bind(this);
+    this.assignProjectsToState.bind(this);
   }
+
+  // Refresh the page when coming from a back navigation event.
+  willFocus = this.props.navigation.addListener("willFocus", payload => {
+    this.assignProjectsToState({refresh:true});
+  });
 
   // Retrieve project list from API and assign to state.
   assignProjectsToState(opts = { refresh: false }) {
