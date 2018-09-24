@@ -124,6 +124,11 @@ class CreateProject extends Component {
     }
   }
 
+  async goBack() {
+    await Auth.saveItem("@app.refreshProject", {refresh: true});
+    this.props.navigation.goBack();
+  }
+
   render() {
     this.assignTeamsToState();
     return (
@@ -133,13 +138,7 @@ class CreateProject extends Component {
       </Container>
     );
   }
-  async goBack() {
-    await Auth.saveItem("@app.refreshProject", {refresh: true});
-    const { navigation } = this.props;
-    //console.log("navigation", navigation);
-    //navigation.state.params.assignProjectsToState({ refresh: true, passingState: true, state: this.state });
-    navigation.goBack();
-  }
+
   _renderHeader() {
     return (
       <Header>
@@ -156,9 +155,9 @@ class CreateProject extends Component {
         </Body>
         <Right>
           <Button
-            onPress={() => this.goBack()}
+            onPress={() => this.props.navigation.goBack()}
           >
-            <Icon name="menu" />
+            <Icon name="arrow-back" />
           </Button>
         </Right>
       </Header>
