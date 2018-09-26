@@ -69,7 +69,7 @@ class Projects extends Component {
     if (buttonText === "Project Info") {
       return this.props.navigation.navigate("ProjectInfo");
     } else {
-      return this.props.navigation.navigate("Requirements");
+      return this.props.navigation.navigate("Requirements", {projectId: projectData.uid});
     }
   }
 
