@@ -141,6 +141,9 @@ const Drawer = DrawerNavigator(
     Reports: { screen: Reports },
     Teams: { screen: Teams },
     Home: { screen: Home },
+    CreateProject: { screen: CreateProject },
+    ProjectInfo: { screen: ProjectInfo },
+    Requirements: { screen: Requirements },
 
     //dev screens
     Anatomy: { screen: Anatomy },
