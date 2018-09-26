@@ -13,7 +13,9 @@ import {
   Input,
   Label,
   Item,
-  Form
+  Form,
+  Picker,
+  Textarea,
 } from "native-base";
 import { Alert } from "react-native";
 import styles from "./styles";
@@ -59,7 +61,6 @@ class CreateProject extends Component {
     this.getFieldValidation.bind(this);
     this._renderHeader.bind(this);
     this._renderBody.bind(this);
-    this._renderFieldEntry.bind(this);
   }
 
   assignTeamsToState(opts = { refresh: false }) {
@@ -67,6 +68,7 @@ class CreateProject extends Component {
       ApiCalls.getTeams().then(response => {
         ApiCalls.handleAPICallResult(response).then(apiResults => {
           if (apiResults) {
+            console.log("apiResults",apiResults);
             this.setState({
               teams: apiResults
             });
@@ -124,6 +126,12 @@ class CreateProject extends Component {
     }
   }
 
+  onTeamSelect(id) {
+    this.setState({
+      teamId: id
+    });
+  }
+
   async goBack() {
     await Auth.saveItem("@app.refreshProject", {refresh: true});
     this.props.navigation.goBack();
@@ -131,6 +139,7 @@ class CreateProject extends Component {
 
   render() {
     this.assignTeamsToState();
+    console.log("STATE",this.state);
     return (
       <Container style={styles.container}>
         {this._renderHeader()}
@@ -166,21 +175,50 @@ class CreateProject extends Component {
   }
 
   _renderBody() {
+    /*
+      Label on its own breaks a return statement making it impossible to abstract.
+      The item tag breaks all components except for input.
+    */
     return (
       <Content padder>
         <Container>
           <Content>
             <Form>
-              {this._renderFieldEntry(fieldsArr[0])}
-              {/* TODO: Convert to TextArea */}
-              {this._renderFieldEntry(fieldsArr[1])}
-              {this._renderFieldEntry(fieldsArr[2])}
+              {/* Start Form */}
+              {/* Project Name */}
+              <Label>{fieldsArr[0].label}</Label>
+              <Input name={fieldsArr[0].name}
+                onChangeText={(value) => this.checkAndSetState(fieldsArr[0].name, value, fieldsArr[0].regex)}
+                value={this.state[fieldsArr[0].name]}
+                onSubmitEditing={this.handleSubmit}
+                keyboardType={fieldsArr[0].keyboardType || "default"}
+                secureTextEntry={fieldsArr[0].secureTextEntry || false}
+              />
+              {/* Project Team */}
+              <Label>{fieldsArr[2].label}</Label>
+              <Form>
+                <Picker
+                  mode="dropdown"
+                  onValueChange={this.onTeamSelect.bind(this)}
+                >
+                  {console.log(this.state)}
+                  {/*Array.map(this.state.teams,(a) => {console.log(a);})*/}
+                </Picker>
+              </Form>
+              {/* Project Description */}
+              <Label>{fieldsArr[1].label}</Label>
+              <Textarea
+                rowSpan={5} 
+                bordered
+              />
+              {/* Submit Button */}
               <Button
                 block style={{ margin: 15, marginTop: 50 }}
                 onPress={this.handleSubmit}
               >
                 <Text>Create Project</Text>
               </Button>
+              {/* End Form */}
             </Form>
           </Content>
         </Container>
@@ -188,21 +226,8 @@ class CreateProject extends Component {
     );
   }
 
-  _renderFieldEntry(obj) {
-    return (
-      <Item floatingLabel
-        success={this.getFieldValidation(obj.name).success}
-        error={this.getFieldValidation(obj.name).error} >
-        <Label>{obj.label}</Label>
-        <Input name={obj.name}
-          onChangeText={(value) => this.checkAndSetState(obj.name, value, obj.regex)}
-          value={this.state[obj.name]}
-          onSubmitEditing={this.handleSubmit}
-          keyboardType={obj.keyboardType || "default"}
-          secureTextEntry={obj.secureTextEntry || false}
-        />
-      </Item>
-    );
+  _renderSelectOption(obj) {
+    return (<Item label="Net Banking" value="key4" />);
   }
 }
 
