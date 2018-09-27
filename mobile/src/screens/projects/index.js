@@ -32,7 +32,7 @@ class Projects extends Component {
 
   // Refresh the page when coming from a back navigation event.
   willFocus = this.props.navigation.addListener("willFocus", payload => {
-    this.assignProjectsToState({refresh:true});
+    this.assignProjectsToState({ refresh: true });
   });
 
   // Retrieve project list from API and assign to state.
