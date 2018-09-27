@@ -53,7 +53,7 @@ class CreateProject extends Component {
       teamId: ""
     };
     // This line is creating an infinte loop of page renders.
-    Auth.setIsLoginStateOnScreenEntry(this, {setUserPermissions: true });
+    Auth.setIsLoginStateOnScreenEntry(this, { setUserPermissions: true });
     Auth.getPermissions.bind(this);
     this.checkAndSetState.bind(this);
     this.getFieldValidation.bind(this);
@@ -125,7 +125,7 @@ class CreateProject extends Component {
   }
 
   async goBack() {
-    await Auth.saveItem("@app.refreshProject", {refresh: true});
+    await Auth.saveItem("@app.refreshProject", { refresh: true });
     this.props.navigation.goBack();
   }
 

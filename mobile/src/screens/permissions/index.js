@@ -16,10 +16,10 @@ import {
 import styles from "./styles";
 const Auth = require("../../util/Auth");
 class Permissions extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {};
-    Auth.setIsLoginStateOnScreenEntry(this, {navigate:"Permissions", setUserPermissions: true});
+    Auth.setIsLoginStateOnScreenEntry(this, { navigate: "Permissions", setUserPermissions: true });
     Auth.getPermissions.bind(this);
   }
   render() {
@@ -41,7 +41,7 @@ class Permissions extends Component {
         </Header>
 
         <Content padder>
-        <List
+          <List
             dataArray={Auth.getPermissions(this)}
             renderRow={data =>
               <ListItem>

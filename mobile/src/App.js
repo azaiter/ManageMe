@@ -184,9 +184,9 @@ const AppNavigator = StackNavigator(
   {
     Drawer: { screen: Drawer },
 
-    Requirements: {screen: Requirements},
-    CreateProject: {screen: CreateProject},
-    ProjectInfo: {screen: ProjectInfo},
+    Requirements: { screen: Requirements },
+    CreateProject: { screen: CreateProject },
+    ProjectInfo: { screen: ProjectInfo },
 
     Header1: { screen: Header1 },
     Header2: { screen: Header2 },
@@ -295,7 +295,7 @@ const AppNavigator = StackNavigator(
     RegularActionSheet: { screen: RegularActionSheet },
     IconActionSheet: { screen: IconActionSheet }
 
-    },
+  },
   {
     initialRouteName: "Drawer",
     headerMode: "none"
