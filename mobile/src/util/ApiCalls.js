@@ -416,6 +416,15 @@ export async function getRecentRequirements() {
         }
     });
 }
+export async function enabledDisableUser(userId, enabled) {
+    return await callFetch({
+        url: "/util/custom",
+        body: {
+            paramArr: [userId, enabled],
+            spName: "sp_updateUserEnabled"
+        }
+    });
+}
 
 export async function completeReq(req) {
     // callFetch incompatible

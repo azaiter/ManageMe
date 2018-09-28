@@ -61,9 +61,9 @@ const datas = [
     bg: "#C5F442"
   },
   {
-    name: "Add User",
-    route: "AddUser",
-    icon: "ios-add",
+    name: "Users",
+    route: "Users",
+    icon: "ios-contact",
     bg: "#C5F442",
     permissionID: 24
   },
