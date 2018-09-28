@@ -13,7 +13,7 @@ import {
   View
 } from "native-base";
 import styles from "./styles";
-import { TouchableOpacity, FlatList } from "react-native";
+import { TouchableOpacity, FlatList, TouchableWithoutFeedback } from "react-native";
 import Modal from "react-native-modal";
 const Auth = require("../../util/Auth");
 const ApiCalls = require("../../util/ApiCalls");
@@ -153,7 +153,7 @@ class Projects extends Component {
         this.setState(JSON.parse(JSON.stringify(this.state)));
       }}>
         <View style={styles.text}>
-          <Text style={styles.title}>{projectData.uid} - {projectData.name}</Text>
+          <Text style={styles.title}>{projectData.name}</Text>
           <Text style={styles.body}>
             {this.truncate(projectData.desc)}
           </Text>
@@ -174,15 +174,22 @@ class Projects extends Component {
   // @TODO: Implement proper buttons menu and polish the UI
   _renderModal(projectData) {
     return (
-      <Modal isVisible={projectData.modalVisible}>
-        <View style={styles.modalContent}>
-          <Text style={styles.modalTitle}>{projectData.name}</Text>
-          <View style={styles.modalFlex}>
-            {this._renderModalButton(projectData, "Project Info")}
-            {this._renderModalButton(projectData, "Requirements")}
+      <TouchableWithoutFeedback onPress={() => this.closeModal(projectData)}>
+        <Modal
+          onBackdropPress={() => this.closeModal(projectData)}
+          onBackButtonPress={() => this.closeModal(projectData)}
+          onSwipe={() => this.closeModal(projectData)}
+          swipeDirection="down"
+          isVisible={projectData.modalVisible}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>{projectData.name}</Text>
+            <View style={styles.modalFlex}>
+              {this._renderModalButton(projectData, "Project Info")}
+              {this._renderModalButton(projectData, "Requirements")}
+            </View>
           </View>
-        </View>
-      </Modal>
+        </Modal>
+      </TouchableWithoutFeedback>
     );
   }
 
