@@ -130,6 +130,8 @@ import AddUser from "./screens/adduser";
 import Requirements from "./screens/requirements";
 import CreateProject from "./screens/createProject";
 import ProjectInfo from "./screens/projectInfo";
+import Users from "./screens/users";
+
 
 const Drawer = DrawerNavigator(
   {
@@ -144,6 +146,7 @@ const Drawer = DrawerNavigator(
     CreateProject: { screen: CreateProject },
     ProjectInfo: { screen: ProjectInfo },
     Requirements: { screen: Requirements },
+    Users: { screen: Users },
 
     //dev screens
     Anatomy: { screen: Anatomy },
