@@ -67,9 +67,9 @@ class Projects extends Component {
   onModalButtonClick(projectData, buttonText) {
     this.closeModal(projectData);
     if (buttonText === "Project Info") {
-      return this.props.navigation.navigate("ProjectInfo");
+      return this.props.navigation.navigate("ProjectInfo", { project: projectData });
     } else {
-      return this.props.navigation.navigate("Requirements");
+      return this.props.navigation.navigate("Requirements", { project: projectData });
     }
   }
 
