@@ -15,14 +15,12 @@ import {
   Text,
   Form,
   Card,
-  Textarea,
   Spinner,
 } from "native-base";
 import styles from "./styles";
-import { FlatList, Alert, Keyboard } from "react-native";
+import { FlatList, Alert, TextInput, Keyboard } from "react-native";
 const Auth = require("../../util/Auth");
 const ApiCalls = require("../../util/ApiCalls");
-Keyboard.dismiss();
 
 const fieldsArr = [
   {
@@ -37,7 +35,6 @@ const fieldsArr = [
 class ProjectInfo extends Component {
   constructor(props) {
     super(props);
-    this.myRef = React.createRef();
     this.state = {
       projectComment: "",
     };
@@ -79,7 +76,7 @@ class ProjectInfo extends Component {
             });
             this.setState({
               requirementList,
-              render: true
+              renderRequirement: true
             });
           }
         });
@@ -95,7 +92,7 @@ class ProjectInfo extends Component {
           if (apiResults) {
             this.setState({
               commentList: apiResults,
-              render1: true
+              renderComment: true
             });
           }
         });
@@ -103,7 +100,8 @@ class ProjectInfo extends Component {
     }
   }
 
-  /* // Retrieve timecaps from API and assign to state.
+  /* // @TODO: Get TimeCaps for Project 
+  // Retrieve timecaps from API and assign to state.
    assignTimeCapsToState(opts = { refresh: false }) {
      if ((this.state && this.state.loggedIn) && (!this.state.timeCaps || opts.refresh)) {
        ApiCalls.getTimeCaps(this.params.project.uid).then(response => {
@@ -133,6 +131,7 @@ class ProjectInfo extends Component {
       let apiResult = await ApiCalls.addProjectComment(this.params.project.uid, this.state.projectComment);
       let handledApiResults = await ApiCalls.handleAPICallResult(apiResult, this);
       this.setState({ isLoading: false });
+      this.setState({ projectComment: "" });
       if (handledApiResults) {
         let message = "Comment was added successfully!";
         ApiCalls.showToastsInArr([message], {
@@ -147,8 +146,6 @@ class ProjectInfo extends Component {
           [
             {
               text: "OK", onPress: () => {
-                this.myRef.current.setNativeProps({ text: "" });
-                //this.refs.txtArea.setNativeProps({focus: false});
                 this.assignCommentsToState({ refresh: true });
               }
             },
@@ -242,7 +239,7 @@ class ProjectInfo extends Component {
     this.assignRequirementsToState();
     this.assignCommentsToState();
     //this.assignTimeCapsToState();
-    if (this.state.render && this.state.render1) {
+    if (this.state.renderRequirement && this.state.renderComment) {
       return (
         <Tabs>
           <Tab heading="Information">
@@ -353,12 +350,12 @@ class ProjectInfo extends Component {
   _renderFieldEntry(obj) {
     return (
       <Form style={styles.card}>
-        <Textarea
+        <TextInput
+          style={styles.comment}
           placeholder={obj.label}
-          ref={this.myRef}
           name={obj.name}
-          rowSpan={3}
-          bordered
+          multiline={true}
+          numberOfLines={4}
           onChangeText={(value) => this.checkAndSetState(obj.name, value, obj.regex)}
           value={this.state[obj.name]}
           onSubmitEditing={this.handleSubmit}

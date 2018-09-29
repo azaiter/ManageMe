@@ -69,8 +69,8 @@ export default {
   },
 
   flatlist: {
-    borderBottomWidth: 2,
-    borderBottomColor: "#000",
+    borderBottomWidth: 1,
+    borderBottomColor: "black",
   },
 
   commentBody: {
@@ -110,5 +110,13 @@ export default {
     fontSize: 20,
     fontWeight: "bold",
     color: "white",
+  },
+
+  comment: {
+    borderColor: "black",
+    borderWidth: 1,
+    fontSize: 15,
+    height: 75,
+    padding: 5,
   },
 };
