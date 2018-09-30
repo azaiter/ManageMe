@@ -13,8 +13,8 @@ import {
   View
 } from "native-base";
 import styles from "./styles";
-import { TouchableOpacity, FlatList } from 'react-native';
-import Modal from 'react-native-modal';
+import { TouchableOpacity, FlatList, TouchableWithoutFeedback } from "react-native";
+import Modal from "react-native-modal";
 const Auth = require("../../util/Auth");
 const ApiCalls = require("../../util/ApiCalls");
 
@@ -28,18 +28,23 @@ class Teams extends Component {
     });
   }
 
+  // Refresh the page when coming from a back navigation event.
+  willFocus = this.props.navigation.addListener("willFocus", payload => {
+    this.assignTeamsToState({ refresh: true });
+  });
+
   // Retrieve team list from API and assign to state.
-  assignTeamsToState(opts={refresh:false}){
-    if ((this.state && this.state.loggedIn) && (!this.state.teamsList || opts.refresh)){
-      ApiCalls.getTeams().then(response=>{
-        ApiCalls.handleAPICallResult(response).then(apiResults=>{
-          if (apiResults){
+  assignTeamsToState(opts = { refresh: false }) {
+    if ((this.state && this.state.loggedIn) && (!this.state.teamsList || opts.refresh)) {
+      ApiCalls.getTeams().then(response => {
+        ApiCalls.handleAPICallResult(response).then(apiResults => {
+          if (apiResults) {
             apiResults.forEach(result => {
               result.modalVisible = false;
-              result.key = result.uid.toString()+"_"+result.modalVisible.toString(); 
+              result.key = result.uid.toString() + "_" + result.modalVisible.toString();
             });
             this.setState({
-              teamsList:apiResults
+              teamsList: apiResults
             });
           }
         });
@@ -49,7 +54,7 @@ class Teams extends Component {
 
   // Retrieve team list from state.
   getTeamsFromState() {
-    if(this.state && this.state.teamsList) {
+    if (this.state && this.state.teamsList) {
       return this.state.teamsList;
     } else {
       return [];
@@ -57,7 +62,7 @@ class Teams extends Component {
   }
 
   // Handles the onClick event for the modal buttons.
-  onModalButtonClick(teamData,buttonText) {
+  onModalButtonClick(teamData, buttonText) {
     // @TODO: Implement Button Events
     this.closeModal(teamData);
   }
@@ -67,14 +72,30 @@ class Teams extends Component {
     teamData.modalVisible = false;
     this.setState(JSON.parse(JSON.stringify(this.state)));
   }
-  
+
   // Reduces text to 40 characters.
-  truncate(text) { 
-    if(text.length > 40) {
+  truncate(text) {
+    if (text.length > 40) {
       return `${text.substr(0, 40)}...`;
     } else {
       return text;
     }
+  }
+
+  // Handles the onClick event for the modal buttons.
+  onModalButtonClick(teamData, buttonText) {
+    this.closeModal(teamData);
+    if (buttonText === "Team Info") {
+      return this.props.navigation.navigate("TeamInfo", { team: teamData });
+    } else {
+      return this.props.navigation.navigate("ManageTeam", { team: teamData });
+    }
+  }
+
+  // Closes the modal.
+  closeModal(teamData) {
+    teamData.modalVisible = false;
+    this.setState(JSON.parse(JSON.stringify(this.state)));
   }
 
   // Render
@@ -89,94 +110,102 @@ class Teams extends Component {
   }
 
   // Render Header
-  _renderHeader() { return (
-    <Header>
-      <Left>
-        <Button
-          transparent
-          onPress={() => this.props.navigation.navigate("DrawerOpen")}
-        >
-          <Icon name="menu" />
-        </Button>
-      </Left>
-      <Body>
-        <Title>Teams</Title>
-      </Body>
-      <Right style={styles.flex}>
-        <Button
-          transparent
-          onPress={() => this.props.navigation.navigate("CreateTeam")}
-        >
-          <Icon name="add" />
-        </Button>
-        <Button
-          transparent
-          onPress={() => this.assignTeamsToState({ refresh: true })}
-        >
-          <Icon name="refresh" />
-        </Button>
-      </Right>
-    </Header>
-  );}
+  _renderHeader() {
+    return (
+      <Header>
+        <Left>
+          <Button
+            transparent
+            onPress={() => this.props.navigation.navigate("DrawerOpen")}
+          >
+            <Icon name="menu" />
+          </Button>
+        </Left>
+        <Body>
+          <Title>Teams</Title>
+        </Body>
+        <Right style={styles.flex}>
+          <Button
+            transparent
+            onPress={() => this.props.navigation.navigate("CreateTeam")}
+          >
+            <Icon name="add" />
+          </Button>
+          <Button
+            transparent
+            onPress={() => this.assignTeamsToState({ refresh: true })}
+          >
+            <Icon name="refresh" />
+          </Button>
+        </Right>
+      </Header>
+    );
+  }
 
   // Render Body
-  _renderBody() { return (
-    <Content padder>
-      <FlatList 
-        style={styles.container}
-        data={this.getTeamsFromState()}
-        renderItem={data => this._renderTeamData(data.item)}
-      />
-    </Content>
-  );}
+  _renderBody() {
+    return (
+      <Content padder>
+        <FlatList
+          style={styles.container}
+          data={this.getTeamsFromState()}
+          renderItem={data => this._renderTeamData(data.item)}
+        />
+      </Content>
+    );
+  }
 
   // Render Team Data
-  _renderTeamData(teamData) { return (
-    <TouchableOpacity style={styles.teamItem} onPress={()=> {
+  _renderTeamData(teamData) {
+    return (
+      <TouchableOpacity style={styles.teamItem} onPress={() => {
         teamData.modalVisible = true;
         this.setState(JSON.parse(JSON.stringify(this.state)));
       }}>
-      <View style={styles.text}>
-        <Text style={styles.title}>{teamData.uid} - {teamData.name}</Text>
-        <Text style={styles.body}>
-          {this.truncate(teamData.desc)}
-        </Text>
-        <View style={styles.flex}>
-          <Icon style={styles.time} name="time" />
-          <Text style={styles.time}>
-            {"  "}{teamData.created}
+        <View style={styles.text}>
+          <Text style={styles.title}>{teamData.uid} - {teamData.name}</Text>
+          <Text style={styles.body}>
+            {this.truncate(teamData.desc)}
           </Text>
         </View>
-      </View>
-      <Icon style={styles.icon} name="more" />
-      {this._renderModal(teamData)}
-    </TouchableOpacity>
-  );}
+        <Icon style={styles.icon} name="more" />
+        {this._renderModal(teamData)}
+      </TouchableOpacity>
+    );
+  }
 
   // Render Modal
-  // @TODO: Implement proper buttons menu and polish the UI
-  _renderModal(teamData) { return (
-    <Modal isVisible={teamData.modalVisible}>
-      <View style={styles.modalContent}>
-        <Text>{teamData.name}</Text>
-        {this._renderModalButton(teamData,"Apples")}
-        {this._renderModalButton(teamData,"Banans")}
-        {this._renderModalButton(teamData,"Carrots")}
-      </View>
-    </Modal>
-  );}
+  _renderModal(teamData) {
+    return (
+      <TouchableWithoutFeedback onPress={() => this.closeModal(teamData)}>
+        <Modal
+          onBackdropPress={() => this.closeModal(teamData)}
+          onBackButtonPress={() => this.closeModal(teamData)}
+          onSwipe={() => this.closeModal(teamData)}
+          swipeDirection="down"
+          isVisible={teamData.modalVisible}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>{teamData.name}</Text>
+            <View style={styles.modalFlex}>
+              {this._renderModalButton(teamData, "Info")}
+              {this._renderModalButton(teamData, "Members")}
+            </View>
+          </View>
+        </Modal>
+      </TouchableWithoutFeedback>
+    );
+  }
 
   // Render Modal Button
-  // @TODO: Implement OnClose
-  _renderModalButton(teamData,buttonText) { return (
-    <TouchableOpacity onPress={() => { 
-      this.onModalButtonClick(teamData,buttonText);
-    }}>
-      <View style={styles.button}>
-        <Text>{buttonText}</Text>
-      </View>
-    </TouchableOpacity>
-  );}
+  _renderModalButton(teamData, buttonText) {
+    return (
+      <TouchableOpacity style={styles.modalButton} onPress={() => {
+        this.onModalButtonClick(teamData, buttonText);
+      }}>
+        <Text style={styles.modalText}>{buttonText}</Text>
+      </TouchableOpacity>
+    );
+  }
 }
 
 export default Teams;

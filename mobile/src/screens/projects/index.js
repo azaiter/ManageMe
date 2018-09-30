@@ -171,7 +171,6 @@ class Projects extends Component {
   }
 
   // Render Modal
-  // @TODO: Implement proper buttons menu and polish the UI
   _renderModal(projectData) {
     return (
       <TouchableWithoutFeedback onPress={() => this.closeModal(projectData)}>
@@ -194,7 +193,6 @@ class Projects extends Component {
   }
 
   // Render Modal Button
-  // @TODO: Implement OnClose
   _renderModalButton(projectData, buttonText) {
     return (
       <TouchableOpacity style={styles.modalButton} onPress={() => {
