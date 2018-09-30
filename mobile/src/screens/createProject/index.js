@@ -15,90 +15,65 @@ import {
   Item,
   Form
 } from "native-base";
-import { Alert, Platform } from "react-native";
+import { Alert } from "react-native";
 import styles from "./styles";
 const Auth = require("../../util/Auth");
 const ApiCalls = require("../../util/ApiCalls");
 
 const fieldsArr = [
   {
-    name: "firstName",
-    label: "First Name",
+    name: "projectName",
+    label: "Name",
     regex: /^.+$/,
     keyboardType: "default",
     secureTextEntry: false
   },
   {
-    name: "lastName",
-    label: "Last Name",
+    name: "projectDesc",
+    label: "Description",
     regex: /^.+$/,
     keyboardType: "default",
     secureTextEntry: false
   },
   {
-    name: "email",
-    label: "Email Address",
-    regex: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-    keyboardType: "email-address",
-    secureTextEntry: false
-  },
-  {
-    name: "phoneNumber",
-    label: "Phone Number",
-    regex: /^\d{10}$/,
-    keyboardType: Platform.OS === "android" ? "phone-pad" : "number-pad",
-    secureTextEntry: false
-  },
-  {
-    name: "address",
-    label: "Address",
-    regex: /^.+$/,
-    keyboardType: "default",
-    secureTextEntry: false
-  },
-  {
-    name: "wage",
-    label: "Wage",
-    regex: /^\d+(.\d+)?$/,
-    keyboardType: "numeric",
-    secureTextEntry: false
-  },
-  {
-    name: "username",
-    label: "Username",
-    regex: /^.+$/,
-    keyboardType: "default",
-    secureTextEntry: false
-  },
-  {
-    name: "password",
-    label: "Password",
-    regex: /^(?=(?:[^A-Z]*[A-Z]){1})(?=[^!@#$&*]*[!@#$&*])(?=(?:[^0-9]*[0-9]){1}).{8,}$/,
+    name: "teamId",
+    label: "Team",
+    regex: /^[0-9]*$/,
     keyboardType: "default",
     secureTextEntry: false
   }
 ];
 
-class AddUser extends Component {
+class CreateProject extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      firstName: "",
-      lastName: "",
-      email: "",
-      phoneNumber: "",
-      address: "",
-      wage: "",
-      username: "",
-      password: ""
+      projectName: "",
+      projectDesc: "",
+      teamId: ""
     };
-    Auth.setIsLoginStateOnScreenEntry(this, { navigate: "AddUser", setUserPermissions: true });
+    // This line is creating an infinte loop of page renders.
+    Auth.setIsLoginStateOnScreenEntry(this, { setUserPermissions: true });
     Auth.getPermissions.bind(this);
     this.checkAndSetState.bind(this);
     this.getFieldValidation.bind(this);
     this._renderHeader.bind(this);
     this._renderBody.bind(this);
     this._renderFieldEntry.bind(this);
+  }
+
+  assignTeamsToState(opts = { refresh: false }) {
+    if ((this.state && this.state.loggedIn) && (!this.state.teams || opts.refresh)) {
+      ApiCalls.getTeams().then(response => {
+        ApiCalls.handleAPICallResult(response).then(apiResults => {
+          if (apiResults) {
+            this.setState({
+              teams: apiResults
+            });
+          }
+        });
+      });
+    }
   }
 
   handleSubmit = async () => {
@@ -112,18 +87,18 @@ class AddUser extends Component {
       });
     }
     else {
-      let apiResult = await ApiCalls.createUser(this.state.firstName, this.state.lastName, this.state.email, this.state.phoneNumber, this.state.address, this.state.username, this.state.password, this.state.wage);
+      let apiResult = await ApiCalls.createProject(this.state.projectName, this.state.projectDesc, this.state.teamId);
       let handledApiResults = await ApiCalls.handleAPICallResult(apiResult, this);
       this.setState({ isLoading: false });
       if (handledApiResults) {
-        let message = `User "${this.state.firstName} ${this.state.lastName}" was added successfully!`;
+        let message = `Project "${this.state.projectName}" was added successfully!`;
         ApiCalls.showToastsInArr([message], {
           buttonText: "OK",
           type: "success",
           position: "top",
           duration: 10 * 1000
         });
-        Alert.alert("User Added!", message);
+        Alert.alert("Project Added!", message);
       }
     }
   }
@@ -149,7 +124,13 @@ class AddUser extends Component {
     }
   }
 
+  async goBack() {
+    await Auth.saveItem("@app.refreshProject", { refresh: true });
+    this.props.navigation.goBack();
+  }
+
   render() {
+    this.assignTeamsToState();
     return (
       <Container style={styles.container}>
         {this._renderHeader()}
@@ -170,9 +151,16 @@ class AddUser extends Component {
           </Button>
         </Left>
         <Body>
-          <Title>Add User</Title>
+          <Title>Create Project</Title>
         </Body>
-        <Right />
+        <Right>
+          <Button
+            transparent
+            onPress={() => this.props.navigation.goBack()}
+          >
+            <Icon name="arrow-back" />
+          </Button>
+        </Right>
       </Header>
     );
   }
@@ -184,18 +172,14 @@ class AddUser extends Component {
           <Content>
             <Form>
               {this._renderFieldEntry(fieldsArr[0])}
+              {/* TODO: Convert to TextArea */}
               {this._renderFieldEntry(fieldsArr[1])}
               {this._renderFieldEntry(fieldsArr[2])}
-              {this._renderFieldEntry(fieldsArr[3])}
-              {this._renderFieldEntry(fieldsArr[4])}
-              {this._renderFieldEntry(fieldsArr[5])}
-              {this._renderFieldEntry(fieldsArr[6])}
-              {this._renderFieldEntry(fieldsArr[7])}
               <Button
                 block style={{ margin: 15, marginTop: 50 }}
                 onPress={this.handleSubmit}
               >
-                <Text>Add User</Text>
+                <Text>Create Project</Text>
               </Button>
             </Form>
           </Content>
@@ -222,4 +206,4 @@ class AddUser extends Component {
   }
 }
 
-export default AddUser;
+export default CreateProject;

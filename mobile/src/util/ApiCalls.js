@@ -3,12 +3,12 @@ const Auth = require("../util/Auth");
 
 import { Toast } from "native-base";
 
-callFetch = async function (params) {
-    if(params.url) {
+let callFetch = async function (params) {
+    if (params.url) {
         let tok = await Auth.getLocalToken();
-        let bodyObj = (params.body)?params.body:params;
-        if(bodyObj.paramArr) {
-            if(bodyObj.paramArr.constructor === Array) {
+        let bodyObj = (params.body) ? params.body : params;
+        if (bodyObj.paramArr) {
+            if (bodyObj.paramArr.constructor === Array) {
                 bodyObj.paramArr = [tok.token].concat(bodyObj.paramArr);
             } else {
                 bodyObj.paramArr = [tok.token];
@@ -16,7 +16,7 @@ callFetch = async function (params) {
         } else {
             bodyObj.token = tok.token;
         }
-        if(params.body) {
+        if (params.body) {
             Object.assign(bodyObj, params.body);
         }
         const res = await fetch(apiURL + params.url, {
@@ -27,7 +27,7 @@ callFetch = async function (params) {
         const json = await res.json();
         return [json, res.status];
     }
-}
+};
 
 export function getErrorsListFromObj(obj) {
     let arrToReturn = [];
@@ -85,8 +85,8 @@ export async function getTime() {
     });
 }
 
-export async function clockIn(reqID) {    
-    return this.callFetch({
+export async function clockIn(reqID) {
+    return await callFetch({
         url: "/clock/in",
         body: {
             req_id: reqID
@@ -104,7 +104,7 @@ export async function clockOut(reqID) {
 }
 
 export async function getEstimate(projId) {
-    return this.callFetch({
+    return await callFetch({
         url: "/project/estimate/get",
         body: {
             project_id: projId
@@ -113,7 +113,7 @@ export async function getEstimate(projId) {
 }
 
 export async function getRequirementEstimates(reqId) {
-    return this.callFetch({
+    return await callFetch({
         url: "/requirement/estimate/get",
         body: {
             req_id: reqId
@@ -122,7 +122,7 @@ export async function getRequirementEstimates(reqId) {
 }
 
 export async function getTimeCaps(projId) {
-    return this.callFetch({
+    return await callFetch({
         url: "/project/timecaps/get",
         body: {
             project_id: projId
@@ -413,6 +413,15 @@ export async function getRecentRequirements() {
         url: "/util/custom",
         body: {
             spName: "sp_getRecentReqs"
+        }
+    });
+}
+export async function enabledDisableUser(userId, enabled) {
+    return await callFetch({
+        url: "/util/custom",
+        body: {
+            paramArr: [userId, enabled],
+            spName: "sp_updateUserEnabled"
         }
     });
 }

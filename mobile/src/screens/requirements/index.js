@@ -9,19 +9,11 @@ import {
   Right,
   Body,
   Text,
-  Icon,
-  List,
-  ListItem
+  Icon
 } from "native-base";
 import styles from "./styles";
-const Auth = require("../../util/Auth");
-class Permissions extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-    Auth.setIsLoginStateOnScreenEntry(this, { navigate: "Permissions", setUserPermissions: true });
-    Auth.getPermissions.bind(this);
-  }
+
+class Requirements extends Component {
   render() {
     return (
       <Container style={styles.container}>
@@ -35,23 +27,11 @@ class Permissions extends Component {
             </Button>
           </Left>
           <Body>
-            <Title>My Permissions</Title>
+            <Title>Requirements</Title>
           </Body>
           <Right />
         </Header>
-
         <Content padder>
-          <List
-            dataArray={Auth.getPermissions(this)}
-            renderRow={data =>
-              <ListItem>
-                <Left>
-                  <Text>
-                    {data.desc}
-                  </Text>
-                </Left>
-              </ListItem>}
-          />
           <Button onPress={() => this.props.navigation.goBack()}>
             <Text>Back</Text>
           </Button>
@@ -60,5 +40,4 @@ class Permissions extends Component {
     );
   }
 }
-
-export default Permissions;
+export default Requirements;

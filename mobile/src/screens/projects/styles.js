@@ -1,6 +1,7 @@
 export default {
   container: {
-    backgroundColor: "#FFF"
+    backgroundColor: "#FFF",
+    flex: 1,
   },
 
   mb10: {
@@ -9,22 +10,17 @@ export default {
 
   projectItem: {
     flex: 1,
-    flexDirection: 'row',
+    flexDirection: "row",
     borderBottomWidth: 1,
-    borderBottomColor: '#E4E4E4',
-    paddingTop:10,
-    alignSelf: 'flex-start',
-    justifyContent: 'flex-start',
+    borderBottomColor: "#E4E4E4",
+    paddingTop: 10,
+    alignSelf: "flex-start",
+    justifyContent: "flex-start",
     height: "100%"
   },
 
-  button:{
-    flex:1,
-    
-  },
-
-  text:{
-    flex:3,
+  text: {
+    flex: 3,
   },
 
   icon: {
@@ -33,48 +29,57 @@ export default {
 
   title: {
     fontSize: 23,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     color: "#008000",
+  },
+
+  modalTitle: {
+    fontSize: 30,
+    fontWeight: "bold",
+    color: "white",
+  },
+
+  modalText: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "black",
   },
 
   flex: {
     flex: 1,
-    flexDirection: 'row',
+    flexDirection: "row",
     paddingTop: 10,
-    paddingBottom: 10
-  },
-  time: {
-    fontSize: 17.5,
-    fontStyle: 'italic',
-    color: 'black',
+    paddingBottom: 10,
   },
 
-  container: {
-    flex: 1,
+  modalFlex: {
+    flexDirection: "row",
+  },
+
+
+  time: {
+    fontSize: 17.5,
+    fontStyle: "italic",
+    color: "black",
   },
 
   body: {
     fontSize: 20,
-    color: 'black',
+    color: "black",
   },
 
-  button: {
-    backgroundColor: 'lightblue',
+  modalButton: {
+    backgroundColor: "lightskyblue",
     padding: 12,
     margin: 16,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     borderRadius: 4,
-    borderColor: 'rgba(0, 0, 0, 0.1)',
-  },
-  
-  modalContent: {
-    backgroundColor: 'white',
-    padding: 22,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 4,
-    borderColor: 'rgba(0, 0, 0, 0.1)',
   },
 
+  modalContent: {
+    padding: 22,
+    justifyContent: "center",
+    alignItems: "center",
+  },
 };
