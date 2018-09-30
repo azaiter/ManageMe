@@ -274,7 +274,7 @@ WHERE
  	and Session.end > CURRENT_TIMESTAMP) > 0$$
 
 CREATE PROCEDURE `sp_getAllUsers` ()  NO SQL
-SELECT `uid`, `first_name`, `last_name`, `email`, `phone`, `address`,`wage`, `username` FROM User WHERE enabled = 1$$
+SELECT `uid`, `first_name`, `last_name`, `email`, `phone`, `address`,`wage`, `username`, `created`, `enabled` FROM User$$
 
 CREATE PROCEDURE `sp_getFileTypes` ()  NO SQL
 SELECT * FROM FileType$$
@@ -293,6 +293,12 @@ And (SELECT count(User.uid) FROM Session
              Where Session.token = in_token
              And User.enabled = 1 
              And Session.end > CURRENT_TIMESTAMP) > 0$$
+
+CREATE PROCEDURE `sp_updateUserEnabled` (IN `in_token` VARCHAR(255), IN `userID` INT, IN `in_enabled` INT)  NO SQL
+BEGIN
+	update User set enabled = in_enabled where uid = userID;
+	SELECT `uid`, `first_name`, `last_name`, `email`, `phone`, `address`, `wage`,`username`, `enabled` FROM User WHERE uid = userID;
+END$$
 
 CREATE PROCEDURE `sp_getProjects` (IN `tok` VARCHAR(255))  NO SQL
 SELECT `uid`, `name`, `desc`, `created` FROM Project WHERE assigned_team in (SELECT team_uid FROM TeamMember WHERE user_uid=(SELECT user_uid FROM Session WHERE token=tok and enabled=1 LIMIT 1)) OR created_by = (SELECT user_uid FROM Session WHERE token=tok and enabled=1 LIMIT 1)$$

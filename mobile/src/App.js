@@ -130,6 +130,8 @@ import AddUser from "./screens/adduser";
 import Requirements from "./screens/requirements";
 import CreateProject from "./screens/createProject";
 import ProjectInfo from "./screens/projectInfo";
+import Users from "./screens/users";
+
 
 const Drawer = DrawerNavigator(
   {
@@ -141,6 +143,10 @@ const Drawer = DrawerNavigator(
     Reports: { screen: Reports },
     Teams: { screen: Teams },
     Home: { screen: Home },
+    CreateProject: { screen: CreateProject },
+    ProjectInfo: { screen: ProjectInfo },
+    Requirements: { screen: Requirements },
+    Users: { screen: Users },
 
     //dev screens
     Anatomy: { screen: Anatomy },
@@ -181,9 +187,9 @@ const AppNavigator = StackNavigator(
   {
     Drawer: { screen: Drawer },
 
-    Requirements: {screen: Requirements},
-    CreateProject: {screen: CreateProject},
-    ProjectInfo: {screen: ProjectInfo},
+    Requirements: { screen: Requirements },
+    CreateProject: { screen: CreateProject },
+    ProjectInfo: { screen: ProjectInfo },
 
     Header1: { screen: Header1 },
     Header2: { screen: Header2 },
@@ -292,7 +298,7 @@ const AppNavigator = StackNavigator(
     RegularActionSheet: { screen: RegularActionSheet },
     IconActionSheet: { screen: IconActionSheet }
 
-    },
+  },
   {
     initialRouteName: "Drawer",
     headerMode: "none"

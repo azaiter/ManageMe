@@ -45,32 +45,32 @@ export function getPermissions(component) {
     }
 }
 
-export function userHasPermission(component, permissionID){
+export function userHasPermission(component, permissionID) {
     return getPermissions(component).filter(perm => perm.uid === permissionID).length > 0;
 }
 
-export async function setIsLoginStateOnScreenEntry(component, opts={}) {
+export async function setIsLoginStateOnScreenEntry(component, opts = {}) {
     let isClientLoggedIn = await isLoggedIn();
-    if (isClientLoggedIn){
-        if (component && component.state && !component.state.loggedIn){
+    if (isClientLoggedIn) {
+        if (component && component.state && !component.state.loggedIn) {
             let userToken = await getLocalToken();
             component.setState({ loggedIn: true, userTokenObj: userToken }); // only update state when needed
-            if (opts.setUserPermissions){
+            if (opts.setUserPermissions) {
                 setUserPermissionsOnComponent(component);
             }
         }
-        if (opts.navigate){
+        if (opts.navigate) {
             component.props.navigation.navigate(opts.navigate);
         }
     }
     else {
-        if (component && component.state && component.state.loggedIn){
+        if (component && component.state && component.state.loggedIn) {
             component.setState({ loggedIn: false }); // only update state when needed
-            if (opts.setUserPermissions){
+            if (opts.setUserPermissions) {
                 setUserPermissionsOnComponent(component);
             }
         }
-        if (!opts.dontGoHome){
+        if (!opts.dontGoHome) {
             component.props.navigation.navigate("Home");
         }
     }
@@ -79,33 +79,33 @@ export async function setIsLoginStateOnScreenEntry(component, opts={}) {
 export async function setUserPermissionsOnComponent(component) {
     let isClientLoggedIn = await isLoggedIn();
     let permissionsObj = await getPermissionsObject();
-    if (isClientLoggedIn){
-        if (!permissionsObj){
+    if (isClientLoggedIn) {
+        if (!permissionsObj) {
             let localToken = await getLocalToken();
             //console.log("doing api call permissions")
             let apiResult = await ApiCalls.getUserPerms(localToken.uid);
             let handledApiResults = await ApiCalls.handleAPICallResult(apiResult, component);
-            if (handledApiResults){
+            if (handledApiResults) {
                 //console.log("UserPermissions: ", handledApiResults);
                 permissionsObj = handledApiResults;
             }
         }
-        if (component && component.state && !component.state.userPermissions){
+        if (component && component.state && !component.state.userPermissions) {
             //console.log("setting state main");
             await saveItem(userPermissionsASKey, permissionsObj);
             component.setState({ userPermissions: permissionsObj }); // only update state when needed
         }
     }
     else {
-        if (component && component.state && component.state.userPermissions){
+        if (component && component.state && component.state.userPermissions) {
             //console.log("setting state else");
             component.setState({ userPermissions: false }); // only update state when needed
         }
     }
 }
 
-export async function getPermissionsObject(){
-    return new Promise(async (resolve, reject)=>{
+export async function getPermissionsObject() {
+    return new Promise(async (resolve, reject) => {
         let permissionsObj = await getItem(userPermissionsASKey);
         //console.log(permissionsObj);
         resolve(permissionsObj ? permissionsObj : false);
@@ -113,7 +113,7 @@ export async function getPermissionsObject(){
 }
 
 export async function isLoggedIn() {
-    return new Promise(async (resolve, reject)=>{
+    return new Promise(async (resolve, reject) => {
         let sessionObj = await getItem(loginTokenASKey);
         if (sessionObj) {
             let expirationDate = new Date(sessionObj.expire);
