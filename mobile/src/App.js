@@ -131,7 +131,7 @@ import Requirements from "./screens/requirements";
 import CreateProject from "./screens/createProject";
 import ProjectInfo from "./screens/projectInfo";
 import Users from "./screens/users";
-
+import CreateTeam from "./screens/createTeam";
 
 const Drawer = DrawerNavigator(
   {
@@ -144,6 +144,7 @@ const Drawer = DrawerNavigator(
     Teams: { screen: Teams },
     Home: { screen: Home },
     CreateProject: { screen: CreateProject },
+    CreateTeam: { screen: CreateTeam },
     ProjectInfo: { screen: ProjectInfo },
     Requirements: { screen: Requirements },
     Users: { screen: Users },
@@ -190,6 +191,7 @@ const AppNavigator = StackNavigator(
     Requirements: { screen: Requirements },
     CreateProject: { screen: CreateProject },
     ProjectInfo: { screen: ProjectInfo },
+    CreateTeam: { screen: CreateTeam },
 
     Header1: { screen: Header1 },
     Header2: { screen: Header2 },
