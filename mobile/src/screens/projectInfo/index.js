@@ -18,7 +18,7 @@ import {
   Spinner,
 } from "native-base";
 import styles from "./styles";
-import { FlatList, Alert, TextInput, Keyboard } from "react-native";
+import { FlatList, Alert, TextInput, TouchableOpacity } from "react-native";
 const Auth = require("../../util/Auth");
 const ApiCalls = require("../../util/ApiCalls");
 
@@ -100,22 +100,22 @@ class ProjectInfo extends Component {
     }
   }
 
-  /* // @TODO: Get TimeCaps for Project 
-  // Retrieve timecaps from API and assign to state.
-   assignTimeCapsToState(opts = { refresh: false }) {
-     if ((this.state && this.state.loggedIn) && (!this.state.timeCaps || opts.refresh)) {
-       ApiCalls.getTimeCaps(this.params.project.uid).then(response => {
-         ApiCalls.handleAPICallResult(response).then(apiResults => {
-           if (apiResults) {
-             //console.log(apiResults);  
-             this.setState({
-               timeCaps: apiResults
-             });
-           }
-         });
-       });
-     }
-   }*/
+  // Retrieve Project Hours from API and assign to state.
+  assignProjectHoursToState(opts = { refresh: false }) {
+    if ((this.state && this.state.loggedIn) && (!this.state.projectHours || opts.refresh)) {
+      ApiCalls.getProjectHours(this.params.project.uid).then(response => {
+        ApiCalls.handleAPICallResult(response).then(apiResults => {
+          if (apiResults) {
+            //console.log(apiResults);  
+            this.setState({
+              projectHours: apiResults,
+              renderHours: true
+            });
+          }
+        });
+      });
+    }
+  }
 
   handleSubmit = async () => {
     this.setState({ isLoading: true });
@@ -187,6 +187,26 @@ class ProjectInfo extends Component {
     }
   }
 
+  // Get Time.
+  getTime() {
+    if (this.state.projectHours.length === 2) {
+      return "\n Project is " + ((this.state.projectHours[0]["SUM(soft_cap)"] / this.state.projectHours[1]["SUM(soft_cap)"]) * 100).toFixed(2) + " % Complete (on track)\n";
+    } else {
+      return null;
+    }
+  }
+
+  // Get Requirement count.
+  getInitialPage(text) {
+    if (text === "Pending:") {
+      return 1;
+    } else if (text === "Completed:") {
+      return 2;
+    } else {
+      return 0;
+    }
+  }
+
   // Render
   render() {
 
@@ -238,8 +258,8 @@ class ProjectInfo extends Component {
   _renderTabs() {
     this.assignRequirementsToState();
     this.assignCommentsToState();
-    //this.assignTimeCapsToState();
-    if (this.state.renderRequirement && this.state.renderComment) {
+    this.assignProjectHoursToState();
+    if ((this.state.renderRequirement && this.state.renderComment) && this.state.renderHours) {
       return (
         <Tabs>
           <Tab heading="Information">
@@ -272,9 +292,12 @@ class ProjectInfo extends Component {
               {"  "}{this.params.project.created}
             </Text>
           </View>
+          <Text style={styles.commentTitle1}>
+            {this.getTime()}
+          </Text>
         </View>
         <View style={styles.flexRow}>
-          <View style={styles.requirement}>
+          <View>
             <Card style={styles.card}>
               <Text style={styles.title}>Requirements</Text>
               {this._renderRequirementButton("Active:")}
@@ -283,9 +306,9 @@ class ProjectInfo extends Component {
             </Card>
           </View>
           <View style={styles.buttonView}>
-            <Button style={styles.buttonBlue}><Text style={styles.buttonText2}>EDIT</Text></Button>
-            <Button style={styles.buttonBlue}><Text style={styles.buttonText2}>TEAM</Text></Button>
-            <Button style={styles.buttonRed}><Text style={styles.buttonText2}>DELETE</Text></Button>
+            <TouchableOpacity style={styles.buttonBlue} transparent><Text style={styles.buttonText2}>EDIT</Text></TouchableOpacity>
+            <TouchableOpacity style={styles.buttonBlue} transparent><Text style={styles.buttonText2}>TEAM</Text></TouchableOpacity>
+            <TouchableOpacity style={styles.buttonRed} transparent><Text style={styles.buttonText2}>DELETE</Text></TouchableOpacity>
           </View>
         </View>
       </Content >
@@ -297,7 +320,7 @@ class ProjectInfo extends Component {
     return (
       <Button
         transparent
-        onPress={() => this.props.navigation.navigate("Requirements")}
+        onPress={() => this.props.navigation.navigate("Requirements", { project: this.params.project, initialPage: this.getInitialPage(text) })}
       >
         <View style={styles.flex}>
           <Text style={styles.buttonText}>{text}</Text>

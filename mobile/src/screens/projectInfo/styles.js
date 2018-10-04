@@ -41,21 +41,23 @@ export default {
   buttonView: {
     flexDirection: "column",
     justifyContent: "space-evenly",
+    alignItems: "center",
   },
 
   buttonBlue: {
-    width: 100,
+    width: 80,
+    height: 30,
     justifyContent: "center",
+    backgroundColor: "blue",
+    alignItems: "center",
   },
 
   buttonRed: {
-    width: 100,
+    width: 80,
+    height: 30,
     justifyContent: "center",
     backgroundColor: "red",
-  },
-
-  requirement: {
-    width: 200,
+    alignItems: "center",
   },
 
   card: {
@@ -65,6 +67,13 @@ export default {
   commentTitle: {
     fontSize: 20,
     fontWeight: "bold",
+    color: "#008000",
+  },
+
+  commentTitle1: {
+    fontSize: 22,
+    fontWeight: "bold",
+    textAlign: "center",
     color: "#008000",
   },
 
@@ -107,9 +116,17 @@ export default {
   },
 
   buttonText2: {
-    fontSize: 20,
-    fontWeight: "bold",
+    fontSize: 22,
     color: "white",
+    fontWeight: "bold",
+  },
+
+  buttonText3: {
+    fontSize: 20,
+    color: "red",
+    fontWeight: "bold",
+    textDecorationLine: "underline",
+    padding: 5,
   },
 
   comment: {
