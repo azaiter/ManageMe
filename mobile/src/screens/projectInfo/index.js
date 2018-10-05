@@ -177,9 +177,9 @@ class ProjectInfo extends Component {
 
   // Get Requirement count.
   getRequirementsCount(status) {
-    if (status === "Pending:") {
+    if (status === "Pending") {
       return this.state.requirementList.pending.length;
-    } else if (status === "Completed:") {
+    } else if (status === "Completed") {
       return this.state.requirementList.completed.length;
     } else {
       return this.state.requirementList.initial.length;
@@ -197,9 +197,9 @@ class ProjectInfo extends Component {
 
   // Get Requirement count.
   getInitialPage(status) {
-    if (status === "Pending:") {
+    if (status === "Pending") {
       return 1;
-    } else if (status === "Completed:") {
+    } else if (status === "Completed") {
       return 2;
     } else {
       return 0;
@@ -278,35 +278,35 @@ class ProjectInfo extends Component {
     return (
       <Content padder>
         <View>
-          <Text style={styles.title}>
+          <Text style={styles.projectTitle}>
             {this.params.project.name}
           </Text>
-          <Text style={styles.body}>
+          <Text style={styles.projectDesc}>
             {this.params.project.desc}{"\n"}
           </Text>
           <View style={styles.flex}>
-            <Icon style={styles.time} name="time" />
-            <Text style={styles.time}>
+            <Icon style={styles.projectTime} name="time" />
+            <Text style={styles.projectTime}>
               {"  "}{this.params.project.created}
             </Text>
           </View>
-          <Text style={styles.commentTitle1}>
+          <Text style={styles.projectHours}>
             {this.getTime()}
           </Text>
         </View>
         <View style={styles.flexRow}>
           <View>
             <Card style={styles.card}>
-              <Text style={styles.title}>Requirements</Text>
-              {this._renderRequirementButton("Active:")}
-              {this._renderRequirementButton("Pending:")}
-              {this._renderRequirementButton("Completed:")}
+              <Text style={styles.projectTitle}>Requirements</Text>
+              {this._renderRequirementButton("Active")}
+              {this._renderRequirementButton("Pending")}
+              {this._renderRequirementButton("Completed")}
             </Card>
           </View>
-          <View style={styles.buttonView}>
-            <TouchableOpacity style={styles.buttonBlue} transparent><Text style={styles.buttonText2}>EDIT</Text></TouchableOpacity>
-            <TouchableOpacity style={styles.buttonBlue} transparent><Text style={styles.buttonText2}>TEAM</Text></TouchableOpacity>
-            <TouchableOpacity style={styles.buttonRed} transparent><Text style={styles.buttonText2}>DELETE</Text></TouchableOpacity>
+          <View style={styles.requirementView}>
+            <TouchableOpacity style={styles.buttonBlue} transparent><Text style={styles.projectActivity}>EDIT</Text></TouchableOpacity>
+            <TouchableOpacity style={styles.buttonBlue} transparent><Text style={styles.projectActivity}>TEAM</Text></TouchableOpacity>
+            <TouchableOpacity style={styles.buttonRed} transparent><Text style={styles.projectActivity}>DELETE</Text></TouchableOpacity>
           </View>
         </View>
       </Content >
@@ -321,10 +321,10 @@ class ProjectInfo extends Component {
         onPress={() => this.props.navigation.navigate("Requirements", { project: this.params.project, initialPage: this.getInitialPage(status) })}
       >
         <View style={styles.flex}>
-          <Text style={styles.buttonText}>{status}</Text>
+          <Text style={styles.requirementStatus}>{status}{":"}</Text>
         </View>
         <View>
-          <Text style={styles.buttonText1}>{this.getRequirementsCount(status)}</Text>
+          <Text style={styles.requirementCount}>{this.getRequirementsCount(status)}</Text>
         </View>
       </Button>
     );

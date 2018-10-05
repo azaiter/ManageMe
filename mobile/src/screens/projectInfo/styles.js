@@ -7,7 +7,7 @@ export default {
     marginBottom: 10
   },
 
-  title: {
+  projectTitle: {
     fontSize: 28,
     fontWeight: "bold",
     color: "#008000",
@@ -15,7 +15,7 @@ export default {
     paddingBottom: 15,
   },
 
-  body: {
+  projectDesc: {
     fontSize: 22,
     color: "black",
     textAlign: "justify",
@@ -26,19 +26,30 @@ export default {
     flexDirection: "row",
   },
 
-  time: {
+  flexRow: {
+    flexDirection: "row",
+    justifyContent: "space-evenly"
+  },
+
+  projectTime: {
     fontSize: 18.5,
     fontStyle: "italic",
     color: "black",
     paddingBottom: 15,
   },
 
-  flexRow: {
-    flexDirection: "row",
-    justifyContent: "space-evenly"
+  projectHours: {
+    fontSize: 22,
+    fontWeight: "bold",
+    textAlign: "center",
+    color: "#008000",
   },
 
-  buttonView: {
+  card: {
+    padding: 10,
+  },
+
+  requirementView: {
     flexDirection: "column",
     justifyContent: "space-evenly",
     alignItems: "center",
@@ -60,20 +71,9 @@ export default {
     alignItems: "center",
   },
 
-  card: {
-    padding: 10,
-  },
-
   commentTitle: {
     fontSize: 20,
     fontWeight: "bold",
-    color: "#008000",
-  },
-
-  commentTitle1: {
-    fontSize: 22,
-    fontWeight: "bold",
-    textAlign: "center",
     color: "#008000",
   },
 
@@ -101,32 +101,24 @@ export default {
     color: "black",
   },
 
-  buttonText: {
+  requirementStatus: {
     fontSize: 20,
     fontWeight: "bold",
     textDecorationLine: "underline",
     color: "blue",
   },
 
-  buttonText1: {
+  requirementCount: {
     fontSize: 20,
     fontWeight: "bold",
     color: "black",
     paddingRight: 50,
   },
 
-  buttonText2: {
+  projectActivity: {
     fontSize: 22,
     color: "white",
     fontWeight: "bold",
-  },
-
-  buttonText3: {
-    fontSize: 20,
-    color: "red",
-    fontWeight: "bold",
-    textDecorationLine: "underline",
-    padding: 5,
   },
 
   comment: {
