@@ -106,7 +106,6 @@ class ProjectInfo extends Component {
       ApiCalls.getProjectHours(this.params.project.uid).then(response => {
         ApiCalls.handleAPICallResult(response).then(apiResults => {
           if (apiResults) {
-            //console.log(apiResults);  
             this.setState({
               projectHours: apiResults,
               renderHours: true
@@ -177,10 +176,10 @@ class ProjectInfo extends Component {
   }
 
   // Get Requirement count.
-  getRequirementsCount(text) {
-    if (text === "Pending:") {
+  getRequirementsCount(status) {
+    if (status === "Pending:") {
       return this.state.requirementList.pending.length;
-    } else if (text === "Completed:") {
+    } else if (status === "Completed:") {
       return this.state.requirementList.completed.length;
     } else {
       return this.state.requirementList.initial.length;
@@ -197,10 +196,10 @@ class ProjectInfo extends Component {
   }
 
   // Get Requirement count.
-  getInitialPage(text) {
-    if (text === "Pending:") {
+  getInitialPage(status) {
+    if (status === "Pending:") {
       return 1;
-    } else if (text === "Completed:") {
+    } else if (status === "Completed:") {
       return 2;
     } else {
       return 0;
@@ -209,7 +208,6 @@ class ProjectInfo extends Component {
 
   // Render
   render() {
-
     return (
       <Container style={styles.container}>
         {this._renderHeader()}
@@ -316,17 +314,17 @@ class ProjectInfo extends Component {
   }
 
   // Render Requirement Button
-  _renderRequirementButton(text) {
+  _renderRequirementButton(status) {
     return (
       <Button
         transparent
-        onPress={() => this.props.navigation.navigate("Requirements", { project: this.params.project, initialPage: this.getInitialPage(text) })}
+        onPress={() => this.props.navigation.navigate("Requirements", { project: this.params.project, initialPage: this.getInitialPage(status) })}
       >
         <View style={styles.flex}>
-          <Text style={styles.buttonText}>{text}</Text>
+          <Text style={styles.buttonText}>{status}</Text>
         </View>
         <View>
-          <Text style={styles.buttonText1}>{this.getRequirementsCount(text)}</Text>
+          <Text style={styles.buttonText1}>{this.getRequirementsCount(status)}</Text>
         </View>
       </Button>
     );
