@@ -9,7 +9,6 @@ import {
   Right,
   Body,
   Text,
-<<<<<<< HEAD
   Tab,
   Tabs,
   Spinner,
@@ -17,13 +16,6 @@ import {
   Icon,
 } from "native-base";
 import { FlatList, Alert } from "react-native";
-=======
-  Icon,
-  Tab,
-  Tabs,
-} from "native-base";
-import { TouchableOpacity, FlatList } from "react-native";
->>>>>>> cdb18b1f48d63476f2429cfff19b3f43e96b738f
 import styles from "./styles";
 const Auth = require("../../util/Auth");
 const ApiCalls = require("../../util/ApiCalls");
@@ -31,12 +23,10 @@ const ApiCalls = require("../../util/ApiCalls");
 class Requirements extends Component {
   constructor(props) {
     super(props);
-<<<<<<< HEAD
     this.state = {};
     this.params = this.props.navigation.state.params;
     Auth.setIsLoginStateOnScreenEntry(this, { setUserPermissions: true });
     Auth.getPermissions.bind(this);
-    //this._renderAccordionContentActive.bind(this);
     this._renderTabs.bind(this);
   }
 
@@ -44,21 +34,6 @@ class Requirements extends Component {
   assignRequirementsToState(opts = { refresh: false }) {
     if ((this.state && this.state.loggedIn) && (!this.state.requirementList || opts.refresh)) {
       ApiCalls.getRequirementsByProjectId(this.params.project.uid).then(response => {
-=======
-    this.state = {
-      projectName: "",
-      projectDesc: "",
-      teamId: ""
-    };
-    Auth.setIsLoginStateOnScreenEntry(this, { setUserPermissions: true });
-    Auth.getPermissions.bind(this);
-  }
-
-  // Retrieve requirement list from API and assign to state.
-  assignRequirementsToState(projectId, opts = { refresh: false }) {
-    if ((this.state && this.state.loggedIn) && (!this.state.reqList || opts.refresh)) {
-      ApiCalls.getRequirementsByProjectId(projectId).then(response => {
->>>>>>> cdb18b1f48d63476f2429cfff19b3f43e96b738f
         ApiCalls.handleAPICallResult(response).then(apiResults => {
           if (apiResults) {
             /* 
@@ -67,7 +42,6 @@ class Requirements extends Component {
               3: pending
               4: change request
             */
-<<<<<<< HEAD
             let requirementList = {};
             requirementList.initial = [];
             requirementList.completed = [];
@@ -91,35 +65,12 @@ class Requirements extends Component {
               requirementList,
               renderRequirement: true
             });
-=======
-            let reqList = {};
-            reqList.initial = [];
-            reqList.completed = [];
-            reqList.pending = [];
-            reqList.changeRequest = [];
-            apiResults.forEach(result => {
-              if (result.status === 1) {
-                reqList.initial.push(result);
-              }
-              if (result.status === 2) {
-                reqList.completed.push(result);
-              }
-              if (result.status === 3) {
-                reqList.pending.push(result);
-              }
-              if (result.status === 4) {
-                reqList.changeRequest.push(result);
-              }
-            });
-            this.setState({ reqList });
->>>>>>> cdb18b1f48d63476f2429cfff19b3f43e96b738f
           }
         });
       });
     }
   }
 
-<<<<<<< HEAD
   //Handle Submit
   handleSubmit = async (requirementData) => {
     if (requirementData.clocked_in === "Y") {
@@ -226,57 +177,10 @@ class Requirements extends Component {
       <Container style={styles.container}>
         {this._renderHeader()}
         {this._renderTabs()}
-=======
-  /* TODO: remove this comment
-    example requirement object
-    Object {
-      "accepted_by": 0,
-      "changed": null,
-      "clocked_in": "N",
-      "created": "Wed, 25 Apr 2018 10:35:50 GMT",
-      "created_by": 95,
-      "desc": "Just do it please.",
-      "estimate": 5,
-      "first_name": "Zack",
-      "hard_cap": 30,
-      "last_name": "Zaiter",
-      "name": "Make The Fox Blue",
-      "notes": null,
-      "priority": 1,
-      "soft_cap": 20,
-      "status": 2,
-      "uid": 66,
-    },
-  */
-
-  render() {
-    this.assignRequirementsToState(this.props.navigation.state.params.projectId);
-    if (this.state.render) {
-      return (
-        <Container style={styles.container}> 
-          {this._renderHeader()}
-          {this._renderBody()}
-        </Container>
-      );
-    } else {
-      return this._renderLoadingScreen();
-    }
-  }
-
-  _renderLoadingScreen() {
-    return (
-      <Container style={styles.container}>
-        <Content padder>
-          <Text>
-            Loading...
-          </Text>
-        </Content>
->>>>>>> cdb18b1f48d63476f2429cfff19b3f43e96b738f
       </Container>
     );
   }
 
-<<<<<<< HEAD
   // Render loading screen
   _renderLoadingScreen() {
     return (
@@ -290,11 +194,6 @@ class Requirements extends Component {
   _renderHeader() {
     return (
       <Header hasTabs>
-=======
-  _renderHeader() {
-    return (
-      <Header>
->>>>>>> cdb18b1f48d63476f2429cfff19b3f43e96b738f
         <Left>
           <Button
             transparent
@@ -308,10 +207,7 @@ class Requirements extends Component {
         </Body>
         <Right>
           <Button
-<<<<<<< HEAD
             transparent
-=======
->>>>>>> cdb18b1f48d63476f2429cfff19b3f43e96b738f
             onPress={() => this.props.navigation.goBack()}
           >
             <Icon name="arrow-back" />
@@ -321,7 +217,6 @@ class Requirements extends Component {
     );
   }
 
-<<<<<<< HEAD
   // Render Tabs
   _renderTabs() {
     if (this.state.renderRequirement) {
@@ -400,51 +295,6 @@ class Requirements extends Component {
         </View>
         {this.getButtons(status, requirementData)}
       </View>
-=======
-  _renderBody() {
-    return (
-      <Tabs>
-        <Tab heading="Active">
-          <Content padder>
-            <Text>ONE</Text>
-          </Content>
-        </Tab>
-        <Tab heading="Pending">
-          <Content padder>
-            <Text>TWO</Text>
-          </Content>
-        </Tab>
-        <Tab heading="Completed">
-          <Content padder>
-            <Text>THREE</Text>
-          </Content>
-        </Tab>
-      </Tabs>
-    );
-  }
-
-  _renderListActive() {
-    return (
-      <Content padder>
-        <Text>ACTIVE</Text>
-      </Content>
-    );
-  }
-
-  _renderListPending() {
-    return (
-      <Content padder>
-        <Text>PENDING</Text>
-      </Content>
-    );
-  }
-
-  _renderListCompleted() {
-    return (
-      <Content padder>
-        <Text>COMPLETED</Text>
-      </Content>
->>>>>>> cdb18b1f48d63476f2429cfff19b3f43e96b738f
     );
   }
 }
