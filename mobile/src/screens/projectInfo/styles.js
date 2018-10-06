@@ -7,7 +7,7 @@ export default {
     marginBottom: 10
   },
 
-  title: {
+  projectTitle: {
     fontSize: 28,
     fontWeight: "bold",
     color: "#008000",
@@ -15,7 +15,7 @@ export default {
     paddingBottom: 15,
   },
 
-  body: {
+  projectDesc: {
     fontSize: 22,
     color: "black",
     textAlign: "justify",
@@ -26,40 +26,49 @@ export default {
     flexDirection: "row",
   },
 
-  time: {
+  flexRow: {
+    flexDirection: "row",
+    justifyContent: "space-evenly"
+  },
+
+  projectTime: {
     fontSize: 18.5,
     fontStyle: "italic",
     color: "black",
     paddingBottom: 15,
   },
 
-  flexRow: {
-    flexDirection: "row",
-    justifyContent: "space-evenly"
-  },
-
-  buttonView: {
-    flexDirection: "column",
-    justifyContent: "space-evenly",
-  },
-
-  buttonBlue: {
-    width: 100,
-    justifyContent: "center",
-  },
-
-  buttonRed: {
-    width: 100,
-    justifyContent: "center",
-    backgroundColor: "red",
-  },
-
-  requirement: {
-    width: 200,
+  projectHours: {
+    fontSize: 22,
+    fontWeight: "bold",
+    textAlign: "center",
+    color: "#008000",
   },
 
   card: {
     padding: 10,
+  },
+
+  requirementView: {
+    flexDirection: "column",
+    justifyContent: "space-evenly",
+    alignItems: "center",
+  },
+
+  buttonBlue: {
+    width: 80,
+    height: 30,
+    justifyContent: "center",
+    backgroundColor: "blue",
+    alignItems: "center",
+  },
+
+  buttonRed: {
+    width: 80,
+    height: 30,
+    justifyContent: "center",
+    backgroundColor: "red",
+    alignItems: "center",
   },
 
   commentTitle: {
@@ -92,24 +101,24 @@ export default {
     color: "black",
   },
 
-  buttonText: {
+  requirementStatus: {
     fontSize: 20,
     fontWeight: "bold",
     textDecorationLine: "underline",
     color: "blue",
   },
 
-  buttonText1: {
+  requirementCount: {
     fontSize: 20,
     fontWeight: "bold",
     color: "black",
     paddingRight: 50,
   },
 
-  buttonText2: {
-    fontSize: 20,
-    fontWeight: "bold",
+  projectActivity: {
+    fontSize: 22,
     color: "white",
+    fontWeight: "bold",
   },
 
   comment: {
