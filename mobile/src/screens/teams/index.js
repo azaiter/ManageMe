@@ -163,7 +163,7 @@ class Teams extends Component {
         this.setState(JSON.parse(JSON.stringify(this.state)));
       }}>
         <View style={styles.text}>
-          <Text style={styles.title}>{teamData.uid} - {teamData.name}</Text>
+          <Text style={styles.title}>{teamData.name}</Text>
           <Text style={styles.body}>
             {this.truncate(teamData.desc)}
           </Text>
