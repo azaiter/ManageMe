@@ -14,8 +14,9 @@ import {
   Spinner,
   View,
   Icon,
+  Accordion,
 } from "native-base";
-import { FlatList, Alert } from "react-native";
+import { Alert } from "react-native";
 import styles from "./styles";
 const Auth = require("../../util/Auth");
 const ApiCalls = require("../../util/ApiCalls");
@@ -27,7 +28,6 @@ class Requirements extends Component {
     this.params = this.props.navigation.state.params;
     Auth.setIsLoginStateOnScreenEntry(this, { setUserPermissions: true });
     Auth.getPermissions.bind(this);
-    this._renderTabs.bind(this);
   }
 
   // Retrieve requirement list from API and assign to state.
@@ -64,6 +64,22 @@ class Requirements extends Component {
             this.setState({
               requirementList,
               renderRequirement: true
+            });
+          }
+        });
+      });
+    }
+  }
+
+  // Retrieve clocked time from API and assign to state.
+  assignTimeToState(opts = { refresh: false }) {
+    if ((this.state && this.state.loggedIn) && (!this.state.clockedTime || opts.refresh)) {
+      ApiCalls.getTime().then(response => {
+        ApiCalls.handleAPICallResult(response).then(apiResults => {
+          if (apiResults) {
+            this.setState({
+              clockedTime: apiResults,
+              renderTime: true
             });
           }
         });
@@ -135,9 +151,40 @@ class Requirements extends Component {
     }
   }
 
+  // Time Remaining
+  timeRemaining(requirementData, cap) {
+    let timeData = [];
+    let timeValue = [];
+    this.state.clockedTime.forEach(result => {
+      if (result.req_uid === requirementData.uid) {
+        timeData.push(result);
+      }
+    });
+    timeData.forEach(result => {
+      var outTime = new Date(result.out_time);
+      var inTime = new Date(result.in_time);
+      const time = Math.abs(outTime - inTime) / 36e5;
+      timeValue.push(time);
+    });
+    const totalTime = timeValue.reduce((a, b) => a + b, 0)
+    if (cap === "Soft") {
+
+      return this.getTimeFormat(requirementData.soft_cap - totalTime);
+    } else {
+      return this.getTimeFormat(requirementData.hard_cap - totalTime);
+    }
+  }
+
+  // Get Time format
+  getTimeFormat(data) {
+    var hrs = parseInt(Number(data));
+    var min = Math.abs(Math.round((Number(data) - hrs) * 60));
+    return hrs + ':' + min;
+  }
+
   // Get Buttons
-  getButtons(status, requirementData) {
-    if (status === "initial") {
+  getButtons(requirementData) {
+    if (requirementData.status === 1) {
       return (
         <View style={styles.requirementActivityView}>
           <Button style={styles.button} rounded primary onPress={() => this.handleSubmit(requirementData)}>
@@ -148,7 +195,7 @@ class Requirements extends Component {
           </Button>
         </View>
       );
-    } else if (status === "pending") {
+    } else if (requirementData.status === 3) {
       return (
         <View style={styles.requirementActivityView}>
           <Button style={styles.button} rounded primary>
@@ -164,8 +211,60 @@ class Requirements extends Component {
       );
     } else {
       return (<View style={styles.requirementActivityView}>
-        <Button style={styles.button} transparent/>
       </View>
+      );
+    }
+  }
+
+  // Get Requirement Data
+  getRequirementDetails(requirementData) {
+    if (requirementData.status === 2) {
+      return (
+        <View />
+      );
+    }
+    else {
+      return (
+        <View>
+          <View style={styles.requirementDataFlex}>
+            <View>
+              <Text style={styles.requirementDetails}>Soft Cap</Text>
+              <Text style={styles.requirementDetails}>Hard Cap</Text>
+              <Text style={styles.requirementDetails}>Estimate</Text>
+              <Text style={styles.requirementDetails}>Priority</Text>
+            </View>
+            <View>
+              <Text style={styles.requirementDetails}>{requirementData.soft_cap}{" "}{"hours"}</Text>
+              <Text style={styles.requirementDetails}>{requirementData.hard_cap}{" "}{"hours"}</Text>
+              <Text style={styles.requirementDetails}>{requirementData.estimate}{" "}{"units"}</Text>
+              <Text style={styles.requirementDetails}>{requirementData.priority}{" "}{" "}</Text>
+            </View>
+          </View>
+          {this.getTimeRemaining(requirementData)}
+        </View>
+      );
+    }
+  }
+
+// Get Time Remiaining Data
+  getTimeRemaining(requirementData) {
+    if (requirementData.status === 1) {
+      return (
+        <View style={styles.requirementDataFlex}>
+            <View>
+              <Text style={styles.requirementDetails}>Time for Soft Cap</Text>
+              <Text style={styles.requirementDetails}>Time for Hard Cap</Text>
+            </View>
+            <View>
+              <Text style={styles.requirementDetails}>{this.timeRemaining(requirementData, "Soft")}{" "}</Text>
+              <Text style={styles.requirementDetails}>{this.timeRemaining(requirementData, "Hard")}{" "}</Text>
+            </View>
+          </View>
+      );
+    }
+    else {
+      return(
+        <View />
       );
     }
   }
@@ -173,6 +272,7 @@ class Requirements extends Component {
   // Render
   render() {
     this.assignRequirementsToState();
+    this.assignTimeToState();
     return (
       <Container style={styles.container}>
         {this._renderHeader()}
@@ -219,18 +319,17 @@ class Requirements extends Component {
 
   // Render Tabs
   _renderTabs() {
-    if (this.state.renderRequirement) {
+    if (this.state.renderRequirement && this.state.renderTime) {
       return (
         <Tabs initialPage={this.params.initialPage}>
           <Tab
             heading="Active"
           >
             <Content padder>
-              <FlatList
-                style={styles.container}
-                data={this.state.requirementList.initial}
-                renderItem={data => this._renderRequirementData(data.item, "initial")}
-                keyExtractor={item => item.uid.toString()}
+              <Accordion
+                dataArray={this.state.requirementList.initial}
+                renderHeader={this._renderAccordionHeader}
+                renderContent={this._renderAccordionContent}
               />
             </Content>
           </Tab>
@@ -238,11 +337,10 @@ class Requirements extends Component {
             heading="Pending"
           >
             <Content padder>
-              <FlatList
-                style={styles.container}
-                data={this.state.requirementList.pending}
-                renderItem={data => this._renderRequirementData(data.item, "pending")}
-                keyExtractor={item => item.uid.toString()}
+              <Accordion
+                dataArray={this.state.requirementList.pending}
+                renderHeader={this._renderAccordionHeader}
+                renderContent={this._renderAccordionContent}
               />
             </Content>
           </Tab>
@@ -250,11 +348,10 @@ class Requirements extends Component {
             heading="Completed"
           >
             <Content padder>
-              <FlatList
-                style={styles.container}
-                data={this.state.requirementList.completed}
-                renderItem={data => this._renderRequirementData(data.item, "completed")}
-                keyExtractor={item => item.uid.toString()}
+              <Accordion
+                dataArray={this.state.requirementList.completed}
+                renderHeader={this._renderAccordionHeader}
+                renderContent={this._renderAccordionContent}
               />
             </Content>
           </Tab>
@@ -265,13 +362,22 @@ class Requirements extends Component {
     }
   }
 
-  // Render Requirement Data
-  _renderRequirementData(requirementData, status) {
+  // Render Accordion Header
+  _renderAccordionHeader = (requirementData, expanded) => {
     return (
-      <View style={styles.requirementItem}>
-        <View>
-          <Text style={styles.requirementDataTitle}>{requirementData.name}</Text>
-        </View>
+      <View style={styles.accordionHeaderView}>
+        <Text style={styles.requirementDataTitle}>{requirementData.name}</Text>
+        {expanded
+          ? <Icon style={styles.expandedIconStyle} name="remove-circle" />
+          : <Icon style={styles.iconStyle} name="add-circle" />}
+      </View>
+    );
+  }
+
+  // Render Accordion Content
+  _renderAccordionContent = (requirementData) => {
+    return (
+      <View style={styles.accordionContentView}>
         <View>
           <Text style={styles.requirementDataDesc}>{requirementData.desc}</Text>
           <View style={styles.flex}>
@@ -279,23 +385,10 @@ class Requirements extends Component {
             <Text style={styles.requirementDataTime}>{"  "}{requirementData.created}</Text>
           </View>
         </View>
-        <View style={styles.requirementDataFlex}>
-          <View>
-            <Text style={styles.requirementDetails}>Soft Cap</Text>
-            <Text style={styles.requirementDetails}>Hard Cap</Text>
-            <Text style={styles.requirementDetails}>Estimate</Text>
-            <Text style={styles.requirementDetails}>Priority</Text>
-          </View>
-          <View>
-            <Text style={styles.requirementDetails}>{requirementData.soft_cap}{" "}{"hours"}</Text>
-            <Text style={styles.requirementDetails}>{requirementData.hard_cap}{" "}{"hours"}</Text>
-            <Text style={styles.requirementDetails}>{requirementData.estimate}{" "}{"units"}</Text>
-            <Text style={styles.requirementDetails}>{requirementData.priority}{" "}{" "}</Text>
-          </View>
-        </View>
-        {this.getButtons(status, requirementData)}
+        {this.getRequirementDetails(requirementData)}
+        {this.getButtons(requirementData)}
       </View>
-    );
+    )
   }
 }
 

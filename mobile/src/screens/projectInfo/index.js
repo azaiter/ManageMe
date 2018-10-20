@@ -18,7 +18,7 @@ import {
   Spinner,
 } from "native-base";
 import styles from "./styles";
-import { FlatList, Alert, TextInput, TouchableOpacity } from "react-native";
+import { FlatList, Alert, TextInput } from "react-native";
 const Auth = require("../../util/Auth");
 const ApiCalls = require("../../util/ApiCalls");
 
@@ -304,9 +304,9 @@ class ProjectInfo extends Component {
             </Card>
           </View>
           <View style={styles.requirementView}>
-            <TouchableOpacity style={styles.buttonBlue} transparent><Text style={styles.projectActivity}>EDIT</Text></TouchableOpacity>
-            <TouchableOpacity style={styles.buttonBlue} transparent><Text style={styles.projectActivity}>TEAM</Text></TouchableOpacity>
-            <TouchableOpacity style={styles.buttonRed} transparent><Text style={styles.projectActivity}>DELETE</Text></TouchableOpacity>
+            <Button style={styles.button} rounded primary><Text style={styles.projectActivity}>EDIT</Text></Button>
+            <Button style={styles.button} rounded primary><Text style={styles.projectActivity}>TEAM</Text></Button>
+            <Button style={styles.button} rounded danger><Text style={styles.projectActivity}>DELETE</Text></Button>
           </View>
         </View>
       </Content >
