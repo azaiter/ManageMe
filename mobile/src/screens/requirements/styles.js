@@ -8,10 +8,27 @@ export default {
     marginBottom: 10
   },
 
-  requirementItem: {
-    borderBottomWidth: 1,
-    borderBottomColor: "#E4E4E4",
-    paddingTop: 10,
+  accordionHeaderView: {
+    flexDirection: "row", 
+    padding: 10, 
+    justifyContent: "space-between", 
+    alignItems: "center", 
+    backgroundColor: "#A9DAD6"
+  },
+
+  iconStyle: {
+    fontSize: 20,
+    color: "green",
+  },
+
+  expandedIconStyle: {
+    fontSize: 20,
+    color: "red",
+  },
+
+  accordionContentView: {
+    padding: 10,
+    backgroundColor: "#E3F1F1"
   },
 
   requirementDataTitle: {

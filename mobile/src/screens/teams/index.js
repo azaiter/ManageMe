@@ -61,12 +61,6 @@ class Teams extends Component {
     }
   }
 
-  // Handles the onClick event for the modal buttons.
-  onModalButtonClick(teamData, buttonText) {
-    // @TODO: Implement Button Events
-    this.closeModal(teamData);
-  }
-
   // Closes the modal.
   closeModal(teamData) {
     teamData.modalVisible = false;
@@ -85,11 +79,12 @@ class Teams extends Component {
   // Handles the onClick event for the modal buttons.
   onModalButtonClick(teamData, buttonText) {
     this.closeModal(teamData);
-    if (buttonText === "Team Info") {
+    // @TODO: Implement Button Events
+    /*if (buttonText === "Team Info") {
       return this.props.navigation.navigate("TeamInfo", { team: teamData });
     } else {
       return this.props.navigation.navigate("ManageTeam", { team: teamData });
-    }
+    }*/
   }
 
   // Closes the modal.

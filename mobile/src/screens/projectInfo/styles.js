@@ -55,20 +55,9 @@ export default {
     alignItems: "center",
   },
 
-  buttonBlue: {
-    width: 80,
-    height: 30,
+  button: {
+    width: 95,
     justifyContent: "center",
-    backgroundColor: "blue",
-    alignItems: "center",
-  },
-
-  buttonRed: {
-    width: 80,
-    height: 30,
-    justifyContent: "center",
-    backgroundColor: "red",
-    alignItems: "center",
   },
 
   commentTitle: {
@@ -116,8 +105,7 @@ export default {
   },
 
   projectActivity: {
-    fontSize: 22,
-    color: "white",
+    fontSize: 20,
     fontWeight: "bold",
   },
 
