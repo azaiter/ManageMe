@@ -138,17 +138,12 @@ class CreateProject extends Component {
 
   render() {
     this.assignTeamsToState();
-    return (this.state.render) ?
-      (
-        <Container style={styles.container}>
-          {this._renderHeader()}
-          {this._renderBody()}
-        </Container>
-      ) : (
-        <Container style={styles.container}>
-          {this._renderLoadingScreen()}
-        </Container>
-      );
+    return (
+      <Container style={styles.container}>
+        {this._renderHeader()}
+        {this._renderBody()}
+      </Container>
+    );
   }
 
   _renderHeader() {
@@ -182,64 +177,61 @@ class CreateProject extends Component {
       Label on its own breaks a return statement making it impossible to abstract.
       The item tag breaks all components except for input.
     */
-    return (
+   return (this.state.render) ? (
       <Content padder>
-        <Container>
-          <Content>
-            <Form>
-              {/* Start Form */}
-              {/* Project Name */}
-              <Label>{fieldsArr[0].label}</Label>
-              <Input name={fieldsArr[0].name}
-                onChangeText={(value) => this.checkAndSetState(fieldsArr[0].name, value, fieldsArr[0].regex)}
-                value={this.state[fieldsArr[0].name]}
-                onSubmitEditing={this.handleSubmit}
-                keyboardType={fieldsArr[0].keyboardType || "default"}
-                secureTextEntry={fieldsArr[0].secureTextEntry || false}
-              />
-              {/* Project Team */}
-              <Label>{fieldsArr[2].label}</Label>
-              <Form>
-                <Picker
-                  mode="dropdown"
-                  selectedValue={this.state.teamId}
-                  onValueChange={this.onTeamSelect.bind(this)}
-                >
-                  {this.state.teams.map(team => this._renderSelectOption(team))}
-                </Picker>
-              </Form>
-              {/* Project Description */}
-              <Label>{fieldsArr[1].label}</Label>
-              <Textarea
-                onChangeText={(value) => this.checkAndSetState(fieldsArr[1].name, value, fieldsArr[1].regex)}
-                rowSpan={5}
-                bordered
-              />
-              {/* Submit Button */}
-              <Button
-                block style={{ margin: 15, marginTop: 50 }}
-                onPress={this.handleSubmit}
-              >
-                <Text>Create Project</Text>
-              </Button>
-              {/* End Form */}
-            </Form>
-          </Content>
-        </Container>
+        <Form>
+          {/* Start Form */}
+          {/* Project Name */}
+          <Label>{fieldsArr[0].label}</Label>
+          <Input name={fieldsArr[0].name}
+            onChangeText={(value) => this.checkAndSetState(fieldsArr[0].name, value, fieldsArr[0].regex)}
+            value={this.state[fieldsArr[0].name]}
+            onSubmitEditing={this.handleSubmit}
+            keyboardType={fieldsArr[0].keyboardType || "default"}
+            secureTextEntry={fieldsArr[0].secureTextEntry || false}
+          />
+          {/* Project Team */}
+          <Label>{fieldsArr[2].label}</Label>
+          <Form>
+            <Picker
+              mode="dropdown"
+              iosIcon={<Icon name="ios-arrow-down-outline" />}
+              style={{ width: undefined }}
+              placeholder="Select your SIM"
+              placeholderStyle={{ color: "#bfc6ea" }}
+              placeholderIconColor="#007aff"
+              selectedValue={this.state.teamId}
+              onValueChange={this.onTeamSelect.bind(this)}
+            >
+              {this.state.teams.map(team => this._renderSelectOption(team))}
+            </Picker>
+          </Form>
+          {/* Project Description */}
+          <Label>{fieldsArr[1].label}</Label>
+          <Textarea
+            onChangeText={(value) => this.checkAndSetState(fieldsArr[1].name, value, fieldsArr[1].regex)}
+            rowSpan={5}
+            bordered
+          />
+          {/* Submit Button */}
+          <Button
+            block style={{ margin: 15, marginTop: 50 }}
+            onPress={this.handleSubmit}
+          >
+            <Text>Create Project</Text>
+          </Button>
+          {/* End Form */}
+        </Form>
+      </Content>
+    ) : (
+      <Content padder>
+        <Spinner color="blue" />
       </Content>
     );
   }
 
   _renderSelectOption(team) {
     return (<Item label={team.name} value={team.uid} key={team.uid}/>);
-  }
-
-  _renderLoadingScreen() {
-    return (
-      <Content padder>
-        <Spinner color="blue" />
-      </Content>
-    );
   }
 }
 
