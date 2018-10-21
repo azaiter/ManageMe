@@ -74,11 +74,11 @@ class Teams extends Component {
   onModalButtonClick(teamData, buttonText) {
     this.closeModal(teamData);
     // @TODO: Implement Button Events
-    /*if (buttonText === "Team Info") {
-      return this.props.navigation.navigate("TeamInfo", { team: teamData });
+    if (buttonText === "Info") {
+      return this.props.navigation.navigate("TeamInfo", { uid: teamData.uid });
     } else {
-      return this.props.navigation.navigate("ManageTeam", { team: teamData });
-    }*/
+      return this.props.navigation.navigate("TeamMembers", { uid: teamData.uid });
+    }
   }
 
   // Closes the modal.
