@@ -132,22 +132,24 @@ import CreateProject from "./screens/createProject";
 import ProjectInfo from "./screens/projectInfo";
 import Users from "./screens/users";
 import CreateTeam from "./screens/createTeam";
+import TeamMembers from "./screens/teamMembers";
 
 const Drawer = DrawerNavigator(
   {
     // app screens
+    Home: { screen: Home },
     Admin: { screen: Admin },
     Projects: { screen: Projects },
-    Permissions: { screen: Permissions },
-    AddUser: { screen: AddUser },
     Reports: { screen: Reports },
     Teams: { screen: Teams },
-    Home: { screen: Home },
-    CreateProject: { screen: CreateProject },
-    CreateTeam: { screen: CreateTeam },
-    ProjectInfo: { screen: ProjectInfo },
+    Permissions: { screen: Permissions },
+    AddUser: { screen: AddUser },
     Requirements: { screen: Requirements },
+    CreateProject: { screen: CreateProject },
+    ProjectInfo: { screen: ProjectInfo },
     Users: { screen: Users },
+    CreateTeam: { screen: CreateTeam },
+    TeamMembers: { screen: TeamMembers },
 
     //dev screens
     Anatomy: { screen: Anatomy },
@@ -187,11 +189,6 @@ const Drawer = DrawerNavigator(
 const AppNavigator = StackNavigator(
   {
     Drawer: { screen: Drawer },
-
-    Requirements: { screen: Requirements },
-    CreateProject: { screen: CreateProject },
-    ProjectInfo: { screen: ProjectInfo },
-    CreateTeam: { screen: CreateTeam },
 
     Header1: { screen: Header1 },
     Header2: { screen: Header2 },
