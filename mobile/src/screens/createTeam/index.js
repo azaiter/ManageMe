@@ -35,7 +35,6 @@ const fieldsArr = [
     keyboardType: "default",
     secureTextEntry: false
   },
-
 ];
 
 class CreateTeam extends Component {
@@ -54,8 +53,6 @@ class CreateTeam extends Component {
     this._renderBody.bind(this);
     this._renderFieldEntry.bind(this);
   }
-
-
 
   handleSubmit = async () => {
     this.setState({ isLoading: true });
@@ -80,14 +77,14 @@ class CreateTeam extends Component {
           duration: 10 * 1000
         });
         Alert.alert("Team Added!",
-        message,
-        [
-          {
-            text: "OK", onPress: () => {
-              this.props.navigation.navigate("Teams");
-            }
-          },
-        ]);
+          message,
+          [
+            {
+              text: "OK", onPress: () => {
+                this.props.navigation.navigate("Teams");
+              }
+            },
+          ]);
       }
     }
   }

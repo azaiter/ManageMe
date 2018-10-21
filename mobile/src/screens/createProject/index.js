@@ -16,6 +16,7 @@ import {
   Form,
   Picker,
   Textarea,
+  Spinner,
 } from "native-base";
 import { Alert } from "react-native";
 import styles from "./styles";
@@ -68,9 +69,9 @@ class CreateProject extends Component {
       ApiCalls.getTeams().then(response => {
         ApiCalls.handleAPICallResult(response).then(apiResults => {
           if (apiResults) {
-            console.log("apiResults",apiResults);
             this.setState({
-              teams: apiResults
+              teams: apiResults,
+              render: true
             });
           }
         });
@@ -80,7 +81,9 @@ class CreateProject extends Component {
 
   handleSubmit = async () => {
     this.setState({ isLoading: true });
-    if (fieldsArr.filter(x => { return !this.state[x.name + "Validation"]; }).length > 0) {
+    if (fieldsArr.filter(x => {
+      return !this.state[x.name + "Validation"]; 
+    }).length > 0) {
       ApiCalls.showToastsInArr(["Some of the fields below are invalid."], {
         buttonText: "OK",
         type: "danger",
@@ -127,9 +130,7 @@ class CreateProject extends Component {
   }
 
   onTeamSelect(id) {
-    this.setState({
-      teamId: id
-    });
+    this.setState({ teamId: id, teamIdValidation: true });
   }
 
   async goBack() {
@@ -139,13 +140,17 @@ class CreateProject extends Component {
 
   render() {
     this.assignTeamsToState();
-    console.log("STATE",this.state);
-    return (
-      <Container style={styles.container}>
-        {this._renderHeader()}
-        {this._renderBody()}
-      </Container>
-    );
+    return (this.state.render) ?
+      (
+        <Container style={styles.container}>
+          {this._renderHeader()}
+          {this._renderBody()}
+        </Container>
+      ) : (
+        <Container style={styles.container}>
+          {this._renderLoadingScreen()}
+        </Container>
+      );
   }
 
   _renderHeader() {
@@ -199,16 +204,16 @@ class CreateProject extends Component {
               <Form>
                 <Picker
                   mode="dropdown"
-                  onValueChange={this.onTeamSelect.bind(this)}
+                  selectedValue={this.state.teamId}
+                  onValueChange={this.onTeamSelect(this)}
                 >
-                  {console.log(this.state)}
-                  {/*Array.map(this.state.teams,(a) => {console.log(a);})*/}
+                  {this.state.teams.map(team => this._renderSelectOption(team))}
                 </Picker>
               </Form>
               {/* Project Description */}
               <Label>{fieldsArr[1].label}</Label>
               <Textarea
-                rowSpan={5} 
+                rowSpan={5}
                 bordered
               />
               {/* Submit Button */}
@@ -226,8 +231,16 @@ class CreateProject extends Component {
     );
   }
 
-  _renderSelectOption(obj) {
-    return (<Item label="Net Banking" value="key4" />);
+  _renderSelectOption(team) {
+    return (<Item label={team.name} value={team.uid} key={team.uid}/>);
+  }
+
+  _renderLoadingScreen() {
+    return (
+      <Content padder>
+        <Spinner color="blue" />
+      </Content>
+    );
   }
 }
 
