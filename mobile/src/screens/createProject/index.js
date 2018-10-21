@@ -81,9 +81,7 @@ class CreateProject extends Component {
 
   handleSubmit = async () => {
     this.setState({ isLoading: true });
-    if (fieldsArr.filter(x => {
-      return !this.state[x.name + "Validation"]; 
-    }).length > 0) {
+    if (fieldsArr.filter(x => !this.state[x.name + "Validation"]).length > 0) {
       ApiCalls.showToastsInArr(["Some of the fields below are invalid."], {
         buttonText: "OK",
         type: "danger",
@@ -129,8 +127,8 @@ class CreateProject extends Component {
     }
   }
 
-  onTeamSelect(id) {
-    this.setState({ teamId: id, teamIdValidation: true });
+  onTeamSelect(value) {
+    this.checkAndSetState(fieldsArr[2].name,value,fieldsArr[2].regex);
   }
 
   async goBack() {
@@ -205,7 +203,7 @@ class CreateProject extends Component {
                 <Picker
                   mode="dropdown"
                   selectedValue={this.state.teamId}
-                  onValueChange={this.onTeamSelect(this)}
+                  onValueChange={this.onTeamSelect.bind(this)}
                 >
                   {this.state.teams.map(team => this._renderSelectOption(team))}
                 </Picker>
@@ -213,6 +211,7 @@ class CreateProject extends Component {
               {/* Project Description */}
               <Label>{fieldsArr[1].label}</Label>
               <Textarea
+                onChangeText={(value) => this.checkAndSetState(fieldsArr[1].name, value, fieldsArr[1].regex)}
                 rowSpan={5}
                 bordered
               />
