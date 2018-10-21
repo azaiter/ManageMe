@@ -11,13 +11,13 @@ import {
     Text,
     Icon,
     View,
-    Spinner
+    Spinner,
 } from "native-base";
 import styles from "./styles";
-import { FlatList } from "react-native";
+import { TouchableOpacity, FlatList, TouchableWithoutFeedback } from "react-native";
+import Modal from "react-native-modal";
 const Auth = require("../../util/Auth");
 const ApiCalls = require("../../util/ApiCalls");
-
 class TeamMembers extends Component {
     constructor(props) {
         super(props);
@@ -30,7 +30,6 @@ class TeamMembers extends Component {
         Auth.userHasPermission.bind(this);
         this.assignTeamMembersToState.bind(this);
     }
-
     // Retrieve team members list from API and assign to state.
     assignTeamMembersToState(opts = { refresh: false }) {
         if ((this.state && this.state.loggedIn) && (!this.state.teamMembersList || opts.refresh)) {
@@ -52,11 +51,24 @@ class TeamMembers extends Component {
                         render: true
                     });
                 }
-
             });
         }
     }
-
+    // Handles the onClick event for the modal buttons.
+    onModalButtonClick(teamMemberData, buttonText) {
+        this.closeModal(teamMemberData);
+        // @TODO: Implement Button Events
+        /*if (buttonText === "Delete") {
+            return this.props.navigation.navigate("TeamInfo", { uid: teamData.uid });
+        } else {
+            return this.props.navigation.navigate("TeamMembers", { uid: teamData.uid });
+        }*/
+    }
+    // Closes the modal.
+    closeModal(teamMemberData) {
+        teamMemberData.modalVisible = false;
+        this.setState(JSON.parse(JSON.stringify(this.state)));
+    }
     // Render
     render() {
         this.assignTeamMembersToState();
@@ -67,7 +79,6 @@ class TeamMembers extends Component {
             </Container>
         );
     }
-
     // Render Header
     _renderHeader() {
         return (
@@ -100,7 +111,6 @@ class TeamMembers extends Component {
             </Header>
         );
     }
-
     // Render Body
     _renderBody() {
         if (this.state.render) {
@@ -120,7 +130,6 @@ class TeamMembers extends Component {
             return this._renderLoadingScreen();
         }
     }
-
     // Render loading screen
     _renderLoadingScreen() {
         return (
@@ -129,23 +138,60 @@ class TeamMembers extends Component {
             </Content>
         );
     }
-
     // Render Project Data
     _renderTeamMemberData(teamMemberData) {
         return (
-            <View style={styles.text}>
-                <Text style={styles.title}>{teamMemberData.first_name} {teamMemberData.last_name}</Text>
-                <Text style={styles.body}>
-                    email - {teamMemberData.email}
-                </Text>
-                <Text style={styles.body}>
-                    username - {teamMemberData.username}
-                </Text>
-                {teamMemberData.isLead === 1 ?
-                    <Text style={styles.body}>Team Lead: Yes</Text> :
-                    <Text style={styles.body}>Team Lead: No</Text>
-                }
-            </View>
+            <TouchableOpacity style={styles.teamItem} onPress={() => {
+                teamMemberData.modalVisible = true;
+                this.setState(JSON.parse(JSON.stringify(this.state)));
+            }}>
+                <View style={styles.text}>
+                    <Text style={styles.title}>{teamMemberData.first_name} {teamMemberData.last_name}</Text>
+                    <Text style={styles.body}>
+                        email - {teamMemberData.email}
+                    </Text>
+                    <Text style={styles.body}>
+                        username - {teamMemberData.username}
+                    </Text>
+                    {teamMemberData.isLead === 1 ?
+                        <Text style={styles.body}>Team Lead: Yes</Text> :
+                        <Text style={styles.body}>Team Lead: No</Text>
+                    }
+                </View>
+                <Icon style={styles.icon} name="more" />
+                {this._renderModal(teamMemberData)}
+            </TouchableOpacity>
+        );
+    }
+    // Render Modal
+    _renderModal(teamMemberData) {
+        return (
+            <TouchableWithoutFeedback onPress={() => this.closeModal(teamMemberData)}>
+                <Modal
+                    onBackdropPress={() => this.closeModal(teamMemberData)}
+                    onBackButtonPress={() => this.closeModal(teamMemberData)}
+                    onSwipe={() => this.closeModal(teamMemberData)}
+                    swipeDirection="down"
+                    isVisible={teamMemberData.modalVisible}>
+                    <View style={styles.modalContent}>
+                        <Text style={styles.modalTitle}>{teamMemberData.first_name} {teamMemberData.last_name}</Text>
+                        <View style={styles.modalFlex}>
+                            {this._renderModalButton(teamMemberData, "Change Team Lead")}
+                            {this._renderModalButton(teamMemberData, "Delete")}
+                        </View>
+                    </View>
+                </Modal>
+            </TouchableWithoutFeedback>
+        );
+    }
+    // Render Modal Button
+    _renderModalButton(teamMemberData, buttonText) {
+        return (
+            <TouchableOpacity style={styles.modalButton} onPress={() => {
+                this.onModalButtonClick(teamMemberData, buttonText);
+            }}>
+                <Text style={styles.modalText}>{buttonText}</Text>
+            </TouchableOpacity>
         );
     }
 }
