@@ -337,9 +337,9 @@ class ProjectInfo extends Component {
             onPress={() => this.state.teamid === -1 ? null : null}
           >
             <View style={styles.flex}>
-              <Text style={styles.requirementCount}>Team : </Text>
+              <Text style={styles.requirementCount}>Team: </Text>
+              <Text style={styles.requirementStatus}>{this.state.teamName}</Text>
             </View>
-            <Text style={styles.requirementStatus}>{this.state.teamName}</Text>
           </Button>
           <Text style={styles.projectHours}>
             {this.getTime()}
