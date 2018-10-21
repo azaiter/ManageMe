@@ -61,12 +61,6 @@ class Teams extends Component {
     }
   }
 
-  // Closes the modal.
-  closeModal(teamData) {
-    teamData.modalVisible = false;
-    this.setState(JSON.parse(JSON.stringify(this.state)));
-  }
-
   // Reduces text to 40 characters.
   truncate(text) {
     if (text.length > 40) {

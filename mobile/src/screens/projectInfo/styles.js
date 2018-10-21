@@ -101,7 +101,6 @@ export default {
     fontSize: 20,
     fontWeight: "bold",
     color: "black",
-    paddingRight: 50,
   },
 
   projectActivity: {
