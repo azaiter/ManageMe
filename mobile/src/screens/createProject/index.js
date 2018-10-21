@@ -13,7 +13,10 @@ import {
   Input,
   Label,
   Item,
-  Form
+  Form,
+  Picker,
+  Textarea,
+  Spinner,
 } from "native-base";
 import { Alert } from "react-native";
 import styles from "./styles";
@@ -59,7 +62,6 @@ class CreateProject extends Component {
     this.getFieldValidation.bind(this);
     this._renderHeader.bind(this);
     this._renderBody.bind(this);
-    this._renderFieldEntry.bind(this);
   }
 
   assignTeamsToState(opts = { refresh: false }) {
@@ -68,7 +70,8 @@ class CreateProject extends Component {
         ApiCalls.handleAPICallResult(response).then(apiResults => {
           if (apiResults) {
             this.setState({
-              teams: apiResults
+              teams: apiResults,
+              render: true
             });
           }
         });
@@ -78,7 +81,7 @@ class CreateProject extends Component {
 
   handleSubmit = async () => {
     this.setState({ isLoading: true });
-    if (fieldsArr.filter(x => { return !this.state[x.name + "Validation"]; }).length > 0) {
+    if (fieldsArr.filter(x => !this.state[x.name + "Validation"]).length > 0) {
       ApiCalls.showToastsInArr(["Some of the fields below are invalid."], {
         buttonText: "OK",
         type: "danger",
@@ -124,6 +127,10 @@ class CreateProject extends Component {
     }
   }
 
+  onTeamSelect(value) {
+    this.checkAndSetState(fieldsArr[2].name,value,fieldsArr[2].regex);
+  }
+
   async goBack() {
     await Auth.saveItem("@app.refreshProject", { refresh: true });
     this.props.navigation.goBack();
@@ -166,43 +173,65 @@ class CreateProject extends Component {
   }
 
   _renderBody() {
-    return (
+    /*
+      Label on its own breaks a return statement making it impossible to abstract.
+      The item tag breaks all components except for input.
+    */
+   return (this.state.render) ? (
       <Content padder>
-        <Container>
-          <Content>
-            <Form>
-              {this._renderFieldEntry(fieldsArr[0])}
-              {/* TODO: Convert to TextArea */}
-              {this._renderFieldEntry(fieldsArr[1])}
-              {this._renderFieldEntry(fieldsArr[2])}
-              <Button
-                block style={{ margin: 15, marginTop: 50 }}
-                onPress={this.handleSubmit}
-              >
-                <Text>Create Project</Text>
-              </Button>
-            </Form>
-          </Content>
-        </Container>
+        <Form>
+          {/* Start Form */}
+          {/* Project Name */}
+          <Label>{fieldsArr[0].label}</Label>
+          <Input name={fieldsArr[0].name}
+            onChangeText={(value) => this.checkAndSetState(fieldsArr[0].name, value, fieldsArr[0].regex)}
+            value={this.state[fieldsArr[0].name]}
+            onSubmitEditing={this.handleSubmit}
+            keyboardType={fieldsArr[0].keyboardType || "default"}
+            secureTextEntry={fieldsArr[0].secureTextEntry || false}
+          />
+          {/* Project Team */}
+          <Label>{fieldsArr[2].label}</Label>
+          <Form>
+            <Picker
+              mode="dropdown"
+              iosIcon={<Icon name="ios-arrow-down-outline" />}
+              style={{ width: undefined }}
+              placeholder="Select your SIM"
+              placeholderStyle={{ color: "#bfc6ea" }}
+              placeholderIconColor="#007aff"
+              selectedValue={this.state.teamId}
+              onValueChange={this.onTeamSelect.bind(this)}
+            >
+              {this.state.teams.map(team => this._renderSelectOption(team))}
+            </Picker>
+          </Form>
+          {/* Project Description */}
+          <Label>{fieldsArr[1].label}</Label>
+          <Textarea
+            onChangeText={(value) => this.checkAndSetState(fieldsArr[1].name, value, fieldsArr[1].regex)}
+            rowSpan={5}
+            bordered
+          />
+          {/* Submit Button */}
+          <Button
+            block style={{ margin: 15, marginTop: 50 }}
+            onPress={this.handleSubmit}
+          >
+            <Text>Create Project</Text>
+          </Button>
+          {/* End Form */}
+        </Form>
+      </Content>
+    ) : (
+      <Content padder>
+        <Spinner color="blue" />
       </Content>
     );
   }
 
-  _renderFieldEntry(obj) {
-    return (
-      <Item floatingLabel
-        success={this.getFieldValidation(obj.name).success}
-        error={this.getFieldValidation(obj.name).error} >
-        <Label>{obj.label}</Label>
-        <Input name={obj.name}
-          onChangeText={(value) => this.checkAndSetState(obj.name, value, obj.regex)}
-          value={this.state[obj.name]}
-          onSubmitEditing={this.handleSubmit}
-          keyboardType={obj.keyboardType || "default"}
-          secureTextEntry={obj.secureTextEntry || false}
-        />
-      </Item>
-    );
+  _renderSelectOption(team) {
+    return (<Item label={team.name} value={team.uid} key={team.uid}/>);
   }
 }
 
