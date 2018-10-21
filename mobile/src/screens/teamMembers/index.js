@@ -141,6 +141,10 @@ class TeamMembers extends Component {
                 <Text style={styles.body}>
                     username - {teamMemberData.username}
                 </Text>
+                {teamMemberData.isLead === 1 ?
+                    <Text style={styles.body}>Team Lead: Yes</Text> :
+                    <Text style={styles.body}>Team Lead: No</Text>
+                }
             </View>
         );
     }
