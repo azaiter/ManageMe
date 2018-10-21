@@ -192,8 +192,8 @@ class Users extends Component {
             <View style={styles.modalContent}>
               <Text style={styles.modalTitle}>{userData.name}</Text>
               <View style={styles.modalFlex}>
-                {this._renderModalButton(userData, "User Info", ()=>{this.goToUserInfo(userData)})}
-                {this._renderModalButton(userData, userData.enabled ? "Disable User" : "Enable User", ()=>{this.enableDisableUser(userData)})}
+                {this._renderModalButton(userData, "User Info", ()=>{this.goToUserInfo(userData);})}
+                {this._renderModalButton(userData, userData.enabled ? "Disable User" : "Enable User", ()=>{this.enableDisableUser(userData);})}
               </View>
             </View>
         </Modal>
@@ -203,7 +203,7 @@ class Users extends Component {
 
   // Render Modal Button
   // @TODO: Implement OnClose
-  _renderModalButton(userData, buttonText, functionToExec=false) {
+  _renderModalButton(userData, buttonText, functionToExec = false) {
     return (
       <TouchableOpacity style={styles.modalButton} onPress={
         functionToExec ? functionToExec : () => { this.onModalButtonClick(userData, buttonText); }

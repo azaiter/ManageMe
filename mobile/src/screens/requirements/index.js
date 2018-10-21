@@ -33,7 +33,7 @@ class Requirements extends Component {
   // Retrieve requirement list from API and assign to state.
   assignRequirementsToState(opts = { refresh: false }) {
     if ((this.state && this.state.loggedIn) && (!this.state.requirementList || opts.refresh)) {
-      ApiCalls.getRequirementsByProjectId(this.params.project.uid).then(response => {
+      ApiCalls.getRequirementsByProjectId(this.params.uid).then(response => {
         ApiCalls.handleAPICallResult(response).then(apiResults => {
           if (apiResults) {
             /* 
@@ -166,9 +166,8 @@ class Requirements extends Component {
       const time = Math.abs(outTime - inTime) / 36e5;
       timeValue.push(time);
     });
-    const totalTime = timeValue.reduce((a, b) => a + b, 0)
+    const totalTime = timeValue.reduce((a, b) => a + b, 0);
     if (cap === "Soft") {
-
       return this.getTimeFormat(requirementData.soft_cap - totalTime);
     } else {
       return this.getTimeFormat(requirementData.hard_cap - totalTime);
@@ -177,9 +176,9 @@ class Requirements extends Component {
 
   // Get Time format
   getTimeFormat(data) {
-    var hrs = parseInt(Number(data));
+    var hrs = parseInt(Number(data), 10);
     var min = Math.abs(Math.round((Number(data) - hrs) * 60));
-    return hrs + ':' + min;
+    return hrs + ":" + min;
   }
 
   // Get Buttons
@@ -210,8 +209,7 @@ class Requirements extends Component {
         </View>
       );
     } else {
-      return (<View style={styles.requirementActivityView}>
-      </View>
+      return (<View style={styles.requirementActivityView} />
       );
     }
   }
@@ -263,7 +261,7 @@ class Requirements extends Component {
       );
     }
     else {
-      return(
+      return (
         <View />
       );
     }
@@ -388,7 +386,7 @@ class Requirements extends Component {
         {this.getRequirementDetails(requirementData)}
         {this.getButtons(requirementData)}
       </View>
-    )
+    );
   }
 }
 

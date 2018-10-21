@@ -46,7 +46,7 @@ class ProjectInfo extends Component {
   // Retrieve Requirements from API and assign to state.
   assignRequirementsToState(opts = { refresh: false }) {
     if ((this.state && this.state.loggedIn) && (!this.state.requirementList || opts.refresh)) {
-      ApiCalls.getRequirementsByProjectId(this.params.project.uid).then(response => {
+      ApiCalls.getRequirementsByProjectId(this.params.uid).then(response => {
         ApiCalls.handleAPICallResult(response).then(apiResults => {
           if (apiResults) {
             /* 
@@ -87,7 +87,7 @@ class ProjectInfo extends Component {
   // Retrieve comments from API and assign to state.
   assignCommentsToState(opts = { refresh: false }) {
     if ((this.state && this.state.loggedIn) && (!this.state.commentList || opts.refresh)) {
-      ApiCalls.getProjectComments(this.params.project.uid).then(response => {
+      ApiCalls.getProjectComments(this.params.uid).then(response => {
         ApiCalls.handleAPICallResult(response).then(apiResults => {
           if (apiResults) {
             this.setState({
@@ -100,10 +100,37 @@ class ProjectInfo extends Component {
     }
   }
 
+  // Retrieve Project Info from API and assign to state.
+  assignProjectInfoToState(opts = { refresh: false }) {
+    if ((this.state && this.state.loggedIn) && (!this.state.projectInfo || opts.refresh)) {
+      ApiCalls.getProjectInfo(this.params.uid).then(response => {
+        ApiCalls.handleAPICallResult(response).then(apiResults => {
+          if (apiResults) {
+            ApiCalls.getTeamById(apiResults[0].assigned_team).then(_response => {
+              if (_response[1] === 200) {
+                var teamName = _response[0][0].name;
+                var teamid = _response[0][0].uid;
+              } else {
+                var teamName = "Not Assigned";
+                var teamid = -1;
+              }
+              this.setState({
+                teamName,
+                teamid,
+                projectInfo: apiResults,
+                renderProjectInfo: true
+              });
+            });
+          }
+        });
+      });
+    }
+  }
+
   // Retrieve Project Hours from API and assign to state.
   assignProjectHoursToState(opts = { refresh: false }) {
     if ((this.state && this.state.loggedIn) && (!this.state.projectHours || opts.refresh)) {
-      ApiCalls.getProjectHours(this.params.project.uid).then(response => {
+      ApiCalls.getProjectHours(this.params.uid).then(response => {
         ApiCalls.handleAPICallResult(response).then(apiResults => {
           if (apiResults) {
             this.setState({
@@ -127,7 +154,7 @@ class ProjectInfo extends Component {
       });
     }
     else {
-      let apiResult = await ApiCalls.addProjectComment(this.params.project.uid, this.state.projectComment);
+      let apiResult = await ApiCalls.addProjectComment(this.params.uid, this.state.projectComment);
       let handledApiResults = await ApiCalls.handleAPICallResult(apiResult, this);
       this.setState({ isLoading: false });
       this.setState({ projectComment: "" });
@@ -208,6 +235,10 @@ class ProjectInfo extends Component {
 
   // Render
   render() {
+    this.assignRequirementsToState();
+    this.assignCommentsToState();
+    this.assignProjectHoursToState();
+    this.assignProjectInfoToState();
     return (
       <Container style={styles.container}>
         {this._renderHeader()}
@@ -254,10 +285,7 @@ class ProjectInfo extends Component {
 
   // Render Tabs
   _renderTabs() {
-    this.assignRequirementsToState();
-    this.assignCommentsToState();
-    this.assignProjectHoursToState();
-    if ((this.state.renderRequirement && this.state.renderComment) && this.state.renderHours) {
+    if ((this.state.renderRequirement && this.state.renderComment) && (this.state.renderHours && this.state.renderProjectInfo)) {
       return (
         <Tabs>
           <Tab heading="Information">
@@ -277,19 +305,42 @@ class ProjectInfo extends Component {
   _renderProjectInfo() {
     return (
       <Content padder>
+        <FlatList
+          style={styles.container}
+          data={this.state.projectInfo}
+          renderItem={data => this._renderProject(data.item)}
+          keyExtractor={item => item.uid.toString()}
+        />
+      </Content >
+    );
+  }
+
+  _renderProject(info) {
+    return (
+      <View>
         <View>
           <Text style={styles.projectTitle}>
-            {this.params.project.name}
+            {info.name}
           </Text>
           <Text style={styles.projectDesc}>
-            {this.params.project.desc}{"\n"}
+            {info.desc}{"\n"}
           </Text>
           <View style={styles.flex}>
             <Icon style={styles.projectTime} name="time" />
             <Text style={styles.projectTime}>
-              {"  "}{this.params.project.created}
+              {"  "}{info.created}
             </Text>
           </View>
+          <Button
+            transparent
+            //@TODO to implement navigation to the Teams page//this.props.navigation.navigate("Requirements", { uid: info.uid})
+            onPress={() => this.state.teamid === -1 ? null : null}
+          >
+            <View style={styles.flex}>
+              <Text style={styles.requirementCount}>Team : </Text>
+            </View>
+            <Text style={styles.requirementStatus}>{this.state.teamName}</Text>
+          </Button>
           <Text style={styles.projectHours}>
             {this.getTime()}
           </Text>
@@ -305,11 +356,10 @@ class ProjectInfo extends Component {
           </View>
           <View style={styles.requirementView}>
             <Button style={styles.button} rounded primary><Text style={styles.projectActivity}>EDIT</Text></Button>
-            <Button style={styles.button} rounded primary><Text style={styles.projectActivity}>TEAM</Text></Button>
             <Button style={styles.button} rounded danger><Text style={styles.projectActivity}>DELETE</Text></Button>
           </View>
         </View>
-      </Content >
+      </View>
     );
   }
 
@@ -318,7 +368,7 @@ class ProjectInfo extends Component {
     return (
       <Button
         transparent
-        onPress={() => this.props.navigation.navigate("Requirements", { project: this.params.project, initialPage: this.getInitialPage(status) })}
+        onPress={() => this.props.navigation.navigate("Requirements", { uid: this.params.uid, initialPage: this.getInitialPage(status) })}
       >
         <View style={styles.flex}>
           <Text style={styles.requirementStatus}>{status}{":"}</Text>

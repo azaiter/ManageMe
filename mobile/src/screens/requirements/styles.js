@@ -9,10 +9,10 @@ export default {
   },
 
   accordionHeaderView: {
-    flexDirection: "row", 
-    padding: 10, 
-    justifyContent: "space-between", 
-    alignItems: "center", 
+    flexDirection: "row",
+    padding: 10,
+    justifyContent: "space-between",
+    alignItems: "center",
     backgroundColor: "#A9DAD6"
   },
 
