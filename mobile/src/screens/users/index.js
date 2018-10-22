@@ -15,6 +15,7 @@ import {
 import styles from "./styles";
 import { TouchableOpacity, FlatList, Alert, TouchableWithoutFeedback } from "react-native";
 import Modal from "react-native-modal";
+import SectionedMultiSelect from "react-native-sectioned-multi-select";
 const Auth = require("../../util/Auth");
 const ApiCalls = require("../../util/ApiCalls");
 
@@ -34,6 +35,32 @@ class Users extends Component {
     this._renderModal.bind(this);
     this._renderHeader.bind(this);
     this._renderModalButton.bind(this);
+    this._renderBody.bind(this);
+    this._renderUserData.bind(this);
+    this.onSelectedItemsChange.bind(this);
+    this._renderPermissionsSelector.bind(this);
+  }
+
+  onSelectedItemsChange = (userData, selectedItems) => {
+    let removed = this.state[`user_${userData.uid}_perms`].filter(x=>!selectedItems.includes(x));
+    let added = selectedItems.filter(x=>!this.state[`user_${userData.uid}_perms`].includes(x));
+    for (let i = 0; i < removed.length; i++) {
+      const permissionID = removed[i];
+      ApiCalls.revokePrivilage(permissionID, userData.uid).then(res=>{
+        ApiCalls.handleAPICallResult(res, this).then(apiResults => {
+        });
+      });
+    }
+    for (let i = 0; i < added.length; i++) {
+      const permissionID = added[i];
+      ApiCalls.assignPrivilage(permissionID, userData.uid).then(res=>{
+        ApiCalls.handleAPICallResult(res, this).then(apiResults => {
+        });
+      });
+    }
+    this.setState({
+      [`user_${userData.uid}_perms`]: selectedItems
+    });
   }
 
   // Refresh the page when coming from a back navigation event.
@@ -51,8 +78,28 @@ class Users extends Component {
               result.modalVisible = false;
               result.key = result.uid.toString() + "_" + result.modalVisible.toString();
             });
-            this.setState({
-              usersList: apiResults
+            ApiCalls.getAllPerms().then(response2 => {
+              ApiCalls.handleAPICallResult(response2, this).then(apiResults2 => {
+                let allPermissions = [
+                  {
+                    name: "Permissions",
+                    id: 0,
+                    children: apiResults2.map(x=>{return {name:x.label, id:x.value};})
+                  }
+                ];
+                let setStateObj = {
+                  usersList: apiResults.map(x=>{
+                    x.permissions = x.permissions.map(y=>y.uid);
+                    return x;
+                  }),
+                  allPermissions: allPermissions
+                };
+                for (let i = 0; i < setStateObj.usersList.length; i++) {
+                  const userObj = setStateObj.usersList[i];
+                  setStateObj[`user_${userObj.uid}_perms`] = userObj.permissions;
+                }
+                this.setState(setStateObj);
+              });
             });
           }
         });
@@ -146,8 +193,35 @@ class Users extends Component {
           style={styles.container}
           data={this.getUsersFromState()}
           renderItem={data => this._renderUserData(data.item)}
+          extraData={this.state}
         />
       </Content>
+    );
+  }
+
+  _renderPermissionsSelector(userData){
+    let selectedDataHandler = (y)=> {
+      this.onSelectedItemsChange(userData, y);
+    };
+    return (
+        <View>
+        <SectionedMultiSelect
+          items={this.state.allPermissions}
+          uniqueKey="id"
+          subKey="children"
+          selectText="Choose permissions..."
+          searchPlaceholderText="Search..."
+          showChips={false}
+          onSelectedItemsChange={ selectedDataHandler }
+          selectedItems={this.state[`user_${userData.uid}_perms`]}
+          readOnlyHeadings={true}
+          style={{
+            selectToggle: {
+              width: "100%",
+            },
+          }}
+        />
+      </View>
     );
   }
 
@@ -166,11 +240,12 @@ class Users extends Component {
             <Text style={styles.body}> Hourly Wage: ${userData.wage} </Text>
             <Text style={styles.body}> Address: {userData.address} </Text>
             <View style={styles.flex}>
-            <Icon style={styles.time} name="time" />
-            <Text style={styles.time}>
-              {"  "}{userData.created}
-            </Text>
-          </View>
+              <Icon style={styles.time} name="time" />
+              <Text style={styles.time}>
+                {"  "}{userData.created}
+              </Text>
+            </View>
+            {this._renderPermissionsSelector(userData)}
           </View>
           <Icon style={styles.icon} name="more" />
         {this._renderModal(userData)}
@@ -189,13 +264,13 @@ class Users extends Component {
           onSwipe={() => this.closeModal(userData)}
           swipeDirection="down"
           isVisible={userData.modalVisible}>
-            <View style={styles.modalContent}>
-              <Text style={styles.modalTitle}>{userData.name}</Text>
-              <View style={styles.modalFlex}>
-                {this._renderModalButton(userData, "User Info", ()=>{this.goToUserInfo(userData);})}
-                {this._renderModalButton(userData, userData.enabled ? "Disable User" : "Enable User", ()=>{this.enableDisableUser(userData);})}
-              </View>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>{userData.name}</Text>
+            <View style={styles.modalFlex}>
+              {this._renderModalButton(userData, "User Info", ()=>{this.goToUserInfo(userData);})}
+              {this._renderModalButton(userData, userData.enabled ? "Disable User" : "Enable User", ()=>{this.enableDisableUser(userData);})}
             </View>
+          </View>
         </Modal>
       </TouchableWithoutFeedback>
     );
