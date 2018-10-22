@@ -67,7 +67,6 @@ class TeamMembers extends Component {
           return true;
         });
         // removeTeamMember
-        return true;
       }
     }
 
