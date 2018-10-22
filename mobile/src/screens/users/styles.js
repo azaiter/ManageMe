@@ -96,5 +96,21 @@ export default {
         textShadowOffset: {width: -1, height: 1},
         textShadowRadius: 10,
     },
+    selectToggle: {
+      width: "100%",
+    },
+    multiSelect: {
+      alignItems: "stretch",
+      flexDirection: "row",
+      width: "100%",
+      flexGrow: 1,
+    },
+    scrollViewCustomH: {
+      height: "25%",
+    },
+    scrollViewContentContainer: {
+      alignItems: "stretch",
+      justifyContent: "center",
+    }
   };
 
