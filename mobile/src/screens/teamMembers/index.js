@@ -18,6 +18,7 @@ import { TouchableOpacity, FlatList, TouchableWithoutFeedback } from "react-nati
 import Modal from "react-native-modal";
 const Auth = require("../../util/Auth");
 const ApiCalls = require("../../util/ApiCalls");
+
 class TeamMembers extends Component {
     constructor(props) {
         super(props);
@@ -30,6 +31,7 @@ class TeamMembers extends Component {
         Auth.userHasPermission.bind(this);
         this.assignTeamMembersToState.bind(this);
     }
+
     // Retrieve team members list from API and assign to state.
     assignTeamMembersToState(opts = { refresh: false }) {
         if ((this.state && this.state.loggedIn) && (!this.state.teamMembersList || opts.refresh)) {
@@ -38,7 +40,7 @@ class TeamMembers extends Component {
                     ApiCalls.handleAPICallResult(response).then(apiResults => {
                         if (apiResults) {
                             this.setState({
-                                teamID: 0,
+                                teamID: this.params.uid,
                                 teamMembersList: apiResults,
                                 render: true
                             });
@@ -54,22 +56,26 @@ class TeamMembers extends Component {
             });
         }
     }
+
     // Handles the onClick event for the modal buttons.
     onModalButtonClick(teamMemberData, buttonText) {
-        this.closeModal(teamMemberData);
-        // @TODO: Implement Button Events
-        /*if (buttonText === "Delete") {
-            return this.props.navigation.navigate("TeamInfo", { uid: teamData.uid });
-        } else {
-            return this.props.navigation.navigate("TeamMembers", { uid: teamData.uid });
-        }*/
+      this.closeModal(teamMemberData);
+      if (buttonText === "Remove") {
+        // remove team member
+      } else {
+        ApiCalls.makeTeamLead(this.state.teamID, teamMemberData.uid).then(response => {
+          return true;
+        });
+        // removeTeamMember
+      }
     }
+
     // Closes the modal.
     closeModal(teamMemberData) {
         teamMemberData.modalVisible = false;
         this.setState(JSON.parse(JSON.stringify(this.state)));
     }
-    // Render
+
     render() {
         this.assignTeamMembersToState();
         return (
@@ -79,7 +85,7 @@ class TeamMembers extends Component {
             </Container>
         );
     }
-    // Render Header
+
     _renderHeader() {
         return (
             <Header>
@@ -111,7 +117,7 @@ class TeamMembers extends Component {
             </Header>
         );
     }
-    // Render Body
+
     _renderBody() {
         if (this.state.render) {
             return (
@@ -130,7 +136,7 @@ class TeamMembers extends Component {
             return this._renderLoadingScreen();
         }
     }
-    // Render loading screen
+
     _renderLoadingScreen() {
         return (
             <Content padder>
@@ -138,7 +144,7 @@ class TeamMembers extends Component {
             </Content>
         );
     }
-    // Render Project Data
+
     _renderTeamMemberData(teamMemberData) {
         return (
             <TouchableOpacity style={styles.teamItem} onPress={() => {
@@ -163,7 +169,7 @@ class TeamMembers extends Component {
             </TouchableOpacity>
         );
     }
-    // Render Modal
+
     _renderModal(teamMemberData) {
         return (
             <TouchableWithoutFeedback onPress={() => this.closeModal(teamMemberData)}>
@@ -176,15 +182,15 @@ class TeamMembers extends Component {
                     <View style={styles.modalContent}>
                         <Text style={styles.modalTitle}>{teamMemberData.first_name} {teamMemberData.last_name}</Text>
                         <View style={styles.modalFlex}>
-                            {this._renderModalButton(teamMemberData, "Change Team Lead")}
-                            {this._renderModalButton(teamMemberData, "Delete")}
+                            {this._renderModalButton(teamMemberData, "Assign Lead")}
+                            {this._renderModalButton(teamMemberData, "Remove")}
                         </View>
                     </View>
                 </Modal>
             </TouchableWithoutFeedback>
         );
     }
-    // Render Modal Button
+
     _renderModalButton(teamMemberData, buttonText) {
         return (
             <TouchableOpacity style={styles.modalButton} onPress={() => {
@@ -195,4 +201,5 @@ class TeamMembers extends Component {
         );
     }
 }
+
 export default TeamMembers;
