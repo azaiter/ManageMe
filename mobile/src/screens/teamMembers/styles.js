@@ -30,7 +30,7 @@ export default {
   title: {
     fontSize: 23,
     fontWeight: "bold",
-    color: "#008000",
+    color: "#000090",
   },
 
   modalTitle: {
@@ -69,6 +69,18 @@ export default {
   body: {
     fontSize: 20,
     color: "black",
+  },
+
+  isLead0: {
+    textShadowColor: "#008000",
+    textShadowOffset: { width: -1, height: 1 },
+    textShadowRadius: 10,
+  },
+
+  isLead1: {
+    textShadowColor: "#FF4B4B",
+    textShadowOffset: { width: -1, height: 1 },
+    textShadowRadius: 10,
   },
 
   modalButton: {
