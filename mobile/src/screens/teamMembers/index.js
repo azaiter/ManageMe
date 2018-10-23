@@ -59,15 +59,15 @@ class TeamMembers extends Component {
 
     // Handles the onClick event for the modal buttons.
     onModalButtonClick(teamMemberData, buttonText) {
-      this.closeModal(teamMemberData);
-      if (buttonText === "Remove") {
-        // remove team member
-      } else {
-        ApiCalls.makeTeamLead(this.state.teamID, teamMemberData.uid).then(response => {
-          return true;
-        });
-        // removeTeamMember
-      }
+        this.closeModal(teamMemberData);
+        if (buttonText === "Remove") {
+            // remove team member
+        } else {
+            ApiCalls.makeTeamLead(this.state.teamID, teamMemberData.uid).then(response => {
+                return true;
+            });
+            // removeTeamMember
+        }
     }
 
     // Closes the modal.
@@ -159,10 +159,12 @@ class TeamMembers extends Component {
                     <Text style={styles.body}>
                         username - {teamMemberData.username}
                     </Text>
-                    {teamMemberData.isLead === 1 ?
-                        <Text style={styles.body}>Team Lead: Yes</Text> :
-                        <Text style={styles.body}>Team Lead: No</Text>
-                    }
+                    <View style={styles.bodyFlex}>
+                        {teamMemberData.isLead === 1 ?
+                            <Text style={styles.body}>Team Lead: Yes</Text> :
+                            <Text style={styles.body}>Team Lead: No</Text>
+                        }
+                    </View>
                 </View>
                 <Icon style={styles.icon} name="more" />
                 {this._renderModal(teamMemberData)}

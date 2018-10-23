@@ -45,6 +45,10 @@ export default {
     color: "black",
   },
 
+  bodyFlex: {
+    paddingBottom: 10,
+  },
+
   flex: {
     flex: 1,
     flexDirection: "row",
