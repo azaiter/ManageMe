@@ -197,7 +197,7 @@ class CreateProject extends Component {
               mode="dropdown"
               iosIcon={<Icon name="ios-arrow-down-outline" />}
               style={{ width: undefined }}
-              placeholder="Select your SIM"
+              placeholder="Select a Team"
               placeholderStyle={{ color: "#bfc6ea" }}
               placeholderIconColor="#007aff"
               selectedValue={this.state.teamId}
