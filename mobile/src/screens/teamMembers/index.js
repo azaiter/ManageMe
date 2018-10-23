@@ -64,7 +64,7 @@ class TeamMembers extends Component {
             // remove team member
         } else {
             ApiCalls.makeTeamLead(this.state.teamID, teamMemberData.uid).then(response => {
-                return true;
+                this.assignTeamMembersToState({ refresh: true });
             });
             // removeTeamMember
         }
