@@ -153,9 +153,11 @@ class Teams extends Component {
       }}>
         <View style={styles.text}>
           <Text style={styles.title}>{teamData.name}</Text>
-          <Text style={styles.body}>
-            {this.truncate(teamData.desc)}
-          </Text>
+          <View style={styles.bodyFlex}>
+            <Text style={styles.body}>
+              {this.truncate(teamData.desc)}
+            </Text>
+          </View>
         </View>
         <Icon style={styles.icon} name="more" />
         {this._renderModal(teamData)}

@@ -1,84 +1,88 @@
 export default {
-    container: {
-      backgroundColor: "#FFF",
-      flex: 1,
-    },
+  container: {
+    backgroundColor: "#FFF",
+    flex: 1,
+  },
 
-    mb10: {
-      marginBottom: 10
-    },
+  mb10: {
+    marginBottom: 10
+  },
 
-    teamItem: {
-      flex: 1,
-      flexDirection: "row",
-      borderBottomWidth: 1,
-      borderBottomColor: "#E4E4E4",
-      paddingTop: 10,
-      alignSelf: "flex-start",
-      justifyContent: "flex-start",
-      height: "100%"
-    },
+  teamItem: {
+    flex: 1,
+    flexDirection: "row",
+    borderBottomWidth: 1,
+    borderBottomColor: "#E4E4E4",
+    paddingTop: 10,
+    alignSelf: "flex-start",
+    justifyContent: "flex-start",
+    height: "100%"
+  },
 
-    text: {
-      flex: 2,
-    },
+  text: {
+    flex: 2,
+  },
 
-    icon: {
-      color: "#008000",
-    },
+  icon: {
+    color: "#008000",
+  },
 
-    title: {
-      fontSize: 23,
-      fontWeight: "bold",
-      color: "#008000",
-    },
+  title: {
+    fontSize: 23,
+    fontWeight: "bold",
+    color: "#008000",
+  },
 
-    modalTitle: {
-      fontSize: 30,
-      fontWeight: "bold",
-      color: "white",
-    },
+  modalTitle: {
+    fontSize: 30,
+    fontWeight: "bold",
+    color: "white",
+  },
 
-    modalText: {
-      fontSize: 18,
-      fontWeight: "bold",
-      color: "black",
-    },
+  modalText: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "black",
+  },
 
-    flex: {
-      flex: 1,
-      flexDirection: "row",
-      paddingTop: 10,
-      paddingBottom: 10,
-    },
+  bodyFlex: {
+    paddingBottom: 10,
+  },
 
-    modalFlex: {
-      flexDirection: "row",
-    },
+  flex: {
+    flex: 1,
+    flexDirection: "row",
+    paddingTop: 10,
+    paddingBottom: 10,
+  },
 
-    time: {
-      fontSize: 17.5,
-      fontStyle: "italic",
-      color: "black",
-    },
+  modalFlex: {
+    flexDirection: "row",
+  },
 
-    body: {
-      fontSize: 20,
-      color: "black",
-    },
+  time: {
+    fontSize: 17.5,
+    fontStyle: "italic",
+    color: "black",
+  },
 
-    modalButton: {
-      backgroundColor: "lightskyblue",
-      padding: 12,
-      margin: 16,
-      justifyContent: "center",
-      alignItems: "center",
-      borderRadius: 4,
-    },
+  body: {
+    fontSize: 20,
+    color: "black",
+  },
 
-    modalContent: {
-      padding: 22,
-      justifyContent: "center",
-      alignItems: "center",
-    },
-  };
+  modalButton: {
+    backgroundColor: "lightskyblue",
+    padding: 12,
+    margin: 16,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 4,
+  },
+
+  modalContent: {
+    padding: 22,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+};
