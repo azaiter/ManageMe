@@ -61,12 +61,13 @@ class TeamMembers extends Component {
     onModalButtonClick(teamMemberData, buttonText) {
         this.closeModal(teamMemberData);
         if (buttonText === "Remove") {
-            // remove team member
+            ApiCalls.removeUserFromTeam(this.state.teamID, teamMemberData.uid).then(response => {
+                this.assignTeamMembersToState({ refresh: true });
+            });
         } else {
             ApiCalls.makeTeamLead(this.state.teamID, teamMemberData.uid).then(response => {
                 this.assignTeamMembersToState({ refresh: true });
             });
-            // removeTeamMember
         }
     }
 
