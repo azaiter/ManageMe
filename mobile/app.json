@@ -1,8 +1,8 @@
 {
   "expo": {
     "sdkVersion": "28.0.0",
-    "icon": "./assets/nblogo.png",
-    "slug": "nativebasekitchensink",
+    "icon": "./assets/logo.png",
+    "slug": "ManageMe",
     "loading": {
       "hideExponentText": true,
       "backgroundImage": "./assets/splashscreen.png"
@@ -18,6 +18,12 @@
     "androidStatusBar": {
       "barStyle": "light-content",
       "backgroundColor": "#334393"
+    },
+    "ios": {
+      "bundleIdentifier": "com.zaiter.manageme"
+    },
+    "android": {
+      "package": "com.zaiter.manageme"
     }
   }
 }
