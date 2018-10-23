@@ -126,7 +126,7 @@ class TeamMembers extends Component {
                         <Text style={styles.title}>No Team Members Assigned</Text> :
                         <FlatList
                             style={styles.container}
-                            data={this.state.teamMembersList}
+                            data={this.state.teamMembersList.sort((a, b) => b.isLead - a.isLead)}
                             renderItem={data => this._renderTeamMemberData(data.item)}
                             keyExtractor={item => item.uid.toString()}
                         />}
