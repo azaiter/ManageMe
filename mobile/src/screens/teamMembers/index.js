@@ -152,7 +152,7 @@ class TeamMembers extends Component {
                 this.setState(JSON.parse(JSON.stringify(this.state)));
             }}>
                 <View style={styles.text}>
-                    <Text style={styles.title}>{teamMemberData.first_name} {teamMemberData.last_name}</Text>
+                    <Text style={[styles.title, styles["isLead" + teamMemberData.isLead]]}>{teamMemberData.first_name} {teamMemberData.last_name}</Text>
                     <Text style={styles.body}>
                         email - {teamMemberData.email}
                     </Text>
