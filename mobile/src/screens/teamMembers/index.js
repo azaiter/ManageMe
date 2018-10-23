@@ -62,11 +62,19 @@ class TeamMembers extends Component {
         this.closeModal(teamMemberData);
         if (buttonText === "Remove") {
             ApiCalls.removeUserFromTeam(this.state.teamID, teamMemberData.uid).then(response => {
-                this.assignTeamMembersToState({ refresh: true });
+                ApiCalls.handleAPICallResult(response, this).then(apiResults => {
+                    if (apiResults) {
+                        this.assignTeamMembersToState({ refresh: true });
+                    }
+                });
             });
         } else {
             ApiCalls.makeTeamLead(this.state.teamID, teamMemberData.uid).then(response => {
-                this.assignTeamMembersToState({ refresh: true });
+                ApiCalls.handleAPICallResult(response, this).then(apiResults => {
+                    if (apiResults) {
+                        this.assignTeamMembersToState({ refresh: true });
+                    }
+                });
             });
         }
     }
