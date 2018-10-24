@@ -70,23 +70,6 @@ class Teams extends Component {
     }
   }
 
-  // Handles the onClick event for the modal buttons.
-  onModalButtonClick(teamData, buttonText) {
-    this.closeModal(teamData);
-    // @TODO: Implement Button Events
-    if (buttonText === "Info") {
-      return this.props.navigation.navigate("TeamInfo", { uid: teamData.uid });
-    } else {
-      return this.props.navigation.navigate("TeamMembers", { uid: teamData.uid });
-    }
-  }
-
-  // Closes the modal.
-  closeModal(teamData) {
-    teamData.modalVisible = false;
-    this.setState(JSON.parse(JSON.stringify(this.state)));
-  }
-
   // Render
   render() {
     this.assignTeamsToState();
@@ -147,10 +130,9 @@ class Teams extends Component {
   // Render Team Data
   _renderTeamData(teamData) {
     return (
-      <TouchableOpacity style={styles.teamItem} onPress={() => {
-        teamData.modalVisible = true;
-        this.setState(JSON.parse(JSON.stringify(this.state)));
-      }}>
+      <TouchableOpacity style={styles.teamItem} onPress={() => 
+        this.props.navigation.navigate("TeamMembers", { uid: teamData.uid })
+      }>
         <View style={styles.text}>
           <Text style={styles.title}>{teamData.name}</Text>
           <View style={styles.bodyFlex}>
@@ -160,40 +142,6 @@ class Teams extends Component {
           </View>
         </View>
         <Icon style={styles.icon} name="more" />
-        {this._renderModal(teamData)}
-      </TouchableOpacity>
-    );
-  }
-
-  // Render Modal
-  _renderModal(teamData) {
-    return (
-      <TouchableWithoutFeedback onPress={() => this.closeModal(teamData)}>
-        <Modal
-          onBackdropPress={() => this.closeModal(teamData)}
-          onBackButtonPress={() => this.closeModal(teamData)}
-          onSwipe={() => this.closeModal(teamData)}
-          swipeDirection="down"
-          isVisible={teamData.modalVisible}>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>{teamData.name}</Text>
-            <View style={styles.modalFlex}>
-              {this._renderModalButton(teamData, "Info")}
-              {this._renderModalButton(teamData, "Members")}
-            </View>
-          </View>
-        </Modal>
-      </TouchableWithoutFeedback>
-    );
-  }
-
-  // Render Modal Button
-  _renderModalButton(teamData, buttonText) {
-    return (
-      <TouchableOpacity style={styles.modalButton} onPress={() => {
-        this.onModalButtonClick(teamData, buttonText);
-      }}>
-        <Text style={styles.modalText}>{buttonText}</Text>
       </TouchableOpacity>
     );
   }
