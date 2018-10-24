@@ -333,8 +333,7 @@ class ProjectInfo extends Component {
           </View>
           <Button
             transparent
-            //@TODO to implement navigation to the Teams page//this.props.navigation.navigate("Requirements", { uid: info.uid})
-            onPress={() => this.state.teamid === -1 ? null : null}
+            onPress={() => this.state.teamid === -1 ? null : this.props.navigation.navigate("TeamMembers", { uid: this.state.teamid})}
           >
             <View style={styles.flex}>
               <Text style={styles.requirementCount}>Team: </Text>
