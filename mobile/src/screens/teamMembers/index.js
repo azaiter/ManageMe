@@ -14,7 +14,7 @@ import {
     Spinner,
 } from "native-base";
 import styles from "./styles";
-import { TouchableOpacity, FlatList, TouchableWithoutFeedback } from "react-native";
+import { TouchableOpacity, FlatList, TouchableWithoutFeedback, Alert } from "react-native";
 import Modal from "react-native-modal";
 import SectionedMultiSelect from "react-native-sectioned-multi-select";
 const Auth = require("../../util/Auth");
@@ -92,16 +92,19 @@ class TeamMembers extends Component {
         let added = selectedItems.filter(x => !this.state.teamMember.includes(x));
         for (let i = 0; i < removed.length; i++) {
             const userID = removed[i];
-            ApiCalls.removeUserFromTeam(this.state.teamID, userID).then(res => {
-                ApiCalls.handleAPICallResult(res, this).then(apiResults => {
+            let userObj = this.state.teamMembersList.filter(x => x.uid === userID);
+            if(!userObj[0].isLead) {
+                ApiCalls.removeUserFromTeam(this.state.teamID, userID).then(res => {
+                    ApiCalls.handleAPICallResult(res, this).then(apiResults => {});
                 });
-            });
+            } else {
+                Alert.alert("Cannot remove team lead.");
+            }
         }
         for (let i = 0; i < added.length; i++) {
             const userID = added[i];
             ApiCalls.addUserToTeam(this.state.teamID, userID).then(res => {
-                ApiCalls.handleAPICallResult(res, this).then(apiResults => {
-                });
+                ApiCalls.handleAPICallResult(res, this).then(apiResults => {});
             });
         }
         this.setState({
