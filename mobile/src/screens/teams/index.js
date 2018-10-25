@@ -13,8 +13,7 @@ import {
   View
 } from "native-base";
 import styles from "./styles";
-import { TouchableOpacity, FlatList, TouchableWithoutFeedback } from "react-native";
-import Modal from "react-native-modal";
+import { TouchableOpacity, FlatList } from "react-native";
 const Auth = require("../../util/Auth");
 const ApiCalls = require("../../util/ApiCalls");
 
@@ -130,7 +129,7 @@ class Teams extends Component {
   // Render Team Data
   _renderTeamData(teamData) {
     return (
-      <TouchableOpacity style={styles.teamItem} onPress={() => 
+      <TouchableOpacity style={styles.teamItem} onPress={() =>
         this.props.navigation.navigate("TeamMembers", { uid: teamData.uid })
       }>
         <View style={styles.text}>

@@ -16,13 +16,13 @@ import {
 import styles from "./styles";
 import { TouchableOpacity, FlatList, TouchableWithoutFeedback } from "react-native";
 import Modal from "react-native-modal";
+import SectionedMultiSelect from "react-native-sectioned-multi-select";
 const Auth = require("../../util/Auth");
 const ApiCalls = require("../../util/ApiCalls");
 
 class TeamMembers extends Component {
     constructor(props) {
         super(props);
-        this.state = {};
         this.params = this.props.navigation.state.params;
         Auth.setIsLoginStateOnScreenEntry(this, {
             navigate: "TeamMembers",
@@ -30,18 +30,26 @@ class TeamMembers extends Component {
         });
         Auth.userHasPermission.bind(this);
         this.assignTeamMembersToState.bind(this);
+        this.state = { teamID: this.params.uid};
     }
 
     // Retrieve team members list from API and assign to state.
     assignTeamMembersToState(opts = { refresh: false }) {
         if ((this.state && this.state.loggedIn) && (!this.state.teamMembersList || opts.refresh)) {
             ApiCalls.getTeamMembers(this.params.uid).then(response => {
+                let teamMember = [];
                 if (response[1] === 200) {
                     ApiCalls.handleAPICallResult(response).then(apiResults => {
                         if (apiResults) {
+                            apiResults.forEach(result => {
+                                result.modalVisible = false;
+                                result.key = result.uid.toString() + "_" + result.modalVisible.toString();
+                                teamMember.push(result.uid);
+                              });
                             this.setState({
-                                teamID: this.params.uid,
+                                id: 1,
                                 teamMembersList: apiResults,
+                                teamMember: teamMember,
                                 render: true
                             });
                         }
@@ -49,7 +57,8 @@ class TeamMembers extends Component {
                 }
                 else {
                     this.setState({
-                        teamID: -1,
+                        id: -1,
+                        teamMember: teamMember,
                         render: true
                     });
                 }
@@ -57,18 +66,53 @@ class TeamMembers extends Component {
         }
     }
 
-    // Handles the onClick event for the modal buttons.
-    onModalButtonClick(teamMemberData, buttonText) {
-        this.closeModal(teamMemberData);
-        if (buttonText === "Remove") {
-            ApiCalls.removeUserFromTeam(this.state.teamID, teamMemberData.uid).then(response => {
-                ApiCalls.handleAPICallResult(response, this).then(apiResults => {
-                    if (apiResults) {
-                        this.assignTeamMembersToState({ refresh: true });
+    assignUsersToState(opts = { refresh: false }) {
+        if ((this.state && this.state.loggedIn) && (!this.state.userList || opts.refresh)) {
+            ApiCalls.getUserInfo().then(_response => {
+                ApiCalls.handleAPICallResult(_response, this).then(_apiResults => {
+                    if (_apiResults) {
+                        let userList = [
+                            {
+                                name: "Users",
+                                id: 0,
+                                children: _apiResults.map(x => { return { name: x.first_name + " " + x.last_name, id: x.uid }; })
+                            }
+                        ];
+                        this.setState({
+                            userList: userList,
+                        });
                     }
                 });
             });
-        } else {
+        }
+    }
+
+    onSelectedItemsChange = (selectedItems) => {
+        let removed = this.state.teamMember.filter(x => !selectedItems.includes(x));
+        let added = selectedItems.filter(x => !this.state.teamMember.includes(x));
+        for (let i = 0; i < removed.length; i++) {
+            const userID = removed[i];
+            ApiCalls.removeUserFromTeam(this.state.teamID, userID).then(res => {
+                ApiCalls.handleAPICallResult(res, this).then(apiResults => {
+                });
+            });
+        }
+        for (let i = 0; i < added.length; i++) {
+            const userID = added[i];
+            ApiCalls.addUserToTeam(this.state.teamID, userID).then(res => {
+                ApiCalls.handleAPICallResult(res, this).then(apiResults => {
+                });
+            });
+        }
+        this.setState({
+            teamMember: selectedItems
+        });
+    }
+
+    // Handles the onClick event for the modal buttons.
+    onModalButtonClick(teamMemberData, buttonText) {
+        this.closeModal(teamMemberData);
+        if (buttonText === "Assign Lead") {
             ApiCalls.makeTeamLead(this.state.teamID, teamMemberData.uid).then(response => {
                 ApiCalls.handleAPICallResult(response, this).then(apiResults => {
                     if (apiResults) {
@@ -87,6 +131,7 @@ class TeamMembers extends Component {
 
     render() {
         this.assignTeamMembersToState();
+        this.assignUsersToState();
         return (
             <Container style={styles.container}>
                 {this._renderHeader()}
@@ -129,15 +174,36 @@ class TeamMembers extends Component {
 
     _renderBody() {
         if (this.state.render) {
+            let selectedDataHandler = (y) => {
+                this.onSelectedItemsChange(y);
+                this.assignTeamMembersToState({ refresh: true });
+            };
             return (
                 <Content padder>
-                    {this.state.teamID === -1 ?
+                    <View>
+                        <SectionedMultiSelect
+                            items={this.state.userList}
+                            uniqueKey="id"
+                            subKey="children"
+                            selectText="Add / Remove Members"
+                            searchPlaceholderText="Search..."
+                            showChips={false}
+                            onSelectedItemsChange={selectedDataHandler}
+                            selectedItems={this.state.teamMember}
+                            readOnlyHeadings={true}
+                            style={{
+                                selectToggle: {
+                                    width: "100%",
+                                },
+                            }}
+                        />
+                    </View>
+                    {this.state.id === -1 ?
                         <Text style={styles.title}>No Team Members Assigned</Text> :
                         <FlatList
                             style={styles.container}
                             data={this.state.teamMembersList.sort((a, b) => b.isLead - a.isLead)}
                             renderItem={data => this._renderTeamMemberData(data.item)}
-                            keyExtractor={item => item.uid.toString()}
                         />}
                 </Content>
             );
@@ -177,7 +243,7 @@ class TeamMembers extends Component {
                 </View>
                 <Icon style={styles.icon} name="more" />
                 {teamMemberData.isLead === 1 ? null :
-                this._renderModal(teamMemberData)}
+                    this._renderModal(teamMemberData)}
             </TouchableOpacity>
         );
     }
@@ -195,7 +261,6 @@ class TeamMembers extends Component {
                         <Text style={styles.modalTitle}>{teamMemberData.first_name} {teamMemberData.last_name}</Text>
                         <View style={styles.modalFlex}>
                             {this._renderModalButton(teamMemberData, "Assign Lead")}
-                            {this._renderModalButton(teamMemberData, "Remove")}
                         </View>
                     </View>
                 </Modal>
