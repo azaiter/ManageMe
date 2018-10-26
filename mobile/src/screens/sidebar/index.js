@@ -14,8 +14,6 @@ import {
 } from "native-base";
 import styles from "./style";
 const Auth = require("../../util/Auth");
-const ApiCalls = require("../../util/ApiCalls");
-
 const drawerCover = require("../../../assets/drawer-cover.png");
 const drawerImage = require("../../../assets/logo-kitchen-sink.png");
 const UserInfo = require("../../components/UserInfo");
@@ -31,21 +29,9 @@ const dataOnlyLogin = [
 
 const datas = [
   {
-    name: "Admin",
-    route: "Admin",
-    icon: "ios-briefcase-outline",
-    bg: "#C5F442"
-  },
-  {
     name: "Projects",
     route: "Projects",
     icon: "ios-browsers-outline",
-    bg: "#C5F442"
-  },
-  {
-    name: "Reports",
-    route: "Reports",
-    icon: "ios-copy-outline",
     bg: "#C5F442"
   },
   {
@@ -286,12 +272,12 @@ class SideBar extends Component {
         >
           <Image source={drawerCover} style={styles.drawerCover} />
           {
-            this.state.loggedIn?
+            this.state.loggedIn ?
               <UserInfo
                 style={styles.userInfo}
                 username={this.state.userTokenObj.first_name + " " + this.state.userTokenObj.last_name}
                 email={this.state.userTokenObj.email}
-              />:
+              /> :
               <Image square style={styles.drawerImage} source={drawerImage} />
           }
           <Separator bordered>
