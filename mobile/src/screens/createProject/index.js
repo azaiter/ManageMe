@@ -165,7 +165,7 @@ class CreateProject extends Component {
             transparent
             onPress={() => this.props.navigation.goBack()}
           >
-            <Icon name="arrow-back" />
+            <Icon name="ios-arrow-dropleft-circle" />
           </Button>
         </Right>
       </Header>

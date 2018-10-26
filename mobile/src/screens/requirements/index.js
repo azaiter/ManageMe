@@ -308,7 +308,16 @@ class Requirements extends Component {
             transparent
             onPress={() => this.props.navigation.goBack()}
           >
-            <Icon name="arrow-back" />
+            <Icon name="ios-arrow-dropleft-circle" />
+          </Button>
+          <Button
+            transparent
+            onPress={() => {
+              this.assignRequirementsToState({ refresh: true });
+              this.assignTimeToState({ refresh: true });
+            }}
+          >
+            <Icon name="ios-refresh-circle" />
           </Button>
         </Right>
       </Header>

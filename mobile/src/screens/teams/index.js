@@ -95,18 +95,24 @@ class Teams extends Component {
         <Body>
           <Title>Teams</Title>
         </Body>
-        <Right style={styles.flex}>
+        <Right>
           <Button
             transparent
             onPress={() => this.props.navigation.navigate("CreateTeam")}
           >
-            <Icon name="add" />
+            <Icon name="ios-add-circle" />
+          </Button>
+          <Button
+            transparent
+            onPress={() => this.props.navigation.goBack()}
+          >
+            <Icon name="ios-arrow-dropleft-circle" />
           </Button>
           <Button
             transparent
             onPress={() => this.assignTeamsToState({ refresh: true })}
           >
-            <Icon name="refresh" />
+            <Icon name="ios-refresh-circle" />
           </Button>
         </Right>
       </Header>

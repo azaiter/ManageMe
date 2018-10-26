@@ -167,12 +167,18 @@ class Users extends Component {
         <Body>
           <Title>Users</Title>
         </Body>
-        <Right style={styles.flex}>
+        <Right>
           <Button
             transparent
             onPress={() => this.props.navigation.navigate("AddUser")}
           >
-            <Icon name="add" />
+            <Icon name="ios-add-circle" />
+          </Button>
+          <Button
+            transparent
+            onPress={() => this.props.navigation.goBack()}
+          >
+            <Icon name="ios-arrow-dropleft-circle" />
           </Button>
           <Button
             transparent

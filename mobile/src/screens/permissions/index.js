@@ -25,6 +25,15 @@ class Permissions extends Component {
   render() {
     return (
       <Container style={styles.container}>
+        {this._renderHeader()}
+        {this._renderContent()}
+      </Container>
+    );
+  }
+
+  // Render Header
+  _renderHeader() {
+    return (
         <Header>
           <Left>
             <Button
@@ -37,9 +46,21 @@ class Permissions extends Component {
           <Body>
             <Title>My Permissions</Title>
           </Body>
-          <Right />
+          <Right>
+            <Button
+              transparent
+              onPress={() => this.props.navigation.goBack()}
+            >
+              <Icon name="ios-arrow-dropleft-circle" />
+            </Button>
+          </Right>
         </Header>
+    );
+  }
 
+  // Render Content
+  _renderContent() {
+    return (
         <Content padder>
           <List
             dataArray={Auth.getPermissions(this)}
@@ -52,11 +73,7 @@ class Permissions extends Component {
                 </Left>
               </ListItem>}
           />
-          <Button onPress={() => this.props.navigation.goBack()}>
-            <Text>Back</Text>
-          </Button>
         </Content>
-      </Container>
     );
   }
 }
