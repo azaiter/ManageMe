@@ -10,7 +10,8 @@ import {
   Body,
   Text,
   Icon,
-  View
+  View,
+  Spinner,
 } from "native-base";
 import styles from "./styles";
 import { TouchableOpacity, FlatList, TouchableWithoutFeedback } from "react-native";
@@ -19,6 +20,7 @@ const Auth = require("../../util/Auth");
 const ApiCalls = require("../../util/ApiCalls");
 
 class Projects extends Component {
+  _isMounted = false;
   constructor(props) {
     super(props);
     this.state = {};
@@ -28,6 +30,14 @@ class Projects extends Component {
     });
     Auth.userHasPermission.bind(this);
     this.assignProjectsToState.bind(this);
+    this._renderHeader.bind(this);
+    this._renderBody.bind(this);
+    this._renderLoadingScreen.bind(this);
+    this._renderProjectData.bind(this);
+    this._renderModal.bind(this);
+    this._renderModalButton.bind(this);
+    this.onModalButtonClick.bind(this);
+    this.closeModal.bind(this);
   }
 
   // Refresh the page when coming from a back navigation event.
@@ -35,31 +45,41 @@ class Projects extends Component {
     this.assignProjectsToState({ refresh: true });
   });
 
+  componentDidMount() {
+    this._isMounted = true;
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
+  }
+
   // Retrieve project list from API and assign to state.
   assignProjectsToState(opts = { refresh: false }) {
     if ((this.state && this.state.loggedIn) && (!this.state.projectsList || opts.refresh)) {
       ApiCalls.getProjects().then(response => {
-        ApiCalls.handleAPICallResult(response).then(apiResults => {
+        ApiCalls.handleAPICallResult(response, this).then(apiResults => {
           if (apiResults) {
             apiResults.forEach(result => {
               result.modalVisible = false;
               result.key = result.uid.toString() + "_" + result.modalVisible.toString();
             });
-            this.setState({
-              projectsList: apiResults
-            });
+            if (this._isMounted) {
+              this.setState({
+                projectsList: apiResults
+              });
+            }
           }
         });
       });
     }
   }
 
-  // Retrieve project list from state.
-  getProjectsFromState() {
+  // Retrieve Render from state.
+  getRenderFromState() {
     if (this.state && this.state.projectsList) {
-      return this.state.projectsList;
+      return true;
     } else {
-      return [];
+      return false;
     }
   }
 
@@ -76,7 +96,9 @@ class Projects extends Component {
   // Closes the modal.
   closeModal(projectData) {
     projectData.modalVisible = false;
-    this.setState(JSON.parse(JSON.stringify(this.state)));
+    if (this._isMounted) {
+      this.setState(JSON.parse(JSON.stringify(this.state)));
+    }
   }
 
   // Reduces text to 40 characters.
@@ -99,6 +121,15 @@ class Projects extends Component {
     );
   }
 
+  // Render loading screen
+  _renderLoadingScreen() {
+    return (
+      <Content padder>
+        <Spinner color="blue" />
+      </Content>
+    );
+  }
+
   // Render Header
   _renderHeader() {
     return (
@@ -114,18 +145,24 @@ class Projects extends Component {
         <Body>
           <Title>Projects</Title>
         </Body>
-        <Right style={styles.flex}>
+        <Right>
           <Button
             transparent
             onPress={() => this.props.navigation.navigate("CreateProject")}
           >
-            <Icon name="add" />
+            <Icon name="ios-add-circle" />
+          </Button>
+          <Button
+            transparent
+            onPress={() => this.props.navigation.goBack()}
+          >
+            <Icon name="ios-arrow-dropleft-circle" />
           </Button>
           <Button
             transparent
             onPress={() => this.assignProjectsToState({ refresh: true })}
           >
-            <Icon name="refresh" />
+            <Icon name="ios-refresh-circle" />
           </Button>
         </Right>
       </Header>
@@ -134,15 +171,19 @@ class Projects extends Component {
 
   // Render Body
   _renderBody() {
-    return (
-      <Content padder>
-        <FlatList
-          style={styles.container}
-          data={this.getProjectsFromState()}
-          renderItem={data => this._renderProjectData(data.item)}
-        />
-      </Content>
-    );
+    if (this.getRenderFromState()) {
+      return (
+        <Content padder>
+          <FlatList
+            style={styles.container}
+            data={this.state.projectsList}
+            renderItem={data => this._renderProjectData(data.item)}
+          />
+        </Content>
+      );
+    } else {
+      return this._renderLoadingScreen();
+    }
   }
 
   // Render Project Data
@@ -150,7 +191,9 @@ class Projects extends Component {
     return (
       <TouchableOpacity style={styles.projectItem} onPress={() => {
         projectData.modalVisible = true;
-        this.setState(JSON.parse(JSON.stringify(this.state)));
+        if (this._isMounted) {
+          this.setState(JSON.parse(JSON.stringify(this.state)));
+        }
       }}>
         <View style={styles.text}>
           <Text style={styles.title}>{projectData.name}</Text>
