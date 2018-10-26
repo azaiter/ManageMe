@@ -94,7 +94,6 @@ import AdvSegment from "./screens/segment/segmentTab";
 import SimpleDeck from "./screens/deckswiper/simple";
 import AdvancedDeck from "./screens/deckswiper/advanced";
 
-import Home from "./screens/home/";
 import Anatomy from "./screens/anatomy/";
 import Footer from "./screens/footer/";
 import NHBadge from "./screens/badge/";
@@ -121,35 +120,38 @@ import Segment from "./screens/segment";
 import NHToast from "./screens/toast/";
 import Actionsheet from "./screens/actionsheet";
 
-import Admin from "./screens/admin";
+import Home from "./screens/home/";
 import Projects from "./screens/projects";
-import Reports from "./screens/reports";
 import Teams from "./screens/teams";
 import Permissions from "./screens/permissions";
-import AddUser from "./screens/adduser";
-import Requirements from "./screens/requirements";
+import Users from "./screens/users";
+
 import CreateProject from "./screens/createProject";
 import ProjectInfo from "./screens/projectInfo";
-import Users from "./screens/users";
+import Requirements from "./screens/requirements";
+
 import CreateTeam from "./screens/createTeam";
 import TeamMembers from "./screens/teamMembers";
+
+import AddUser from "./screens/adduser";
 
 const Drawer = DrawerNavigator(
   {
     // app screens
     Home: { screen: Home },
-    Admin: { screen: Admin },
     Projects: { screen: Projects },
-    Reports: { screen: Reports },
     Teams: { screen: Teams },
     Permissions: { screen: Permissions },
-    AddUser: { screen: AddUser },
-    Requirements: { screen: Requirements },
+    Users: { screen: Users },
+
     CreateProject: { screen: CreateProject },
     ProjectInfo: { screen: ProjectInfo },
-    Users: { screen: Users },
+    Requirements: { screen: Requirements },
+
     CreateTeam: { screen: CreateTeam },
     TeamMembers: { screen: TeamMembers },
+
+    AddUser: { screen: AddUser },
 
     //dev screens
     Anatomy: { screen: Anatomy },
@@ -189,6 +191,22 @@ const Drawer = DrawerNavigator(
 const AppNavigator = StackNavigator(
   {
     Drawer: { screen: Drawer },
+
+    // app screens
+    Home: { screen: Home },
+    Projects: { screen: Projects },
+    Teams: { screen: Teams },
+    Permissions: { screen: Permissions },
+    Users: { screen: Users },
+
+    CreateProject: { screen: CreateProject },
+    ProjectInfo: { screen: ProjectInfo },
+    Requirements: { screen: Requirements },
+
+    CreateTeam: { screen: CreateTeam },
+    TeamMembers: { screen: TeamMembers },
+
+    AddUser: { screen: AddUser },
 
     Header1: { screen: Header1 },
     Header2: { screen: Header2 },

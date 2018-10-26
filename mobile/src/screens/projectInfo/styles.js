@@ -56,7 +56,7 @@ export default {
   },
 
   button: {
-    width: 95,
+    width: 105,
     justifyContent: "center",
   },
 
@@ -111,8 +111,6 @@ export default {
   comment: {
     borderColor: "black",
     borderWidth: 1,
-    fontSize: 15,
-    height: 75,
-    padding: 5,
+    borderRadius: 4,
   },
 };

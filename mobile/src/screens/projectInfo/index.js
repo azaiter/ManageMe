@@ -13,12 +13,12 @@ import {
   Icon,
   View,
   Text,
-  Form,
   Card,
   Spinner,
+  Input,
 } from "native-base";
 import styles from "./styles";
-import { FlatList, Alert, TextInput } from "react-native";
+import { FlatList, Alert } from "react-native";
 const Auth = require("../../util/Auth");
 const ApiCalls = require("../../util/ApiCalls");
 
@@ -33,14 +33,53 @@ const fieldsArr = [
 ];
 
 class ProjectInfo extends Component {
+  _isMounted = false;
   constructor(props) {
     super(props);
     this.state = {
       projectComment: "",
     };
     this.params = this.props.navigation.state.params;
-    Auth.setIsLoginStateOnScreenEntry(this, { setUserPermissions: true });
-    Auth.getPermissions.bind(this);
+    Auth.setIsLoginStateOnScreenEntry(this, {
+      navigate: "ProjectInfo",
+      setUserPermissions: true
+    });
+    Auth.userHasPermission.bind(this);
+    this.assignRequirementsToState.bind(this);
+    this.assignCommentsToState.bind(this);
+    this.assignProjectInfoToState.bind(this);
+    this.assignProjectHoursToState.bind(this);
+    this.getRenderFromState.bind(this);
+    this.checkAndSetState.bind(this);
+    this.handleSubmit.bind(this);
+    this.getFieldValidation.bind(this);
+    this.getRequirementsCount.bind(this);
+    this.getTime.bind(this);
+    this.getInitialPage.bind(this);
+    this._renderHeader.bind(this);
+    this._renderTabs.bind(this);
+    this._renderLoadingScreen.bind(this);
+    this._renderProjectInfo.bind(this);
+    this._renderProject.bind(this);
+    this._renderRequirementButton.bind(this);
+    this._renderProjectComments.bind(this);
+    this._renderComment.bind(this);
+  }
+
+  // Refresh the page when coming from a back navigation event.
+  willFocus = this.props.navigation.addListener("willFocus", () => {
+    this.assignRequirementsToState({ refresh: true });
+    this.assignCommentsToState({ refresh: true });
+    this.assignProjectInfoToState({ refresh: true });
+    this.assignProjectHoursToState({ refresh: true });
+  });
+
+  componentDidMount() {
+    this._isMounted = true;
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
   }
 
   // Retrieve Requirements from API and assign to state.
@@ -74,10 +113,11 @@ class ProjectInfo extends Component {
                 requirementList.changeRequest.push(result);
               }
             });
-            this.setState({
-              requirementList,
-              renderRequirement: true
-            });
+            if (this._isMounted) {
+              this.setState({
+                requirementList
+              });
+            }
           }
         });
       });
@@ -90,10 +130,11 @@ class ProjectInfo extends Component {
       ApiCalls.getProjectComments(this.params.uid).then(response => {
         ApiCalls.handleAPICallResult(response).then(apiResults => {
           if (apiResults) {
-            this.setState({
-              commentList: apiResults,
-              renderComment: true
-            });
+            if (this._isMounted) {
+              this.setState({
+                commentList: apiResults
+              });
+            }
           }
         });
       });
@@ -107,19 +148,22 @@ class ProjectInfo extends Component {
         ApiCalls.handleAPICallResult(response).then(apiResults => {
           if (apiResults) {
             ApiCalls.getTeamById(apiResults[0].assigned_team).then(_response => {
-              if (_response[1] === 200) {
-                var teamName = _response[0][0].name;
-                var teamid = _response[0][0].uid;
-              } else {
-                var teamName = "Not Assigned";
-                var teamid = -1;
+              if (this._isMounted) {
+                ApiCalls.handleAPICallResult(_response, this).then(_apiResults => {
+                  if (_apiResults) {
+                    this.setState({
+                      teamData: _apiResults
+                    });
+                  } else {
+                    this.setState({
+                      teamData: "Not Assigned"
+                    });
+                  }
+                  this.setState({
+                    projectInfo: apiResults
+                  });
+                });
               }
-              this.setState({
-                teamName,
-                teamid,
-                projectInfo: apiResults,
-                renderProjectInfo: true
-              });
             });
           }
         });
@@ -133,18 +177,30 @@ class ProjectInfo extends Component {
       ApiCalls.getProjectHours(this.params.uid).then(response => {
         ApiCalls.handleAPICallResult(response).then(apiResults => {
           if (apiResults) {
-            this.setState({
-              projectHours: apiResults,
-              renderHours: true
-            });
+            if (this._isMounted) {
+              this.setState({
+                projectHours: apiResults
+              });
+            }
           }
         });
       });
     }
   }
 
+  // Retrieve Project info from state.
+  getRenderFromState() {
+    if (this.state.requirementList && this.state.commentList && this.state.projectHours && this.state.projectInfo && this.state) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   handleSubmit = async () => {
-    this.setState({ isLoading: true });
+    if (this._isMounted) {
+      this.setState({ isLoading: true });
+    }
     if (fieldsArr.filter(x => { return !this.state[x.name + "Validation"]; }).length > 0) {
       ApiCalls.showToastsInArr(["Comment field is invalid."], {
         buttonText: "OK",
@@ -156,8 +212,10 @@ class ProjectInfo extends Component {
     else {
       let apiResult = await ApiCalls.addProjectComment(this.params.uid, this.state.projectComment);
       let handledApiResults = await ApiCalls.handleAPICallResult(apiResult, this);
-      this.setState({ isLoading: false });
-      this.setState({ projectComment: "" });
+      if (this._isMounted) {
+        this.setState({ isLoading: false });
+        this.setState({ projectComment: "" });
+      }
       if (handledApiResults) {
         let message = "Comment was added successfully!";
         ApiCalls.showToastsInArr([message], {
@@ -183,10 +241,14 @@ class ProjectInfo extends Component {
 
   checkAndSetState(field, value, regex) {
     if (regex.test(value)) {
-      this.setState({ [field]: value, [field + "Validation"]: true });
+      if (this._isMounted) {
+        this.setState({ [field]: value, [field + "Validation"]: true });
+      }
     }
     else {
-      this.setState({ [field]: value, [field + "Validation"]: false });
+      if (this._isMounted) {
+        this.setState({ [field]: value, [field + "Validation"]: false });
+      }
     }
   }
 
@@ -274,18 +336,29 @@ class ProjectInfo extends Component {
         <Right>
           <Button
             transparent
-            onPress={() => this.assignCommentsToState({ refresh: true })}
+            onPress={() => this.props.navigation.goBack()}
           >
-            <Icon name="refresh" />
+            <Icon name="ios-arrow-dropleft-circle" />
+          </Button>
+          <Button
+            transparent
+            onPress={() => {
+              this.assignRequirementsToState({ refresh: true });
+              this.assignCommentsToState({ refresh: true });
+              this.assignProjectInfoToState({ refresh: true });
+              this.assignProjectHoursToState({ refresh: true });
+            }}
+          >
+            <Icon name="ios-refresh-circle" />
           </Button>
         </Right>
-      </Header>
+      </Header >
     );
   }
 
   // Render Tabs
   _renderTabs() {
-    if ((this.state.renderRequirement && this.state.renderComment) && (this.state.renderHours && this.state.renderProjectInfo)) {
+    if (this.getRenderFromState()) {
       return (
         <Tabs>
           <Tab heading="Information">
@@ -333,11 +406,13 @@ class ProjectInfo extends Component {
           </View>
           <Button
             transparent
-            onPress={() => this.state.teamid === -1 ? null : this.props.navigation.navigate("TeamMembers", { uid: this.state.teamid})}
+            onPress={() => this.state.teamData === "Not Assigned" ? null : this.props.navigation.navigate("TeamMembers", { uid: this.state.teamData[0].uid })}
           >
             <View style={styles.flex}>
               <Text style={styles.requirementCount}>Team: </Text>
-              <Text style={styles.requirementStatus}>{this.state.teamName}</Text>
+              {this.state.teamData === "Not Assigned" ?
+                <Text style={styles.requirementStatus}>Not Assigned</Text> :
+                <Text style={styles.requirementStatus}>{this.state.teamData[0].name}</Text>}
             </View>
           </Button>
           <Text style={styles.projectHours}>
@@ -383,6 +458,14 @@ class ProjectInfo extends Component {
   _renderProjectComments() {
     return (
       <Content padder >
+        <View style={styles.comment}>
+          <Input
+            onChangeText={(value) => this.checkAndSetState(fieldsArr[0].name, value, fieldsArr[0].regex)}
+            placeholder="Enter Comment"
+            onSubmitEditing={this.handleSubmit}
+            value={this.state[fieldsArr[0].name]}
+          />
+        </View>
         <View>
           <FlatList
             style={styles.flatlist}
@@ -390,15 +473,6 @@ class ProjectInfo extends Component {
             renderItem={data => this._renderComment(data.item)}
             keyExtractor={item => item.uid.toString()}
           />
-        </View>
-        <View>
-          {this._renderFieldEntry(fieldsArr[0])}
-          <Button
-            block style={{ margin: 15, marginTop: 50 }}
-            onPress={this.handleSubmit}
-          >
-            <Text>Add Comment</Text>
-          </Button>
         </View>
       </Content >
     );
@@ -414,25 +488,6 @@ class ProjectInfo extends Component {
         </View>
         <Text style={styles.commentBody}>{projectComment.comment}</Text>
       </View>
-    );
-  }
-
-  _renderFieldEntry(obj) {
-    return (
-      <Form style={styles.card}>
-        <TextInput
-          style={styles.comment}
-          placeholder={obj.label}
-          name={obj.name}
-          multiline={true}
-          numberOfLines={4}
-          onChangeText={(value) => this.checkAndSetState(obj.name, value, obj.regex)}
-          value={this.state[obj.name]}
-          onSubmitEditing={this.handleSubmit}
-          keyboardType={obj.keyboardType || "default"}
-          secureTextEntry={obj.secureTextEntry || false}
-        />
-      </Form>
     );
   }
 }
