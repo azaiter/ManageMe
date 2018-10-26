@@ -184,7 +184,7 @@ class Users extends Component {
             transparent
             onPress={() => this.assignUsersToState({ refresh: true })}
           >
-            <Icon name="refresh" />
+            <Icon name="ios-refresh-circle" />
           </Button>
         </Right>
       </Header>

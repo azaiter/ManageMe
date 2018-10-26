@@ -53,6 +53,12 @@ class Permissions extends Component {
             >
               <Icon name="ios-arrow-dropleft-circle" />
             </Button>
+            <Button
+              transparent
+              onPress={() => Auth.getPermissions.bind(this)}
+            >
+              <Icon name="ios-refresh-circle" />
+            </Button>
           </Right>
         </Header>
     );

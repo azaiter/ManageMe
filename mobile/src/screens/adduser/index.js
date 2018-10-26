@@ -172,7 +172,14 @@ class AddUser extends Component {
         <Body>
           <Title>Add User</Title>
         </Body>
-        <Right />
+        <Right >
+          <Button
+            transparent
+            onPress={() => this.props.navigation.goBack()}
+          >
+            <Icon name="ios-arrow-dropleft-circle" />
+          </Button>
+        </Right>
       </Header>
     );
   }
