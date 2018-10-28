@@ -1,6 +1,6 @@
 import React from "react";
 import { Root } from "native-base";
-import { StackNavigator, DrawerNavigator } from "react-navigation";
+import { createDrawerNavigator, createStackNavigator } from "react-navigation";
 
 import DevSample from "./screens/devSample";
 import Header1 from "./screens/devSample/Header/1";
@@ -135,9 +135,9 @@ import Requirements from "./screens/requirements";
 import CreateTeam from "./screens/createTeam";
 import TeamMembers from "./screens/teamMembers";
 
-import AddUser from "./screens/adduser";
+import CreateUser from "./screens/createUser";
 
-const Drawer = DrawerNavigator(
+const Drawer = createDrawerNavigator(
   {
     // app screens
     Home: { screen: Home },
@@ -145,15 +145,6 @@ const Drawer = DrawerNavigator(
     Teams: { screen: Teams },
     Permissions: { screen: Permissions },
     Users: { screen: Users },
-
-    CreateProject: { screen: CreateProject },
-    ProjectInfo: { screen: ProjectInfo },
-    Requirements: { screen: Requirements },
-
-    CreateTeam: { screen: CreateTeam },
-    TeamMembers: { screen: TeamMembers },
-
-    AddUser: { screen: AddUser },
 
     //dev screens
     DevSample: { screen: DevSample },
@@ -167,7 +158,7 @@ const Drawer = DrawerNavigator(
   }
 );
 
-const AppNavigator = StackNavigator(
+const AppNavigator = createStackNavigator(
   {
     Drawer: { screen: Drawer },
 
@@ -179,7 +170,7 @@ const AppNavigator = StackNavigator(
     CreateTeam: { screen: CreateTeam },
     TeamMembers: { screen: TeamMembers },
 
-    AddUser: { screen: AddUser },
+    CreateUser: { screen: CreateUser },
 
     //dev screens
     Anatomy: { screen: Anatomy },
