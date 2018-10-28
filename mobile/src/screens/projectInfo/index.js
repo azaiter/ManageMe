@@ -468,7 +468,6 @@ class ProjectInfo extends Component {
         </View>
         <View>
           <FlatList
-            style={styles.flatlist}
             data={this.state.commentList}
             renderItem={data => this._renderComment(data.item)}
             keyExtractor={item => item.uid.toString()}

@@ -66,11 +66,6 @@ export default {
     color: "#008000",
   },
 
-  flatlist: {
-    borderBottomWidth: 1,
-    borderBottomColor: "black",
-  },
-
   commentBody: {
     fontSize: 18,
     color: "black",
