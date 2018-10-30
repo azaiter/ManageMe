@@ -295,21 +295,15 @@ class Requirements extends Component {
         <Left>
           <Button
             transparent
-            onPress={() => this.props.navigation.openDrawer()}
+            onPress={() => this.props.navigation.goBack()}
           >
-            <Icon name="menu" />
+            <Icon name="ios-arrow-dropleft-circle" />
           </Button>
         </Left>
         <Body>
           <Title>Requirements</Title>
         </Body>
         <Right>
-          <Button
-            transparent
-            onPress={() => this.props.navigation.goBack()}
-          >
-            <Icon name="ios-arrow-dropleft-circle" />
-          </Button>
           <Button
             transparent
             onPress={() => {

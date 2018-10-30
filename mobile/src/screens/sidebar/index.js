@@ -10,7 +10,6 @@ import {
   Left,
   Right,
   Badge,
-  Separator,
   Header,
   Body,
   Footer,
@@ -68,15 +67,6 @@ const datas = [
   },
 ];
 
-const datasDev = [
-  {
-    name: "DevSample",
-    route: "DevSample",
-    icon: "phone-portrait",
-    bg: "#477EEA"
-  },
-];
-
 class SideBar extends Component {
   constructor(props) {
     super(props);
@@ -125,7 +115,7 @@ class SideBar extends Component {
     }
     return (
       <Container>
-        <Header style={{ height: 230 }}>
+        <Header style={{ height: 230, backgroundColor: "white" }}>
           <Body>
             <Image source={drawerCover} style={styles.drawerCover} />
             {
@@ -142,47 +132,6 @@ class SideBar extends Component {
         <Content
           bounces={false}
         >
-          <Separator bordered>
-            <Text>Dev Program</Text>
-          </Separator>
-          <List
-            dataArray={datasDev}
-            renderRow={data =>
-              <ListItem
-                button
-                noBorder
-                onPress={() => this.handleSideBarDataObj(data)}
-              >
-                <Left>
-                  <Icon
-                    active
-                    name={data.icon}
-                    style={{ color: "#777", fontSize: 26, width: 30 }}
-                  />
-                  <Text style={styles.text}>
-                    {data.name}
-                  </Text>
-                </Left>
-                {data.types &&
-                  <Right style={{ flex: 1 }}>
-                    <Badge
-                      style={{
-                        borderRadius: 3,
-                        height: 25,
-                        width: 72,
-                        backgroundColor: data.bg
-                      }}
-                    >
-                      <Text
-                        style={styles.badgeText}
-                      >{`${data.types} Types`}</Text>
-                    </Badge>
-                  </Right>}
-              </ListItem>}
-          />
-          <Separator bordered>
-            <Text>Main Program</Text>
-          </Separator>
           <List
             dataArray={dataListToShow}
             renderRow={data =>
@@ -221,7 +170,7 @@ class SideBar extends Component {
         </Content>
         {
           this.state.loggedIn ?
-            <Footer>
+            <Footer style={{ backgroundColor: "white" }}>
               <List
                 dataArray={dataLogout}
                 renderRow={data =>
@@ -234,9 +183,9 @@ class SideBar extends Component {
                       <Icon
                         active
                         name={data.icon}
-                        style={{ fontSize: 26, width: 30 }}
+                        style={{ fontSize: 26, width: 30, color: "red" }}
                       />
-                      <Text style={styles.text}>
+                      <Text style={styles.footerText}>
                         {data.name}
                       </Text>
                     </Left>

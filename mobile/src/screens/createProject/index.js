@@ -152,21 +152,15 @@ class CreateProject extends Component {
         <Left>
           <Button
             transparent
-            onPress={() => this.props.navigation.openDrawer()}
+            onPress={() => this.props.navigation.goBack()}
           >
-            <Icon name="menu" />
+            <Icon name="ios-arrow-dropleft-circle" />
           </Button>
         </Left>
         <Body>
           <Title>Create Project</Title>
         </Body>
         <Right>
-          <Button
-            transparent
-            onPress={() => this.props.navigation.goBack()}
-          >
-            <Icon name="ios-arrow-dropleft-circle" />
-          </Button>
           <Button
             transparent
             onPress={() => this.assignTeamsToState({ refresh: true })}

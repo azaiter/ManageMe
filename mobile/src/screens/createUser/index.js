@@ -164,22 +164,15 @@ class CreateUser extends Component {
         <Left>
           <Button
             transparent
-            onPress={() => this.props.navigation.openDrawer()}
+            onPress={() => this.props.navigation.goBack()}
           >
-            <Icon name="menu" />
+            <Icon name="ios-arrow-dropleft-circle" />
           </Button>
         </Left>
         <Body>
           <Title>Create User</Title>
         </Body>
-        <Right >
-          <Button
-            transparent
-            onPress={() => this.props.navigation.goBack()}
-          >
-            <Icon name="ios-arrow-dropleft-circle" />
-          </Button>
-        </Right>
+        <Right />
       </Header>
     );
   }

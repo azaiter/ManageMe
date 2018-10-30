@@ -176,12 +176,6 @@ class Users extends Component {
           </Button>
           <Button
             transparent
-            onPress={() => this.props.navigation.goBack()}
-          >
-            <Icon name="ios-arrow-dropleft-circle" />
-          </Button>
-          <Button
-            transparent
             onPress={() => this.assignUsersToState({ refresh: true })}
           >
             <Icon name="ios-refresh-circle" />

@@ -49,12 +49,6 @@ class Permissions extends Component {
           <Right>
             <Button
               transparent
-              onPress={() => this.props.navigation.goBack()}
-            >
-              <Icon name="ios-arrow-dropleft-circle" />
-            </Button>
-            <Button
-              transparent
               onPress={() => Auth.getPermissions.bind(this)}
             >
               <Icon name="ios-refresh-circle" />
