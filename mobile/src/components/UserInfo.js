@@ -12,9 +12,10 @@ class UserInfo extends Component {
     render() {
         return (
             <View style={this.props.style}>
-                <UserAvatar size="100" name={this.props.username} />
-                <Text>{this.props.username}</Text>
-                <Text>{this.props.email}</Text>
+                <UserAvatar size="80" name={this.props.username} />
+                <Text />
+                <Text style={{fontSize: 20, fontWeight: "bold" , color: "#008000"}}>{this.props.username}</Text>
+                <Text style={{fontSize: 17, fontWeight: "bold" , color: "#008000"}}>{this.props.email}</Text>
             </View>
         );
     }

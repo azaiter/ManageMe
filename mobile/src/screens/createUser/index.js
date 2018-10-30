@@ -79,7 +79,7 @@ const fieldsArr = [
   }
 ];
 
-class AddUser extends Component {
+class CreateUser extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -164,13 +164,13 @@ class AddUser extends Component {
         <Left>
           <Button
             transparent
-            onPress={() => this.props.navigation.navigate("DrawerOpen")}
+            onPress={() => this.props.navigation.goBack()}
           >
-            <Icon name="menu" />
+            <Icon name="ios-arrow-dropleft-circle" />
           </Button>
         </Left>
         <Body>
-          <Title>Add User</Title>
+          <Title>Create User</Title>
         </Body>
         <Right />
       </Header>
@@ -222,4 +222,4 @@ class AddUser extends Component {
   }
 }
 
-export default AddUser;
+export default CreateUser;

@@ -159,7 +159,7 @@ class Users extends Component {
         <Left>
           <Button
             transparent
-            onPress={() => this.props.navigation.navigate("DrawerOpen")}
+            onPress={() => this.props.navigation.openDrawer()}
           >
             <Icon name="menu" />
           </Button>
@@ -167,18 +167,18 @@ class Users extends Component {
         <Body>
           <Title>Users</Title>
         </Body>
-        <Right style={styles.flex}>
+        <Right>
           <Button
             transparent
             onPress={() => this.props.navigation.navigate("AddUser")}
           >
-            <Icon name="add" />
+            <Icon name="ios-add-circle" />
           </Button>
           <Button
             transparent
             onPress={() => this.assignUsersToState({ refresh: true })}
           >
-            <Icon name="refresh" />
+            <Icon name="ios-refresh-circle" />
           </Button>
         </Right>
       </Header>

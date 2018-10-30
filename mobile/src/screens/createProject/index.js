@@ -128,7 +128,7 @@ class CreateProject extends Component {
   }
 
   onTeamSelect(value) {
-    this.checkAndSetState(fieldsArr[2].name,value,fieldsArr[2].regex);
+    this.checkAndSetState(fieldsArr[2].name, value, fieldsArr[2].regex);
   }
 
   async goBack() {
@@ -152,9 +152,9 @@ class CreateProject extends Component {
         <Left>
           <Button
             transparent
-            onPress={() => this.props.navigation.navigate("DrawerOpen")}
+            onPress={() => this.props.navigation.goBack()}
           >
-            <Icon name="menu" />
+            <Icon name="ios-arrow-dropleft-circle" />
           </Button>
         </Left>
         <Body>
@@ -163,9 +163,9 @@ class CreateProject extends Component {
         <Right>
           <Button
             transparent
-            onPress={() => this.props.navigation.goBack()}
+            onPress={() => this.assignTeamsToState({ refresh: true })}
           >
-            <Icon name="arrow-back" />
+            <Icon name="ios-refresh-circle" />
           </Button>
         </Right>
       </Header>
@@ -177,7 +177,7 @@ class CreateProject extends Component {
       Label on its own breaks a return statement making it impossible to abstract.
       The item tag breaks all components except for input.
     */
-   return (this.state.render) ? (
+    return (this.state.render) ? (
       <Content padder>
         <Form>
           {/* Start Form */}
@@ -224,14 +224,14 @@ class CreateProject extends Component {
         </Form>
       </Content>
     ) : (
-      <Content padder>
-        <Spinner color="blue" />
-      </Content>
-    );
+        <Content padder>
+          <Spinner color="blue" />
+        </Content>
+      );
   }
 
   _renderSelectOption(team) {
-    return (<Item label={team.name} value={team.uid} key={team.uid}/>);
+    return (<Item label={team.name} value={team.uid} key={team.uid} />);
   }
 }
 

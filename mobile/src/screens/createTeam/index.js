@@ -130,22 +130,15 @@ class CreateTeam extends Component {
         <Left>
           <Button
             transparent
-            onPress={() => this.props.navigation.navigate("DrawerOpen")}
+            onPress={() => this.props.navigation.goBack()}
           >
-            <Icon name="menu" />
+            <Icon name="ios-arrow-dropleft-circle" />
           </Button>
         </Left>
         <Body>
           <Title>Create Team</Title>
         </Body>
-        <Right>
-          <Button
-            transparent
-            onPress={() => this.props.navigation.goBack()}
-          >
-            <Icon name="arrow-back" />
-          </Button>
-        </Right>
+        <Right />
       </Header>
     );
   }

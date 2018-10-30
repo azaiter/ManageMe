@@ -325,21 +325,15 @@ class ProjectInfo extends Component {
         <Left>
           <Button
             transparent
-            onPress={() => this.props.navigation.navigate("DrawerOpen")}
+            onPress={() => this.props.navigation.goBack()}
           >
-            <Icon name="menu" />
+            <Icon name="ios-arrow-dropleft-circle" />
           </Button>
         </Left>
         <Body>
           <Title>Project Details</Title>
         </Body>
         <Right>
-          <Button
-            transparent
-            onPress={() => this.props.navigation.goBack()}
-          >
-            <Icon name="ios-arrow-dropleft-circle" />
-          </Button>
           <Button
             transparent
             onPress={() => {
@@ -468,7 +462,6 @@ class ProjectInfo extends Component {
         </View>
         <View>
           <FlatList
-            style={styles.flatlist}
             data={this.state.commentList}
             renderItem={data => this._renderComment(data.item)}
             keyExtractor={item => item.uid.toString()}

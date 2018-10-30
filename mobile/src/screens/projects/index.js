@@ -137,7 +137,7 @@ class Projects extends Component {
         <Left>
           <Button
             transparent
-            onPress={() => this.props.navigation.navigate("DrawerOpen")}
+            onPress={() => this.props.navigation.openDrawer()}
           >
             <Icon name="menu" />
           </Button>
@@ -151,12 +151,6 @@ class Projects extends Component {
             onPress={() => this.props.navigation.navigate("CreateProject")}
           >
             <Icon name="ios-add-circle" />
-          </Button>
-          <Button
-            transparent
-            onPress={() => this.props.navigation.goBack()}
-          >
-            <Icon name="ios-arrow-dropleft-circle" />
           </Button>
           <Button
             transparent

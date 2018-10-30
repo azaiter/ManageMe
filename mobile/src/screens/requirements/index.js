@@ -295,9 +295,9 @@ class Requirements extends Component {
         <Left>
           <Button
             transparent
-            onPress={() => this.props.navigation.navigate("DrawerOpen")}
+            onPress={() => this.props.navigation.goBack()}
           >
-            <Icon name="menu" />
+            <Icon name="ios-arrow-dropleft-circle" />
           </Button>
         </Left>
         <Body>
@@ -306,9 +306,12 @@ class Requirements extends Component {
         <Right>
           <Button
             transparent
-            onPress={() => this.props.navigation.goBack()}
+            onPress={() => {
+              this.assignRequirementsToState({ refresh: true });
+              this.assignTimeToState({ refresh: true });
+            }}
           >
-            <Icon name="arrow-back" />
+            <Icon name="ios-refresh-circle" />
           </Button>
         </Right>
       </Header>

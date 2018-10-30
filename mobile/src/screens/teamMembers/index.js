@@ -30,7 +30,7 @@ class TeamMembers extends Component {
         });
         Auth.userHasPermission.bind(this);
         this.assignTeamMembersToState.bind(this);
-        this.state = { teamID: this.params.uid};
+        this.state = { teamID: this.params.uid };
     }
 
     // Retrieve team members list from API and assign to state.
@@ -45,7 +45,7 @@ class TeamMembers extends Component {
                                 result.modalVisible = false;
                                 result.key = result.uid.toString() + "_" + result.modalVisible.toString();
                                 teamMember.push(result.uid);
-                              });
+                            });
                             this.setState({
                                 id: 1,
                                 teamMembersList: apiResults,
@@ -93,9 +93,9 @@ class TeamMembers extends Component {
         for (let i = 0; i < removed.length; i++) {
             const userID = removed[i];
             let userObj = this.state.teamMembersList.filter(x => x.uid === userID);
-            if(!userObj[0].isLead) {
+            if (!userObj[0].isLead) {
                 ApiCalls.removeUserFromTeam(this.state.teamID, userID).then(res => {
-                    ApiCalls.handleAPICallResult(res, this).then(apiResults => {});
+                    ApiCalls.handleAPICallResult(res, this).then(apiResults => { });
                 });
             } else {
                 Alert.alert("Cannot remove team lead.");
@@ -104,7 +104,7 @@ class TeamMembers extends Component {
         for (let i = 0; i < added.length; i++) {
             const userID = added[i];
             ApiCalls.addUserToTeam(this.state.teamID, userID).then(res => {
-                ApiCalls.handleAPICallResult(res, this).then(apiResults => {});
+                ApiCalls.handleAPICallResult(res, this).then(apiResults => { });
             });
         }
         this.setState({
@@ -149,26 +149,20 @@ class TeamMembers extends Component {
                 <Left>
                     <Button
                         transparent
-                        onPress={() => this.props.navigation.navigate("DrawerOpen")}
+                        onPress={() => this.props.navigation.goBack()}
                     >
-                        <Icon name="menu" />
+                        <Icon name="ios-arrow-dropleft-circle" />
                     </Button>
                 </Left>
                 <Body>
                     <Title>Team Members</Title>
                 </Body>
-                <Right style={styles.flex}>
-                    <Button
-                        transparent
-                        onPress={() => this.props.navigation.navigate("AddMember")}
-                    >
-                        <Icon name="add" />
-                    </Button>
+                <Right>
                     <Button
                         transparent
                         onPress={() => this.assignTeamMembersToState({ refresh: true })}
                     >
-                        <Icon name="refresh" />
+                        <Icon name="ios-refresh-circle" />
                     </Button>
                 </Right>
             </Header>
