@@ -10,7 +10,8 @@ import {
   Body,
   Text,
   Icon,
-  View
+  View,
+  Spinner,
 } from "native-base";
 import styles from "./styles";
 import { TouchableOpacity, FlatList } from "react-native";
@@ -18,6 +19,7 @@ const Auth = require("../../util/Auth");
 const ApiCalls = require("../../util/ApiCalls");
 
 class Teams extends Component {
+  _isMounted = false;
   constructor(props) {
     super(props);
     this.state = {};
@@ -25,6 +27,13 @@ class Teams extends Component {
       navigate: "Teams",
       setUserPermissions: true
     });
+    Auth.userHasPermission.bind(this);
+    this.assignTeamsToState.bind(this);
+    this.getRenderFromState.bind(this);
+    this._renderHeader.bind(this);
+    this._renderBody.bind(this);
+    this._renderLoadingScreen.bind(this);
+    this._renderTeamData.bind(this);
   }
 
   // Refresh the page when coming from a back navigation event.
@@ -32,31 +41,45 @@ class Teams extends Component {
     this.assignTeamsToState({ refresh: true });
   });
 
+  componentDidMount() {
+    this._isMounted = true;
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
+  }
+
   // Retrieve team list from API and assign to state.
   assignTeamsToState(opts = { refresh: false }) {
     if ((this.state && this.state.loggedIn) && (!this.state.teamsList || opts.refresh)) {
       ApiCalls.getTeams().then(response => {
-        ApiCalls.handleAPICallResult(response).then(apiResults => {
-          if (apiResults) {
-            apiResults.forEach(result => {
-              result.modalVisible = false;
-              result.key = result.uid.toString() + "_" + result.modalVisible.toString();
-            });
-            this.setState({
-              teamsList: apiResults
-            });
-          }
-        });
+        if (this._isMounted) {
+          ApiCalls.handleAPICallResult(response, this).then(apiResults => {
+            if (apiResults) {
+              apiResults.forEach(result => {
+                result.modalVisible = false;
+                result.key = result.uid.toString() + "_" + result.modalVisible.toString();
+              });
+              this.setState({
+                teamsList: apiResults
+              });
+            } else {
+              this.setState({
+                teamsList: "null"
+              });
+            }
+          });
+        }
       });
     }
   }
 
-  // Retrieve team list from state.
-  getTeamsFromState() {
+  // Retrieve Render from state.
+  getRenderFromState() {
     if (this.state && this.state.teamsList) {
-      return this.state.teamsList;
+      return true;
     } else {
-      return [];
+      return false;
     }
   }
 
@@ -77,6 +100,15 @@ class Teams extends Component {
         {this._renderHeader()}
         {this._renderBody()}
       </Container>
+    );
+  }
+
+  // Render loading screen
+  _renderLoadingScreen() {
+    return (
+      <Content padder>
+        <Spinner color="blue" />
+      </Content>
     );
   }
 
@@ -115,15 +147,26 @@ class Teams extends Component {
 
   // Render Body
   _renderBody() {
-    return (
-      <Content padder>
-        <FlatList
-          style={styles.container}
-          data={this.getTeamsFromState()}
-          renderItem={data => this._renderTeamData(data.item)}
-        />
-      </Content>
-    );
+    if (this.getRenderFromState()) {
+      return (
+        <Content padder>
+          {this.state.teamsList === "null" ?
+            <View style={styles.warningView} >
+              <Icon style={styles.warningIcon} name="warning"/>
+              <Text style={styles.warningText}>{this.state.ApiErrorsList}</Text>
+            </View>
+            :
+            <FlatList
+              style={styles.container}
+              data={this.state.teamsList}
+              renderItem={data => this._renderTeamData(data.item)}
+              keyExtractor={item => item.uid.toString()}
+            />}
+        </Content>
+      );
+    } else {
+      return this._renderLoadingScreen();
+    }
   }
 
   // Render Team Data

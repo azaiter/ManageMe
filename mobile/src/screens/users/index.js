@@ -10,7 +10,8 @@ import {
   Body,
   Text,
   Icon,
-  View
+  View,
+  Spinner,
 } from "native-base";
 import styles from "./styles";
 import { TouchableOpacity, FlatList, Alert, TouchableWithoutFeedback } from "react-native";
@@ -20,6 +21,7 @@ const Auth = require("../../util/Auth");
 const ApiCalls = require("../../util/ApiCalls");
 
 class Users extends Component {
+  _isMounted = false;
   constructor(props) {
     super(props);
     this.state = {};
@@ -41,78 +43,94 @@ class Users extends Component {
     this._renderPermissionsSelector.bind(this);
   }
 
+  // Refresh the page when coming from a back navigation event.
+  willFocus = this.props.navigation.addListener("willFocus", payload => {
+    this.assignUsersToState({ refresh: true });
+  });
+
+  componentDidMount() {
+    this._isMounted = true;
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
+  }
+
   onSelectedItemsChange = (userData, selectedItems) => {
-    let removed = this.state[`user_${userData.uid}_perms`].filter(x=>!selectedItems.includes(x));
-    let added = selectedItems.filter(x=>!this.state[`user_${userData.uid}_perms`].includes(x));
+    let removed = this.state[`user_${userData.uid}_perms`].filter(x => !selectedItems.includes(x));
+    let added = selectedItems.filter(x => !this.state[`user_${userData.uid}_perms`].includes(x));
     for (let i = 0; i < removed.length; i++) {
       const permissionID = removed[i];
-      ApiCalls.revokePrivilage(permissionID, userData.uid).then(res=>{
+      ApiCalls.revokePrivilage(permissionID, userData.uid).then(res => {
         ApiCalls.handleAPICallResult(res, this).then(apiResults => {
         });
       });
     }
     for (let i = 0; i < added.length; i++) {
       const permissionID = added[i];
-      ApiCalls.assignPrivilage(permissionID, userData.uid).then(res=>{
+      ApiCalls.assignPrivilage(permissionID, userData.uid).then(res => {
         ApiCalls.handleAPICallResult(res, this).then(apiResults => {
         });
       });
     }
-    this.setState({
-      [`user_${userData.uid}_perms`]: selectedItems
-    });
+    if (this._isMounted) {
+      this.setState({
+        [`user_${userData.uid}_perms`]: selectedItems
+      });
+    }
   }
-
-  // Refresh the page when coming from a back navigation event.
-  willFocus = this.props.navigation.addListener("willFocus", payload => {
-    this.assignUsersToState({ refresh: true });
-  });
 
   // Retrieve user list from API and assign to state.
   assignUsersToState(opts = { refresh: false }) {
     if ((this.state && this.state.loggedIn) && (!this.state.usersList || opts.refresh)) {
       ApiCalls.getUserInfo().then(response => {
-        ApiCalls.handleAPICallResult(response, this).then(apiResults => {
-          if (apiResults) {
-            apiResults.forEach(result => {
-              result.modalVisible = false;
-              result.key = result.uid.toString() + "_" + result.modalVisible.toString();
-            });
-            ApiCalls.getAllPerms().then(response2 => {
-              ApiCalls.handleAPICallResult(response2, this).then(apiResults2 => {
-                let allPermissions = [
-                  {
-                    name: "Permissions",
-                    id: 0,
-                    children: apiResults2.map(x=>{return {name:x.label, id:x.value};})
-                  }
-                ];
-                let setStateObj = {
-                  usersList: apiResults.map(x=>{
-                    x.permissions = x.permissions.map(y=>y.uid);
-                    return x;
-                  }),
-                  allPermissions: allPermissions
-                };
-                for (let i = 0; i < setStateObj.usersList.length; i++) {
-                  const userObj = setStateObj.usersList[i];
-                  setStateObj[`user_${userObj.uid}_perms`] = userObj.permissions;
-                }
-                this.setState(setStateObj);
+        if (this._isMounted) {
+          ApiCalls.handleAPICallResult(response, this).then(apiResults => {
+            if (apiResults) {
+              apiResults.forEach(result => {
+                result.modalVisible = false;
+                result.key = result.uid.toString() + "_" + result.modalVisible.toString();
               });
-            });
-          }
-        });
+              ApiCalls.getAllPerms().then(_response => {
+                ApiCalls.handleAPICallResult(_response, this).then(_apiResults => {
+                  let allPermissions = [
+                    {
+                      name: "Permissions",
+                      id: 0,
+                      children: _apiResults.map(x => { return { name: x.label, id: x.value }; })
+                    }
+                  ];
+                  let setStateObj = {
+                    usersList: apiResults.map(x => {
+                      x.permissions = x.permissions.map(y => y.uid);
+                      return x;
+                    }),
+                    allPermissions: allPermissions
+                  };
+                  for (let i = 0; i < setStateObj.usersList.length; i++) {
+                    const userObj = setStateObj.usersList[i];
+                    setStateObj[`user_${userObj.uid}_perms`] = userObj.permissions;
+                  }
+                  this.setState(setStateObj);
+                });
+              });
+            } else {
+              this.setState({
+                usersList: "null"
+              });
+            }
+          });
+        }
       });
     }
   }
 
-  // Retrieve user list from state.
-  getUsersFromState() {
+  // Retrieve Render from state.
+  getRenderFromState() {
     if (this.state && this.state.usersList) {
-      return this.state.usersList;
+      return true;
     } else {
-      return [];
+      return false;
     }
   }
 
@@ -129,7 +147,9 @@ class Users extends Component {
   // Closes the modal.
   closeModal(userData) {
     userData.modalVisible = false;
-    this.setState(JSON.parse(JSON.stringify(this.state)));
+    if (this._isMounted) {
+      this.setState(JSON.parse(JSON.stringify(this.state)));
+    }
   }
 
   // Reduces text to 40 characters.
@@ -152,6 +172,15 @@ class Users extends Component {
     );
   }
 
+  // Render loading screen
+  _renderLoadingScreen() {
+    return (
+      <Content padder>
+        <Spinner color="blue" />
+      </Content>
+    );
+  }
+
   // Render Header
   _renderHeader() {
     return (
@@ -170,7 +199,7 @@ class Users extends Component {
         <Right>
           <Button
             transparent
-            onPress={() => this.props.navigation.navigate("AddUser")}
+            onPress={() => this.props.navigation.navigate("CreateUser")}
           >
             <Icon name="ios-add-circle" />
           </Button>
@@ -187,24 +216,33 @@ class Users extends Component {
 
   // Render Body
   _renderBody() {
-    return (
-      <Content padder>
-        <FlatList
-          style={styles.container}
-          data={this.getUsersFromState()}
-          renderItem={data => this._renderUserData(data.item)}
-          extraData={this.state}
-        />
-      </Content>
-    );
+    if (this.getRenderFromState()) {
+      return (
+        <Content padder>
+          {this.state.usersList === "null" ?
+            <View style={styles.warningView} >
+            <Icon style={styles.warningIcon} name="warning"/>
+            <Text style={styles.warningText}>{this.state.ApiErrorsList}</Text>
+          </View> :
+            <FlatList
+              style={styles.container}
+              data={this.state.usersList}
+              renderItem={data => this._renderUserData(data.item)}
+              extraData={this.state}
+            />}
+        </Content>
+      );
+    } else {
+      return this._renderLoadingScreen();
+    }
   }
 
-  _renderPermissionsSelector(userData){
-    let selectedDataHandler = (y)=> {
+  _renderPermissionsSelector(userData) {
+    let selectedDataHandler = (y) => {
       this.onSelectedItemsChange(userData, y);
     };
     return (
-        <View>
+      <View>
         <SectionedMultiSelect
           items={this.state.allPermissions}
           uniqueKey="id"
@@ -212,7 +250,7 @@ class Users extends Component {
           selectText="Choose permissions..."
           searchPlaceholderText="Search..."
           showChips={false}
-          onSelectedItemsChange={ selectedDataHandler }
+          onSelectedItemsChange={selectedDataHandler}
           selectedItems={this.state[`user_${userData.uid}_perms`]}
           readOnlyHeadings={true}
           style={{
@@ -230,24 +268,26 @@ class Users extends Component {
     return (
       <TouchableOpacity style={[styles.userItem]} onPress={() => {
         userData.modalVisible = true;
-        this.setState(JSON.parse(JSON.stringify(this.state)));
+        if (this._isMounted) {
+          this.setState(JSON.parse(JSON.stringify(this.state)));
+        }
       }}>
-          <View style={styles.text}>
-            <Text style={[styles.title, styles["userListEnabled" + userData.enabled]]}>{userData.first_name} {userData.last_name}</Text>
-            <Text style={styles.body}> Username: {userData.username} </Text>
-            <Text style={styles.body}> Email: {userData.email} </Text>
-            <Text style={styles.body}> Phone #: {userData.phone} </Text>
-            <Text style={styles.body}> Hourly Wage: ${userData.wage} </Text>
-            <Text style={styles.body}> Address: {userData.address} </Text>
-            <View style={styles.flex}>
-              <Icon style={styles.time} name="time" />
-              <Text style={styles.time}>
-                {"  "}{userData.created}
-              </Text>
-            </View>
-            {this._renderPermissionsSelector(userData)}
+        <View style={styles.text}>
+          <Text style={[styles.title, styles["userListEnabled" + userData.enabled]]}>{userData.first_name} {userData.last_name}</Text>
+          <Text style={styles.body}> Username: {userData.username} </Text>
+          <Text style={styles.body}> Email: {userData.email} </Text>
+          <Text style={styles.body}> Phone #: {userData.phone} </Text>
+          <Text style={styles.body}> Hourly Wage: ${userData.wage} </Text>
+          <Text style={styles.body}> Address: {userData.address} </Text>
+          <View style={styles.flex}>
+            <Icon style={styles.time} name="time" />
+            <Text style={styles.time}>
+              {"  "}{userData.created}
+            </Text>
           </View>
-          <Icon style={styles.icon} name="more" />
+          {this._renderPermissionsSelector(userData)}
+        </View>
+        <Icon style={styles.icon} name="more" />
         {this._renderModal(userData)}
       </TouchableOpacity>
     );
@@ -257,18 +297,18 @@ class Users extends Component {
   // @TODO: Implement proper buttons menu and polish the UI
   _renderModal(userData) {
     return (
-      <TouchableWithoutFeedback onPress={() => this.closeModal(userData) }>
+      <TouchableWithoutFeedback onPress={() => this.closeModal(userData)}>
         <Modal
           onBackdropPress={() => this.closeModal(userData)}
-          onBackButtonPress={() => this.closeModal(userData) }
+          onBackButtonPress={() => this.closeModal(userData)}
           onSwipe={() => this.closeModal(userData)}
           swipeDirection="down"
           isVisible={userData.modalVisible}>
           <View style={styles.modalContent}>
             <Text style={styles.modalTitle}>{userData.name}</Text>
             <View style={styles.modalFlex}>
-              {this._renderModalButton(userData, "User Info", ()=>{this.goToUserInfo(userData);})}
-              {this._renderModalButton(userData, userData.enabled ? "Disable User" : "Enable User", ()=>{this.enableDisableUser(userData);})}
+              {this._renderModalButton(userData, "User Info", () => { this.goToUserInfo(userData); })}
+              {this._renderModalButton(userData, userData.enabled ? "Disable User" : "Enable User", () => { this.enableDisableUser(userData); })}
             </View>
           </View>
         </Modal>
@@ -282,28 +322,30 @@ class Users extends Component {
     return (
       <TouchableOpacity style={styles.modalButton} onPress={
         functionToExec ? functionToExec : () => { this.onModalButtonClick(userData, buttonText); }
-        }>
+      }>
         <Text style={styles.modalText}>{buttonText}</Text>
       </TouchableOpacity>
     );
   }
 
-  goToUserInfo(userData){
+  goToUserInfo(userData) {
     return;
   }
-  enableDisableUser(userData){
+  enableDisableUser(userData) {
     let enabled = userData.enabled ? 0 : 1;
     ApiCalls.enabledDisableUser(userData.uid, enabled).then(response => {
       ApiCalls.handleAPICallResult(response, this).then(apiResults => {
         if (apiResults) {
           Alert.alert("Success", `User has been ${enabled ? "enabled" : "disabled"}!`,
-          [
-            {text: "OK", onPress: () => {
-              this.closeModal(userData);
-              this.assignUsersToState({ refresh: true });
-            }},
-          ],
-          { cancelable: false });
+            [
+              {
+                text: "OK", onPress: () => {
+                  this.closeModal(userData);
+                  this.assignUsersToState({ refresh: true });
+                }
+              },
+            ],
+            { cancelable: false });
         }
       });
     });

@@ -21,8 +21,10 @@ const Auth = require("../../util/Auth");
 const ApiCalls = require("../../util/ApiCalls");
 
 class TeamMembers extends Component {
+    _isMounted = false;
     constructor(props) {
         super(props);
+        this.state = {};
         this.params = this.props.navigation.state.params;
         Auth.setIsLoginStateOnScreenEntry(this, {
             navigate: "TeamMembers",
@@ -30,16 +32,41 @@ class TeamMembers extends Component {
         });
         Auth.userHasPermission.bind(this);
         this.assignTeamMembersToState.bind(this);
-        this.state = { teamID: this.params.uid };
+        this.assignUsersToState.bind(this);
+        this.getRenderFromState.bind(this);
+        this.onSelectedItemsChange.bind(this);
+        this.onModalButtonClick.bind(this);
+        this.closeModal.bind(this);
+        this._renderHeader.bind(this);
+        this._renderBody.bind(this);
+        this._renderLoadingScreen.bind(this);
+        this._renderTeamMemberData.bind(this);
+        this._renderModal.bind(this);
+        this._renderModalButton.bind(this);
+    }
+
+    // Refresh the page when coming from a back navigation event.
+    willFocus = this.props.navigation.addListener("willFocus", payload => {
+        this.assignTeamMembersToState({ refresh: true });
+        this.assignUsersToState({ refresh: true });
+
+    });
+
+    componentDidMount() {
+        this._isMounted = true;
+    }
+
+    componentWillUnmount() {
+        this._isMounted = false;
     }
 
     // Retrieve team members list from API and assign to state.
     assignTeamMembersToState(opts = { refresh: false }) {
         if ((this.state && this.state.loggedIn) && (!this.state.teamMembersList || opts.refresh)) {
             ApiCalls.getTeamMembers(this.params.uid).then(response => {
-                let teamMember = [];
-                if (response[1] === 200) {
-                    ApiCalls.handleAPICallResult(response).then(apiResults => {
+                if (this._isMounted) {
+                    ApiCalls.handleAPICallResult(response, this).then(apiResults => {
+                        let teamMember = [];
                         if (apiResults) {
                             apiResults.forEach(result => {
                                 result.modalVisible = false;
@@ -47,19 +74,15 @@ class TeamMembers extends Component {
                                 teamMember.push(result.uid);
                             });
                             this.setState({
-                                id: 1,
                                 teamMembersList: apiResults,
                                 teamMember: teamMember,
-                                render: true
+                            });
+                        } else {
+                            this.setState({
+                                teamMember: teamMember,
+                                teamMembersList: "null",
                             });
                         }
-                    });
-                }
-                else {
-                    this.setState({
-                        id: -1,
-                        teamMember: teamMember,
-                        render: true
                     });
                 }
             });
@@ -68,22 +91,33 @@ class TeamMembers extends Component {
 
     assignUsersToState(opts = { refresh: false }) {
         if ((this.state && this.state.loggedIn) && (!this.state.userList || opts.refresh)) {
-            ApiCalls.getUserInfo().then(_response => {
-                ApiCalls.handleAPICallResult(_response, this).then(_apiResults => {
-                    if (_apiResults) {
-                        let userList = [
-                            {
-                                name: "Users",
-                                id: 0,
-                                children: _apiResults.map(x => { return { name: x.first_name + " " + x.last_name, id: x.uid }; })
-                            }
-                        ];
-                        this.setState({
-                            userList: userList,
-                        });
-                    }
-                });
+            ApiCalls.getUserInfo().then(response => {
+                if (this._isMounted) {
+                    ApiCalls.handleAPICallResult(response, this).then(apiResults => {
+                        if (apiResults) {
+                            let userList = [
+                                {
+                                    name: "Users",
+                                    id: 0,
+                                    children: apiResults.map(x => { return { name: x.first_name + " " + x.last_name, id: x.uid }; })
+                                }
+                            ];
+                            this.setState({
+                                userList: userList,
+                            });
+                        }
+                    });
+                }
             });
+        }
+    }
+
+    // Retrieve Render from state.
+    getRenderFromState() {
+        if (this.state && this.state.userList && this.state.teamMembersList && this.state.teamMember) {
+            return true;
+        } else {
+            return false;
         }
     }
 
@@ -94,8 +128,15 @@ class TeamMembers extends Component {
             const userID = removed[i];
             let userObj = this.state.teamMembersList.filter(x => x.uid === userID);
             if (!userObj[0].isLead) {
-                ApiCalls.removeUserFromTeam(this.state.teamID, userID).then(res => {
-                    ApiCalls.handleAPICallResult(res, this).then(apiResults => { });
+                ApiCalls.removeUserFromTeam(this.params.uid, userID).then(response => {
+                    if (this._isMounted) {
+                        ApiCalls.handleAPICallResult(response, this).then(apiResults => {
+                            if (apiResults) { }
+                            else {
+                                Alert.alert("User not Removed!", JSON.stringify(this.state.ApiErrorsList));
+                            }
+                        });
+                    }
                 });
             } else {
                 Alert.alert("Cannot remove team lead.");
@@ -103,20 +144,29 @@ class TeamMembers extends Component {
         }
         for (let i = 0; i < added.length; i++) {
             const userID = added[i];
-            ApiCalls.addUserToTeam(this.state.teamID, userID).then(res => {
-                ApiCalls.handleAPICallResult(res, this).then(apiResults => { });
+            ApiCalls.addUserToTeam(this.params.uid, userID).then(response => {
+                if (this._isMounted) {
+                    ApiCalls.handleAPICallResult(response, this).then(apiResults => {
+                        if (apiResults) { }
+                        else {
+                            Alert.alert("User not Added!", JSON.stringify(this.state.ApiErrorsList));
+                        }
+                    });
+                }
             });
         }
-        this.setState({
-            teamMember: selectedItems
-        });
+        if (this._isMounted) {
+            this.setState({
+                teamMember: selectedItems
+            });
+        }
     }
 
     // Handles the onClick event for the modal buttons.
     onModalButtonClick(teamMemberData, buttonText) {
         this.closeModal(teamMemberData);
         if (buttonText === "Assign Lead") {
-            ApiCalls.makeTeamLead(this.state.teamID, teamMemberData.uid).then(response => {
+            ApiCalls.makeTeamLead(this.params.uid, teamMemberData.uid).then(response => {
                 ApiCalls.handleAPICallResult(response, this).then(apiResults => {
                     if (apiResults) {
                         this.assignTeamMembersToState({ refresh: true });
@@ -129,7 +179,9 @@ class TeamMembers extends Component {
     // Closes the modal.
     closeModal(teamMemberData) {
         teamMemberData.modalVisible = false;
-        this.setState(JSON.parse(JSON.stringify(this.state)));
+        if (this._isMounted) {
+            this.setState(JSON.parse(JSON.stringify(this.state)));
+        }
     }
 
     render() {
@@ -170,7 +222,7 @@ class TeamMembers extends Component {
     }
 
     _renderBody() {
-        if (this.state.render) {
+        if (this.getRenderFromState()) {
             let selectedDataHandler = (y) => {
                 this.onSelectedItemsChange(y);
                 this.assignTeamMembersToState({ refresh: true });
@@ -195,13 +247,17 @@ class TeamMembers extends Component {
                             }}
                         />
                     </View>
-                    {this.state.id === -1 ?
-                        <Text style={styles.title}>No Team Members Assigned</Text> :
+                    {this.state.teamMembersList === "null" ?
+                        <View style={styles.warningView} >
+                            <Icon style={styles.warningIcon} name="warning" />
+                            <Text style={styles.warningText}>{this.state.ApiErrorsList}</Text>
+                        </View> :
                         <FlatList
                             style={styles.container}
                             data={this.state.teamMembersList.sort((a, b) => b.isLead - a.isLead)}
                             renderItem={data => this._renderTeamMemberData(data.item)}
-                        />}
+                        />
+                    }
                 </Content>
             );
         } else {
@@ -221,7 +277,9 @@ class TeamMembers extends Component {
         return (
             <TouchableOpacity style={styles.teamItem} onPress={() => {
                 teamMemberData.modalVisible = true;
-                this.setState(JSON.parse(JSON.stringify(this.state)));
+                if (this._isMounted) {
+                    this.setState(JSON.parse(JSON.stringify(this.state)));
+                }
             }}>
                 <View style={styles.text}>
                     <Text style={[styles.title, styles["isLead" + teamMemberData.isLead]]}>{teamMemberData.first_name} {teamMemberData.last_name}</Text>
