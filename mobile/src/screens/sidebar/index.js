@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Image } from "react-native";
+import { Image, TouchableOpacity } from "react-native";
 import {
   Content,
   Text,
@@ -7,18 +7,16 @@ import {
   ListItem,
   Icon,
   Container,
-  Left,
-  Right,
-  Badge,
-  Header,
   Body,
-  Footer,
+  Row,
+  Col,
 } from "native-base";
-import styles from "./style";
+import styles from "./styles";
 const Auth = require("../../util/Auth");
 const drawerCover = require("../../../assets/drawer-cover.png");
 const drawerImage = require("../../../assets/logo-kitchen-sink.png");
 const UserInfo = require("../../components/UserInfo");
+var pjson = require("../../../package.json");
 
 const dataOnlyLogin = [
   {
@@ -29,15 +27,15 @@ const dataOnlyLogin = [
   }
 ];
 
-const dataLogout = [
-  {
-    name: "Logout",
-    route: false,
-    action: "logout",
-    icon: "ios-log-out",
-    bg: "#C5F442"
-  }
-];
+const dataLogout =
+{
+  name: "Logout",
+  route: false,
+  action: "logout",
+  icon: "ios-log-out",
+  bg: "#C5F442"
+}
+  ;
 
 const datas = [
   {
@@ -115,101 +113,55 @@ class SideBar extends Component {
     }
     return (
       <Container>
-        <Header style={{ height: 230, backgroundColor: "white" }}>
-          <Body>
-            <Image source={drawerCover} style={styles.drawerCover} />
-            {
-              this.state.loggedIn ?
-                <UserInfo
-                  style={styles.userInfo}
-                  username={this.state.userTokenObj.first_name + " " + this.state.userTokenObj.last_name}
-                  email={this.state.userTokenObj.email}
-                /> :
-                <Image square style={styles.drawerImage} source={drawerImage} />
-            }
-          </Body>
-        </Header>
         <Content
           bounces={false}
         >
-          <List
-            dataArray={dataListToShow}
-            renderRow={data =>
-              <ListItem
-                button
-                noBorder
-                onPress={() => this.handleSideBarDataObj(data)}
-              >
-                <Left>
-                  <Icon
-                    active
-                    name={data.icon}
-                    style={{ color: "#777", fontSize: 26, width: 30 }}
-                  />
-                  <Text style={styles.text}>
-                    {data.name}
-                  </Text>
-                </Left>
-                {data.types &&
-                  <Right style={{ flex: 1 }}>
-                    <Badge
-                      style={{
-                        borderRadius: 3,
-                        height: 25,
-                        width: 72,
-                        backgroundColor: data.bg
-                      }}
-                    >
-                      <Text
-                        style={styles.badgeText}
-                      >{`${data.types} Types`}</Text>
-                    </Badge>
-                  </Right>}
-              </ListItem>}
-          />
+          <Row style={styles.header}>
+            <Body>
+              <Image source={drawerCover} style={styles.drawerCover} />
+              {
+                this.state.loggedIn ?
+                  <UserInfo
+                    style={styles.userInfo}
+                    username={this.state.userTokenObj.first_name + " " + this.state.userTokenObj.last_name}
+                    email={this.state.userTokenObj.email}
+                  /> :
+                  <Image square style={styles.drawerImage} source={drawerImage} />
+              }
+            </Body>
+          </Row>
+          <Row style={styles.body}>
+            <List
+              dataArray={dataListToShow}
+              renderRow={data =>
+                <ListItem button noBorder onPress={() => this.handleSideBarDataObj(data)}>
+                  <Icon active name={data.icon} style={styles.icon} />
+                  <Text style={styles.text}>{data.name}</Text>
+                </ListItem>}
+            />
+          </Row>
+          {
+            this.state.loggedIn ?
+              <Row style={styles.logout}>
+                <ListItem button noBorder onPress={() => this.handleSideBarDataObj(dataLogout)}>
+                  <Icon active name={dataLogout.icon} style={styles.footerIcon} />
+                  <Text style={styles.footerText}>{dataLogout.name}</Text>
+                </ListItem>
+              </Row> :
+              null
+          }
+          <Row style={styles.rowVersion}>
+            <Col style={styles.colVersion}>
+              <Text style={styles.textVersion}>Version: {pjson.version}</Text>
+            </Col>
+            <Col style={styles.colTerms}>
+              <Text>|</Text>
+            </Col>
+            <Col style={styles.colVersion}>
+              <TouchableOpacity><Text style={styles.textVersion}>Privacy & Terms</Text></TouchableOpacity>
+            </Col>
+          </Row>
         </Content>
-        {
-          this.state.loggedIn ?
-            <Footer style={{ backgroundColor: "white" }}>
-              <List
-                dataArray={dataLogout}
-                renderRow={data =>
-                  <ListItem
-                    button
-                    noBorder
-                    onPress={() => this.handleSideBarDataObj(data)}
-                  >
-                    <Left>
-                      <Icon
-                        active
-                        name={data.icon}
-                        style={{ fontSize: 26, width: 30, color: "red" }}
-                      />
-                      <Text style={styles.footerText}>
-                        {data.name}
-                      </Text>
-                    </Left>
-                    {data.types &&
-                      <Right style={{ flex: 1 }}>
-                        <Badge
-                          style={{
-                            borderRadius: 3,
-                            height: 25,
-                            width: 72,
-                            backgroundColor: data.bg
-                          }}
-                        >
-                          <Text
-                            style={styles.badgeText}
-                          >{`${data.types} Types`}</Text>
-                        </Badge>
-                      </Right>}
-                  </ListItem>}
-              />
-            </Footer>
-            :
-            null
-        }
       </Container>
     );
   }

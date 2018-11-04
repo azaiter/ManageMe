@@ -18,7 +18,7 @@ import {
   Textarea,
   Spinner,
 } from "native-base";
-import { Alert } from "react-native";
+import { Alert, View } from "react-native";
 import styles from "./styles";
 const Auth = require("../../util/Auth");
 const ApiCalls = require("../../util/ApiCalls");
@@ -48,6 +48,7 @@ const fieldsArr = [
 ];
 
 class CreateProject extends Component {
+  _isMounted = false;
   constructor(props) {
     super(props);
     this.state = {
@@ -55,63 +56,109 @@ class CreateProject extends Component {
       projectDesc: "",
       teamId: ""
     };
-    // This line is creating an infinte loop of page renders.
-    Auth.setIsLoginStateOnScreenEntry(this, { setUserPermissions: true });
+    Auth.setIsLoginStateOnScreenEntry(this, {
+      navigate: "CreateProject",
+      setUserPermissions: true
+    });
     Auth.getPermissions.bind(this);
+    this.assignTeamsToState.bind(this);
+    this.getRenderFromState.bind(this);
+    this.handleSubmit.bind(this);
     this.checkAndSetState.bind(this);
     this.getFieldValidation.bind(this);
+    this.onTeamSelect.bind(this);
     this._renderHeader.bind(this);
     this._renderBody.bind(this);
+    this._renderLoadingScreen.bind(this);
+    this._renderSelectOption.bind(this);
+  }
+
+  // Refresh the page when coming from a back navigation event.
+  willFocus = this.props.navigation.addListener("willFocus", payload => {
+  });
+
+  componentDidMount() {
+    this._isMounted = true;
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
   }
 
   assignTeamsToState(opts = { refresh: false }) {
     if ((this.state && this.state.loggedIn) && (!this.state.teams || opts.refresh)) {
       ApiCalls.getTeams().then(response => {
-        ApiCalls.handleAPICallResult(response).then(apiResults => {
-          if (apiResults) {
-            this.setState({
-              teams: apiResults,
-              render: true
-            });
-          }
-        });
+        if (this._isMounted) {
+          ApiCalls.handleAPICallResult(response, this).then(apiResults => {
+            if (apiResults) {
+              this.setState({
+                teams: apiResults,
+              });
+            } else {
+              this.setState({
+                teams: "null"
+              });
+            }
+          });
+        }
       });
     }
   }
 
-  handleSubmit = async () => {
-    this.setState({ isLoading: true });
-    if (fieldsArr.filter(x => !this.state[x.name + "Validation"]).length > 0) {
-      ApiCalls.showToastsInArr(["Some of the fields below are invalid."], {
-        buttonText: "OK",
-        type: "danger",
-        position: "top",
-        duration: 5 * 1000
-      });
+  // Retrieve Render from state.
+  getRenderFromState() {
+    if (this.state && this.state.teams) {
+      return true;
+    } else {
+      return false;
     }
-    else {
-      let apiResult = await ApiCalls.createProject(this.state.projectName, this.state.projectDesc, this.state.teamId);
-      let handledApiResults = await ApiCalls.handleAPICallResult(apiResult, this);
-      this.setState({ isLoading: false });
-      if (handledApiResults) {
-        let message = `Project "${this.state.projectName}" was added successfully!`;
-        ApiCalls.showToastsInArr([message], {
+  }
+
+  handleSubmit = async () => {
+    if (this._isMounted) {
+      if (fieldsArr.filter(x => !this.state[x.name + "Validation"]).length > 0) {
+        ApiCalls.showToastsInArr(["Some of the fields below are invalid."], {
           buttonText: "OK",
-          type: "success",
+          type: "danger",
           position: "top",
-          duration: 10 * 1000
+          duration: 5 * 1000
         });
-        Alert.alert("Project Added!", message);
+      }
+      else {
+        ApiCalls.createProject(this.state.projectName, this.state.projectDesc, this.state.teamId).then(response => {
+          ApiCalls.handleAPICallResult(response, this).then(apiResults => {
+            if (apiResults) {
+              let message = `Project "${this.state.projectName}" was added successfully!`;
+              ApiCalls.showToastsInArr([message], {
+                buttonText: "OK",
+                type: "success",
+                position: "top",
+                duration: 10 * 1000
+              });
+              Alert.alert("Project Added!", message, [
+                {
+                  text: "OK", onPress: () => {
+                    this.props.navigation.navigate("Projects");
+                  }
+                },
+              ]);
+            } else {
+              Alert.alert("Project not Added", JSON.stringify(this.state.ApiErrorsList));
+            }
+          });
+        });
       }
     }
   }
 
   checkAndSetState(field, value, regex) {
-    if (regex.test(value)) {
-      this.setState({ [field]: value, [field + "Validation"]: true });
-    }
-    else {
-      this.setState({ [field]: value, [field + "Validation"]: false });
+    if (this._isMounted) {
+      if (regex.test(value)) {
+        this.setState({ [field]: value, [field + "Validation"]: true });
+      }
+      else {
+        this.setState({ [field]: value, [field + "Validation"]: false });
+      }
     }
   }
 
@@ -131,11 +178,6 @@ class CreateProject extends Component {
     this.checkAndSetState(fieldsArr[2].name, value, fieldsArr[2].regex);
   }
 
-  async goBack() {
-    await Auth.saveItem("@app.refreshProject", { refresh: true });
-    this.props.navigation.goBack();
-  }
-
   render() {
     this.assignTeamsToState();
     return (
@@ -146,6 +188,16 @@ class CreateProject extends Component {
     );
   }
 
+  // Render loading screen
+  _renderLoadingScreen() {
+    return (
+      <Content padder>
+        <Spinner color="blue" />
+      </Content>
+    );
+  }
+
+  // Render Header
   _renderHeader() {
     return (
       <Header>
@@ -173,61 +225,62 @@ class CreateProject extends Component {
   }
 
   _renderBody() {
-    /*
-      Label on its own breaks a return statement making it impossible to abstract.
-      The item tag breaks all components except for input.
-    */
-    return (this.state.render) ? (
-      <Content padder>
-        <Form>
-          {/* Start Form */}
-          {/* Project Name */}
-          <Label>{fieldsArr[0].label}</Label>
-          <Input name={fieldsArr[0].name}
-            onChangeText={(value) => this.checkAndSetState(fieldsArr[0].name, value, fieldsArr[0].regex)}
-            value={this.state[fieldsArr[0].name]}
-            onSubmitEditing={this.handleSubmit}
-            keyboardType={fieldsArr[0].keyboardType || "default"}
-            secureTextEntry={fieldsArr[0].secureTextEntry || false}
-          />
-          {/* Project Team */}
-          <Label>{fieldsArr[2].label}</Label>
-          <Form>
-            <Picker
-              mode="dropdown"
-              iosIcon={<Icon name="ios-arrow-down-outline" />}
-              style={{ width: undefined }}
-              placeholder="Select a Team"
-              placeholderStyle={{ color: "#bfc6ea" }}
-              placeholderIconColor="#007aff"
-              selectedValue={this.state.teamId}
-              onValueChange={this.onTeamSelect.bind(this)}
-            >
-              {this.state.teams.map(team => this._renderSelectOption(team))}
-            </Picker>
-          </Form>
-          {/* Project Description */}
-          <Label>{fieldsArr[1].label}</Label>
-          <Textarea
-            onChangeText={(value) => this.checkAndSetState(fieldsArr[1].name, value, fieldsArr[1].regex)}
-            rowSpan={5}
-            bordered
-          />
-          {/* Submit Button */}
-          <Button
-            block style={{ margin: 15, marginTop: 50 }}
-            onPress={this.handleSubmit}
-          >
-            <Text>Create Project</Text>
-          </Button>
-          {/* End Form */}
-        </Form>
-      </Content>
-    ) : (
+    if (this.getRenderFromState()) {
+      return (
         <Content padder>
-          <Spinner color="blue" />
+          <Form>
+            {/* Start Form */}
+            {/* Project Name */}
+            <Label>{fieldsArr[0].label}</Label>
+            <Input name={fieldsArr[0].name}
+              onChangeText={(value) => this.checkAndSetState(fieldsArr[0].name, value, fieldsArr[0].regex)}
+              value={this.state[fieldsArr[0].name]}
+              onSubmitEditing={this.handleSubmit}
+              keyboardType={fieldsArr[0].keyboardType || "default"}
+              secureTextEntry={fieldsArr[0].secureTextEntry || false}
+            />
+            {/* Project Team */}
+            <Label>{fieldsArr[2].label}</Label>
+            {this.state.teams === "null" ?
+              <View style={styles.warningView} >
+                <Icon style={styles.warningIcon} name="warning" />
+                <Text style={styles.warningText}>{this.state.ApiErrorsList}</Text>
+              </View> :
+              <Form>
+                <Picker
+                  mode="dropdown"
+                  iosIcon={<Icon name="ios-arrow-down-outline" />}
+                  style={{ width: undefined }}
+                  placeholder="Select a Team"
+                  placeholderStyle={{ color: "#bfc6ea" }}
+                  placeholderIconColor="#007aff"
+                  selectedValue={this.state.teamId}
+                  onValueChange={this.onTeamSelect.bind(this)}
+                >
+                  {this.state.teams.map(team => this._renderSelectOption(team))}
+                </Picker>
+              </Form>}
+            {/* Project Description */}
+            <Label>{fieldsArr[1].label}</Label>
+            <Textarea
+              onChangeText={(value) => this.checkAndSetState(fieldsArr[1].name, value, fieldsArr[1].regex)}
+              rowSpan={5}
+              bordered
+            />
+            {/* Submit Button */}
+            <Button
+              block style={{ margin: 15, marginTop: 50 }}
+              onPress={this.handleSubmit}
+            >
+              <Text>Create Project</Text>
+            </Button>
+            {/* End Form */}
+          </Form>
         </Content>
       );
+    } else {
+      return this._renderLoadingScreen();
+    }
   }
 
   _renderSelectOption(team) {

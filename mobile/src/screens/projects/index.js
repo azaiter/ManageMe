@@ -30,6 +30,7 @@ class Projects extends Component {
     });
     Auth.userHasPermission.bind(this);
     this.assignProjectsToState.bind(this);
+    this.getRenderFromState.bind(this);
     this._renderHeader.bind(this);
     this._renderBody.bind(this);
     this._renderLoadingScreen.bind(this);
@@ -57,19 +58,23 @@ class Projects extends Component {
   assignProjectsToState(opts = { refresh: false }) {
     if ((this.state && this.state.loggedIn) && (!this.state.projectsList || opts.refresh)) {
       ApiCalls.getProjects().then(response => {
-        ApiCalls.handleAPICallResult(response, this).then(apiResults => {
-          if (apiResults) {
-            apiResults.forEach(result => {
-              result.modalVisible = false;
-              result.key = result.uid.toString() + "_" + result.modalVisible.toString();
-            });
-            if (this._isMounted) {
+        if (this._isMounted) {
+          ApiCalls.handleAPICallResult(response, this).then(apiResults => {
+            if (apiResults) {
+              apiResults.forEach(result => {
+                result.modalVisible = false;
+                result.key = result.uid.toString() + "_" + result.modalVisible.toString();
+              });
               this.setState({
                 projectsList: apiResults
               });
+            } else {
+              this.setState({
+                projectsList: "null"
+              });
             }
-          }
-        });
+          });
+        }
       });
     }
   }
@@ -148,7 +153,7 @@ class Projects extends Component {
         <Right>
           <Button
             transparent
-            onPress={() => this.props.navigation.navigate("CreateProject")}
+            onPress={() => this.props.navigation.navigate("CreateProject", {action: "create"})}
           >
             <Icon name="ios-add-circle" />
           </Button>
@@ -168,11 +173,16 @@ class Projects extends Component {
     if (this.getRenderFromState()) {
       return (
         <Content padder>
-          <FlatList
-            style={styles.container}
-            data={this.state.projectsList}
-            renderItem={data => this._renderProjectData(data.item)}
-          />
+          {this.state.projectsList === "null" ?
+            <View style={styles.warningView} >
+            <Icon style={styles.warningIcon} name="warning"/>
+            <Text style={styles.warningText}>{this.state.ApiErrorsList}</Text>
+          </View> :
+            <FlatList
+              style={styles.container}
+              data={this.state.projectsList}
+              renderItem={data => this._renderProjectData(data.item)}
+            />}
         </Content>
       );
     } else {

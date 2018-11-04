@@ -102,4 +102,19 @@ export default {
     fontSize: 18,
     color: "#008000",
   },
+
+  warningIcon: {
+    fontSize: 40,
+    color:"orange"
+  },
+
+  warningText: {
+    fontWeight: "bold",
+    fontSize: 22,
+    color:"orange"
+  },
+
+  warningView: {
+    alignItems:"center"
+  },
 };

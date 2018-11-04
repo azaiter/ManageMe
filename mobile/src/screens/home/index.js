@@ -25,14 +25,15 @@ class Home extends Component {
 
   handleSubmit = async () => {
     this.setState({ isLoading: true });
-    let apiResult = await ApiCalls.getToken(this.state.username, this.state.password);
-    let handledApiResults = await ApiCalls.handleAPICallResult(apiResult, this);
-    if (handledApiResults) {
-      await Auth.setLocalToken(handledApiResults);
-      this.setState({ loggedIn: true });
-      this.props.navigation.navigate("Projects");
-    }
-    //console.log("handledApiResults", handledApiResults);
+    ApiCalls.getToken(this.state.username, this.state.password).then(response => {
+      ApiCalls.handleAPICallResult(response, this).then(apiResults => {
+        if (apiResults) {
+          Auth.setLocalToken(apiResults);
+          this.setState({ loggedIn: true });
+          this.props.navigation.navigate("Projects");
+        }
+      });
+    });
   }
 
   render() {
@@ -62,7 +63,7 @@ class Home extends Component {
     </Form>;
 
     let signedInForm =
-      <Button block success style={styles.mb15} onPress={() => { this.props.navigation.navigate("DrawerOpen"); }}>
+      <Button block success style={styles.mb15} onPress={() => { this.props.navigation.openDrawer();}}>
         <Text>You are logged in, Click to View Menu</Text>
       </Button>;
 

@@ -67,7 +67,7 @@ class ProjectInfo extends Component {
   }
 
   // Refresh the page when coming from a back navigation event.
-  willFocus = this.props.navigation.addListener("willFocus", () => {
+  willFocus = this.props.navigation.addListener("willFocus", payload => {
     this.assignRequirementsToState({ refresh: true });
     this.assignCommentsToState({ refresh: true });
     this.assignProjectInfoToState({ refresh: true });
@@ -86,40 +86,44 @@ class ProjectInfo extends Component {
   assignRequirementsToState(opts = { refresh: false }) {
     if ((this.state && this.state.loggedIn) && (!this.state.requirementList || opts.refresh)) {
       ApiCalls.getRequirementsByProjectId(this.params.uid).then(response => {
-        ApiCalls.handleAPICallResult(response).then(apiResults => {
-          if (apiResults) {
-            /* 
-              1: initial
-              2: completed
-              3: pending
-              4: change request
-            */
+        if (this._isMounted) {
+          ApiCalls.handleAPICallResult(response, this).then(apiResults => {
             let requirementList = {};
             requirementList.initial = [];
             requirementList.completed = [];
             requirementList.pending = [];
             requirementList.changeRequest = [];
-            apiResults.forEach(result => {
-              if (result.status === 1) {
-                requirementList.initial.push(result);
-              }
-              if (result.status === 2) {
-                requirementList.completed.push(result);
-              }
-              if (result.status === 3) {
-                requirementList.pending.push(result);
-              }
-              if (result.status === 4) {
-                requirementList.changeRequest.push(result);
-              }
-            });
-            if (this._isMounted) {
+            if (apiResults) {
+              /* 
+                1: initial
+                2: completed
+                3: pending
+                4: change request
+              */
+              apiResults.forEach(result => {
+                if (result.status === 1) {
+                  requirementList.initial.push(result);
+                }
+                if (result.status === 2) {
+                  requirementList.completed.push(result);
+                }
+                if (result.status === 3) {
+                  requirementList.pending.push(result);
+                }
+                if (result.status === 4) {
+                  requirementList.changeRequest.push(result);
+                }
+              });
               this.setState({
                 requirementList
               });
+            } else {
+              this.setState({
+                requirementList: "null"
+              });
             }
-          }
-        });
+          });
+        }
       });
     }
   }
@@ -128,15 +132,19 @@ class ProjectInfo extends Component {
   assignCommentsToState(opts = { refresh: false }) {
     if ((this.state && this.state.loggedIn) && (!this.state.commentList || opts.refresh)) {
       ApiCalls.getProjectComments(this.params.uid).then(response => {
-        ApiCalls.handleAPICallResult(response).then(apiResults => {
-          if (apiResults) {
-            if (this._isMounted) {
+        if (this._isMounted) {
+          ApiCalls.handleAPICallResult(response, this).then(apiResults => {
+            if (apiResults) {
               this.setState({
                 commentList: apiResults
               });
+            } else {
+              this.setState({
+                commentList: "null"
+              });
             }
-          }
-        });
+          });
+        }
       });
     }
   }
@@ -145,10 +153,10 @@ class ProjectInfo extends Component {
   assignProjectInfoToState(opts = { refresh: false }) {
     if ((this.state && this.state.loggedIn) && (!this.state.projectInfo || opts.refresh)) {
       ApiCalls.getProjectInfo(this.params.uid).then(response => {
-        ApiCalls.handleAPICallResult(response).then(apiResults => {
-          if (apiResults) {
-            ApiCalls.getTeamById(apiResults[0].assigned_team).then(_response => {
-              if (this._isMounted) {
+        if (this._isMounted) {
+          ApiCalls.handleAPICallResult(response, this).then(apiResults => {
+            if (apiResults) {
+              ApiCalls.getTeamById(apiResults[0].assigned_team).then(_response => {
                 ApiCalls.handleAPICallResult(_response, this).then(_apiResults => {
                   if (_apiResults) {
                     this.setState({
@@ -156,17 +164,21 @@ class ProjectInfo extends Component {
                     });
                   } else {
                     this.setState({
-                      teamData: "Not Assigned"
+                      teamData: "null"
                     });
                   }
                   this.setState({
                     projectInfo: apiResults
                   });
                 });
-              }
-            });
-          }
-        });
+              });
+            } else {
+              this.setState({
+                projectInfo: "null"
+              });
+            }
+          });
+        }
       });
     }
   }
@@ -175,20 +187,24 @@ class ProjectInfo extends Component {
   assignProjectHoursToState(opts = { refresh: false }) {
     if ((this.state && this.state.loggedIn) && (!this.state.projectHours || opts.refresh)) {
       ApiCalls.getProjectHours(this.params.uid).then(response => {
-        ApiCalls.handleAPICallResult(response).then(apiResults => {
-          if (apiResults) {
-            if (this._isMounted) {
+        if (this._isMounted) {
+          ApiCalls.handleAPICallResult(response, this).then(apiResults => {
+            if (apiResults) {
               this.setState({
                 projectHours: apiResults
               });
+            } else {
+              this.setState({
+                projectHours: "null"
+              });
             }
-          }
-        });
+          });
+        }
       });
     }
   }
 
-  // Retrieve Project info from state.
+  // Retrieve Render from state.
   getRenderFromState() {
     if (this.state.requirementList && this.state.commentList && this.state.projectHours && this.state.projectInfo && this.state) {
       return true;
@@ -199,54 +215,52 @@ class ProjectInfo extends Component {
 
   handleSubmit = async () => {
     if (this._isMounted) {
-      this.setState({ isLoading: true });
-    }
-    if (fieldsArr.filter(x => { return !this.state[x.name + "Validation"]; }).length > 0) {
-      ApiCalls.showToastsInArr(["Comment field is invalid."], {
-        buttonText: "OK",
-        type: "danger",
-        position: "top",
-        duration: 5 * 1000
-      });
-    }
-    else {
-      let apiResult = await ApiCalls.addProjectComment(this.params.uid, this.state.projectComment);
-      let handledApiResults = await ApiCalls.handleAPICallResult(apiResult, this);
-      if (this._isMounted) {
-        this.setState({ isLoading: false });
-        this.setState({ projectComment: "" });
-      }
-      if (handledApiResults) {
-        let message = "Comment was added successfully!";
-        ApiCalls.showToastsInArr([message], {
+      if (fieldsArr.filter(x => { return !this.state[x.name + "Validation"]; }).length > 0) {
+        ApiCalls.showToastsInArr(["Comment field is invalid."], {
           buttonText: "OK",
-          type: "success",
+          type: "danger",
           position: "top",
-          duration: 10 * 1000
+          duration: 5 * 1000
         });
-        Alert.alert(
-          "Comment Added!",
-          message,
-          [
-            {
-              text: "OK", onPress: () => {
-                this.assignCommentsToState({ refresh: true });
-              }
-            },
-          ]
-        );
+      }
+      else {
+        ApiCalls.addProjectComment(this.params.uid, this.state.projectComment).then(response => {
+          ApiCalls.handleAPICallResult(response, this).then(apiResults => {
+            this.setState({ projectComment: "" });
+            if (apiResults) {
+              let message = "Comment was added successfully!";
+              ApiCalls.showToastsInArr([message], {
+                buttonText: "OK",
+                type: "success",
+                position: "top",
+                duration: 10 * 1000
+              });
+              Alert.alert(
+                "Comment Added!",
+                message,
+                [
+                  {
+                    text: "OK", onPress: () => {
+                      this.assignCommentsToState({ refresh: true });
+                    }
+                  },
+                ]
+              );
+            } else {
+              Alert.alert("Comment not Added!", JSON.stringify(this.state.ApiErrorsList));
+            }
+          });
+        });
       }
     }
   }
 
   checkAndSetState(field, value, regex) {
-    if (regex.test(value)) {
-      if (this._isMounted) {
+    if (this._isMounted) {
+      if (regex.test(value)) {
         this.setState({ [field]: value, [field + "Validation"]: true });
       }
-    }
-    else {
-      if (this._isMounted) {
+      else {
         this.setState({ [field]: value, [field + "Validation"]: false });
       }
     }
@@ -372,12 +386,17 @@ class ProjectInfo extends Component {
   _renderProjectInfo() {
     return (
       <Content padder>
-        <FlatList
-          style={styles.container}
-          data={this.state.projectInfo}
-          renderItem={data => this._renderProject(data.item)}
-          keyExtractor={item => item.uid.toString()}
-        />
+        {this.state.projectInfo === "null" ?
+          <View style={styles.warningView} >
+          <Icon style={styles.warningIcon} name="warning"/>
+          <Text style={styles.warningText}>{this.state.ApiErrorsList}</Text>
+        </View> :
+          <FlatList
+            style={styles.container}
+            data={this.state.projectInfo}
+            renderItem={data => this._renderProject(data.item)}
+            keyExtractor={item => item.uid.toString()}
+          />}
       </Content >
     );
   }
@@ -397,34 +416,49 @@ class ProjectInfo extends Component {
             <Text style={styles.projectTime}>
               {"  "}{info.created}
             </Text>
-          </View>
-          <Button
-            transparent
-            onPress={() => this.state.teamData === "Not Assigned" ? null : this.props.navigation.navigate("TeamMembers", { uid: this.state.teamData[0].uid })}
-          >
-            <View style={styles.flex}>
-              <Text style={styles.requirementCount}>Team: </Text>
-              {this.state.teamData === "Not Assigned" ?
-                <Text style={styles.requirementStatus}>Not Assigned</Text> :
-                <Text style={styles.requirementStatus}>{this.state.teamData[0].name}</Text>}
-            </View>
-          </Button>
-          <Text style={styles.projectHours}>
-            {this.getTime()}
-          </Text>
+          </View>{this.state.teamData === "null" ?
+            <View style={styles.warningView} >
+            <Icon style={styles.warningIcon} name="warning"/>
+            <Text style={styles.warningText}>{this.state.ApiErrorsList}</Text>
+          </View> :
+            <Button
+              transparent
+              onPress={() => this.props.navigation.navigate("TeamMembers", { uid: this.state.teamData[0].uid })}
+            >
+              <View style={styles.flex}>
+                <Text style={styles.requirementCount}>Team: </Text>
+                <Text style={styles.requirementStatus}>{this.state.teamData[0].name}</Text>
+              </View>
+            </Button>}
+          {this.state.projectHours === "null" ?
+            <View style={styles.warningView} >
+            <Icon style={styles.warningIcon} name="warning"/>
+            <Text style={styles.warningText}>{this.state.ApiErrorsList}</Text>
+          </View> :
+            <Text style={styles.projectHours}>
+              {this.getTime()}
+            </Text>}
         </View>
         <View style={styles.flexRow}>
           <View>
             <Card style={styles.card}>
               <Text style={styles.projectTitle}>Requirements</Text>
-              {this._renderRequirementButton("Active")}
-              {this._renderRequirementButton("Pending")}
-              {this._renderRequirementButton("Completed")}
+              {this.state.requirementList === "null" ?
+                <View style={styles.warningView} >
+                <Icon style={styles.warningIcon} name="warning"/>
+                <Text style={styles.warningText}>{this.state.ApiErrorsList}</Text>
+              </View> :
+                <View>
+                  {this._renderRequirementButton("Active")}
+                  {this._renderRequirementButton("Pending")}
+                  {this._renderRequirementButton("Completed")}
+                </View>}
             </Card>
           </View>
           <View style={styles.requirementView}>
-            <Button style={styles.button} rounded primary><Text style={styles.projectActivity}>EDIT</Text></Button>
-            <Button style={styles.button} rounded danger><Text style={styles.projectActivity}>DELETE</Text></Button>
+            <Button style={styles.button} rounded primary
+           onPress={() => this.props.navigation.navigate("CreateProject", {action: "edit", projectData: info})}>
+            <Text style={styles.projectActivity}>EDIT</Text></Button>
           </View>
         </View>
       </View>
@@ -461,11 +495,16 @@ class ProjectInfo extends Component {
           />
         </View>
         <View>
-          <FlatList
-            data={this.state.commentList}
-            renderItem={data => this._renderComment(data.item)}
-            keyExtractor={item => item.uid.toString()}
-          />
+          {this.state.commentList === "null" ?
+            <View style={styles.warningView} >
+            <Icon style={styles.warningIcon} name="warning"/>
+            <Text style={styles.warningText}>{this.state.ApiErrorsList}</Text>
+          </View> :
+            <FlatList
+              data={this.state.commentList}
+              renderItem={data => this._renderComment(data.item)}
+              keyExtractor={item => item.uid.toString()}
+            />}
         </View>
       </Content >
     );

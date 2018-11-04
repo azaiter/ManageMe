@@ -38,63 +38,85 @@ const fieldsArr = [
 ];
 
 class CreateTeam extends Component {
+  _isMounted = false;
   constructor(props) {
     super(props);
     this.state = {
       teamName: "",
       teamDesc: "",
     };
-    // This line is creating an infinte loop of page renders.
-    Auth.setIsLoginStateOnScreenEntry(this, { setUserPermissions: true });
+    Auth.setIsLoginStateOnScreenEntry(this, {
+      navigate: "CreateTeam",
+      setUserPermissions: true
+    });
     Auth.getPermissions.bind(this);
     this.checkAndSetState.bind(this);
     this.getFieldValidation.bind(this);
     this._renderHeader.bind(this);
     this._renderBody.bind(this);
     this._renderFieldEntry.bind(this);
+    this.handleSubmit.bind(this);
+  }
+
+  // Refresh the page when coming from a back navigation event.
+  willFocus = this.props.navigation.addListener("willFocus", payload => {
+  });
+
+  componentDidMount() {
+    this._isMounted = true;
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
   }
 
   handleSubmit = async () => {
-    this.setState({ isLoading: true });
-    if (fieldsArr.filter(x => { return !this.state[x.name + "Validation"]; }).length > 0) {
-      ApiCalls.showToastsInArr(["Some of the fields below are invalid."], {
-        buttonText: "OK",
-        type: "danger",
-        position: "top",
-        duration: 5 * 1000
-      });
-    }
-    else {
-      let apiResult = await ApiCalls.createTeam(this.state.teamName, this.state.teamDesc);
-      let handledApiResults = await ApiCalls.handleAPICallResult(apiResult, this);
-      this.setState({ isLoading: false });
-      if (handledApiResults) {
-        let message = `Team "${this.state.teamName}" was added successfully!`;
-        ApiCalls.showToastsInArr([message], {
+    if (this._isMounted) {
+      if (fieldsArr.filter(x => { return !this.state[x.name + "Validation"]; }).length > 0) {
+        ApiCalls.showToastsInArr(["Some of the fields below are invalid."], {
           buttonText: "OK",
-          type: "success",
+          type: "danger",
           position: "top",
-          duration: 10 * 1000
+          duration: 5 * 1000
         });
-        Alert.alert("Team Added!",
-          message,
-          [
-            {
-              text: "OK", onPress: () => {
-                this.props.navigation.navigate("Teams");
-              }
-            },
-          ]);
+      }
+      else {
+        ApiCalls.createTeam(this.state.teamName, this.state.teamDesc).then(response => {
+          ApiCalls.handleAPICallResult(response, this).then(apiResults => {
+            if (apiResults) {
+              let message = `Team "${this.state.teamName}" was added successfully!`;
+              ApiCalls.showToastsInArr([message], {
+                buttonText: "OK",
+                type: "success",
+                position: "top",
+                duration: 10 * 1000
+              });
+              Alert.alert("Team Added!",
+                message,
+                [
+                  {
+                    text: "OK", onPress: () => {
+                      this.props.navigation.navigate("Teams");
+                    }
+                  },
+                ]);
+            } else {
+              Alert.alert("Team not Added", JSON.stringify(this.state.ApiErrorsList));
+            }
+          });
+        });
       }
     }
   }
 
   checkAndSetState(field, value, regex) {
-    if (regex.test(value)) {
-      this.setState({ [field]: value, [field + "Validation"]: true });
-    }
-    else {
-      this.setState({ [field]: value, [field + "Validation"]: false });
+    if (this._isMounted) {
+      if (regex.test(value)) {
+        this.setState({ [field]: value, [field + "Validation"]: true });
+      }
+      else {
+        this.setState({ [field]: value, [field + "Validation"]: false });
+      }
     }
   }
 
@@ -108,11 +130,6 @@ class CreateTeam extends Component {
     else {
       return { success: false, error: true };
     }
-  }
-
-  async goBack() {
-    await Auth.saveItem("@app.refreshProject", { refresh: true });
-    this.props.navigation.goBack();
   }
 
   render() {

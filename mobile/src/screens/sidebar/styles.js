@@ -25,21 +25,53 @@ export default {
     left: Platform.OS === "android" ? deviceWidth / 13 : deviceWidth / 12,
     top: Platform.OS === "android" ? deviceHeight / 15 : deviceHeight / 14,
   },
+  header: {
+    height: deviceHeight / 3.5,
+  },
+  body: {
+    height: deviceHeight / 1.68,
+  },
+  logout: {
+    height: deviceHeight / 14,
+    borderTopWidth:1,
+    borderBottomWidth:1,
+  },
+  rowVersion: {
+    flex: 1,
+    alignContent: "center",
+  },
+  colVersion: {
+    alignItems: "center",
+    width: "47%"
+  },
+  colTerms: {
+    justifyContent: "center",
+    alignItems: "center",
+    width: "6%"
+  },
+  textVersion:{
+    fontSize: 18,
+    textDecorationLine: "underline",
+  },
+  icon: {
+    color: "#777",
+    fontSize: 26,
+    width: 30
+  },
+  footerIcon: {
+    color: "red",
+    fontSize: 26,
+    width: 30
+  },
   text: {
     fontWeight: Platform.OS === "ios" ? "500" : "400",
-    fontSize: 16,
+    fontSize: 18,
     marginLeft: 20
   },
   footerText: {
     fontWeight: Platform.OS === "ios" ? "500" : "400",
-    fontSize: 16,
+    fontSize: 18,
     marginLeft: 20,
     color: "red"
-  },
-  badgeText: {
-    fontSize: Platform.OS === "ios" ? 13 : 11,
-    fontWeight: "400",
-    textAlign: "center",
-    marginTop: Platform.OS === "android" ? -3 : undefined
   }
 };

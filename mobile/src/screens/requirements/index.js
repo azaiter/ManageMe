@@ -22,51 +22,89 @@ const Auth = require("../../util/Auth");
 const ApiCalls = require("../../util/ApiCalls");
 
 class Requirements extends Component {
+  _isMounted = false;
   constructor(props) {
     super(props);
     this.state = {};
     this.params = this.props.navigation.state.params;
-    Auth.setIsLoginStateOnScreenEntry(this, { setUserPermissions: true });
-    Auth.getPermissions.bind(this);
+    Auth.setIsLoginStateOnScreenEntry(this, {
+      navigate: "Requirements",
+      setUserPermissions: true
+    });
+    Auth.userHasPermission.bind(this);
+    this.assignRequirementsToState.bind(this);
+    this.assignTimeToState.bind(this);
+    this.getRenderFromState.bind(this);
+    this.handleSubmit.bind(this);
+    this.getRequirementDetails.bind(this);
+    this.getButtons.bind(this);
+    this.getTimeRemaining.bind(this);
+    this.clockInText.bind(this);
+    this.timeRemaining.bind(this);
+    this.getTimeFormat.bind(this);
+    this._renderHeader.bind(this);
+    this._renderTabs.bind(this);
+    this._renderLoadingScreen.bind(this);
+    this._renderAccordionHeader.bind(this);
+    this._renderAccordionContent.bind(this);
+  }
+
+  // Refresh the page when coming from a back navigation event.
+  willFocus = this.props.navigation.addListener("willFocus", payload => {
+    this.assignRequirementsToState({ refresh: true });
+    this.assignTimeToState({ refresh: true });
+  });
+
+  componentDidMount() {
+    this._isMounted = true;
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
   }
 
   // Retrieve requirement list from API and assign to state.
   assignRequirementsToState(opts = { refresh: false }) {
     if ((this.state && this.state.loggedIn) && (!this.state.requirementList || opts.refresh)) {
       ApiCalls.getRequirementsByProjectId(this.params.uid).then(response => {
-        ApiCalls.handleAPICallResult(response).then(apiResults => {
-          if (apiResults) {
-            /* 
-              1: initial
-              2: completed
-              3: pending
-              4: change request
-            */
+        if (this._isMounted) {
+          ApiCalls.handleAPICallResult(response, this).then(apiResults => {
             let requirementList = {};
             requirementList.initial = [];
             requirementList.completed = [];
             requirementList.pending = [];
             requirementList.changeRequest = [];
-            apiResults.forEach(result => {
-              if (result.status === 1) {
-                requirementList.initial.push(result);
-              }
-              if (result.status === 2) {
-                requirementList.completed.push(result);
-              }
-              if (result.status === 3) {
-                requirementList.pending.push(result);
-              }
-              if (result.status === 4) {
-                requirementList.changeRequest.push(result);
-              }
-            });
-            this.setState({
-              requirementList,
-              renderRequirement: true
-            });
-          }
-        });
+            if (apiResults) {
+              /* 
+             1: initial
+             2: completed
+             3: pending
+             4: change request
+           */
+              apiResults.forEach(result => {
+                if (result.status === 1) {
+                  requirementList.initial.push(result);
+                }
+                if (result.status === 2) {
+                  requirementList.completed.push(result);
+                }
+                if (result.status === 3) {
+                  requirementList.pending.push(result);
+                }
+                if (result.status === 4) {
+                  requirementList.changeRequest.push(result);
+                }
+              });
+              this.setState({
+                requirementList
+              });
+            } else {
+              this.setState({
+                requirementList: "null"
+              });
+            }
+          });
+        }
       });
     }
   }
@@ -75,15 +113,29 @@ class Requirements extends Component {
   assignTimeToState(opts = { refresh: false }) {
     if ((this.state && this.state.loggedIn) && (!this.state.clockedTime || opts.refresh)) {
       ApiCalls.getTime().then(response => {
-        ApiCalls.handleAPICallResult(response).then(apiResults => {
-          if (apiResults) {
-            this.setState({
-              clockedTime: apiResults,
-              renderTime: true
-            });
-          }
-        });
+        if (this._isMounted) {
+          ApiCalls.handleAPICallResult(response, this).then(apiResults => {
+            if (apiResults) {
+              this.setState({
+                clockedTime: apiResults
+              });
+            } else {
+              this.setState({
+                clockedTime: "null"
+              });
+            }
+          });
+        }
       });
+    }
+  }
+
+  // Retrieve Render from state.
+  getRenderFromState() {
+    if (this.state.requirementList && this.state.clockedTime && this.state) {
+      return true;
+    } else {
+      return false;
     }
   }
 
@@ -91,53 +143,81 @@ class Requirements extends Component {
   handleSubmit = async (requirementData) => {
     if (requirementData.clocked_in === "Y") {
       ApiCalls.clockOut(requirementData.uid).then(response => {
-        ApiCalls.handleAPICallResult(response).then(apiResults => {
-          if (apiResults) {
-            let message = `Requirement "${requirementData.name}" was successfully Clocked Out!`;
-            ApiCalls.showToastsInArr([message], {
-              buttonText: "OK",
-              type: "success",
-              position: "top",
-              duration: 10 * 1000
-            });
-            Alert.alert(
-              "Requirement is Clocked Out!",
-              message,
-              [
-                {
-                  text: "OK", onPress: () => {
-                    this.assignRequirementsToState({ refresh: true });
-                  }
-                },
-              ]
-            );
-          }
-        });
+        if (this._isMounted) {
+          ApiCalls.handleAPICallResult(response, this).then(apiResults => {
+            if (apiResults) {
+              let message = `Requirement "${requirementData.name}" was successfully Clocked Out!`;
+              ApiCalls.showToastsInArr([message], {
+                buttonText: "OK",
+                type: "success",
+                position: "top",
+                duration: 10 * 1000
+              });
+              Alert.alert(
+                "Requirement is Clocked Out!",
+                message,
+                [
+                  {
+                    text: "OK", onPress: () => {
+                      this.assignRequirementsToState({ refresh: true });
+                    }
+                  },
+                ]
+              );
+            } else {
+              Alert.alert(
+                "Not Clocked Out!",
+                JSON.stringify(this.state.ApiErrorsList),
+                [
+                  {
+                    text: "OK", onPress: () => {
+                      this.assignRequirementsToState({ refresh: true });
+                    }
+                  },
+                ]
+              );
+            }
+          });
+        }
       });
     } else {
       ApiCalls.clockIn(requirementData.uid).then(response => {
-        ApiCalls.handleAPICallResult(response).then(apiResults => {
-          if (apiResults) {
-            let message = `Requirement "${requirementData.name}" was successfully Clocked In!`;
-            ApiCalls.showToastsInArr([message], {
-              buttonText: "OK",
-              type: "success",
-              position: "top",
-              duration: 10 * 1000
-            });
-            Alert.alert(
-              "Requirement is Clocked in!",
-              message,
-              [
-                {
-                  text: "OK", onPress: () => {
-                    this.assignRequirementsToState({ refresh: true });
-                  }
-                },
-              ]
-            );
-          }
-        });
+        if (this._isMounted) {
+          ApiCalls.handleAPICallResult(response, this).then(apiResults => {
+            if (apiResults) {
+              let message = `Requirement "${requirementData.name}" was successfully Clocked In!`;
+              ApiCalls.showToastsInArr([message], {
+                buttonText: "OK",
+                type: "success",
+                position: "top",
+                duration: 10 * 1000
+              });
+              Alert.alert(
+                "Requirement is Clocked in!",
+                message,
+                [
+                  {
+                    text: "OK", onPress: () => {
+                      this.assignRequirementsToState({ refresh: true });
+                    }
+                  },
+                ]
+              );
+            } else {
+              Alert.alert(
+                "Not Clocked in!",
+                JSON.stringify(this.state.ApiErrorsList),
+                [
+                  {
+                    text: "OK", onPress: () => {
+                      this.assignRequirementsToState({ refresh: true });
+                    }
+                  },
+                ]
+              );
+            }
+          });
+        }
       });
     }
   }
@@ -238,26 +318,33 @@ class Requirements extends Component {
               <Text style={styles.requirementDetails}>{requirementData.priority}{" "}{" "}</Text>
             </View>
           </View>
-          {this.getTimeRemaining(requirementData)}
+          {this.state.clockedTime === "null" ?
+            <View style={styles.warningView} >
+            <Icon style={styles.warningIcon} name="warning"/>
+            <Text style={styles.warningText}>{this.state.ApiErrorsList}</Text>
+          </View> :
+            <View>
+              {this.getTimeRemaining(requirementData)}
+            </View>}
         </View>
       );
     }
   }
 
-// Get Time Remiaining Data
+  // Get Time Remiaining Data
   getTimeRemaining(requirementData) {
     if (requirementData.status === 1) {
       return (
         <View style={styles.requirementDataFlex}>
-            <View>
-              <Text style={styles.requirementDetails}>Time for Soft Cap</Text>
-              <Text style={styles.requirementDetails}>Time for Hard Cap</Text>
-            </View>
-            <View>
-              <Text style={styles.requirementDetails}>{this.timeRemaining(requirementData, "Soft")}{" "}</Text>
-              <Text style={styles.requirementDetails}>{this.timeRemaining(requirementData, "Hard")}{" "}</Text>
-            </View>
+          <View>
+            <Text style={styles.requirementDetails}>Time for Soft Cap</Text>
+            <Text style={styles.requirementDetails}>Time for Hard Cap</Text>
           </View>
+          <View>
+            <Text style={styles.requirementDetails}>{this.timeRemaining(requirementData, "Soft")}{" "}</Text>
+            <Text style={styles.requirementDetails}>{this.timeRemaining(requirementData, "Hard")}{" "}</Text>
+          </View>
+        </View>
       );
     }
     else {
@@ -320,40 +407,49 @@ class Requirements extends Component {
 
   // Render Tabs
   _renderTabs() {
-    if (this.state.renderRequirement && this.state.renderTime) {
+    if (this.getRenderFromState()) {
       return (
         <Tabs initialPage={this.params.initialPage}>
-          <Tab
-            heading="Active"
-          >
+          <Tab heading="Active">
             <Content padder>
-              <Accordion
-                dataArray={this.state.requirementList.initial}
-                renderHeader={this._renderAccordionHeader}
-                renderContent={this._renderAccordionContent}
-              />
+              {this.state.requirementList === "null" ?
+                <View style={styles.warningView} >
+                <Icon style={styles.warningIcon} name="warning"/>
+                <Text style={styles.warningText}>{this.state.ApiErrorsList}</Text>
+              </View> :
+                <Accordion
+                  dataArray={this.state.requirementList.initial}
+                  renderHeader={this._renderAccordionHeader}
+                  renderContent={this._renderAccordionContent}
+                />}
             </Content>
           </Tab>
-          <Tab
-            heading="Pending"
-          >
+          <Tab heading="Pending" >
             <Content padder>
-              <Accordion
-                dataArray={this.state.requirementList.pending}
-                renderHeader={this._renderAccordionHeader}
-                renderContent={this._renderAccordionContent}
-              />
+              {this.state.requirementList === "null" ?
+                <View style={styles.warningView} >
+                <Icon style={styles.warningIcon} name="warning"/>
+                <Text style={styles.warningText}>{this.state.ApiErrorsList}</Text>
+              </View> :
+                <Accordion
+                  dataArray={this.state.requirementList.pending}
+                  renderHeader={this._renderAccordionHeader}
+                  renderContent={this._renderAccordionContent}
+                />}
             </Content>
           </Tab>
-          <Tab
-            heading="Completed"
-          >
+          <Tab heading="Completed" >
             <Content padder>
-              <Accordion
-                dataArray={this.state.requirementList.completed}
-                renderHeader={this._renderAccordionHeader}
-                renderContent={this._renderAccordionContent}
-              />
+              {this.state.requirementList === "null" ?
+                <View style={styles.warningView} >
+                <Icon style={styles.warningIcon} name="warning"/>
+                <Text style={styles.warningText}>{this.state.ApiErrorsList}</Text>
+              </View> :
+                <Accordion
+                  dataArray={this.state.requirementList.completed}
+                  renderHeader={this._renderAccordionHeader}
+                  renderContent={this._renderAccordionContent}
+                />}
             </Content>
           </Tab>
         </Tabs>
