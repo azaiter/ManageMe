@@ -27,15 +27,13 @@ const dataOnlyLogin = [
   }
 ];
 
-const dataLogout =
-{
+const dataLogout = {
   name: "Logout",
   route: false,
   action: "logout",
   icon: "ios-log-out",
   bg: "#C5F442"
-}
-  ;
+};
 
 const datas = [
   {

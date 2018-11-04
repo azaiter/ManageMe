@@ -195,7 +195,7 @@ class Users extends Component {
         <Right>
           <Button
             transparent
-            onPress={() => this.props.navigation.navigate("CreateUser", {action: "create"})}
+            onPress={() => this.props.navigation.navigate("CreateUser", { action: "create" })}
           >
             <Icon name="ios-add-circle" />
           </Button>
@@ -225,7 +225,8 @@ class Users extends Component {
               data={this.state.usersList}
               renderItem={data => this._renderUserData(data.item)}
               extraData={this.state}
-            />}
+            />
+          }
         </Content>
       );
     } else {
@@ -324,7 +325,7 @@ class Users extends Component {
 
   goToUserInfo(userData) {
     this.closeModal(userData);
-    return this.props.navigation.navigate("CreateUser", {action: "edit", userData: userData});
+    return this.props.navigation.navigate("CreateUser", { action: "edit", userData: userData });
   }
   enableDisableUser(userData) {
     let enabled = userData.enabled ? 0 : 1;

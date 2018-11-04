@@ -294,7 +294,8 @@ class CreateProject extends Component {
                 >
                   {this.state.teams.map(team => this._renderSelectOption(team))}
                 </Picker>
-              </Form>}
+              </Form>
+            }
             {/* Project Description */}
             <Label>{fieldsArr[1].label}</Label>
             <Textarea
