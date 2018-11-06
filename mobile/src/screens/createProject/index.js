@@ -93,11 +93,9 @@ class CreateProject extends Component {
           ApiCalls.handleAPICallResult(response, this).then(apiResults => {
             if (apiResults) {
               if (this.params.action === "edit") {
-                this.setState({
-                  projectName: this.params.projectData.name,
-                  projectDesc: this.params.projectData.desc,
-                  teamId: this.params.projectData.assigned_team,
-                });
+                this.checkAndSetState(fieldsArr[0].name, this.params.projectData.name, fieldsArr[0].regex);
+                this.checkAndSetState(fieldsArr[1].name, this.params.projectData.desc, fieldsArr[1].regex);
+                this.checkAndSetState(fieldsArr[2].name, this.params.projectData.assigned_team, fieldsArr[2].regex);
               }
               this.setState({
                 teams: apiResults,
@@ -134,7 +132,7 @@ class CreateProject extends Component {
       }
       else {
         if (this.params.action === "edit") {
-          ApiCalls.updateProject(this.params.projectData.uid, this.state.projectName, this.state.projectDesc).then(response => {
+          ApiCalls.updateProject(this.params.projectData.uid, this.state.projectName, this.state.projectDesc, this.state.teamId).then(response => {
             ApiCalls.handleAPICallResult(response, this).then(apiResults => {
               if (apiResults) {
                 let message = `Project "${this.state.projectName}" was modified successfully!`;
