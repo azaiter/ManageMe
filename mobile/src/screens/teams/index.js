@@ -152,16 +152,16 @@ class Teams extends Component {
         <Content padder>
           {this.state.teamsList === "null" ?
             <View style={styles.warningView} >
-              <Icon style={styles.warningIcon} name="warning"/>
+              <Icon style={styles.warningIcon} name="warning" />
               <Text style={styles.warningText}>{this.state.ApiErrorsList}</Text>
-            </View>
-            :
+            </View> :
             <FlatList
               style={styles.container}
               data={this.state.teamsList}
               renderItem={data => this._renderTeamData(data.item)}
               keyExtractor={item => item.uid.toString()}
-            />}
+            />
+          }
         </Content>
       );
     } else {

@@ -93,6 +93,7 @@ class CreateUser extends Component {
       username: "",
       password: ""
     };
+    this.params = this.props.navigation.state.params;
     Auth.setIsLoginStateOnScreenEntry(this, {
       navigate: "CreateUser",
       setUserPermissions: true
@@ -194,7 +195,8 @@ class CreateUser extends Component {
           </Button>
         </Left>
         <Body>
-          <Title>Create User</Title>
+          {this.params.action === "edit" ? <Title>Edit User</Title> :
+            <Title>Create User</Title>}
         </Body>
         <Right />
       </Header>
@@ -218,8 +220,8 @@ class CreateUser extends Component {
               <Button
                 block style={{ margin: 15, marginTop: 50 }}
                 onPress={this.handleSubmit}
-              >
-                <Text>Add User</Text>
+              >{this.params.action === "edit" ? <Text>Edit User</Text> :
+                <Text>Create User</Text>}
               </Button>
             </Form>
           </Content>

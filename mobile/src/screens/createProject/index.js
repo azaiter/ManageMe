@@ -56,6 +56,7 @@ class CreateProject extends Component {
       projectDesc: "",
       teamId: ""
     };
+    this.params = this.props.navigation.state.params;
     Auth.setIsLoginStateOnScreenEntry(this, {
       navigate: "CreateProject",
       setUserPermissions: true
@@ -91,6 +92,11 @@ class CreateProject extends Component {
         if (this._isMounted) {
           ApiCalls.handleAPICallResult(response, this).then(apiResults => {
             if (apiResults) {
+              if (this.params.action === "edit") {
+                this.checkAndSetState(fieldsArr[0].name, this.params.projectData.name, fieldsArr[0].regex);
+                this.checkAndSetState(fieldsArr[1].name, this.params.projectData.desc, fieldsArr[1].regex);
+                this.checkAndSetState(fieldsArr[2].name, this.params.projectData.assigned_team, fieldsArr[2].regex);
+              }
               this.setState({
                 teams: apiResults,
               });
@@ -125,28 +131,53 @@ class CreateProject extends Component {
         });
       }
       else {
-        ApiCalls.createProject(this.state.projectName, this.state.projectDesc, this.state.teamId).then(response => {
-          ApiCalls.handleAPICallResult(response, this).then(apiResults => {
-            if (apiResults) {
-              let message = `Project "${this.state.projectName}" was added successfully!`;
-              ApiCalls.showToastsInArr([message], {
-                buttonText: "OK",
-                type: "success",
-                position: "top",
-                duration: 10 * 1000
-              });
-              Alert.alert("Project Added!", message, [
-                {
-                  text: "OK", onPress: () => {
-                    this.props.navigation.navigate("Projects");
-                  }
-                },
-              ]);
-            } else {
-              Alert.alert("Project not Added", JSON.stringify(this.state.ApiErrorsList));
-            }
+        if (this.params.action === "edit") {
+          ApiCalls.updateProject(this.params.projectData.uid, this.state.projectName, this.state.projectDesc, this.state.teamId).then(response => {
+            ApiCalls.handleAPICallResult(response, this).then(apiResults => {
+              if (apiResults) {
+                let message = `Project "${this.state.projectName}" was modified successfully!`;
+                ApiCalls.showToastsInArr([message], {
+                  buttonText: "OK",
+                  type: "success",
+                  position: "top",
+                  duration: 10 * 1000
+                });
+                Alert.alert("Project modified!", message, [
+                  {
+                    text: "OK", onPress: () => {
+                      this.props.navigation.navigate("Projects");
+                    }
+                  },
+                ]);
+              } else {
+                Alert.alert("Project not modified", JSON.stringify(this.state.ApiErrorsList));
+              }
+            });
           });
-        });
+        } else {
+          ApiCalls.createProject(this.state.projectName, this.state.projectDesc, this.state.teamId).then(response => {
+            ApiCalls.handleAPICallResult(response, this).then(apiResults => {
+              if (apiResults) {
+                let message = `Project "${this.state.projectName}" was added successfully!`;
+                ApiCalls.showToastsInArr([message], {
+                  buttonText: "OK",
+                  type: "success",
+                  position: "top",
+                  duration: 10 * 1000
+                });
+                Alert.alert("Project Added!", message, [
+                  {
+                    text: "OK", onPress: () => {
+                      this.props.navigation.navigate("Projects");
+                    }
+                  },
+                ]);
+              } else {
+                Alert.alert("Project not Added", JSON.stringify(this.state.ApiErrorsList));
+              }
+            });
+          });
+        }
       }
     }
   }
@@ -210,7 +241,8 @@ class CreateProject extends Component {
           </Button>
         </Left>
         <Body>
-          <Title>Create Project</Title>
+          {this.params.action === "edit" ? <Title>Edit Project</Title> :
+            <Title>Create Project</Title>}
         </Body>
         <Right>
           <Button
@@ -248,6 +280,7 @@ class CreateProject extends Component {
               </View> :
               <Form>
                 <Picker
+                  value={this.state[fieldsArr[2].name]}
                   mode="dropdown"
                   iosIcon={<Icon name="ios-arrow-down-outline" />}
                   style={{ width: undefined }}
@@ -259,10 +292,12 @@ class CreateProject extends Component {
                 >
                   {this.state.teams.map(team => this._renderSelectOption(team))}
                 </Picker>
-              </Form>}
+              </Form>
+            }
             {/* Project Description */}
             <Label>{fieldsArr[1].label}</Label>
             <Textarea
+              value={this.state[fieldsArr[1].name]}
               onChangeText={(value) => this.checkAndSetState(fieldsArr[1].name, value, fieldsArr[1].regex)}
               rowSpan={5}
               bordered
@@ -272,7 +307,9 @@ class CreateProject extends Component {
               block style={{ margin: 15, marginTop: 50 }}
               onPress={this.handleSubmit}
             >
-              <Text>Create Project</Text>
+              {this.params.action === "edit" ?
+                <Text>Edit Project</Text> :
+                <Text>Create Project</Text>}
             </Button>
             {/* End Form */}
           </Form>

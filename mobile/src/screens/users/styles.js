@@ -56,7 +56,6 @@ export default {
       flexDirection: "row",
     },
 
-
     time: {
       fontSize: 17.5,
       fontStyle: "italic",

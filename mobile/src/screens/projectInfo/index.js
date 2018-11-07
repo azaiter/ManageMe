@@ -388,15 +388,16 @@ class ProjectInfo extends Component {
       <Content padder>
         {this.state.projectInfo === "null" ?
           <View style={styles.warningView} >
-          <Icon style={styles.warningIcon} name="warning"/>
-          <Text style={styles.warningText}>{this.state.ApiErrorsList}</Text>
-        </View> :
+            <Icon style={styles.warningIcon} name="warning" />
+            <Text style={styles.warningText}>{this.state.ApiErrorsList}</Text>
+          </View> :
           <FlatList
             style={styles.container}
             data={this.state.projectInfo}
             renderItem={data => this._renderProject(data.item)}
             keyExtractor={item => item.uid.toString()}
-          />}
+          />
+        }
       </Content >
     );
   }
@@ -418,9 +419,9 @@ class ProjectInfo extends Component {
             </Text>
           </View>{this.state.teamData === "null" ?
             <View style={styles.warningView} >
-            <Icon style={styles.warningIcon} name="warning"/>
-            <Text style={styles.warningText}>{this.state.ApiErrorsList}</Text>
-          </View> :
+              <Icon style={styles.warningIcon} name="warning" />
+              <Text style={styles.warningText}>{this.state.ApiErrorsList}</Text>
+            </View> :
             <Button
               transparent
               onPress={() => this.props.navigation.navigate("TeamMembers", { uid: this.state.teamData[0].uid })}
@@ -429,15 +430,17 @@ class ProjectInfo extends Component {
                 <Text style={styles.requirementCount}>Team: </Text>
                 <Text style={styles.requirementStatus}>{this.state.teamData[0].name}</Text>
               </View>
-            </Button>}
+            </Button>
+          }
           {this.state.projectHours === "null" ?
             <View style={styles.warningView} >
-            <Icon style={styles.warningIcon} name="warning"/>
-            <Text style={styles.warningText}>{this.state.ApiErrorsList}</Text>
-          </View> :
+              <Icon style={styles.warningIcon} name="warning" />
+              <Text style={styles.warningText}>{this.state.ApiErrorsList}</Text>
+            </View> :
             <Text style={styles.projectHours}>
               {this.getTime()}
-            </Text>}
+            </Text>
+          }
         </View>
         <View style={styles.flexRow}>
           <View>
@@ -445,20 +448,21 @@ class ProjectInfo extends Component {
               <Text style={styles.projectTitle}>Requirements</Text>
               {this.state.requirementList === "null" ?
                 <View style={styles.warningView} >
-                <Icon style={styles.warningIcon} name="warning"/>
-                <Text style={styles.warningText}>{this.state.ApiErrorsList}</Text>
-              </View> :
+                  <Icon style={styles.warningIcon} name="warning" />
+                  <Text style={styles.warningText}>{this.state.ApiErrorsList}</Text>
+                </View> :
                 <View>
                   {this._renderRequirementButton("Active")}
                   {this._renderRequirementButton("Pending")}
                   {this._renderRequirementButton("Completed")}
-                </View>}
+                </View>
+              }
             </Card>
           </View>
           <View style={styles.requirementView}>
             <Button style={styles.button} rounded primary
-           onPress={() => this.props.navigation.navigate("CreateProject", {action: "edit", projectData: info})}>
-            <Text style={styles.projectActivity}>EDIT</Text></Button>
+              onPress={() => this.props.navigation.navigate("CreateProject", { action: "edit", projectData: info })}>
+              <Text style={styles.projectActivity}>EDIT</Text></Button>
           </View>
         </View>
       </View>
@@ -497,14 +501,15 @@ class ProjectInfo extends Component {
         <View>
           {this.state.commentList === "null" ?
             <View style={styles.warningView} >
-            <Icon style={styles.warningIcon} name="warning"/>
-            <Text style={styles.warningText}>{this.state.ApiErrorsList}</Text>
-          </View> :
+              <Icon style={styles.warningIcon} name="warning" />
+              <Text style={styles.warningText}>{this.state.ApiErrorsList}</Text>
+            </View> :
             <FlatList
               data={this.state.commentList}
               renderItem={data => this._renderComment(data.item)}
               keyExtractor={item => item.uid.toString()}
-            />}
+            />
+          }
         </View>
       </Content >
     );

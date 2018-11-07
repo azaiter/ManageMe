@@ -93,25 +93,31 @@ class Users extends Component {
               });
               ApiCalls.getAllPerms().then(_response => {
                 ApiCalls.handleAPICallResult(_response, this).then(_apiResults => {
-                  let allPermissions = [
-                    {
-                      name: "Permissions",
-                      id: 0,
-                      children: _apiResults.map(x => { return { name: x.label, id: x.value }; })
+                  if (_apiResults) {
+                    let allPermissions = [
+                      {
+                        name: "Permissions",
+                        id: 0,
+                        children: _apiResults.map(x => { return { name: x.label, id: x.value }; })
+                      }
+                    ];
+                    let setStateObj = {
+                      usersList: apiResults.map(x => {
+                        x.permissions = x.permissions.map(y => y.uid);
+                        return x;
+                      }),
+                      allPermissions: allPermissions
+                    };
+                    for (let i = 0; i < setStateObj.usersList.length; i++) {
+                      const userObj = setStateObj.usersList[i];
+                      setStateObj[`user_${userObj.uid}_perms`] = userObj.permissions;
                     }
-                  ];
-                  let setStateObj = {
-                    usersList: apiResults.map(x => {
-                      x.permissions = x.permissions.map(y => y.uid);
-                      return x;
-                    }),
-                    allPermissions: allPermissions
-                  };
-                  for (let i = 0; i < setStateObj.usersList.length; i++) {
-                    const userObj = setStateObj.usersList[i];
-                    setStateObj[`user_${userObj.uid}_perms`] = userObj.permissions;
+                    this.setState(setStateObj);
+                  } else {
+                    this.setState({
+                      setStateObj: "null"
+                    });
                   }
-                  this.setState(setStateObj);
                 });
               });
             } else {
@@ -131,16 +137,6 @@ class Users extends Component {
       return true;
     } else {
       return false;
-    }
-  }
-
-  // Handles the onClick event for the modal buttons.
-  onModalButtonClick(userData, buttonText) {
-    this.closeModal(userData);
-    if (buttonText === "User Info") {
-      return this.props.navigation.navigate("UserInfo");
-    } else {
-      return this.props.navigation.navigate("Requirements");
     }
   }
 
@@ -199,7 +195,7 @@ class Users extends Component {
         <Right>
           <Button
             transparent
-            onPress={() => this.props.navigation.navigate("CreateUser")}
+            onPress={() => this.props.navigation.navigate("CreateUser", { action: "create" })}
           >
             <Icon name="ios-add-circle" />
           </Button>
@@ -221,15 +217,16 @@ class Users extends Component {
         <Content padder>
           {this.state.usersList === "null" ?
             <View style={styles.warningView} >
-            <Icon style={styles.warningIcon} name="warning"/>
-            <Text style={styles.warningText}>{this.state.ApiErrorsList}</Text>
-          </View> :
+              <Icon style={styles.warningIcon} name="warning" />
+              <Text style={styles.warningText}>{this.state.ApiErrorsList}</Text>
+            </View> :
             <FlatList
               style={styles.container}
               data={this.state.usersList}
               renderItem={data => this._renderUserData(data.item)}
               extraData={this.state}
-            />}
+            />
+          }
         </Content>
       );
     } else {
@@ -305,9 +302,9 @@ class Users extends Component {
           swipeDirection="down"
           isVisible={userData.modalVisible}>
           <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>{userData.name}</Text>
+            <Text style={styles.modalTitle}>{userData.first_name} {userData.last_name}</Text>
             <View style={styles.modalFlex}>
-              {this._renderModalButton(userData, "User Info", () => { this.goToUserInfo(userData); })}
+              {this._renderModalButton(userData, "Edit User", () => { this.goToUserInfo(userData); })}
               {this._renderModalButton(userData, userData.enabled ? "Disable User" : "Enable User", () => { this.enableDisableUser(userData); })}
             </View>
           </View>
@@ -320,16 +317,15 @@ class Users extends Component {
   // @TODO: Implement OnClose
   _renderModalButton(userData, buttonText, functionToExec = false) {
     return (
-      <TouchableOpacity style={styles.modalButton} onPress={
-        functionToExec ? functionToExec : () => { this.onModalButtonClick(userData, buttonText); }
-      }>
+      <TouchableOpacity style={styles.modalButton} onPress={functionToExec}>
         <Text style={styles.modalText}>{buttonText}</Text>
       </TouchableOpacity>
     );
   }
 
   goToUserInfo(userData) {
-    return;
+    this.closeModal(userData);
+    return this.props.navigation.navigate("CreateUser", { action: "edit", userData: userData });
   }
   enableDisableUser(userData) {
     let enabled = userData.enabled ? 0 : 1;

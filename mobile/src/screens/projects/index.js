@@ -153,7 +153,7 @@ class Projects extends Component {
         <Right>
           <Button
             transparent
-            onPress={() => this.props.navigation.navigate("CreateProject", {action: "create"})}
+            onPress={() => this.props.navigation.navigate("CreateProject", { action: "create" })}
           >
             <Icon name="ios-add-circle" />
           </Button>
@@ -175,14 +175,15 @@ class Projects extends Component {
         <Content padder>
           {this.state.projectsList === "null" ?
             <View style={styles.warningView} >
-            <Icon style={styles.warningIcon} name="warning"/>
-            <Text style={styles.warningText}>{this.state.ApiErrorsList}</Text>
-          </View> :
+              <Icon style={styles.warningIcon} name="warning" />
+              <Text style={styles.warningText}>{this.state.ApiErrorsList}</Text>
+            </View> :
             <FlatList
               style={styles.container}
               data={this.state.projectsList}
               renderItem={data => this._renderProjectData(data.item)}
-            />}
+            />
+          }
         </Content>
       );
     } else {

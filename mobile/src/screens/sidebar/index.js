@@ -27,15 +27,13 @@ const dataOnlyLogin = [
   }
 ];
 
-const dataLogout =
-{
+const dataLogout = {
   name: "Logout",
   route: false,
   action: "logout",
   icon: "ios-log-out",
   bg: "#C5F442"
-}
-  ;
+};
 
 const datas = [
   {
@@ -158,7 +156,7 @@ class SideBar extends Component {
               <Text>|</Text>
             </Col>
             <Col style={styles.colVersion}>
-              <TouchableOpacity><Text style={styles.textVersion}>Privacy & Terms</Text></TouchableOpacity>
+              <TouchableOpacity onPress={() => null }><Text style={styles.textVersion}>Privacy & Terms</Text></TouchableOpacity>
             </Col>
           </Row>
         </Content>

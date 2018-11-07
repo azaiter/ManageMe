@@ -320,12 +320,13 @@ class Requirements extends Component {
           </View>
           {this.state.clockedTime === "null" ?
             <View style={styles.warningView} >
-            <Icon style={styles.warningIcon} name="warning"/>
-            <Text style={styles.warningText}>{this.state.ApiErrorsList}</Text>
-          </View> :
+              <Icon style={styles.warningIcon} name="warning" />
+              <Text style={styles.warningText}>{this.state.ApiErrorsList}</Text>
+            </View> :
             <View>
               {this.getTimeRemaining(requirementData)}
-            </View>}
+            </View>
+          }
         </View>
       );
     }
@@ -414,42 +415,45 @@ class Requirements extends Component {
             <Content padder>
               {this.state.requirementList === "null" ?
                 <View style={styles.warningView} >
-                <Icon style={styles.warningIcon} name="warning"/>
-                <Text style={styles.warningText}>{this.state.ApiErrorsList}</Text>
-              </View> :
+                  <Icon style={styles.warningIcon} name="warning" />
+                  <Text style={styles.warningText}>{this.state.ApiErrorsList}</Text>
+                </View> :
                 <Accordion
                   dataArray={this.state.requirementList.initial}
                   renderHeader={this._renderAccordionHeader}
                   renderContent={this._renderAccordionContent}
-                />}
+                />
+              }
             </Content>
           </Tab>
           <Tab heading="Pending" >
             <Content padder>
               {this.state.requirementList === "null" ?
                 <View style={styles.warningView} >
-                <Icon style={styles.warningIcon} name="warning"/>
-                <Text style={styles.warningText}>{this.state.ApiErrorsList}</Text>
-              </View> :
+                  <Icon style={styles.warningIcon} name="warning" />
+                  <Text style={styles.warningText}>{this.state.ApiErrorsList}</Text>
+                </View> :
                 <Accordion
                   dataArray={this.state.requirementList.pending}
                   renderHeader={this._renderAccordionHeader}
                   renderContent={this._renderAccordionContent}
-                />}
+                />
+              }
             </Content>
           </Tab>
           <Tab heading="Completed" >
             <Content padder>
               {this.state.requirementList === "null" ?
                 <View style={styles.warningView} >
-                <Icon style={styles.warningIcon} name="warning"/>
-                <Text style={styles.warningText}>{this.state.ApiErrorsList}</Text>
-              </View> :
+                  <Icon style={styles.warningIcon} name="warning" />
+                  <Text style={styles.warningText}>{this.state.ApiErrorsList}</Text>
+                </View> :
                 <Accordion
                   dataArray={this.state.requirementList.completed}
                   renderHeader={this._renderAccordionHeader}
                   renderContent={this._renderAccordionContent}
-                />}
+                />
+              }
             </Content>
           </Tab>
         </Tabs>
