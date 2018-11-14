@@ -83,8 +83,9 @@ class CreateUser extends Component {
   _isMounted = false;
   constructor(props) {
     super(props);
+    this.params = this.props.navigation.state.params;
     this.state = {
-      firstName: "",
+      firstName:  "",
       lastName: "",
       email: "",
       phoneNumber: "",
@@ -93,7 +94,6 @@ class CreateUser extends Component {
       username: "",
       password: ""
     };
-    this.params = this.props.navigation.state.params;
     Auth.setIsLoginStateOnScreenEntry(this, {
       navigate: "CreateUser",
       setUserPermissions: true
@@ -121,7 +121,7 @@ class CreateUser extends Component {
 
   handleSubmit = async () => {
     if (this._isMounted) {
-      if (fieldsArr.filter(x => { return !this.state[x.name + "Validation"]; }).length > 0) {
+      if (fieldsArr.filter(x => !this.state[x.name + "Validation"]).length > 0) {
         ApiCalls.showToastsInArr(["Some of the fields below are invalid."], {
           buttonText: "OK",
           type: "danger",
@@ -146,9 +146,17 @@ class CreateUser extends Component {
             }
           });
         });
-
       }
     }
+  }
+
+  setFieldValues() {
+    this.checkAndSetState(fieldsArr[0].name ,this.params.userData.first_name  ,fieldsArr[0].regex);
+    this.checkAndSetState(fieldsArr[1].name ,this.params.userData.last_name   ,fieldsArr[1].regex);
+    this.checkAndSetState(fieldsArr[2].name ,this.params.userData.email       ,fieldsArr[2].regex);
+    this.checkAndSetState(fieldsArr[3].name ,this.params.userData.phone       ,fieldsArr[3].regex);
+    this.checkAndSetState(fieldsArr[4].name ,this.params.userData.address     ,fieldsArr[4].regex);
+    this.checkAndSetState(fieldsArr[6].name ,this.params.userData.username    ,fieldsArr[6].regex);
   }
 
   checkAndSetState(field, value, regex) {
@@ -175,6 +183,9 @@ class CreateUser extends Component {
   }
 
   render() {
+    if (this.params.action === "edit") {
+      this.setFieldValues();
+    }
     return (
       <Container style={styles.container}>
         {this._renderHeader()}
@@ -195,8 +206,11 @@ class CreateUser extends Component {
           </Button>
         </Left>
         <Body>
-          {this.params.action === "edit" ? <Title>Edit User</Title> :
-            <Title>Create User</Title>}
+          {
+            this.params.action === "edit" ?
+              <Title>Edit User</Title> :
+              <Title>Create User</Title>
+          }
         </Body>
         <Right />
       </Header>
@@ -214,14 +228,17 @@ class CreateUser extends Component {
               {this._renderFieldEntry(fieldsArr[2])}
               {this._renderFieldEntry(fieldsArr[3])}
               {this._renderFieldEntry(fieldsArr[4])}
-              {this._renderFieldEntry(fieldsArr[5])}
+              {this.params.action === "edit" ? null : this._renderFieldEntry(fieldsArr[5])}
               {this._renderFieldEntry(fieldsArr[6])}
-              {this._renderFieldEntry(fieldsArr[7])}
+              {this.params.action === "edit" ? null : this._renderFieldEntry(fieldsArr[7])}
               <Button
                 block style={{ margin: 15, marginTop: 50 }}
                 onPress={this.handleSubmit}
-              >{this.params.action === "edit" ? <Text>Edit User</Text> :
-                <Text>Create User</Text>}
+              >{
+                this.params.action === "edit" ?
+                  <Text>Edit User</Text> :
+                  <Text>Create User</Text>
+                }
               </Button>
             </Form>
           </Content>
@@ -242,6 +259,7 @@ class CreateUser extends Component {
           onSubmitEditing={this.handleSubmit}
           keyboardType={obj.keyboardType || "default"}
           secureTextEntry={obj.secureTextEntry || false}
+          disabled={obj.name === "username" && this.params.action === "edit" ? true : false}
         />
       </Item>
     );
