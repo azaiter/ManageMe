@@ -15,7 +15,6 @@ import {
   Item,
   Form,
   Picker,
-  Textarea,
   Spinner,
 } from "native-base";
 import { Alert, View } from "react-native";
@@ -241,8 +240,11 @@ class CreateProject extends Component {
           </Button>
         </Left>
         <Body>
-          {this.params.action === "edit" ? <Title>Edit Project</Title> :
-            <Title>Create Project</Title>}
+          {
+            this.params.action === "edit" ?
+              <Title>Edit Project</Title> :
+              <Title>Create Project</Title>
+          }
         </Body>
         <Right>
           <Button
@@ -263,22 +265,28 @@ class CreateProject extends Component {
           <Form>
             {/* Start Form */}
             {/* Project Name */}
-            <Label>{fieldsArr[0].label}</Label>
-            <Input name={fieldsArr[0].name}
-              onChangeText={(value) => this.checkAndSetState(fieldsArr[0].name, value, fieldsArr[0].regex)}
-              value={this.state[fieldsArr[0].name]}
-              onSubmitEditing={this.handleSubmit}
-              keyboardType={fieldsArr[0].keyboardType || "default"}
-              secureTextEntry={fieldsArr[0].secureTextEntry || false}
-            />
+            <Item floatingLabel
+              success={this.getFieldValidation(fieldsArr[0].name).success}
+              error={this.getFieldValidation(fieldsArr[0].name).error} >
+              <Label>{fieldsArr[0].label}</Label>
+              <Input name={fieldsArr[0].name}
+                onChangeText={(value) => this.checkAndSetState(fieldsArr[0].name, value, fieldsArr[0].regex)}
+                value={this.state[fieldsArr[0].name]}
+                onSubmitEditing={this.handleSubmit}
+                keyboardType={fieldsArr[0].keyboardType || "default"}
+                secureTextEntry={fieldsArr[0].secureTextEntry || false}
+              />
+            </Item>
             {/* Project Team */}
-            <Label>{fieldsArr[2].label}</Label>
-            {this.state.teams === "null" ?
-              <View style={styles.warningView} >
-                <Icon style={styles.warningIcon} name="warning" />
-                <Text style={styles.warningText}>{this.state.ApiErrorsList}</Text>
-              </View> :
-              <Form>
+            <Item stackedLabel
+              success={this.getFieldValidation(fieldsArr[2].name).success}
+              error={this.getFieldValidation(fieldsArr[2].name).error} >
+              <Label>{fieldsArr[2].label}</Label>
+              {this.state.teams === "null" ?
+                <View style={styles.warningView} >
+                  <Icon style={styles.warningIcon} name="warning" />
+                  <Text style={styles.warningText}>{this.state.ApiErrorsList}</Text>
+                </View> :
                 <Picker
                   value={this.state[fieldsArr[2].name]}
                   mode="dropdown"
@@ -292,24 +300,31 @@ class CreateProject extends Component {
                 >
                   {this.state.teams.map(team => this._renderSelectOption(team))}
                 </Picker>
-              </Form>
-            }
+              }
+            </Item>
             {/* Project Description */}
-            <Label>{fieldsArr[1].label}</Label>
-            <Textarea
-              value={this.state[fieldsArr[1].name]}
-              onChangeText={(value) => this.checkAndSetState(fieldsArr[1].name, value, fieldsArr[1].regex)}
-              rowSpan={5}
-              bordered
-            />
+            <Item floatingLabel
+              success={this.getFieldValidation(fieldsArr[1].name).success}
+              error={this.getFieldValidation(fieldsArr[1].name).error}>
+              <Label>{fieldsArr[1].label}</Label>
+              <Input
+                value={this.state[fieldsArr[1].name]}
+                onChangeText={(value) => this.checkAndSetState(fieldsArr[1].name, value, fieldsArr[1].regex)}
+                numberOfLines={5}
+                multiline={true}
+                style={{ height: 150 }}
+              />
+            </Item>
             {/* Submit Button */}
             <Button
               block style={{ margin: 15, marginTop: 50 }}
               onPress={this.handleSubmit}
             >
-              {this.params.action === "edit" ?
-                <Text>Edit Project</Text> :
-                <Text>Create Project</Text>}
+              {
+                this.params.action === "edit" ?
+                  <Text>Edit Project</Text> :
+                  <Text>Create Project</Text>
+              }
             </Button>
             {/* End Form */}
           </Form>
@@ -321,7 +336,7 @@ class CreateProject extends Component {
   }
 
   _renderSelectOption(team) {
-    return (<Item label={team.name} value={team.uid} key={team.uid} />);
+    return (<Picker.Item label={team.name} value={team.uid} key={team.uid} />);
   }
 }
 

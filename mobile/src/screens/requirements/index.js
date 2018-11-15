@@ -272,14 +272,14 @@ class Requirements extends Component {
           <Button style={styles.button} rounded primary>
             <Text style={styles.requirementActivity}>Change</Text>
           </Button>
+          <Button style={styles.button} rounded primary>
+            <Text style={styles.requirementActivity}>Close</Text>
+          </Button>
         </View>
       );
     } else if (requirementData.status === 3) {
       return (
         <View style={styles.requirementActivityView}>
-          <Button style={styles.button} rounded primary>
-            <Text style={styles.requirementActivity}>Change</Text>
-          </Button>
           <Button style={styles.button} rounded primary>
             <Text style={styles.requirementActivity}>Accept</Text>
           </Button>
@@ -394,6 +394,11 @@ class Requirements extends Component {
         <Right>
           <Button
             transparent
+          >
+            <Icon name="ios-add-circle" />
+          </Button>
+          <Button
+            transparent
             onPress={() => {
               this.assignRequirementsToState({ refresh: true });
               this.assignTimeToState({ refresh: true });
@@ -468,9 +473,11 @@ class Requirements extends Component {
     return (
       <View style={styles.accordionHeaderView}>
         <Text style={styles.requirementDataTitle}>{requirementData.name}</Text>
-        {expanded
-          ? <Icon style={styles.expandedIconStyle} name="remove-circle" />
-          : <Icon style={styles.iconStyle} name="add-circle" />}
+        {
+          expanded ?
+            <Icon style={styles.expandedIconStyle} name="remove-circle" /> :
+            <Icon style={styles.iconStyle} name="add-circle" />
+        }
       </View>
     );
   }
