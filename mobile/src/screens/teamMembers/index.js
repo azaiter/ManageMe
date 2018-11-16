@@ -297,8 +297,7 @@ class TeamMembers extends Component {
                     </View>
                 </View>
                 <Icon style={styles.icon} name="more" />
-                {teamMemberData.isLead === 1 ? null :
-                    this._renderModal(teamMemberData)}
+                {teamMemberData.isLead === 1 ? null : this._renderModal(teamMemberData)}
             </TouchableOpacity>
         );
     }

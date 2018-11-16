@@ -139,6 +139,35 @@ class Requirements extends Component {
     }
   }
 
+  handleSubmit_Complete = async (requirementData) => {
+    if (this._isMounted) {
+      ApiCalls.completeReq(requirementData.uid).then(response => {
+        ApiCalls.handleAPICallResult(response, this).then(apiResults => {
+          if (apiResults) {
+            let message = `Requirement "${requirementData.name}" was Completed successfully!`;
+            ApiCalls.showToastsInArr([message], {
+              buttonText: "OK",
+              type: "success",
+              position: "top",
+              duration: 10 * 1000
+            });
+            Alert.alert("Requirement Completed!",
+              message,
+              [
+                {
+                  text: "OK", onPress: () => {
+                    this.assignRequirementsToState({ refresh: true });
+                  }
+                },
+              ]);
+          } else {
+            Alert.alert("Requirement not Completed", JSON.stringify(this.state.ApiErrorsList));
+          }
+        });
+      });
+    }
+  }
+
   //Handle Submit
   handleSubmit = async (requirementData) => {
     if (requirementData.clocked_in === "Y") {
@@ -272,14 +301,14 @@ class Requirements extends Component {
           <Button style={styles.button} rounded primary>
             <Text style={styles.requirementActivity}>Change</Text>
           </Button>
+          <Button style={styles.button} rounded primary onPress={() => this.handleSubmit_Complete(requirementData)}>
+            <Text style={styles.requirementActivity}>Complete</Text>
+          </Button>
         </View>
       );
     } else if (requirementData.status === 3) {
       return (
         <View style={styles.requirementActivityView}>
-          <Button style={styles.button} rounded primary>
-            <Text style={styles.requirementActivity}>Change</Text>
-          </Button>
           <Button style={styles.button} rounded primary>
             <Text style={styles.requirementActivity}>Accept</Text>
           </Button>
@@ -394,9 +423,8 @@ class Requirements extends Component {
         <Right>
           <Button
             transparent
-            onPress={() => this.props.navigation.navigate("CreateRequirement", { action: "create", projId: this.params.uid })}
           >
-            <Icon name="ios-add-circle" />
+           <Icon name="ios-add-circle" />
           </Button>
           <Button
             transparent
@@ -474,9 +502,11 @@ class Requirements extends Component {
     return (
       <View style={styles.accordionHeaderView}>
         <Text style={styles.requirementDataTitle}>{requirementData.name}</Text>
-        {expanded
-          ? <Icon style={styles.expandedIconStyle} name="remove-circle" />
-          : <Icon style={styles.iconStyle} name="add-circle" />}
+        {
+          expanded ?
+            <Icon style={styles.expandedIconStyle} name="remove-circle" /> :
+            <Icon style={styles.iconStyle} name="add-circle" />
+        }
       </View>
     );
   }
