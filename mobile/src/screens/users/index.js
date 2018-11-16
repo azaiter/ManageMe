@@ -304,6 +304,12 @@ class Users extends Component {
           <View style={styles.modalContent}>
             <Text style={styles.modalTitle}>{userData.first_name} {userData.last_name}</Text>
             <View style={styles.modalFlex}>
+              {
+                /* 
+                  setUserPermissions 
+                  permision 23
+                */
+              }
               {this._renderModalButton(userData, "Edit User", () => { this.goToUserInfo(userData); })}
               {this._renderModalButton(userData, userData.enabled ? "Disable User" : "Enable User", () => { this.enableDisableUser(userData); })}
             </View>
@@ -325,8 +331,9 @@ class Users extends Component {
 
   goToUserInfo(userData) {
     this.closeModal(userData);
-    return this.props.navigation.navigate("CreateUser", { action: "edit", userData: userData });
+    this.props.navigation.navigate("CreateUser", { action: "edit", userData: userData });
   }
+
   enableDisableUser(userData) {
     let enabled = userData.enabled ? 0 : 1;
     ApiCalls.enabledDisableUser(userData.uid, enabled).then(response => {

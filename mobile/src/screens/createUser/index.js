@@ -85,7 +85,7 @@ class CreateUser extends Component {
     super(props);
     this.params = this.props.navigation.state.params;
     this.state = {
-      firstName:  "",
+      firstName: "",
       lastName: "",
       email: "",
       phoneNumber: "",
