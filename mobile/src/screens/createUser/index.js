@@ -113,6 +113,7 @@ class CreateUser extends Component {
 
   componentDidMount() {
     this._isMounted = true;
+    this.setFieldValues();
   }
 
   componentWillUnmount() {
@@ -151,12 +152,14 @@ class CreateUser extends Component {
   }
 
   setFieldValues() {
-    this.checkAndSetState(fieldsArr[0].name ,this.params.userData.first_name  ,fieldsArr[0].regex);
-    this.checkAndSetState(fieldsArr[1].name ,this.params.userData.last_name   ,fieldsArr[1].regex);
-    this.checkAndSetState(fieldsArr[2].name ,this.params.userData.email       ,fieldsArr[2].regex);
-    this.checkAndSetState(fieldsArr[3].name ,this.params.userData.phone       ,fieldsArr[3].regex);
-    this.checkAndSetState(fieldsArr[4].name ,this.params.userData.address     ,fieldsArr[4].regex);
-    this.checkAndSetState(fieldsArr[6].name ,this.params.userData.username    ,fieldsArr[6].regex);
+    if (this.params.action === "edit") {
+      this.checkAndSetState(fieldsArr[0].name ,this.params.userData.first_name  ,fieldsArr[0].regex);
+      this.checkAndSetState(fieldsArr[1].name ,this.params.userData.last_name   ,fieldsArr[1].regex);
+      this.checkAndSetState(fieldsArr[2].name ,this.params.userData.email       ,fieldsArr[2].regex);
+      this.checkAndSetState(fieldsArr[3].name ,this.params.userData.phone       ,fieldsArr[3].regex);
+      this.checkAndSetState(fieldsArr[4].name ,this.params.userData.address     ,fieldsArr[4].regex);
+      this.checkAndSetState(fieldsArr[6].name ,this.params.userData.username    ,fieldsArr[6].regex);
+    }
   }
 
   checkAndSetState(field, value, regex) {
@@ -183,9 +186,6 @@ class CreateUser extends Component {
   }
 
   render() {
-    if (this.params.action === "edit") {
-      this.setFieldValues();
-    }
     return (
       <Container style={styles.container}>
         {this._renderHeader()}
