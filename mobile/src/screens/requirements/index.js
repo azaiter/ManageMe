@@ -423,8 +423,9 @@ class Requirements extends Component {
         <Right>
           <Button
             transparent
+            onPress={() => this.props.navigation.navigate("CreateRequirement", { action: "create", projId: this.params.uid })}
           >
-            <Icon name="ios-add-circle" />
+           <Icon name="ios-add-circle" />
           </Button>
           <Button
             transparent

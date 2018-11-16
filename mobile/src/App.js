@@ -13,6 +13,7 @@ import Users from "./screens/users";
 import CreateProject from "./screens/createProject";
 import ProjectInfo from "./screens/projectInfo";
 import Requirements from "./screens/requirements";
+import CreateRequirement from "./screens/createRequirement";
 
 import CreateTeam from "./screens/createTeam";
 import TeamMembers from "./screens/teamMembers";
@@ -43,6 +44,7 @@ const AppNavigator = createStackNavigator(
     CreateProject: { screen: CreateProject },
     ProjectInfo: { screen: ProjectInfo },
     Requirements: { screen: Requirements },
+    CreateRequirement: { screen: CreateRequirement },
 
     CreateTeam: { screen: CreateTeam },
     TeamMembers: { screen: TeamMembers },
