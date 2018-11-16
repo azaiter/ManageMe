@@ -298,7 +298,8 @@ class Requirements extends Component {
           <Button style={styles.button} rounded primary onPress={() => this.handleSubmit(requirementData)}>
             <Text style={styles.requirementActivity}>{this.clockInText(requirementData.clocked_in)}</Text>
           </Button>
-          <Button style={styles.button} rounded primary>
+          <Button style={styles.button} rounded primary
+            onPress={() => this.props.navigation.navigate("CreateRequirement", { action: "edit", requirementData })}>>
             <Text style={styles.requirementActivity}>Change</Text>
           </Button>
           <Button style={styles.button} rounded primary onPress={() => this.handleSubmit_Complete(requirementData)}>
@@ -425,7 +426,7 @@ class Requirements extends Component {
             transparent
             onPress={() => this.props.navigation.navigate("CreateRequirement", { action: "create", projId: this.params.uid })}
           >
-           <Icon name="ios-add-circle" />
+            <Icon name="ios-add-circle" />
           </Button>
           <Button
             transparent

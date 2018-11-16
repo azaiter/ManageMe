@@ -38,14 +38,14 @@ const fieldsArr = [
   {
     name: "est",
     label: "Estimate",
-    regex: /^\d$/,
+    regex: /^\d{1,2}$/,
     keyboardType: Platform.OS === "android" ? "phone-pad" : "number-pad",
     secureTextEntry: false
   },
   {
     name: "reqPriority",
     label: "Priority",
-    regex: /^\d$/,
+    regex: /^\d{1,2}$/,
     keyboardType: Platform.OS === "android" ? "phone-pad" : "number-pad",
     secureTextEntry: false
   },
@@ -97,10 +97,22 @@ class CreateRequirement extends Component {
 
   componentDidMount() {
     this._isMounted = true;
+    this.setFieldValues();
   }
 
   componentWillUnmount() {
     this._isMounted = false;
+  }
+
+  setFieldValues() {
+    if (this.params.action === "edit") {
+      this.checkAndSetState(fieldsArr[0].name, this.params.requirementData.name,          fieldsArr[0].regex);
+      this.checkAndSetState(fieldsArr[1].name, this.params.requirementData.desc,          fieldsArr[1].regex);
+      this.checkAndSetState(fieldsArr[2].name, `${this.params.requirementData.estimate}`, fieldsArr[2].regex);
+      this.checkAndSetState(fieldsArr[3].name, `${this.params.requirementData.priority}`, fieldsArr[3].regex);
+      this.checkAndSetState(fieldsArr[4].name, `${this.params.requirementData.soft_cap}`, fieldsArr[4].regex);
+      this.checkAndSetState(fieldsArr[5].name, `${this.params.requirementData.hard_cap}`, fieldsArr[5].regex);
+    }
   }
 
   handleSubmit = async () => {
@@ -114,30 +126,55 @@ class CreateRequirement extends Component {
         });
       }
       else {
-        ApiCalls.createRequirement(this.params.projId, this.state.est, this.state.reqDesc, this.state.reqName, this.state.reqSoft, this.state.reqHard, this.state.reqPriority).then(response => {
-          ApiCalls.handleAPICallResult(response, this).then(apiResults => {
-            if (apiResults) {
-              let message = `Requirement "${this.state.reqName}" was added successfully!`;
-              ApiCalls.showToastsInArr([message], {
-                buttonText: "OK",
-                type: "success",
-                position: "top",
-                duration: 10 * 1000
-              });
-              Alert.alert("Requirement Added!",
-                message,
-                [
+        if (this.params.action === "edit") {
+          ApiCalls.createChangeRequest(this.params.requirementData.uid, this.state.est, this.state.reqDesc, this.state.reqName, this.state.reqSoft, this.state.reqHard, this.state.reqPriority).then(response => {
+            ApiCalls.handleAPICallResult(response, this).then(apiResults => {
+              if (apiResults) {
+                let message = `Requirement "${this.state.reqName}" was modified successfully!`;
+                ApiCalls.showToastsInArr([message], {
+                  buttonText: "OK",
+                  type: "success",
+                  position: "top",
+                  duration: 10 * 1000
+                });
+                Alert.alert("Requirement modified!", message, [
                   {
                     text: "OK", onPress: () => {
                       this.props.navigation.navigate("Requirements");
                     }
                   },
                 ]);
-            } else {
-              Alert.alert("Requirement not Added", JSON.stringify(this.state.ApiErrorsList));
-            }
+              } else {
+                Alert.alert("Requirement not modified", JSON.stringify(this.state.ApiErrorsList));
+              }
+            });
           });
-        });
+        } else {
+          ApiCalls.createRequirement(this.params.projId, this.state.est, this.state.reqDesc, this.state.reqName, this.state.reqSoft, this.state.reqHard, this.state.reqPriority).then(response => {
+            ApiCalls.handleAPICallResult(response, this).then(apiResults => {
+              if (apiResults) {
+                let message = `Requirement "${this.state.reqName}" was added successfully!`;
+                ApiCalls.showToastsInArr([message], {
+                  buttonText: "OK",
+                  type: "success",
+                  position: "top",
+                  duration: 10 * 1000
+                });
+                Alert.alert("Requirement Added!",
+                  message,
+                  [
+                    {
+                      text: "OK", onPress: () => {
+                        this.props.navigation.navigate("Requirements");
+                      }
+                    },
+                  ]);
+              } else {
+                Alert.alert("Requirement not Added", JSON.stringify(this.state.ApiErrorsList));
+              }
+            });
+          });
+        }
       }
     }
   }
@@ -186,7 +223,11 @@ class CreateRequirement extends Component {
           </Button>
         </Left>
         <Body>
-          <Title>Create Requirement</Title>
+          {
+            this.params.action === "edit" ?
+              <Title>Edit Requirement</Title> :
+              <Title>Create Requirement</Title>
+          }
         </Body>
         <Right />
       </Header>
@@ -209,7 +250,11 @@ class CreateRequirement extends Component {
                 block style={{ margin: 15, marginTop: 50 }}
                 onPress={this.handleSubmit}
               >
-                <Text>Create Requirement</Text>
+                {
+                  this.params.action === "edit" ?
+                    <Text>Edit Requirement</Text> :
+                    <Text>Create Requirement</Text>
+                }
               </Button>
             </Form>
           </Content>
