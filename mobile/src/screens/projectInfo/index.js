@@ -495,6 +495,9 @@ class ProjectInfo extends Component {
             onChangeText={(value) => this.checkAndSetState(fieldsArr[0].name, value, fieldsArr[0].regex)}
             placeholder="Enter Comment"
             onSubmitEditing={this.handleSubmit}
+            numberOfLines={5}
+            multiline={true}
+            style={{ height: 100 }}
             value={this.state[fieldsArr[0].name]}
           />
         </View>
