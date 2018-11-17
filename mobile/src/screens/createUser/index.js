@@ -1,15 +1,9 @@
 import React, { Component } from "react";
 import {
   Container,
-  Header,
-  Title,
   Content,
   Button,
-  Left,
-  Right,
-  Body,
   Text,
-  Icon,
   Input,
   Label,
   Item,
@@ -19,6 +13,7 @@ import { Alert, Platform } from "react-native";
 import styles from "./styles";
 const Auth = require("../../util/Auth");
 const ApiCalls = require("../../util/ApiCalls");
+const Render = require("../../util/Render");
 
 const fieldsArr = [
   {
@@ -102,7 +97,6 @@ class CreateUser extends Component {
     this.checkAndSetState.bind(this);
     this.getFieldValidation.bind(this);
     this.handleSubmit.bind(this);
-    this._renderHeader.bind(this);
     this._renderBody.bind(this);
     this._renderFieldEntry.bind(this);
   }
@@ -209,32 +203,15 @@ class CreateUser extends Component {
   render() {
     return (
       <Container style={styles.container}>
-        {this._renderHeader()}
+        {Render._header({
+          title: (this.params.action === "edit") ? "Edit User" : "Create User",
+          leftIcon: "ios-arrow-dropleft-circle",
+          onPress: {
+              left: () => this.props.navigation.goBack()
+          }
+        })}
         {this._renderBody()}
       </Container>
-    );
-  }
-
-  _renderHeader() {
-    return (
-      <Header>
-        <Left>
-          <Button
-            transparent
-            onPress={() => this.props.navigation.goBack()}
-          >
-            <Icon name="ios-arrow-dropleft-circle" />
-          </Button>
-        </Left>
-        <Body>
-          {
-            this.params.action === "edit" ?
-              <Title>Edit User</Title> :
-              <Title>Create User</Title>
-          }
-        </Body>
-        <Right />
-      </Header>
     );
   }
 
