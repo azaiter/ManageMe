@@ -177,7 +177,7 @@ class CreateUser extends Component {
       this.checkAndSetState(fieldsArr[2].name ,this.params.userData.email       ,fieldsArr[2].regex);
       this.checkAndSetState(fieldsArr[3].name ,this.params.userData.phone       ,fieldsArr[3].regex);
       this.checkAndSetState(fieldsArr[4].name ,this.params.userData.address     ,fieldsArr[4].regex);
-      this.checkAndSetState(fieldsArr[5].name ,this.params.userData.wage        ,fieldsArr[5].regex);
+      this.checkAndSetState(fieldsArr[5].name ,`${this.params.userData.wage}`   ,fieldsArr[5].regex);
       this.checkAndSetState(fieldsArr[6].name ,this.params.userData.username    ,fieldsArr[6].regex);
       this.checkAndSetState(fieldsArr[7].name ,"A!012345"                       ,fieldsArr[7].regex);
     }
