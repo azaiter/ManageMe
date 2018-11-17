@@ -14,16 +14,16 @@ export default {
   },
   drawerImage: {
     position: "absolute",
-    left: Platform.OS === "android" ? deviceWidth / 13 : deviceWidth / 12,
-    top: Platform.OS === "android" ? deviceHeight / 8 : deviceHeight / 7,
+    left: Platform.OS === "android" ? deviceWidth / 12 : deviceWidth / 12,
+    top: Platform.OS === "android" ? deviceHeight / 7 : deviceHeight / 7,
     width: 210,
     height: 27,
     resizeMode: "cover"
   },
   userInfo: {
     position: "absolute",
-    left: Platform.OS === "android" ? deviceWidth / 13 : deviceWidth / 12,
-    top: Platform.OS === "android" ? deviceHeight / 15 : deviceHeight / 14,
+    left: Platform.OS === "android" ? deviceWidth / 12 : deviceWidth / 12,
+    top: Platform.OS === "android" ? deviceHeight / 14 : deviceHeight / 14,
   },
   header: {
     height: deviceHeight / 3.5,
