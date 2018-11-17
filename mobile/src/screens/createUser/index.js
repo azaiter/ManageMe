@@ -122,7 +122,7 @@ class CreateUser extends Component {
 
   handleSubmit = async () => {
     if (this._isMounted) {
-      if (fieldsArr.filter(x => !this.state[x.name + "Validation"]).length > 0) {
+      if (fieldsArr.filter(x => !this.state[x.name + "Validation"]).length > 0)  {
         ApiCalls.showToastsInArr(["Some of the fields below are invalid."], {
           buttonText: "OK",
           type: "danger",
@@ -131,22 +131,41 @@ class CreateUser extends Component {
         });
       }
       else {
-        ApiCalls.createUser(this.state.firstName, this.state.lastName, this.state.email, this.state.phoneNumber, this.state.address, this.state.username, this.state.password, this.state.wage).then(response => {
-          ApiCalls.handleAPICallResult(response, this).then(apiResults => {
-            if (apiResults) {
-              let message = `User "${this.state.firstName} ${this.state.lastName}" was added successfully!`;
-              ApiCalls.showToastsInArr([message], {
-                buttonText: "OK",
-                type: "success",
-                position: "top",
-                duration: 10 * 1000
-              });
-              Alert.alert("User Added!", message);
-            } else {
-              Alert.alert("User not Added!", JSON.stringify(this.state.ApiErrorsList));
-            }
+        if (this.params.action === "edit") {
+          ApiCalls.updateUserInfo(this.state.firstName, this.state.lastName, this.state.email, this.state.phoneNumber, this.state.address, this.params.userData.uid).then(response => {
+            ApiCalls.handleAPICallResult(response, this).then(apiResults => {
+              if (apiResults) {
+                let message = `User "${this.state.firstName} ${this.state.lastName}" was modified successfully!`;
+                ApiCalls.showToastsInArr([message], {
+                  buttonText: "OK",
+                  type: "success",
+                  position: "top",
+                  duration: 10 * 1000
+                });
+                Alert.alert("User Modified!", message);
+              } else {
+                Alert.alert("User not Modified!", JSON.stringify(this.state.ApiErrorsList));
+              }
+            });
           });
-        });
+        } else {
+          ApiCalls.createUser(this.state.firstName, this.state.lastName, this.state.email, this.state.phoneNumber, this.state.address, this.state.username, this.state.password, this.state.wage).then(response => {
+            ApiCalls.handleAPICallResult(response, this).then(apiResults => {
+              if (apiResults) {
+                let message = `User "${this.state.firstName} ${this.state.lastName}" was added successfully!`;
+                ApiCalls.showToastsInArr([message], {
+                  buttonText: "OK",
+                  type: "success",
+                  position: "top",
+                  duration: 10 * 1000
+                });
+                Alert.alert("User Added!", message);
+              } else {
+                Alert.alert("User not Added!", JSON.stringify(this.state.ApiErrorsList));
+              }
+            });
+          });
+        }
       }
     }
   }
@@ -158,7 +177,9 @@ class CreateUser extends Component {
       this.checkAndSetState(fieldsArr[2].name ,this.params.userData.email       ,fieldsArr[2].regex);
       this.checkAndSetState(fieldsArr[3].name ,this.params.userData.phone       ,fieldsArr[3].regex);
       this.checkAndSetState(fieldsArr[4].name ,this.params.userData.address     ,fieldsArr[4].regex);
+      this.checkAndSetState(fieldsArr[5].name ,this.params.userData.wage        ,fieldsArr[5].regex);
       this.checkAndSetState(fieldsArr[6].name ,this.params.userData.username    ,fieldsArr[6].regex);
+      this.checkAndSetState(fieldsArr[7].name ,"A!012345"                       ,fieldsArr[7].regex);
     }
   }
 
