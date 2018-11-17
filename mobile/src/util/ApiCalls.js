@@ -362,12 +362,17 @@ export async function updateProject(projId, projName, projDesc, teamId) {
     });
 }
 
-export async function updateUser(userId, cellName, cellValue) {
+export async function updateUser(userId, firstName, lastName, email, phoneNumber, address, wage) {
     return await callFetch({
         url: "/user/update",
         body: {
             user_id: userId,
-            [cellName]: cellValue
+            first_name: firstName,
+            last_name: lastName,
+            email: email,
+            phone: phoneNumber,
+            address: address,
+            wage: wage
         }
     });
 }

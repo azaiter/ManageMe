@@ -132,7 +132,7 @@ class CreateUser extends Component {
       }
       else {
         if (this.params.action === "edit") {
-          ApiCalls.updateUserInfo(this.state.firstName, this.state.lastName, this.state.email, this.state.phoneNumber, this.state.address, this.params.userData.uid).then(response => {
+          ApiCalls.updateUser(this.params.userData.uid, this.state.firstName, this.state.lastName, this.state.email, this.state.phoneNumber, this.state.address, this.state.wage).then(response => {
             ApiCalls.handleAPICallResult(response, this).then(apiResults => {
               if (apiResults) {
                 let message = `User "${this.state.firstName} ${this.state.lastName}" was modified successfully!`;
@@ -249,7 +249,7 @@ class CreateUser extends Component {
               {this._renderFieldEntry(fieldsArr[2])}
               {this._renderFieldEntry(fieldsArr[3])}
               {this._renderFieldEntry(fieldsArr[4])}
-              {this.params.action === "edit" ? null : this._renderFieldEntry(fieldsArr[5])}
+              {this._renderFieldEntry(fieldsArr[5])}
               {this._renderFieldEntry(fieldsArr[6])}
               {this.params.action === "edit" ? null : this._renderFieldEntry(fieldsArr[7])}
               <Button
