@@ -305,12 +305,10 @@ class Users extends Component {
             <Text style={styles.modalTitle}>{userData.first_name} {userData.last_name}</Text>
             <View style={styles.modalFlex}>
               {
-                /* 
-                  setUserPermissions 
-                  permision 23
-                */
+                Auth.userHasPermission(this, 11) ?
+                this._renderModalButton(userData, "Edit User", () => { this.goToUserInfo(userData); })
+                : null
               }
-              {this._renderModalButton(userData, "Edit User", () => { this.goToUserInfo(userData); })}
               {this._renderModalButton(userData, userData.enabled ? "Disable User" : "Enable User", () => { this.enableDisableUser(userData); })}
             </View>
           </View>
