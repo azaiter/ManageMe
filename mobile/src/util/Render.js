@@ -9,9 +9,9 @@ import {
   Icon,
 } from "native-base";
 
-export function _header(opts) {
+export function ManageMe_Header(props) {
   /*
-  let opts = {
+  props = {
     title: "title",
     leftIcon: "leftIcon",
     onPress: {
@@ -21,36 +21,28 @@ export function _header(opts) {
     }
   };
   */
-  if (!opts.onPress) {
-    opts.onPress = {};
-  }
   return (
     <Header hasTabs>
       <Left>
         <Button
           transparent
-          onPress={opts.onPress.left} // this changes
+          onPress={props.onPress.left} // this changes
         >
-          <Icon name={opts.leftIcon} />
+          <Icon name={props.leftIcon} />
         </Button>
       </Left>
       <Body>
-        <Title>{opts.title}</Title>
+        <Title>{props.title}</Title>
       </Body>
       <Right>
-        {opts.onPress.add ?
-          <Button
-            transparent
-            onPress={opts.onPress.add}
-          >
-            <Icon name="ios-add-circle" />
-          </Button>
-          : null
-        }
-        {opts.onPress.refresh ?
+        {
+          props.onPress.add ? 
+            <ManageMe_BackButton onPress={props.onPress.add}>
+            </ManageMe_BackButton> : null}
+        {props.onPress.refresh ?
           <Button
               transparent
-              onPress={opts.onPress.refresh}
+              onPress={props.onPress.refresh}
             >
             <Icon name="ios-refresh-circle" />
           </Button>
@@ -58,5 +50,16 @@ export function _header(opts) {
         }
       </Right>
     </Header>
+  );
+}
+
+export function ManageMe_BackButton(props) {
+  return (
+    <Button
+      transparent
+      onPress={props.onPress.add}
+    >
+      <Icon name="ios-add-circle" />
+    </Button>
   );
 }
