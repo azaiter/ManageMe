@@ -310,10 +310,10 @@ class Requirements extends Component {
     } else if (requirementData.status === 3) {
       return (
         <View style={styles.requirementActivityView}>
-          <Button style={styles.button} rounded primary>
+          <Button style={styles.button} rounded primary onPress={ApiCalls.acceptChangeRequest(req_uid)}>
             <Text style={styles.requirementActivity}>Accept</Text>
           </Button>
-          <Button style={styles.button} rounded primary>
+          <Button style={styles.button} rounded primary onPress={ApiCalls.rejectChangeRequest(req_uid)}>
             <Text style={styles.requirementActivity}>Reject</Text>
           </Button>
         </View>
