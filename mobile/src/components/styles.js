@@ -5,6 +5,6 @@ export default {
       color: "#FFFFFF",
       textShadowColor: "#000000",
       textShadowOffset: { width: 1, height: 1 },
-      textShadowRadius: 20,
+      textShadowRadius: 5,
     }
   };
