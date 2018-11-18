@@ -20,7 +20,8 @@ class Home extends Component {
       errorsList: [],
       loggedIn: false
     };
-    Auth.setIsLoginStateOnScreenEntry(this, { navigate: "Projects" });
+    Auth.logout(this);
+    //Auth.setIsLoginStateOnScreenEntry(this, { navigate: "Projects" });
   }
 
   handleSubmit = async () => {
