@@ -283,6 +283,17 @@ class Requirements extends Component {
     }
   }
 
+  acceptRejectChangeRequest = (req_uid, action) => {
+    let functionToExec = action === "accept" ? ApiCalls.acceptChangeRequest : ApiCalls.rejectChangeRequest;
+    functionToExec(req_uid).then(response => {
+      if (this._isMounted) {
+        ApiCalls.handleAPICallResult(response, this).then(apiResults => {
+          this.assignRequirementsToState({ refresh: true });
+        });
+      }
+    });
+  }
+
   // Get Time format
   getTimeFormat(data) {
     var hrs = parseInt(Number(data), 10);
@@ -299,7 +310,7 @@ class Requirements extends Component {
             <Text style={styles.requirementActivity}>{this.clockInText(requirementData.clocked_in)}</Text>
           </Button>
           <Button style={styles.button} rounded primary
-            onPress={() => this.props.navigation.navigate("CreateRequirement", { action: "edit", requirementData })}>>
+            onPress={() => this.props.navigation.navigate("CreateRequirement", { action: "edit", requirementData })}>
             <Text style={styles.requirementActivity}>Change</Text>
           </Button>
           <Button style={styles.button} rounded primary onPress={() => this.handleSubmit_Complete(requirementData)}>
@@ -310,10 +321,10 @@ class Requirements extends Component {
     } else if (requirementData.status === 3) {
       return (
         <View style={styles.requirementActivityView}>
-          <Button style={styles.button} rounded primary>
+          <Button style={styles.button} rounded primary onPress={() => this.acceptRejectChangeRequest(requirementData.uid, "accept")}>
             <Text style={styles.requirementActivity}>Accept</Text>
           </Button>
-          <Button style={styles.button} rounded primary>
+          <Button style={styles.button} rounded primary onPress={() => this.acceptRejectChangeRequest(requirementData.uid, "reject")}>
             <Text style={styles.requirementActivity}>Reject</Text>
           </Button>
         </View>
