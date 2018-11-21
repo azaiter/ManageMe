@@ -350,14 +350,13 @@ export async function createRequirementEstimate(reqId, estAmt) {
     });
 }
 
-export async function updateProject(projId, projName, projDesc, teamId) {
+export async function updateProject(projId, projName, projDesc) {
     return await callFetch({
         url: "/project/update",
         body: {
             project_id: projId,
             project_name: projName,
-            project_desc: projDesc,
-            team_id: teamId
+            project_desc: projDesc
         }
     });
 }

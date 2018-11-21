@@ -79,6 +79,7 @@ class CreateProject extends Component {
 
   componentDidMount() {
     this._isMounted = true;
+    this.setFieldValues();
   }
 
   componentWillUnmount() {
@@ -91,11 +92,6 @@ class CreateProject extends Component {
         if (this._isMounted) {
           ApiCalls.handleAPICallResult(response, this).then(apiResults => {
             if (apiResults) {
-              if (this.params.action === "edit") {
-                this.checkAndSetState(fieldsArr[0].name, this.params.projectData.name, fieldsArr[0].regex);
-                this.checkAndSetState(fieldsArr[1].name, this.params.projectData.desc, fieldsArr[1].regex);
-                this.checkAndSetState(fieldsArr[2].name, this.params.projectData.assigned_team, fieldsArr[2].regex);
-              }
               this.setState({
                 teams: apiResults,
               });
@@ -131,7 +127,7 @@ class CreateProject extends Component {
       }
       else {
         if (this.params.action === "edit") {
-          ApiCalls.updateProject(this.params.projectData.uid, this.state.projectName, this.state.projectDesc, this.state.teamId).then(response => {
+          ApiCalls.updateProject(this.params.projectData.uid, this.state.projectName, this.state.projectDesc).then(response => {
             ApiCalls.handleAPICallResult(response, this).then(apiResults => {
               if (apiResults) {
                 let message = `Project "${this.state.projectName}" was modified successfully!`;
@@ -178,6 +174,14 @@ class CreateProject extends Component {
           });
         }
       }
+    }
+  }
+
+  setFieldValues() {
+    if (this.params.action === "edit") {
+      this.checkAndSetState(fieldsArr[0].name, this.params.projectData.name           , fieldsArr[0].regex);
+      this.checkAndSetState(fieldsArr[1].name, this.params.projectData.desc           , fieldsArr[1].regex);
+      this.checkAndSetState(fieldsArr[2].name, this.params.projectData.assigned_team  , fieldsArr[2].regex);
     }
   }
 
@@ -278,30 +282,33 @@ class CreateProject extends Component {
               />
             </Item>
             {/* Project Team */}
-            <Item stackedLabel
-              success={this.getFieldValidation(fieldsArr[2].name).success}
-              error={this.getFieldValidation(fieldsArr[2].name).error} >
-              <Label>{fieldsArr[2].label}</Label>
-              {this.state.teams === "null" ?
-                <View style={styles.warningView} >
-                  <Icon style={styles.warningIcon} name="warning" />
-                  <Text style={styles.warningText}>{this.state.ApiErrorsList}</Text>
-                </View> :
-                <Picker
-                  value={this.state[fieldsArr[2].name]}
-                  mode="dropdown"
-                  iosIcon={<Icon name="ios-arrow-down-outline" />}
-                  style={{ width: undefined }}
-                  placeholder="Select a Team"
-                  placeholderStyle={{ color: "#bfc6ea" }}
-                  placeholderIconColor="#007aff"
-                  selectedValue={this.state.teamId}
-                  onValueChange={this.onTeamSelect.bind(this)}
-                >
-                  {this.state.teams.map(team => this._renderSelectOption(team))}
-                </Picker>
-              }
-            </Item>
+            {this.params.action === "edit" ?
+              null :
+              <Item stackedLabel
+                success={this.getFieldValidation(fieldsArr[2].name).success}
+                error={this.getFieldValidation(fieldsArr[2].name).error} >
+                <Label>{fieldsArr[2].label}</Label>
+                {this.state.teams === "null" ?
+                  <View style={styles.warningView} >
+                    <Icon style={styles.warningIcon} name="warning" />
+                    <Text style={styles.warningText}>{this.state.ApiErrorsList}</Text>
+                  </View> :
+                  <Picker
+                    value={this.state[fieldsArr[2].name]}
+                    mode="dropdown"
+                    iosIcon={<Icon name="ios-arrow-down-outline" />}
+                    style={{ width: undefined }}
+                    placeholder="Select a Team"
+                    placeholderStyle={{ color: "#bfc6ea" }}
+                    placeholderIconColor="#007aff"
+                    selectedValue={this.state.teamId}
+                    onValueChange={this.onTeamSelect.bind(this)}
+                  >
+                    {this.state.teams.map(team => this._renderSelectOption(team))}
+                  </Picker>
+                }
+              </Item>
+            }
             {/* Project Description */}
             <Item floatingLabel
               success={this.getFieldValidation(fieldsArr[1].name).success}
