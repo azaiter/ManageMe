@@ -40,7 +40,7 @@ export function ManageMe_LeftButton(props) {
       <Icon name={
         (props.leftButton === "back") ?
           "ios-arrow-dropleft-circle" :
-          "ios-arrow-dropleft-circle"
+          "menu"
       }/>
     </Button>
   );
