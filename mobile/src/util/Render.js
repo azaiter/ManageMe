@@ -16,7 +16,7 @@ export function ManageMe_Header(props) {
     <Header hasTabs>
       <Left>
         <ManageMe_LeftButton
-          leftIcon={props.leftIcon} 
+          leftIcon={props.leftIcon}
           onPress={props.onPress.left}
         />
       </Left>
@@ -24,7 +24,7 @@ export function ManageMe_Header(props) {
         <Title>{props.title}</Title>
       </Body>
       <Right>
-        { props.onPress.add     ? <ManageMe_BackButton    onPress={props.onPress.add    }/> : null }
+        { props.onPress.add     ? <ManageMe_AddButton    onPress={props.onPress.add    }/> : null }
         { props.onPress.refresh ? <ManageMe_RefreshButton onPress={props.onPress.refresh}/> : null }
       </Right>
     </Header>
@@ -35,7 +35,7 @@ export function ManageMe_LeftButton(props) {
   return (
     <Button
       transparent
-      onPress={() => {props.onPress()}}
+      onPress={() => {props.onPress();}}
     >
       <Icon name={
         (props.leftButton === "back") ?
@@ -46,7 +46,7 @@ export function ManageMe_LeftButton(props) {
   );
 }
 
-export function ManageMe_BackButton(props) {
+export function ManageMe_AddButton(props) {
   return (
     <Button
       transparent
