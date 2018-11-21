@@ -11,9 +11,7 @@ import {
 } from "native-base";
 import { Alert, Platform } from "react-native";
 import styles from "./styles";
-import {
-  ManageMe_Header
-} from "../../util/Render";
+import { ManageMe_Header } from "../../util/Render";
 const Auth = require("../../util/Auth");
 const ApiCalls = require("../../util/ApiCalls");
 
