@@ -15,7 +15,10 @@ export function ManageMe_Header(props) {
   return (
     <Header hasTabs>
       <Left>
-        <ManageMe_LeftButton />
+        <ManageMe_LeftButton
+          leftIcon={props.leftIcon} 
+          onPress={props.onPress.left}
+        />
       </Left>
       <Body>
         <Title>{props.title}</Title>
@@ -32,7 +35,7 @@ export function ManageMe_LeftButton(props) {
   return (
     <Button
       transparent
-      onPress={props.onPress.left}
+      onPress={() => {props.onPress()}}
     >
       <Icon name={
         (props.leftButton === "back") ?
