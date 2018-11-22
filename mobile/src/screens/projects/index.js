@@ -15,6 +15,7 @@ import {
 } from "native-base";
 import styles from "./styles";
 import { TouchableOpacity, FlatList, TouchableWithoutFeedback } from "react-native";
+import { ManageMe_Header } from "../../util/Render";
 import Modal from "react-native-modal";
 const Auth = require("../../util/Auth");
 const ApiCalls = require("../../util/ApiCalls");
@@ -120,7 +121,15 @@ class Projects extends Component {
     this.assignProjectsToState();
     return (
       <Container style={styles.container}>
-        {this._renderHeader()}
+      <ManageMe_Header
+          title = "Projects"
+          leftIcon = "menu"
+          onPress = {{
+            left: this.props.navigation.openDrawer,
+            add: () => {this.props.navigation.navigate("CreateProject", { action: "create" });},
+            refresh: () => {this.assignProjectsToState({ refresh: true });}
+          }}
+        />
         {this._renderBody()}
       </Container>
     );

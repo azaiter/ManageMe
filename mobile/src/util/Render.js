@@ -7,56 +7,67 @@ import {
   Right,
   Body,
   Icon,
+  Text
 } from "native-base";
 
-export function _header(opts) {
-  /*
-  let opts = {
-    title: "title",
-    leftIcon: "leftIcon",
-    onPress: {
-        left: () => { console.log("do stuff"); },
-        refresh: () => { console.log("do stuff"); },
-        add: () => { console.log("do stuff"); }
-    }
-  };
-  */
-  if (!opts.onPress) {
-    opts.onPress = {};
-  }
+/** HEADER **/
+export function ManageMe_Header(props) {
   return (
     <Header hasTabs>
       <Left>
-        <Button
-          transparent
-          onPress={opts.onPress.left} // this changes
-        >
-          <Icon name={opts.leftIcon} />
-        </Button>
+        <ManageMe_Button
+          onPress={props.onPress.left}
+          iconName={
+            (props.leftIcon === "back") ?
+              "ios-arrow-dropleft-circle" :
+              "menu"
+          }
+        />
       </Left>
       <Body>
-        <Title>{opts.title}</Title>
+        <Title>{props.title}</Title>
       </Body>
       <Right>
-        {opts.onPress.add ?
-          <Button
-            transparent
-            onPress={opts.onPress.add}
-          >
-            <Icon name="ios-add-circle" />
-          </Button>
+        {props.onPress.add ?
+          <ManageMe_Button
+            onPress={props.onPress.add}
+            iconName="ios-add-circle"
+          />
           : null
         }
-        {opts.onPress.refresh ?
-          <Button
-              transparent
-              onPress={opts.onPress.refresh}
-            >
-            <Icon name="ios-refresh-circle" />
-          </Button>
+        {props.onPress.refresh ?
+          <ManageMe_Button
+            onPress={props.onPress.refresh}
+            iconName="ios-refresh-circle"
+          />
           : null
         }
       </Right>
     </Header>
+  );
+}
+
+export function ManageMe_Button(props) {
+  return (
+    <Button
+      transparent
+      onPress={() => { props.onPress(); }}
+    >
+      <Icon name={props.iconName} />
+    </Button>
+  );
+}
+
+/** BODY **/
+export function ManageMe_Body(props) {
+  return (
+    <Text>Not Yet Implemented</Text>
+  );
+}
+
+/** MODAL **/
+export function ManageMe_Modal(props) {
+  return (
+    <Text>Not Yet Implemented</Text>
   );
 }

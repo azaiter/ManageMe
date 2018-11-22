@@ -11,9 +11,9 @@ import {
 } from "native-base";
 import { Alert, Platform } from "react-native";
 import styles from "./styles";
+import { ManageMe_Header } from "../../util/Render";
 const Auth = require("../../util/Auth");
 const ApiCalls = require("../../util/ApiCalls");
-const Render = require("../../util/Render");
 
 const fieldsArr = [
   {
@@ -203,13 +203,11 @@ class CreateUser extends Component {
   render() {
     return (
       <Container style={styles.container}>
-        {Render._header({
-          title: (this.params.action === "edit") ? "Edit User" : "Create User",
-          leftIcon: "ios-arrow-dropleft-circle",
-          onPress: {
-              left: () => this.props.navigation.goBack()
-          }
-        })}
+        <ManageMe_Header
+          title = {(this.params.action === "edit") ? "Edit User" : "Create User"}
+          leftIcon = "back"
+          onPress = {{ left: this.props.navigation.goBack }}
+        />
         {this._renderBody()}
       </Container>
     );
