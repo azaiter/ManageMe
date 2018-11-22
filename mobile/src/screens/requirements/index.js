@@ -270,8 +270,10 @@ class Requirements extends Component {
       }
     });
     timeData.forEach(result => {
-      var outTime = new Date(result.out_time);
-      var inTime = new Date(result.in_time);
+      var now = new Date();
+      now.setHours(now.getHours() - 8);
+      var outTime = result.out_time === null ? now : new Date(result.out_time);
+      var inTime = result.in_time === null ? now : new Date(result.in_time);
       const time = Math.abs(outTime - inTime) / 36e5;
       timeValue.push(time);
     });

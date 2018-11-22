@@ -17,7 +17,7 @@ import {
   Picker,
   Spinner,
 } from "native-base";
-import { Alert, View } from "react-native";
+import { Alert, View, Platform } from "react-native";
 import styles from "./styles";
 const Auth = require("../../util/Auth");
 const ApiCalls = require("../../util/ApiCalls");
@@ -291,7 +291,7 @@ class CreateProject extends Component {
                   value={this.state[fieldsArr[2].name]}
                   mode="dropdown"
                   iosIcon={<Icon name="ios-arrow-down-outline" />}
-                  style={{ width: undefined }}
+                  style={{ width:(Platform.OS === "ios") ? undefined : 200 }}
                   placeholder="Select a Team"
                   placeholderStyle={{ color: "#bfc6ea" }}
                   placeholderIconColor="#007aff"
