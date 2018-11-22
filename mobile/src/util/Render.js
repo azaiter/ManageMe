@@ -58,43 +58,6 @@ export function ManageMe_Button(props) {
   );
 }
 
-/*export function ManageMe_LeftButton(props) {
-  return (
-    <Button
-      transparent
-      onPress={() => { props.onPress(); }}
-    >
-      <Icon name={
-        (props.leftButton === "back") ?
-          "ios-arrow-dropleft-circle" :
-          "menu"
-      } />
-    </Button>
-  );
-}
-
-export function ManageMe_AddButton(props) {
-  return (
-    <Button
-      transparent
-      onPress={props.onPress.add}
-    >
-      <Icon name="ios-add-circle" />
-    </Button>
-  );
-}
-
-export function ManageMe_RefreshButton(props) {
-  return (
-    <Button
-      transparent
-      onPress={props.onPress.refresh}
-    >
-      <Icon name="ios-refresh-circle" />
-    </Button>
-  );
-}*/
-
 /** BODY **/
 export function ManageMe_Body(props) {
   return (
