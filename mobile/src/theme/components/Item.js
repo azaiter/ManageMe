@@ -10,7 +10,7 @@ export default (variables = variable) => {
         top: 8
       },
       "NativeBase.Label": {
-        top: 8
+        paddingTop: 5
       },
       "NativeBase.Icon": {
         top: 6
