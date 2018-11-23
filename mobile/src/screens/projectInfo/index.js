@@ -15,10 +15,11 @@ import {
   Text,
   Card,
   Input,
+  Spinner,
 } from "native-base";
 import styles from "./styles";
 import { FlatList, Alert } from "react-native";
-import { _DisplayError, _LoadingScreen } from "../../util/Render";
+import { ManageMe_DisplayError } from "../../util/Render";
 const Auth = require("../../util/Auth");
 const ApiCalls = require("../../util/ApiCalls");
 const HandleError = require("../../util/HandleError");
@@ -59,6 +60,7 @@ class ProjectInfo extends Component {
     this.getInitialPage.bind(this);
     this._renderHeader.bind(this);
     this._renderTabs.bind(this);
+    this._renderLoadingScreen.bind(this);
     this._renderProjectInfo.bind(this);
     this._renderProject.bind(this);
     this._renderRequirementButton.bind(this);
@@ -302,6 +304,15 @@ class ProjectInfo extends Component {
     );
   }
 
+  // Render loading screen
+  _renderLoadingScreen() {
+    return (
+      <Content padder>
+        <Spinner color="blue" />
+      </Content>
+    );
+  }
+
   // Render Tabs
   _renderTabs() {
     if (this.getRenderFromState()) {
@@ -316,7 +327,7 @@ class ProjectInfo extends Component {
         </Tabs>
       );
     } else {
-      return <_LoadingScreen />;
+      return this._renderLoadingScreen();
     }
   }
 
@@ -324,7 +335,7 @@ class ProjectInfo extends Component {
   _renderProjectInfo() {
     return (
       <Content padder>
-        {this.state.ApiErrors ? <_DisplayError ApiErrorsList={this.state.ApiErrors} /> :
+        {this.state.ApiErrors ? <ManageMe_DisplayError ApiErrorsList={this.state.ApiErrors} /> :
           <FlatList
             style={styles.container}
             data={this.state.projectInfo}
