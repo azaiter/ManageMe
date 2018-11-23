@@ -1,13 +1,7 @@
 import React, { Component } from "react";
 import {
   Container,
-  Header,
-  Title,
   Content,
-  Button,
-  Left,
-  Right,
-  Body,
   Text,
   Icon,
   View,
@@ -15,10 +9,11 @@ import {
 } from "native-base";
 import styles from "./styles";
 import { TouchableOpacity, FlatList, TouchableWithoutFeedback } from "react-native";
-import { ManageMe_Header } from "../../util/Render";
+import { ManageMe_Header, ManageMe_DisplayError } from "../../util/Render";
 import Modal from "react-native-modal";
 const Auth = require("../../util/Auth");
 const ApiCalls = require("../../util/ApiCalls");
+const HandleError = require("../../util/HandleError");
 
 class Projects extends Component {
   _isMounted = false;
@@ -32,7 +27,6 @@ class Projects extends Component {
     Auth.userHasPermission.bind(this);
     this.assignProjectsToState.bind(this);
     this.getRenderFromState.bind(this);
-    this._renderHeader.bind(this);
     this._renderBody.bind(this);
     this._renderLoadingScreen.bind(this);
     this._renderProjectData.bind(this);
@@ -43,7 +37,7 @@ class Projects extends Component {
   }
 
   // Refresh the page when coming from a back navigation event.
-  willFocus = this.props.navigation.addListener("willFocus", payload => {
+  willFocus = this.props.navigation.addListener("willFocus", () => {
     this.assignProjectsToState({ refresh: true });
   });
 
@@ -67,7 +61,7 @@ class Projects extends Component {
           projectsList: apiResults
         });
       }, error => {
-        console.log(error);
+        HandleError.handleError(this, error);
       });
     }
   }
@@ -136,49 +130,19 @@ class Projects extends Component {
     );
   }
 
-  // Render Header
-  _renderHeader() {
-    return (
-      <Header>
-        <Left>
-          <Button
-            transparent
-            onPress={() => this.props.navigation.openDrawer()}
-          >
-            <Icon name="menu" />
-          </Button>
-        </Left>
-        <Body>
-          <Title>Projects</Title>
-        </Body>
-        <Right>
-          <Button
-            transparent
-            onPress={() => this.props.navigation.navigate("CreateProject", { action: "create" })}
-          >
-            <Icon name="ios-add-circle" />
-          </Button>
-          <Button
-            transparent
-            onPress={() => this.assignProjectsToState({ refresh: true })}
-          >
-            <Icon name="ios-refresh-circle" />
-          </Button>
-        </Right>
-      </Header>
-    );
-  }
-
   // Render Body
   _renderBody() {
     if (this.getRenderFromState()) {
       return (
         <Content padder>
-          <FlatList
-            style={styles.container}
-            data={this.state.projectsList}
-            renderItem={data => this._renderProjectData(data.item)}
-          />
+          {this.state.ApiErrors ? <ManageMe_DisplayError
+            ApiErrorsList={this.state.ApiErrors} />
+            : <FlatList
+              style={styles.container}
+              data={this.state.projectsList}
+              renderItem={data => this._renderProjectData(data.item)}
+            />}
+
         </Content>
       );
     } else {

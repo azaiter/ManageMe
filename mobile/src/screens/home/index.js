@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { ImageBackground, View, StatusBar } from "react-native";
 import { Container, Button, Text, Content, Form, Item, Label, Input } from "native-base";
-
+import { ManageMe_DisplayError } from "../../util/Render";
 import styles from "./styles";
 
 const launchscreenBg = require("../../../assets/launchscreen-bg.png");
@@ -21,8 +21,8 @@ class Home extends Component {
       errorsList: [],
       loggedIn: false
     };
-    //Auth.logout(this);
-    Auth.setIsLoginStateOnScreenEntry(this, { navigate: "Projects" });
+    Auth.logout(this);
+    //Auth.setIsLoginStateOnScreenEntry(this, { navigate: "Projects" });
   }
 
   handleSubmit = async () => {
@@ -41,6 +41,9 @@ class Home extends Component {
 
   render() {
     let loginForm = <Form>
+      {this.state.ApiErrors ? <ManageMe_DisplayError
+      ApiErrorsList = {this.state.ApiErrors}
+      /> : null }
       <Item floatingLabel>
         <Label>Username</Label>
         <Input name="username"

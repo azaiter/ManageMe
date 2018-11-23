@@ -8,7 +8,7 @@ let showToastsInArr = function (arr, params = {}) {
       position: params.position || "top",
       duration: params.duration || 5000
     });
-}
+};
 
 export async function handleError(component, result) {
   if (result.ApiErr) {
