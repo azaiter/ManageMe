@@ -70,9 +70,9 @@ export function ManageMe_Body(props) {
 
 export function ManageMe_DisplayError(props) {
   return (
-    <View style={{alignItems:"center"}} >
-      <Icon style={{fontSize: 40, color:"orange"}} name="warning" />
-      <Text style={{fontWeight: "bold", fontSize: 22, color:"orange"}}>{props.ApiErrorsList}</Text>
+    <View style={{ alignItems: "center" }} >
+      <Icon style={{ fontSize: 40, color: "orange" }} name="warning" />
+      <Text style={{ fontWeight: "bold", fontSize: 22, color: "orange" }}>{props.ApiErrorsList}</Text>
     </View>
   );
 }

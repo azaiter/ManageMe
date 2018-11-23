@@ -26,17 +26,15 @@ class Home extends Component {
 
   handleSubmit = async () => {
     this.setState({ isLoading: true });
-    ApiCalls.getToken(this, {
+    ApiCalls.getToken({
       user: this.state.username,
       pass: this.state.password
     }).then(apiResults => {
-      if (apiResults) {
-        Auth.setLocalToken(apiResults);
-        this.setState({ loggedIn: true });
-        this.props.navigation.navigate("Projects");
-      }
-    }).catch(err => {
-      console.log(err);
+      Auth.setLocalToken(apiResults);
+      this.setState({ loggedIn: true });
+      this.props.navigation.navigate("Projects");
+    }, error => {
+      console.log(error);
     });
   }
 
