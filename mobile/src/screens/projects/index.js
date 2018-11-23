@@ -57,25 +57,15 @@ class Projects extends Component {
 
   // Retrieve project list from API and assign to state.
   assignProjectsToState(opts = { refresh: false }) {
-    if ((this.state && this.state.loggedIn) && (!this.state.projectsList || opts.refresh)) {
-      ApiCalls.getProjects().then(response => {
-        if (this._isMounted) {
-          ApiCalls.handleAPICallResult(response, this).then(apiResults => {
-            if (apiResults) {
-              apiResults.forEach(result => {
-                result.modalVisible = false;
-                result.key = result.uid.toString() + "_" + result.modalVisible.toString();
-              });
-              this.setState({
-                projectsList: apiResults
-              });
-            } else {
-              this.setState({
-                projectsList: "null"
-              });
-            }
-          });
-        }
+    if ((this.state && this.state.loggedIn && this._isMounted) && (!this.state.projectsList || opts.refresh)) {
+      ApiCalls.getProjects(this).then(apiResults => {
+        apiResults.forEach(result => {
+          result.modalVisible = false;
+          result.key = result.uid.toString() + "_" + result.modalVisible.toString();
+        });
+        this.setState({
+          projectsList: apiResults
+        });
       });
     }
   }

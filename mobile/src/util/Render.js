@@ -1,7 +1,9 @@
 import React from "react";
 import {
+  StyleSheet,
   Header,
   Title,
+  View,
   Button,
   Left,
   Right,
@@ -9,6 +11,24 @@ import {
   Icon,
   Text
 } from "native-base";
+
+/** STYLESHEET **/
+const styles = StyleSheet.create({
+  warningIcon: {
+    fontSize: 40,
+    color:"orange"
+  },
+
+  warningText: {
+    fontWeight: "bold",
+    fontSize: 22,
+    color:"orange"
+  },
+
+  warningView: {
+    alignItems:"center"
+  },
+});
 
 /** HEADER **/
 export function ManageMe_Header(props) {
@@ -62,6 +82,15 @@ export function ManageMe_Button(props) {
 export function ManageMe_Body(props) {
   return (
     <Text>Not Yet Implemented</Text>
+  );
+}
+
+export function ManageMe_DisplayError(props) {
+  return (
+    <View style={styles.warningView} >
+      <Icon style={styles.warningIcon} name="warning" />
+      <Text style={styles.warningText}>{props.ApiErrorsList}</Text>
+    </View>
   );
 }
 
