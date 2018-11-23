@@ -66,6 +66,8 @@ class Projects extends Component {
         this.setState({
           projectsList: apiResults
         });
+      }).catch(err => {
+        console.log(err);
       });
     }
   }
@@ -111,13 +113,13 @@ class Projects extends Component {
     this.assignProjectsToState();
     return (
       <Container style={styles.container}>
-      <ManageMe_Header
-          title = "Projects"
-          leftIcon = "menu"
-          onPress = {{
+        <ManageMe_Header
+          title="Projects"
+          leftIcon="menu"
+          onPress={{
             left: this.props.navigation.openDrawer,
-            add: () => {this.props.navigation.navigate("CreateProject", { action: "create" });},
-            refresh: () => {this.assignProjectsToState({ refresh: true });}
+            add: () => { this.props.navigation.navigate("CreateProject", { action: "create" }); },
+            refresh: () => { this.assignProjectsToState({ refresh: true }); }
           }}
         />
         {this._renderBody()}
@@ -172,17 +174,11 @@ class Projects extends Component {
     if (this.getRenderFromState()) {
       return (
         <Content padder>
-          {this.state.projectsList === "null" ?
-            <View style={styles.warningView} >
-              <Icon style={styles.warningIcon} name="warning" />
-              <Text style={styles.warningText}>{this.state.ApiErrorsList}</Text>
-            </View> :
-            <FlatList
-              style={styles.container}
-              data={this.state.projectsList}
-              renderItem={data => this._renderProjectData(data.item)}
-            />
-          }
+          <FlatList
+            style={styles.container}
+            data={this.state.projectsList}
+            renderItem={data => this._renderProjectData(data.item)}
+          />
         </Content>
       );
     } else {

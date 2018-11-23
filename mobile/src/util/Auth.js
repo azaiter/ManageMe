@@ -83,12 +83,13 @@ export async function setUserPermissionsOnComponent(component) {
         if (!permissionsObj) {
             let localToken = await getLocalToken();
             //console.log("doing api call permissions")
-            let apiResult = await ApiCalls.getUserPerms(localToken.uid);
-            let handledApiResults = await ApiCalls.handleAPICallResult(apiResult, component);
-            if (handledApiResults) {
-                //console.log("UserPermissions: ", handledApiResults);
-                permissionsObj = handledApiResults;
-            }
+            ApiCalls.getUserPerms(this, {
+                userId: localToken.uid
+              }).then(apiResults => {
+                if (apiResults) {
+                    permissionsObj = apiResults;
+                }
+              });
         }
         if (component && component.state && !component.state.userPermissions) {
             //console.log("setting state main");

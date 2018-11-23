@@ -3,17 +3,18 @@ const Auth = require("../util/Auth");
 
 import { Toast } from "native-base";
 
-let callHandler = async function(component, params) {
+let callHandler = async function (component, params) {
     return new Promise((resolve, reject) => {
         callFetch(params).then(result => {
             if (result[1] !== 200) {
                 handleError(component, result[0]);
-                reject({err: result[1]});
+                reject({ err: result[0] });
             } else {
                 resolve(result[0]);
             }
         }).catch(err => {
-            reject({err: err.message});
+            handleError(component, err.message);
+            reject({ err: err.message });
         });
     });
 };
@@ -23,14 +24,16 @@ let callFetch = async function (params) {
         let tok = await Auth.getLocalToken();
         let bodyObj = (params.body) ? params.body : params;
         let json = {};
-        if (bodyObj.paramArr) {
-            if (bodyObj.paramArr.constructor === Array) {
-                bodyObj.paramArr = [tok.token].concat(bodyObj.paramArr);
+        if (!params.tok) {
+            if (bodyObj.paramArr) {
+                if (bodyObj.paramArr.constructor === Array) {
+                    bodyObj.paramArr = [tok.token].concat(bodyObj.paramArr);
+                } else {
+                    bodyObj.paramArr = [tok.token];
+                }
             } else {
-                bodyObj.paramArr = [tok.token];
+                bodyObj.token = tok.token;
             }
-        } else {
-            bodyObj.token = tok.token;
         }
         if (params.body) {
             Object.assign(bodyObj, params.body);
@@ -43,7 +46,7 @@ let callFetch = async function (params) {
         try {
             json = await res.json();
         } catch (e) {
-            json = {err: e.message};
+            json = { err: e.message };
         }
         return [json, res.status || 501];
     }
@@ -58,7 +61,7 @@ let getErrorsListFromObj = function getErrorsListFromObj(obj) {
         }
     }
     return arrToReturn;
-}
+};
 
 let showToastsInArr = function (arr, params = {}) {
     arr.forEach(message => {
@@ -70,36 +73,33 @@ let showToastsInArr = function (arr, params = {}) {
             duration: params.duration || 5000
         });
     });
-}
+};
 
 let handleError = function (component, result) {
-    let errorsArr = getErrorsListFromObj(result[0]);
+    let errorsArr = getErrorsListFromObj(result);
     component.setState({ ApiErrorsList: errorsArr });
     showToastsInArr(errorsArr);
-}
+};
 
-export async function getToken(user, pass) {
-    const res = await fetch(apiURL + "/user/login", {
-        method: "POST",
-        headers:
-            { "content-type": "application/json" },
-        body: JSON.stringify({
-            username: user,
-            password: pass,
-        }),
+export async function getToken(component, params) {
+    return await callHandler(component, {
+        url: "/user/login",
+        tok: true,
+        body: {
+            username: params.user,
+            password: params.pass,
+        }
     });
-    const json = await res.json();
-    return [json, res.status];
 }
 
-export async function getTime() {
-    return await callHandler({
+export async function getTime(component) {
+    return await callHandler(component, {
         url: "/clock/get"
     });
 }
 
 export async function clockIn(component, params) {
-    return await callHandler({
+    return await callHandler(component, {
         url: "/clock/in",
         body: {
             req_id: params.reqID
@@ -108,7 +108,7 @@ export async function clockIn(component, params) {
 }
 
 export async function clockOut(component, params) {
-    return await callHandler({
+    return await callHandler(component, {
         url: "/clock/out",
         body: {
             req_id: params.reqID
@@ -117,7 +117,7 @@ export async function clockOut(component, params) {
 }
 
 export async function getEstimate(component, params) {
-    return await callHandler({
+    return await callHandler(component, {
         url: "/project/estimate/get",
         body: {
             project_id: params.projId
@@ -126,7 +126,7 @@ export async function getEstimate(component, params) {
 }
 
 export async function getRequirementEstimates(component, params) {
-    return await callHandler({
+    return await callHandler(component, {
         url: "/requirement/estimate/get",
         body: {
             req_id: params.reqId
@@ -135,7 +135,7 @@ export async function getRequirementEstimates(component, params) {
 }
 
 export async function getTimeCaps(component, params) {
-    return await callHandler({
+    return await callHandler(component, {
         url: "/project/timecaps/get",
         body: {
             project_id: params.projId
@@ -144,13 +144,13 @@ export async function getTimeCaps(component, params) {
 }
 
 export async function getProjects(component) {
-    return await callHandler({
+    return await callHandler(component, {
         url: "/project/get"
     });
 }
 
 export async function getProjectHours(component, params) {
-    return await callHandler({
+    return await callHandler(component, {
         url: "/project/hours/get",
         body: {
             uid: params.projId
@@ -159,7 +159,7 @@ export async function getProjectHours(component, params) {
 }
 
 export async function getMyInfo(component) {
-    return await callHandler({
+    return await callHandler(component, {
         url: "/util/custom",
         body: {
             spName: "sp_getMyInfo"
@@ -168,7 +168,7 @@ export async function getMyInfo(component) {
 }
 
 export async function getUserInfoByUserId(component, params) {
-    return await callHandler({
+    return await callHandler(component, {
         url: "/user/get",
         body: {
             userID: params.userId
@@ -177,13 +177,13 @@ export async function getUserInfoByUserId(component, params) {
 }
 
 export async function getUserInfo(component) {
-    return await callHandler({
+    return await callHandler(component, {
         url: "/user/get"
     });
 }
 
 export async function getRequirementById(component, params) {
-    return await callHandler({
+    return await callHandler(component, {
         url: "/requirement/get",
         body: {
             reqID: params.reqId
@@ -192,13 +192,13 @@ export async function getRequirementById(component, params) {
 }
 
 export async function getRequirements(component) {
-    return await callHandler({
+    return await callHandler(component, {
         url: "/requirement/get"
     });
 }
 
 export async function getTeamById(component, params) {
-    return await callHandler({
+    return await callHandler(component, {
         url: "/team/get",
         body: {
             teamID: params.teamId
@@ -207,13 +207,13 @@ export async function getTeamById(component, params) {
 }
 
 export async function getTeams(component) {
-    return await callHandler({
+    return await callHandler(component, {
         url: "/team/get"
     });
 }
 
 export async function getRequirementsByProjectId(component, params) {
-    return await callHandler({
+    return await callHandler(component, {
         url: "/project/req/get",
         body: {
             project_uid: params.projectId
@@ -222,7 +222,7 @@ export async function getRequirementsByProjectId(component, params) {
 }
 
 export async function getAllPerms(component) {
-    return await callHandler({
+    return await callHandler(component, {
         url: "/privilage/get"
     });
 }
@@ -230,12 +230,10 @@ export async function getAllPerms(component) {
 import "babel-polyfill";
 
 export async function createUser(component, params) {
-    // callHandler incompatible
-    const res = await fetch(apiURL + "/user/create", {
-        method: "POST",
-        headers:
-            { "content-type": "application/json" },
-        body: JSON.stringify({
+    return await callHandler(component, {
+        url: "/user/create",
+        tok: true,
+        body: {
             first_name: params.first,
             last_name: params.last,
             email: params.mail,
@@ -244,14 +242,12 @@ export async function createUser(component, params) {
             username: params.user,
             password: params.pass,
             wage: params.wage
-        }),
+        }
     });
-    const json = await res.json();
-    return [json, res.status];
 }
 
 export async function createProject(component, params) {
-    return await callHandler({
+    return await callHandler(component, {
         url: "/project/create",
         body: {
             project_name: params.projectName,
@@ -262,7 +258,7 @@ export async function createProject(component, params) {
 }
 
 export async function createTeam(component, params) {
-    return await callHandler({
+    return await callHandler(component, {
         url: "/team/create",
         body: {
             team_name: params.teamName,
@@ -272,7 +268,7 @@ export async function createTeam(component, params) {
 }
 
 export async function deleteTeam(component, params) {
-    return await callHandler({
+    return await callHandler(component, {
         url: "/team/delete",
         body: {
             team_id: params.teamId
@@ -281,7 +277,7 @@ export async function deleteTeam(component, params) {
 }
 
 export async function assignPrivilage(component, params) {
-    return await callHandler({
+    return await callHandler(component, {
         url: "/privilage/assign",
         body: {
             privilage_id: params.privilageId,
@@ -291,7 +287,7 @@ export async function assignPrivilage(component, params) {
 }
 
 export async function revokePrivilage(component, params) {
-    return await callHandler({
+    return await callHandler(component, {
         url: "/privilage/revoke",
         body: {
             privilage_id: params.privilageId,
@@ -301,7 +297,7 @@ export async function revokePrivilage(component, params) {
 }
 
 export async function disableUser(component, params) {
-    return await callHandler({
+    return await callHandler(component, {
         url: "/user/disable",
         body: {
             user_id: params.userId
@@ -310,7 +306,7 @@ export async function disableUser(component, params) {
 }
 
 export async function createRequirement(component, params) {
-    return await callHandler({
+    return await callHandler(component, {
         url: "/requirement/create",
         body: {
             proj_id: params.projId,
@@ -325,7 +321,7 @@ export async function createRequirement(component, params) {
 }
 
 export async function removeUserFromTeam(component, params) {
-    return await callHandler({
+    return await callHandler(component, {
         url: "/team/member/delete",
         body: {
             teamID: params.teamId,
@@ -335,7 +331,7 @@ export async function removeUserFromTeam(component, params) {
 }
 
 export async function addUserToTeam(component, params) {
-    return await callHandler({
+    return await callHandler(component, {
         url: "/team/member/create",
         body: {
             teamID: params.teamId,
@@ -345,7 +341,7 @@ export async function addUserToTeam(component, params) {
 }
 
 export async function getTeamMembers(component, params) {
-    return await callHandler({
+    return await callHandler(component, {
         url: "/team/member/get",
         body: {
             teamID: params.teamId
@@ -354,7 +350,7 @@ export async function getTeamMembers(component, params) {
 }
 
 export async function createRequirementEstimate(component, params) {
-    return await callHandler({
+    return await callHandler(component, {
         url: "/requirement/estimate/create",
         body: {
             reqID: params.reqId,
@@ -364,7 +360,7 @@ export async function createRequirementEstimate(component, params) {
 }
 
 export async function updateProject(component, params) {
-    return await callHandler({
+    return await callHandler(component, {
         url: "/project/update",
         body: {
             project_id: params.projId,
@@ -375,7 +371,7 @@ export async function updateProject(component, params) {
 }
 
 export async function updateUser(component, params) {
-    return await callHandler({
+    return await callHandler(component, {
         url: "/user/update",
         body: {
             user_id: params.userId,
@@ -390,7 +386,7 @@ export async function updateUser(component, params) {
 }
 
 export async function deleteProject(component, params) {
-    return await callHandler({
+    return await callHandler(component, {
         url: "/project/delete",
         body: {
             project_id: params.projectId
@@ -399,7 +395,7 @@ export async function deleteProject(component, params) {
 }
 
 export async function deleteReq(component, params) {
-    return await callHandler({
+    return await callHandler(component, {
         url: "/req/delete",
         body: {
             req_id: params.reqId
@@ -408,7 +404,7 @@ export async function deleteReq(component, params) {
 }
 
 export async function deleteUser(component, params) {
-    return await callHandler({
+    return await callHandler(component, {
         url: "/user/delete",
         body: {
             user_id: params.userId
@@ -417,7 +413,7 @@ export async function deleteUser(component, params) {
 }
 
 export async function updateRequirement(component, params) {
-    return await callHandler({
+    return await callHandler(component, {
         url: "/req/update",
         body: {
             req_id: params.eqId,
@@ -427,7 +423,7 @@ export async function updateRequirement(component, params) {
 }
 
 export async function getRecentRequirements(component) {
-    return await callHandler({
+    return await callHandler(component, {
         url: "/util/custom",
         body: {
             spName: "sp_getRecentReqs"
@@ -435,7 +431,7 @@ export async function getRecentRequirements(component) {
     });
 }
 export async function enabledDisableUser(component, params) {
-    return await callHandler({
+    return await callHandler(component, {
         url: "/util/custom",
         body: {
             paramArr: [params.userId, params.enabled],
@@ -445,22 +441,18 @@ export async function enabledDisableUser(component, params) {
 }
 
 export async function completeReq(component, params) {
-    // callHandler incompatible
-    const res = await fetch(apiURL + "/util/custom", {
-        method: "POST",
-        headers:
-            { "content-type": "application/json" },
-        body: JSON.stringify({
+    return await callHandler(component, {
+        url: "/util/custom",
+        tok: true,
+        body: {
             paramArr: [params.req],
             spName: "sp_completeReq",
-        }),
+        }
     });
-    const json = await res.json();
-    return [json, res.status];
 }
 
 export async function getProjectInfo(component, params) {
-    return await callHandler({
+    return await callHandler(component, {
         url: "/util/custom",
         body: {
             paramArr: [params.proj_id],
@@ -470,7 +462,7 @@ export async function getProjectInfo(component, params) {
 }
 
 export async function getProjectsWithApproval(component) {
-    return await callHandler({
+    return await callHandler(component, {
         url: "/util/custom",
         body: {
             paramArr: true,
@@ -480,7 +472,7 @@ export async function getProjectsWithApproval(component) {
 }
 
 export async function getAllTeams(component) {
-    return await callHandler({
+    return await callHandler(component, {
         url: "/util/custom",
         body: {
             paramArr: true,
@@ -490,7 +482,7 @@ export async function getAllTeams(component) {
 }
 
 export async function getRecentProjects(component) {
-    return await callHandler({
+    return await callHandler(component, {
         url: "/util/custom",
         body: {
             paramArr: true,
@@ -500,7 +492,7 @@ export async function getRecentProjects(component) {
 }
 
 export async function getRecentActivity(component) {
-    return await callHandler({
+    return await callHandler(component, {
         url: "/util/custom",
         body: {
             paramArr: true,
@@ -510,7 +502,7 @@ export async function getRecentActivity(component) {
 }
 
 export async function updateUserInfo(component, params) {
-    return await callHandler({
+    return await callHandler(component, {
         url: "/util/custom",
         body: {
             paramArr: [
@@ -527,7 +519,7 @@ export async function updateUserInfo(component, params) {
 }
 
 export async function getDashboardCardInfo(component, params) {
-    return await callHandler({
+    return await callHandler(component, {
         url: "/user/systeminfo/get",
         body: {
             user_uid: params.uid
@@ -536,7 +528,7 @@ export async function getDashboardCardInfo(component, params) {
 }
 
 export async function createChangeRequest(component, params) {
-    return await callHandler({
+    return await callHandler(component, {
         url: "/req/changerequest/create",
         body: {
             OldreqID: params.OldreqID,
@@ -551,7 +543,7 @@ export async function createChangeRequest(component, params) {
 }
 
 export async function acceptChangeRequest(component, params) {
-    return await callHandler({
+    return await callHandler(component, {
         url: "/req/changerequest/accept",
         body: {
             reqID: params.reqID
@@ -560,7 +552,7 @@ export async function acceptChangeRequest(component, params) {
 }
 
 export async function rejectChangeRequest(component, params) {
-    return await callHandler({
+    return await callHandler(component, {
         url: "/req/changerequest/reject",
         body: {
             reqID: params.reqID
@@ -569,13 +561,13 @@ export async function rejectChangeRequest(component, params) {
 }
 
 export async function getWeeklyHours(component) {
-    return await callHandler({
+    return await callHandler(component, {
         url: "/clock/weeklyhrs/get"
     });
 }
 
 export async function makeTeamLead(component, params) {
-    return await callHandler({
+    return await callHandler(component, {
         url: "/team/member/lead",
         body: {
             teamID: params.teamId,
@@ -585,7 +577,7 @@ export async function makeTeamLead(component, params) {
 }
 
 export async function getUserPerms(component, params) {
-    return await callHandler({
+    return await callHandler(component, {
         url: "/privilage/get",
         body: {
             user_id: params.userId
@@ -594,7 +586,7 @@ export async function getUserPerms(component, params) {
 }
 
 export async function addProjectComment(component, params) {
-    return await callHandler({
+    return await callHandler(component, {
         url: "/project/comments/add",
         body: {
             projID: params.projID,
@@ -604,7 +596,7 @@ export async function addProjectComment(component, params) {
 }
 
 export async function addReqComment(component, params) {
-    return await callHandler({
+    return await callHandler(component, {
         url: "/req/comments/add",
         body: {
             reqID: params.reqID,
@@ -614,7 +606,7 @@ export async function addReqComment(component, params) {
 }
 
 export async function getProjectComments(component, params) {
-    return await callHandler({
+    return await callHandler(component, {
         url: "/project/comments/get",
         body: {
             projID: params.projID
@@ -623,7 +615,7 @@ export async function getProjectComments(component, params) {
 }
 
 export async function getReqComments(component, params) {
-    return await callHandler({
+    return await callHandler(component, {
         url: "/req/comments/get",
         body: {
             reqID: params.reqID
@@ -632,7 +624,7 @@ export async function getReqComments(component, params) {
 }
 
 export async function getTeamReport(component, params) {
-    return await callHandler({
+    return await callHandler(component, {
         url: "/user/wage/get",
         body: {
             teamID: params.teamId

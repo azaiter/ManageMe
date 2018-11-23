@@ -26,14 +26,17 @@ class Home extends Component {
 
   handleSubmit = async () => {
     this.setState({ isLoading: true });
-    ApiCalls.getToken(this.state.username, this.state.password).then(response => {
-      ApiCalls.handleAPICallResult(response, this).then(apiResults => {
-        if (apiResults) {
-          Auth.setLocalToken(apiResults);
-          this.setState({ loggedIn: true });
-          this.props.navigation.navigate("Projects");
-        }
-      });
+    ApiCalls.getToken(this, {
+      user: this.state.username,
+      pass: this.state.password
+    }).then(apiResults => {
+      if (apiResults) {
+        Auth.setLocalToken(apiResults);
+        this.setState({ loggedIn: true });
+        this.props.navigation.navigate("Projects");
+      }
+    }).catch(err => {
+      console.log(err);
     });
   }
 
@@ -64,7 +67,7 @@ class Home extends Component {
     </Form>;
 
     let signedInForm =
-      <Button block success style={styles.mb15} onPress={() => { this.props.navigation.openDrawer();}}>
+      <Button block success style={styles.mb15} onPress={() => { this.props.navigation.openDrawer(); }}>
         <Text>You are logged in, Click to View Menu</Text>
       </Button>;
 
