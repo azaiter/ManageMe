@@ -7,6 +7,7 @@ import styles from "./styles";
 const launchscreenBg = require("../../../assets/launchscreen-bg.png");
 const launchscreenLogo = require("../../../assets/logo-kitchen-sink.png");
 const ApiCalls = require("../../util/ApiCalls");
+const HandleError = require("../../util/HandleError");
 const Auth = require("../../util/Auth");
 
 class Home extends Component {
@@ -20,8 +21,8 @@ class Home extends Component {
       errorsList: [],
       loggedIn: false
     };
-    Auth.logout(this);
-    //Auth.setIsLoginStateOnScreenEntry(this, { navigate: "Projects" });
+    //Auth.logout(this);
+    Auth.setIsLoginStateOnScreenEntry(this, { navigate: "Projects" });
   }
 
   handleSubmit = async () => {
@@ -34,7 +35,7 @@ class Home extends Component {
       this.setState({ loggedIn: true });
       this.props.navigation.navigate("Projects");
     }, error => {
-      console.log(error);
+      HandleError.handleError(this, error);
     });
   }
 
