@@ -11,7 +11,7 @@ import {
 } from "native-base";
 import { Alert, Platform } from "react-native";
 import styles from "./styles";
-import { ManageMe_Header } from "../../util/Render";
+import { _Header } from "../../util/Render";
 const Auth = require("../../util/Auth");
 const ApiCalls = require("../../util/ApiCalls");
 
@@ -203,7 +203,7 @@ class CreateUser extends Component {
   render() {
     return (
       <Container style={styles.container}>
-        <ManageMe_Header
+        <_Header
           title = {(this.params.action === "edit") ? "Edit User" : "Create User"}
           leftIcon = "back"
           onPress = {{ left: this.props.navigation.goBack }}

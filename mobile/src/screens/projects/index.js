@@ -9,7 +9,7 @@ import {
 } from "native-base";
 import styles from "./styles";
 import { TouchableOpacity, FlatList, TouchableWithoutFeedback } from "react-native";
-import { ManageMe_Header, ManageMe_DisplayError } from "../../util/Render";
+import { _Header, _DisplayError } from "../../util/Render";
 import Modal from "react-native-modal";
 const Auth = require("../../util/Auth");
 const ApiCalls = require("../../util/ApiCalls");
@@ -107,7 +107,7 @@ class Projects extends Component {
     this.assignProjectsToState();
     return (
       <Container style={styles.container}>
-        <ManageMe_Header
+        <_Header
           title="Projects"
           leftIcon="menu"
           onPress={{
@@ -135,14 +135,13 @@ class Projects extends Component {
     if (this.getRenderFromState()) {
       return (
         <Content padder>
-          {this.state.ApiErrors ? <ManageMe_DisplayError
-            ApiErrorsList={this.state.ApiErrors} />
-            : <FlatList
+          {this.state.ApiErrors ? <_DisplayError ApiErrorsList={this.state.ApiErrors} /> :
+            <FlatList
               style={styles.container}
               data={this.state.projectsList}
               renderItem={data => this._renderProjectData(data.item)}
-            />}
-
+            />
+          }
         </Content>
       );
     } else {
