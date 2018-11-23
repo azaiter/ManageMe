@@ -8,17 +8,20 @@ import {
   Right,
   Body,
   Icon,
-  Text
+  Text,
+  Content,
+  Spinner
 } from "native-base";
 
-
+import { TouchableWithoutFeedback, TouchableOpacity } from "react-native";
+import Modal from "react-native-modal";
 
 /** HEADER **/
-export function ManageMe_Header(props) {
+export function _Header(props) {
   return (
     <Header hasTabs>
       <Left>
-        <ManageMe_Button
+        <_Button
           onPress={props.onPress.left}
           iconName={
             (props.leftIcon === "back") ?
@@ -32,14 +35,14 @@ export function ManageMe_Header(props) {
       </Body>
       <Right>
         {props.onPress.add ?
-          <ManageMe_Button
+          <_Button
             onPress={props.onPress.add}
             iconName="ios-add-circle"
           />
           : null
         }
         {props.onPress.refresh ?
-          <ManageMe_Button
+          <_Button
             onPress={props.onPress.refresh}
             iconName="ios-refresh-circle"
           />
@@ -50,7 +53,7 @@ export function ManageMe_Header(props) {
   );
 }
 
-export function ManageMe_Button(props) {
+export function _Button(props) {
   return (
     <Button
       transparent
@@ -62,13 +65,23 @@ export function ManageMe_Button(props) {
 }
 
 /** BODY **/
-export function ManageMe_Body(props) {
+export function _Body(props) {
   return (
     <Text>Not Yet Implemented</Text>
   );
 }
 
-export function ManageMe_DisplayError(props) {
+/** LOADING SCREEN **/
+export function _LoadingScreen() {
+  return (
+    <Content padder>
+      <Spinner color="blue" />
+    </Content>
+  );
+}
+
+/** DISPLAY ERROR **/
+export function _DisplayError(props) {
   return (
     <View style={{ alignItems: "center" }} >
       <Icon style={{ fontSize: 60, color: "red" }} name="ios-close-circle" />
@@ -78,8 +91,126 @@ export function ManageMe_DisplayError(props) {
 }
 
 /** MODAL **/
-export function ManageMe_Modal(props) {
+export function _Modal(props) {
   return (
-    <Text>Not Yet Implemented</Text>
+    <TouchableWithoutFeedback onPress={props.onPress.modal}>
+      <Modal
+        onBackdropPress={props.onPress.modal}
+        onBackButtonPress={props.onPress.modal}
+        onSwipe={props.onPress.modal}
+        swipeDirection="down"
+        isVisible={props.Data.modalVisible}>
+        <View style={{ padding: 22, justifyContent: "center", alignItems: "center", }}>
+          <Text style={{ fontSize: 30, fontWeight: "bold", color: "white", }}>
+            {props.Data.name}
+          </Text>
+          <View style={{ flexDirection: "row" }}>
+            {props.buttonText1 ?
+              <_ModalButton
+                Data={props.Data}
+                Text={props.buttonText1}
+                onPress={props.onPress.buttonText1}
+              />
+              : null
+            }
+            {props.buttonText2 ?
+              <_ModalButton
+                Data={props.Data}
+                Text={props.buttonText2}
+                onPress={props.onPress.buttonText2}
+              />
+              : null
+            }
+            {props.buttonText3 ?
+              <_ModalButton
+                Data={props.Data}
+                Text={props.buttonText3}
+                onPress={props.onPress.buttonText3}
+              />
+              : null
+            }
+          </View>
+        </View>
+      </Modal>
+    </TouchableWithoutFeedback >
   );
 }
+
+export function _ModalButton(props) {
+  return (
+    <TouchableOpacity
+      style={{
+        backgroundColor: "lightskyblue",
+        padding: 12,
+        margin: 16,
+        justifyContent: "center",
+        alignItems: "center",
+        borderRadius: 4,
+      }}
+      onPress={() => {
+        props.onPress();
+      }}>
+      <Text
+        style={{
+          fontSize: 18,
+          fontWeight: "bold",
+          color: "black",
+        }}>
+        {props.Text}
+      </Text>
+    </TouchableOpacity>
+  );
+}
+
+
+
+/* Render Modal
+_renderModal(projectData) {
+  return (
+    <TouchableWithoutFeedback onPress={() => this.closeModal(projectData)}>
+      <Modal
+        onBackdropPress={() => this.closeModal(projectData)}
+        onBackButtonPress={() => this.closeModal(projectData)}
+        onSwipe={() => this.closeModal(projectData)}
+        swipeDirection="down"
+        isVisible={projectData.modalVisible}>
+        <View style={styles.modalContent}>
+          <Text style={styles.modalTitle}>{projectData.name}</Text>
+          <View style={styles.modalFlex}>
+            {this._renderModalButton(projectData, "Project Info")}
+            {this._renderModalButton(projectData, "Requirements")}
+          </View>
+        </View>
+      </Modal>
+    </TouchableWithoutFeedback>
+  );
+}
+
+// Render Modal Button
+  _renderModalButton(projectData, buttonText) {
+    return (
+      
+    );
+  }
+}
+
+// Handles the onClick event for the modal buttons.
+  onModalButtonClick(projectData, buttonText) {
+    this.closeModal(projectData);
+    if (buttonText === "Project Info") {
+      return this.props.navigation.navigate("ProjectInfo", { uid: projectData.uid });
+    } else {
+      return this.props.navigation.navigate("Requirements", { uid: projectData.uid });
+    }
+  }
+
+  // Closes the modal.
+  closeModal(projectData) {
+    projectData.modalVisible = false;
+    if (this._isMounted) {
+      this.setState(JSON.parse(JSON.stringify(this.state)));
+    }
+  }
+
+
+*/

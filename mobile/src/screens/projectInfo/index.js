@@ -14,13 +14,14 @@ import {
   View,
   Text,
   Card,
-  Spinner,
   Input,
 } from "native-base";
 import styles from "./styles";
 import { FlatList, Alert } from "react-native";
+import { _DisplayError, _LoadingScreen } from "../../util/Render";
 const Auth = require("../../util/Auth");
 const ApiCalls = require("../../util/ApiCalls");
+const HandleError = require("../../util/HandleError");
 
 const fieldsArr = [
   {
@@ -58,7 +59,6 @@ class ProjectInfo extends Component {
     this.getInitialPage.bind(this);
     this._renderHeader.bind(this);
     this._renderTabs.bind(this);
-    this._renderLoadingScreen.bind(this);
     this._renderProjectInfo.bind(this);
     this._renderProject.bind(this);
     this._renderRequirementButton.bind(this);
@@ -84,122 +84,82 @@ class ProjectInfo extends Component {
 
   // Retrieve Requirements from API and assign to state.
   assignRequirementsToState(opts = { refresh: false }) {
-    if ((this.state && this.state.loggedIn) && (!this.state.requirementList || opts.refresh)) {
-      ApiCalls.getRequirementsByProjectId(this.params.uid).then(response => {
-        if (this._isMounted) {
-          ApiCalls.handleAPICallResult(response, this).then(apiResults => {
-            let requirementList = {};
-            requirementList.initial = [];
-            requirementList.completed = [];
-            requirementList.pending = [];
-            requirementList.changeRequest = [];
-            if (apiResults) {
-              /* 
-                1: initial
-                2: completed
-                3: pending
-                4: change request
-              */
-              apiResults.forEach(result => {
-                if (result.status === 1) {
-                  requirementList.initial.push(result);
-                }
-                if (result.status === 2) {
-                  requirementList.completed.push(result);
-                }
-                if (result.status === 3) {
-                  requirementList.pending.push(result);
-                }
-                if (result.status === 4) {
-                  requirementList.changeRequest.push(result);
-                }
-              });
-              this.setState({
-                requirementList
-              });
-            } else {
-              this.setState({
-                requirementList: "null"
-              });
-            }
-          });
-        }
+    if ((this.state && this.state.loggedIn && this._isMounted) && (!this.state.requirementList || opts.refresh)) {
+      ApiCalls.getRequirementsByProjectId({ projectId: this.params.uid }).then(apiResults => {
+        let requirementList = {};
+        requirementList.initial = [];
+        requirementList.completed = [];
+        requirementList.pending = [];
+        requirementList.changeRequest = [];
+        /* 
+          1: initial
+          2: completed
+          3: pending
+          4: change request
+        */
+        apiResults.forEach(result => {
+          if (result.status === 1) {
+            requirementList.initial.push(result);
+          }
+          if (result.status === 2) {
+            requirementList.completed.push(result);
+          }
+          if (result.status === 3) {
+            requirementList.pending.push(result);
+          }
+          if (result.status === 4) {
+            requirementList.changeRequest.push(result);
+          }
+        });
+        this.setState({
+          requirementList
+        });
+      }, error => {
+        HandleError.handleError(this, error);
       });
     }
   }
 
   // Retrieve comments from API and assign to state.
   assignCommentsToState(opts = { refresh: false }) {
-    if ((this.state && this.state.loggedIn) && (!this.state.commentList || opts.refresh)) {
-      ApiCalls.getProjectComments(this.params.uid).then(response => {
-        if (this._isMounted) {
-          ApiCalls.handleAPICallResult(response, this).then(apiResults => {
-            if (apiResults) {
-              this.setState({
-                commentList: apiResults
-              });
-            } else {
-              this.setState({
-                commentList: "null"
-              });
-            }
-          });
-        }
+    if ((this.state && this.state.loggedIn && this._isMounted) && (!this.state.commentList || opts.refresh)) {
+      ApiCalls.getProjectComments({ projID: this.params.uid }).then(apiResults => {
+        this.setState({
+          commentList: apiResults
+        });
+      }, error => {
+        HandleError.handleError(this, error);
       });
     }
   }
 
   // Retrieve Project Info from API and assign to state.
   assignProjectInfoToState(opts = { refresh: false }) {
-    if ((this.state && this.state.loggedIn) && (!this.state.projectInfo || opts.refresh)) {
-      ApiCalls.getProjectInfo(this.params.uid).then(response => {
-        if (this._isMounted) {
-          ApiCalls.handleAPICallResult(response, this).then(apiResults => {
-            if (apiResults) {
-              ApiCalls.getTeamById(apiResults[0].assigned_team).then(_response => {
-                ApiCalls.handleAPICallResult(_response, this).then(_apiResults => {
-                  if (_apiResults) {
-                    this.setState({
-                      teamData: _apiResults
-                    });
-                  } else {
-                    this.setState({
-                      teamData: "null"
-                    });
-                  }
-                  this.setState({
-                    projectInfo: apiResults
-                  });
-                });
-              });
-            } else {
-              this.setState({
-                projectInfo: "null"
-              });
-            }
+    if ((this.state && this.state.loggedIn && this._isMounted) && (!this.state.projectInfo || opts.refresh)) {
+      ApiCalls.getProjectInfo({ proj_id: this.params.uid }).then(response => {
+        ApiCalls.getTeamById({ teamId: response[0].assigned_team }).then(apiResults => {
+          this.setState({
+            teamData: apiResults,
+            projectInfo: response
           });
-        }
+        }, error => {
+          HandleError.handleError(this, error);
+        });
+      }, error => {
+        HandleError.handleError(this, error);
       });
     }
   }
 
   // Retrieve Project Hours from API and assign to state.
   assignProjectHoursToState(opts = { refresh: false }) {
-    if ((this.state && this.state.loggedIn) && (!this.state.projectHours || opts.refresh)) {
-      ApiCalls.getProjectHours(this.params.uid).then(response => {
-        if (this._isMounted) {
-          ApiCalls.handleAPICallResult(response, this).then(apiResults => {
-            if (apiResults) {
-              this.setState({
-                projectHours: apiResults
-              });
-            } else {
-              this.setState({
-                projectHours: "null"
-              });
-            }
-          });
-        }
+    if ((this.state && this.state.loggedIn && this._isMounted) && (!this.state.projectHours || opts.refresh)) {
+      ApiCalls.getProjectHours({ projId: this.params.uid }).then(apiResults => {
+        this.setState({
+          projectHours: apiResults
+        });
+      }, error => {
+        HandleError.handleError(this, error);
       });
     }
   }
@@ -216,40 +176,27 @@ class ProjectInfo extends Component {
   handleSubmit = async () => {
     if (this._isMounted) {
       if (fieldsArr.filter(x => { return !this.state[x.name + "Validation"]; }).length > 0) {
-        ApiCalls.showToastsInArr(["Comment field is invalid."], {
-          buttonText: "OK",
-          type: "danger",
-          position: "top",
-          duration: 5 * 1000
-        });
+        HandleError.showToastsInArr(["Comment field is invalid."]);
       }
       else {
-        ApiCalls.addProjectComment(this.params.uid, this.state.projectComment).then(response => {
-          ApiCalls.handleAPICallResult(response, this).then(apiResults => {
-            this.setState({ projectComment: "" });
-            if (apiResults) {
-              let message = "Comment was added successfully!";
-              ApiCalls.showToastsInArr([message], {
-                buttonText: "OK",
-                type: "success",
-                position: "top",
-                duration: 10 * 1000
-              });
-              Alert.alert(
-                "Comment Added!",
-                message,
-                [
-                  {
-                    text: "OK", onPress: () => {
-                      this.assignCommentsToState({ refresh: true });
-                    }
-                  },
-                ]
-              );
-            } else {
-              Alert.alert("Comment not Added!", JSON.stringify(this.state.ApiErrorsList));
-            }
+        ApiCalls.addProjectComment({ projID: this.params.uid, comment: this.state.projectComment }).then(apiResults => {
+          this.setState({ projectComment: "" });
+          let message = "Comment was added successfully!";
+          HandleError.showToastsInArr([message], {
+            type: "success",
+            duration: 10000
           });
+          Alert.alert(
+            "Comment Added!",
+            message, [{
+              text: "OK", onPress: () => {
+                this.assignCommentsToState({ refresh: true });
+              }
+            }]
+          );
+        }, error => {
+          HandleError.handleError(this, error);
+          Alert.alert("Comment not Added!");
         });
       }
     }
@@ -323,15 +270,6 @@ class ProjectInfo extends Component {
     );
   }
 
-  // Render loading screen
-  _renderLoadingScreen() {
-    return (
-      <Content padder>
-        <Spinner color="blue" />
-      </Content>
-    );
-  }
-
   // Render Header
   _renderHeader() {
     return (
@@ -378,7 +316,7 @@ class ProjectInfo extends Component {
         </Tabs>
       );
     } else {
-      return this._renderLoadingScreen();
+      return <_LoadingScreen />;
     }
   }
 
@@ -386,11 +324,7 @@ class ProjectInfo extends Component {
   _renderProjectInfo() {
     return (
       <Content padder>
-        {this.state.projectInfo === "null" ?
-          <View style={styles.warningView} >
-            <Icon style={styles.warningIcon} name="warning" />
-            <Text style={styles.warningText}>{this.state.ApiErrorsList}</Text>
-          </View> :
+        {this.state.ApiErrors ? <_DisplayError ApiErrorsList={this.state.ApiErrors} /> :
           <FlatList
             style={styles.container}
             data={this.state.projectInfo}
@@ -417,30 +351,19 @@ class ProjectInfo extends Component {
             <Text style={styles.projectTime}>
               {"  "}{info.created}
             </Text>
-          </View>{this.state.teamData === "null" ?
-            <View style={styles.warningView} >
-              <Icon style={styles.warningIcon} name="warning" />
-              <Text style={styles.warningText}>{this.state.ApiErrorsList}</Text>
-            </View> :
-            <Button
-              transparent
-              onPress={() => this.props.navigation.navigate("TeamMembers", { uid: this.state.teamData[0].uid })}
-            >
-              <View style={styles.flex}>
-                <Text style={styles.requirementCount}>Team: </Text>
-                <Text style={styles.requirementStatus}>{this.state.teamData[0].name}</Text>
-              </View>
-            </Button>
-          }
-          {this.state.projectHours === "null" ?
-            <View style={styles.warningView} >
-              <Icon style={styles.warningIcon} name="warning" />
-              <Text style={styles.warningText}>{this.state.ApiErrorsList}</Text>
-            </View> :
-            <Text style={styles.projectHours}>
-              {this.getTime()}
-            </Text>
-          }
+          </View>
+          <Button
+            transparent
+            onPress={() => this.props.navigation.navigate("TeamMembers", { uid: this.state.teamData[0].uid })}
+          >
+            <View style={styles.flex}>
+              <Text style={styles.requirementCount}>Team: </Text>
+              <Text style={styles.requirementStatus}>{this.state.teamData[0].name}</Text>
+            </View>
+          </Button>
+          <Text style={styles.projectHours}>
+            {this.getTime()}
+          </Text>
         </View>
         <View style={styles.flexRow}>
           <View>

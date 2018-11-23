@@ -1,6 +1,6 @@
 import { Toast } from "native-base";
 
-let showToastsInArr = function (arr, params = {}) {
+export function showToastsInArr(arr, params = {}) {
   arr.forEach(message => {
     Toast.show({
       text: message,
@@ -10,7 +10,7 @@ let showToastsInArr = function (arr, params = {}) {
       duration: params.duration || 5000
     });
   });
-};
+}
 
 export async function handleError(component, result) {
   if (result.ApiErr) {
