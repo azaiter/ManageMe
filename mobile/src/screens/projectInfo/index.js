@@ -46,11 +46,11 @@ class ProjectInfo extends Component {
       navigate: "ProjectInfo",
       setUserPermissions: true
     });
+    this.assignRequirementsToState();
+    this.assignCommentsToState();
+    this.assignProjectHoursToState();
+    this.assignProjectInfoToState();
     Auth.userHasPermission.bind(this);
-    this.assignRequirementsToState.bind(this);
-    this.assignCommentsToState.bind(this);
-    this.assignProjectInfoToState.bind(this);
-    this.assignProjectHoursToState.bind(this);
     this.getRenderFromState.bind(this);
     this.checkAndSetState.bind(this);
     this.handleSubmit.bind(this);
@@ -86,18 +86,18 @@ class ProjectInfo extends Component {
 
   // Retrieve Requirements from API and assign to state.
   assignRequirementsToState(opts = { refresh: false }) {
-    if ((this.state && this.state.loggedIn && this._isMounted) && (!this.state.requirementList || opts.refresh)) {
+    if ((this.state && this._isMounted) && (!this.state.requirementList || opts.refresh)) {
       ApiCalls.getRequirementsByProjectId({ projectId: this.params.uid }).then(apiResults => {
         let requirementList = {};
         requirementList.initial = [];
         requirementList.completed = [];
         requirementList.pending = [];
         requirementList.changeRequest = [];
-        /* 
-          1: initial
-          2: completed
-          3: pending
-          4: change request
+        /*
+        1: initial
+        2: completed
+        3: pending
+        4: change request
         */
         apiResults.forEach(result => {
           if (result.status === 1) {
@@ -118,26 +118,46 @@ class ProjectInfo extends Component {
         });
       }, error => {
         HandleError.handleError(this, error);
+        Alert.alert("Error!",
+          JSON.stringify(this.state.ApiErrors || this.state.Errors),
+          (this.state.ApiErrors ? null :
+            [{
+              text: "OK", onPress: () => {
+                this.assignRequirementsToState({ refresh: true });
+              }
+            }]
+          )
+        );
       });
     }
   }
 
   // Retrieve comments from API and assign to state.
   assignCommentsToState(opts = { refresh: false }) {
-    if ((this.state && this.state.loggedIn && this._isMounted) && (!this.state.commentList || opts.refresh)) {
+    if ((this.state && this._isMounted) && (!this.state.commentList || opts.refresh)) {
       ApiCalls.getProjectComments({ projID: this.params.uid }).then(apiResults => {
         this.setState({
           commentList: apiResults
         });
       }, error => {
         HandleError.handleError(this, error);
+        Alert.alert("Error!",
+          JSON.stringify(this.state.ApiErrors || this.state.Errors),
+          (this.state.ApiErrors ? null :
+            [{
+              text: "OK", onPress: () => {
+                this.assignCommentsToState({ refresh: true });
+              }
+            }]
+          )
+        );
       });
     }
   }
 
   // Retrieve Project Info from API and assign to state.
   assignProjectInfoToState(opts = { refresh: false }) {
-    if ((this.state && this.state.loggedIn && this._isMounted) && (!this.state.projectInfo || opts.refresh)) {
+    if ((this.state && this._isMounted) && (!this.state.projectInfo || opts.refresh)) {
       ApiCalls.getProjectInfo({ proj_id: this.params.uid }).then(response => {
         ApiCalls.getTeamById({ teamId: response[0].assigned_team }).then(apiResults => {
           this.setState({
@@ -146,29 +166,52 @@ class ProjectInfo extends Component {
           });
         }, error => {
           HandleError.handleError(this, error);
+          Alert.alert("Error!",
+            JSON.stringify(this.state.ApiErrors || this.state.Errors),
+          );
         });
       }, error => {
         HandleError.handleError(this, error);
+        Alert.alert("Error!",
+          JSON.stringify(this.state.ApiErrors || this.state.Errors),
+          (this.state.ApiErrors ? null :
+            [{
+              text: "OK", onPress: () => {
+                this.assignProjectInfoToState({ refresh: true });
+              }
+            }]
+          )
+        );
       });
     }
   }
 
   // Retrieve Project Hours from API and assign to state.
   assignProjectHoursToState(opts = { refresh: false }) {
-    if ((this.state && this.state.loggedIn && this._isMounted) && (!this.state.projectHours || opts.refresh)) {
+    if ((this.state && this._isMounted) && (!this.state.projectHours || opts.refresh)) {
       ApiCalls.getProjectHours({ projId: this.params.uid }).then(apiResults => {
         this.setState({
           projectHours: apiResults
         });
       }, error => {
         HandleError.handleError(this, error);
+        Alert.alert("Error!",
+          JSON.stringify(this.state.ApiErrors || this.state.Errors),
+          (this.state.ApiErrors ? null :
+            [{
+              text: "OK", onPress: () => {
+                this.assignProjectHoursToState({ refresh: true });
+              }
+            }]
+          )
+        );
       });
     }
   }
 
   // Retrieve Render from state.
   getRenderFromState() {
-    if (this.state.requirementList && this.state.commentList && this.state.projectHours && this.state.projectInfo && this.state) {
+    if ((this.state.requirementList && this.state.commentList && this.state.projectHours && this.state.projectInfo && this.state) || (this.state && this.state.ApiErrors)) {
       return true;
     } else {
       return false;
@@ -198,7 +241,16 @@ class ProjectInfo extends Component {
           );
         }, error => {
           HandleError.handleError(this, error);
-          Alert.alert("Comment not Added!");
+          Alert.alert("Comment not Added!!",
+            JSON.stringify(this.state.ApiErrors || this.state.Errors),
+            (this.state.ApiErrors ? null :
+              [{
+                text: "OK", onPress: () => {
+                  this.assignCommentsToState({ refresh: true });
+                }
+              }]
+            )
+          );
         });
       }
     }
@@ -260,10 +312,6 @@ class ProjectInfo extends Component {
 
   // Render
   render() {
-    this.assignRequirementsToState();
-    this.assignCommentsToState();
-    this.assignProjectHoursToState();
-    this.assignProjectInfoToState();
     return (
       <Container style={styles.container}>
         {this._renderHeader()}

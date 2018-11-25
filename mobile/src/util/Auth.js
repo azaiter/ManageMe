@@ -1,6 +1,7 @@
 import { AsyncStorage } from "react-native";
 
 const ApiCalls = require("./ApiCalls");
+const HandleError = require("./HandleError");
 
 export const loginTokenASKey = "@app:loginTokenObj";
 export const userPermissionsASKey = "@app:userPermissions";
@@ -88,7 +89,7 @@ export async function setUserPermissionsOnComponent(component) {
             }).then(apiResults => {
                 permissionsObj = apiResults;
             }, error => {
-                console.log(error);
+                HandleError.handleError(this, error);
             });
         }
         if (component && component.state && !component.state.userPermissions) {

@@ -1,7 +1,6 @@
 import React, { Component } from "react";
-import { ImageBackground, View, StatusBar } from "react-native";
+import { ImageBackground, View, StatusBar, Alert } from "react-native";
 import { Container, Button, Text, Content, Form, Item, Label, Input } from "native-base";
-import { ManageMe_DisplayError } from "../../util/Render";
 import styles from "./styles";
 
 const launchscreenBg = require("../../../assets/launchscreen-bg.png");
@@ -36,12 +35,14 @@ class Home extends Component {
       this.props.navigation.navigate("Projects");
     }, error => {
       HandleError.handleError(this, error);
+      Alert.alert("Error Logging In!",
+        JSON.stringify(this.state.ApiErrors || this.state.Errors),
+      );
     });
   }
 
   render() {
     let loginForm = <Form>
-      {this.state.ApiErrors ? <ManageMe_DisplayError ApiErrorsList = {this.state.ApiErrors}/> : null }
       <Item floatingLabel>
         <Label>Username</Label>
         <Input name="username"

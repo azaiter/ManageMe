@@ -8,8 +8,16 @@ import {
   Spinner,
 } from "native-base";
 import styles from "./styles";
-import { TouchableOpacity, FlatList, TouchableWithoutFeedback } from "react-native";
-import { ManageMe_Header, ManageMe_DisplayError } from "../../util/Render";
+import {
+  TouchableOpacity,
+  FlatList,
+  TouchableWithoutFeedback,
+  Alert,
+} from "react-native";
+import {
+  ManageMe_Header,
+  ManageMe_DisplayError,
+} from "../../util/Render";
 import Modal from "react-native-modal";
 const Auth = require("../../util/Auth");
 const ApiCalls = require("../../util/ApiCalls");
@@ -24,8 +32,8 @@ class Projects extends Component {
       navigate: "Projects",
       setUserPermissions: true
     });
+    this.assignProjectsToState();
     Auth.userHasPermission.bind(this);
-    this.assignProjectsToState.bind(this);
     this.getRenderFromState.bind(this);
     this._renderBody.bind(this);
     this._renderLoadingScreen.bind(this);
@@ -51,7 +59,7 @@ class Projects extends Component {
 
   // Retrieve project list from API and assign to state.
   assignProjectsToState(opts = { refresh: false }) {
-    if ((this.state && this.state.loggedIn && this._isMounted) && (!this.state.projectsList || opts.refresh)) {
+    if ((this.state && this._isMounted) && (!this.state.projectsList || opts.refresh)) {
       ApiCalls.getProjects().then(apiResults => {
         apiResults.forEach(result => {
           result.modalVisible = false;
@@ -62,13 +70,23 @@ class Projects extends Component {
         });
       }, error => {
         HandleError.handleError(this, error);
+        Alert.alert("Error!",
+          JSON.stringify(this.state.ApiErrors || this.state.Errors),
+          (this.state.ApiErrors ? null :
+            [{
+              text: "OK", onPress: () => {
+                this.assignProjectsToState({ refresh: true });
+              }
+            }]
+          )
+        );
       });
     }
   }
 
   // Retrieve Render from state.
   getRenderFromState() {
-    if (this.state && this.state.projectsList) {
+    if ((this.state && this.state.projectsList) || (this.state && this.state.ApiErrors)) {
       return true;
     } else {
       return false;
@@ -104,7 +122,6 @@ class Projects extends Component {
 
   // Render
   render() {
-    this.assignProjectsToState();
     return (
       <Container style={styles.container}>
         <ManageMe_Header
