@@ -1,13 +1,7 @@
 import React, { Component } from "react";
 import {
     Container,
-    Header,
-    Title,
     Content,
-    Button,
-    Left,
-    Right,
-    Body,
     Text,
     Icon,
     View,
@@ -17,6 +11,7 @@ import styles from "./styles";
 import { TouchableOpacity, FlatList, TouchableWithoutFeedback, Alert } from "react-native";
 import Modal from "react-native-modal";
 import SectionedMultiSelect from "react-native-sectioned-multi-select";
+import { ManageMe_Header } from "../../util/Render";
 const Auth = require("../../util/Auth");
 const ApiCalls = require("../../util/ApiCalls");
 
@@ -37,7 +32,6 @@ class TeamMembers extends Component {
         this.onSelectedItemsChange.bind(this);
         this.onModalButtonClick.bind(this);
         this.closeModal.bind(this);
-        this._renderHeader.bind(this);
         this._renderBody.bind(this);
         this._renderLoadingScreen.bind(this);
         this._renderTeamMemberData.bind(this);
@@ -189,35 +183,16 @@ class TeamMembers extends Component {
         this.assignUsersToState();
         return (
             <Container style={styles.container}>
-                {this._renderHeader()}
+                <ManageMe_Header
+                    title="Team Members"
+                    leftIcon="back"
+                    onPress={{
+                        left: this.props.navigation.goBack,
+                        refresh: () => { this.assignTeamMembersToState({ refresh: true }); }
+                    }}
+                />
                 {this._renderBody()}
             </Container>
-        );
-    }
-
-    _renderHeader() {
-        return (
-            <Header>
-                <Left>
-                    <Button
-                        transparent
-                        onPress={() => this.props.navigation.goBack()}
-                    >
-                        <Icon name="ios-arrow-dropleft-circle" />
-                    </Button>
-                </Left>
-                <Body>
-                    <Title>Team Members</Title>
-                </Body>
-                <Right>
-                    <Button
-                        transparent
-                        onPress={() => this.assignTeamMembersToState({ refresh: true })}
-                    >
-                        <Icon name="ios-refresh-circle" />
-                    </Button>
-                </Right>
-            </Header>
         );
     }
 

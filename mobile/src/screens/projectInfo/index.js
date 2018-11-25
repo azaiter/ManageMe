@@ -1,15 +1,10 @@
 import React, { Component } from "react";
 import {
   Container,
-  Header,
-  Title,
   Tabs,
   Button,
   Tab,
   Content,
-  Body,
-  Left,
-  Right,
   Icon,
   View,
   Text,
@@ -19,7 +14,7 @@ import {
 } from "native-base";
 import styles from "./styles";
 import { FlatList, Alert } from "react-native";
-import { ManageMe_DisplayError } from "../../util/Render";
+import { ManageMe_Header, ManageMe_DisplayError } from "../../util/Render";
 const Auth = require("../../util/Auth");
 const ApiCalls = require("../../util/ApiCalls");
 const HandleError = require("../../util/HandleError");
@@ -58,7 +53,6 @@ class ProjectInfo extends Component {
     this.getRequirementsCount.bind(this);
     this.getTime.bind(this);
     this.getInitialPage.bind(this);
-    this._renderHeader.bind(this);
     this._renderTabs.bind(this);
     this._renderLoadingScreen.bind(this);
     this._renderProjectInfo.bind(this);
@@ -314,41 +308,21 @@ class ProjectInfo extends Component {
   render() {
     return (
       <Container style={styles.container}>
-        {this._renderHeader()}
-        {this._renderTabs()}
-      </Container>
-    );
-  }
-
-  // Render Header
-  _renderHeader() {
-    return (
-      <Header hasTabs>
-        <Left>
-          <Button
-            transparent
-            onPress={() => this.props.navigation.goBack()}
-          >
-            <Icon name="ios-arrow-dropleft-circle" />
-          </Button>
-        </Left>
-        <Body>
-          <Title>Project Details</Title>
-        </Body>
-        <Right>
-          <Button
-            transparent
-            onPress={() => {
+        <ManageMe_Header
+          title="Project Details"
+          leftIcon="back"
+          onPress={{
+            left: this.props.navigation.goBack,
+            refresh: () => {
               this.assignRequirementsToState({ refresh: true });
               this.assignCommentsToState({ refresh: true });
               this.assignProjectInfoToState({ refresh: true });
               this.assignProjectHoursToState({ refresh: true });
-            }}
-          >
-            <Icon name="ios-refresh-circle" />
-          </Button>
-        </Right>
-      </Header >
+            }
+          }}
+        />
+        {this._renderTabs()}
+      </Container>
     );
   }
 

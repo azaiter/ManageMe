@@ -1,15 +1,9 @@
 import React, { Component } from "react";
 import {
   Container,
-  Header,
-  Title,
   Content,
   Button,
-  Left,
-  Right,
-  Body,
   Text,
-  Icon,
   Item,
   Label,
   Input,
@@ -17,6 +11,7 @@ import {
 } from "native-base";
 import { Alert, Platform } from "react-native";
 import styles from "./styles";
+import { ManageMe_Header } from "../../util/Render";
 const Auth = require("../../util/Auth");
 const ApiCalls = require("../../util/ApiCalls");
 
@@ -85,7 +80,6 @@ class CreateRequirement extends Component {
     Auth.getPermissions.bind(this);
     this.checkAndSetState.bind(this);
     this.getFieldValidation.bind(this);
-    this._renderHeader.bind(this);
     this._renderBody.bind(this);
     this._renderFieldEntry.bind(this);
     this.handleSubmit.bind(this);
@@ -106,8 +100,8 @@ class CreateRequirement extends Component {
 
   setFieldValues() {
     if (this.params.action === "edit") {
-      this.checkAndSetState(fieldsArr[0].name, this.params.requirementData.name,          fieldsArr[0].regex);
-      this.checkAndSetState(fieldsArr[1].name, this.params.requirementData.desc,          fieldsArr[1].regex);
+      this.checkAndSetState(fieldsArr[0].name, this.params.requirementData.name, fieldsArr[0].regex);
+      this.checkAndSetState(fieldsArr[1].name, this.params.requirementData.desc, fieldsArr[1].regex);
       this.checkAndSetState(fieldsArr[2].name, `${this.params.requirementData.estimate}`, fieldsArr[2].regex);
       this.checkAndSetState(fieldsArr[3].name, `${this.params.requirementData.priority}`, fieldsArr[3].regex);
       this.checkAndSetState(fieldsArr[4].name, `${this.params.requirementData.soft_cap}`, fieldsArr[4].regex);
@@ -205,32 +199,13 @@ class CreateRequirement extends Component {
   render() {
     return (
       <Container style={styles.container}>
-        {this._renderHeader()}
+        <ManageMe_Header
+          title={(this.params.action === "edit") ? "Edit Requirement" : "Create Requirement"}
+          leftIcon="back"
+          onPress={{ left: this.props.navigation.goBack }}
+        />
         {this._renderBody()}
       </Container>
-    );
-  }
-
-  _renderHeader() {
-    return (
-      <Header>
-        <Left>
-          <Button
-            transparent
-            onPress={() => this.props.navigation.goBack()}
-          >
-            <Icon name="ios-arrow-dropleft-circle" />
-          </Button>
-        </Left>
-        <Body>
-          {
-            this.params.action === "edit" ?
-              <Title>Edit Requirement</Title> :
-              <Title>Create Requirement</Title>
-          }
-        </Body>
-        <Right />
-      </Header>
     );
   }
 
