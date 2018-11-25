@@ -1,15 +1,9 @@
 import React, { Component } from "react";
 import {
   Container,
-  Header,
-  Title,
   Content,
   Button,
-  Left,
-  Right,
-  Body,
   Text,
-  Icon,
   Item,
   Label,
   Input,
@@ -17,6 +11,7 @@ import {
 } from "native-base";
 import { Alert } from "react-native";
 import styles from "./styles";
+import { ManageMe_Header } from "../../util/Render";
 const Auth = require("../../util/Auth");
 const ApiCalls = require("../../util/ApiCalls");
 
@@ -52,7 +47,6 @@ class CreateTeam extends Component {
     Auth.getPermissions.bind(this);
     this.checkAndSetState.bind(this);
     this.getFieldValidation.bind(this);
-    this._renderHeader.bind(this);
     this._renderBody.bind(this);
     this._renderFieldEntry.bind(this);
     this.handleSubmit.bind(this);
@@ -135,28 +129,13 @@ class CreateTeam extends Component {
   render() {
     return (
       <Container style={styles.container}>
-        {this._renderHeader()}
+        <ManageMe_Header
+          title="Create Team"
+          leftIcon="back"
+          onPress={{ left: this.props.navigation.goBack }}
+        />
         {this._renderBody()}
       </Container>
-    );
-  }
-
-  _renderHeader() {
-    return (
-      <Header>
-        <Left>
-          <Button
-            transparent
-            onPress={() => this.props.navigation.goBack()}
-          >
-            <Icon name="ios-arrow-dropleft-circle" />
-          </Button>
-        </Left>
-        <Body>
-          <Title>Create Team</Title>
-        </Body>
-        <Right />
-      </Header>
     );
   }
 

@@ -1,13 +1,8 @@
 import React, { Component } from "react";
 import {
   Container,
-  Header,
-  Title,
   Content,
   Button,
-  Left,
-  Right,
-  Body,
   Text,
   Icon,
   Input,
@@ -19,6 +14,7 @@ import {
 } from "native-base";
 import { Alert, View, Platform } from "react-native";
 import styles from "./styles";
+import { ManageMe_Header } from "../../util/Render";
 const Auth = require("../../util/Auth");
 const ApiCalls = require("../../util/ApiCalls");
 
@@ -67,7 +63,6 @@ class CreateProject extends Component {
     this.checkAndSetState.bind(this);
     this.getFieldValidation.bind(this);
     this.onTeamSelect.bind(this);
-    this._renderHeader.bind(this);
     this._renderBody.bind(this);
     this._renderLoadingScreen.bind(this);
     this._renderSelectOption.bind(this);
@@ -179,9 +174,9 @@ class CreateProject extends Component {
 
   setFieldValues() {
     if (this.params.action === "edit") {
-      this.checkAndSetState(fieldsArr[0].name, this.params.projectData.name           , fieldsArr[0].regex);
-      this.checkAndSetState(fieldsArr[1].name, this.params.projectData.desc           , fieldsArr[1].regex);
-      this.checkAndSetState(fieldsArr[2].name, this.params.projectData.assigned_team  , fieldsArr[2].regex);
+      this.checkAndSetState(fieldsArr[0].name, this.params.projectData.name, fieldsArr[0].regex);
+      this.checkAndSetState(fieldsArr[1].name, this.params.projectData.desc, fieldsArr[1].regex);
+      this.checkAndSetState(fieldsArr[2].name, this.params.projectData.assigned_team, fieldsArr[2].regex);
     }
   }
 
@@ -216,7 +211,14 @@ class CreateProject extends Component {
     this.assignTeamsToState();
     return (
       <Container style={styles.container}>
-        {this._renderHeader()}
+        <ManageMe_Header
+          title={(this.params.action === "edit") ? "Edit Project" : "Create Project"}
+          leftIcon="back"
+          onPress={{
+            left: this.props.navigation.goBack,
+            refresh: () => { this.assignTeamsToState({ refresh: true }); }
+          }}
+        />
         {this._renderBody()}
       </Container>
     );
@@ -228,37 +230,6 @@ class CreateProject extends Component {
       <Content padder>
         <Spinner color="blue" />
       </Content>
-    );
-  }
-
-  // Render Header
-  _renderHeader() {
-    return (
-      <Header>
-        <Left>
-          <Button
-            transparent
-            onPress={() => this.props.navigation.goBack()}
-          >
-            <Icon name="ios-arrow-dropleft-circle" />
-          </Button>
-        </Left>
-        <Body>
-          {
-            this.params.action === "edit" ?
-              <Title>Edit Project</Title> :
-              <Title>Create Project</Title>
-          }
-        </Body>
-        <Right>
-          <Button
-            transparent
-            onPress={() => this.assignTeamsToState({ refresh: true })}
-          >
-            <Icon name="ios-refresh-circle" />
-          </Button>
-        </Right>
-      </Header>
     );
   }
 
@@ -297,7 +268,7 @@ class CreateProject extends Component {
                     value={this.state[fieldsArr[2].name]}
                     mode="dropdown"
                     iosIcon={<Icon name="ios-arrow-down-outline" />}
-                    style={{ width:(Platform.OS === "ios") ? undefined : 200 }}
+                    style={{ width: (Platform.OS === "ios") ? undefined : 200 }}
                     placeholder="Select a Team"
                     placeholderStyle={{ color: "#bfc6ea" }}
                     placeholderIconColor="#007aff"
