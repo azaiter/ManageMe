@@ -13,7 +13,10 @@ import {
 } from "native-base";
 import { Alert } from "react-native";
 import styles from "./styles";
-import { ManageMe_Header } from "../../util/Render";
+import {
+  ManageMe_Header,
+  ManageMe_DisplayError
+} from "../../util/Render";
 const Auth = require("../../util/Auth");
 const ApiCalls = require("../../util/ApiCalls");
 const HandleError = require("../../util/HandleError");
@@ -176,12 +179,12 @@ class Requirements extends Component {
     let action = requirementData.clocked_in === "Y" ? "Clocked Out" : "Clocked In";
     if (this._isMounted) {
       functionToExec({ reqID: requirementData.uid }).then(apiResults => {
-        let message = `Requirement "${requirementData.name}" was successfully "${action}"!`;
+        let message = `Requirement "${requirementData.name}" was successfully ${action}!`;
         HandleError.showToastsInArr([message], {
           type: "success",
           duration: 10000
         });
-        Alert.alert(`Requirement "${action}"!`,
+        Alert.alert(`Requirement ${action}!`,
           message, [{
             text: "OK", onPress: () => {
               this.assignRequirementsToState({ refresh: true });
@@ -190,7 +193,7 @@ class Requirements extends Component {
         );
       }, error => {
         HandleError.handleError(this, error);
-        Alert.alert(`Requirement not "${action}"!`,
+        Alert.alert(`Requirement not ${action}!`,
           JSON.stringify(this.state.ApiErrors || this.state.Errors),
           (this.state.ApiErrors ? null :
             [{
@@ -335,15 +338,9 @@ class Requirements extends Component {
               <Text style={styles.requirementDetails}>{requirementData.priority}{" "}{" "}</Text>
             </View>
           </View>
-          {this.state.clockedTime === "null" ?
-            <View style={styles.warningView} >
-              <Icon style={styles.warningIcon} name="warning" />
-              <Text style={styles.warningText}>{this.state.ApiErrorsList}</Text>
-            </View> :
-            <View>
-              {this.getTimeRemaining(requirementData)}
-            </View>
-          }
+          <View>
+            {this.getTimeRemaining(requirementData)}
+          </View>
         </View>
       );
     }
@@ -409,11 +406,10 @@ class Requirements extends Component {
         <Tabs initialPage={this.params.initialPage}>
           <Tab heading="Active">
             <Content padder>
-              {this.state.requirementList === "null" ?
-                <View style={styles.warningView} >
-                  <Icon style={styles.warningIcon} name="warning" />
-                  <Text style={styles.warningText}>{this.state.ApiErrorsList}</Text>
-                </View> :
+              {this.state.ApiErrors ?
+                <ManageMe_DisplayError
+                  ApiErrorsList={this.state.ApiErrors}
+                /> :
                 <Accordion
                   dataArray={this.state.requirementList.initial}
                   renderHeader={this._renderAccordionHeader}
@@ -424,11 +420,10 @@ class Requirements extends Component {
           </Tab>
           <Tab heading="Pending" >
             <Content padder>
-              {this.state.requirementList === "null" ?
-                <View style={styles.warningView} >
-                  <Icon style={styles.warningIcon} name="warning" />
-                  <Text style={styles.warningText}>{this.state.ApiErrorsList}</Text>
-                </View> :
+              {this.state.ApiErrors ?
+                <ManageMe_DisplayError
+                  ApiErrorsList={this.state.ApiErrors}
+                /> :
                 <Accordion
                   dataArray={this.state.requirementList.pending}
                   renderHeader={this._renderAccordionHeader}
@@ -439,11 +434,10 @@ class Requirements extends Component {
           </Tab>
           <Tab heading="Completed" >
             <Content padder>
-              {this.state.requirementList === "null" ?
-                <View style={styles.warningView} >
-                  <Icon style={styles.warningIcon} name="warning" />
-                  <Text style={styles.warningText}>{this.state.ApiErrorsList}</Text>
-                </View> :
+              {this.state.ApiErrors ?
+                <ManageMe_DisplayError
+                  ApiErrorsList={this.state.ApiErrors}
+                /> :
                 <Accordion
                   dataArray={this.state.requirementList.completed}
                   renderHeader={this._renderAccordionHeader}

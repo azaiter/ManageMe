@@ -13,8 +13,14 @@ import {
   Spinner,
 } from "native-base";
 import styles from "./styles";
-import { FlatList, Alert } from "react-native";
-import { ManageMe_Header, ManageMe_DisplayError } from "../../util/Render";
+import {
+  FlatList,
+  Alert,
+} from "react-native";
+import {
+  ManageMe_Header,
+  ManageMe_DisplayError
+} from "../../util/Render";
 const Auth = require("../../util/Auth");
 const ApiCalls = require("../../util/ApiCalls");
 const HandleError = require("../../util/HandleError");
@@ -357,7 +363,10 @@ class ProjectInfo extends Component {
   _renderProjectInfo() {
     return (
       <Content padder>
-        {this.state.ApiErrors ? <ManageMe_DisplayError ApiErrorsList={this.state.ApiErrors} /> :
+        {this.state.ApiErrors ?
+          <ManageMe_DisplayError
+            ApiErrorsList={this.state.ApiErrors}
+          /> :
           <FlatList
             style={styles.container}
             data={this.state.projectInfo}
@@ -402,17 +411,11 @@ class ProjectInfo extends Component {
           <View>
             <Card style={styles.card}>
               <Text style={styles.projectTitle}>Requirements</Text>
-              {this.state.requirementList === "null" ?
-                <View style={styles.warningView} >
-                  <Icon style={styles.warningIcon} name="warning" />
-                  <Text style={styles.warningText}>{this.state.ApiErrorsList}</Text>
-                </View> :
-                <View>
-                  {this._renderRequirementButton("Active")}
-                  {this._renderRequirementButton("Pending")}
-                  {this._renderRequirementButton("Completed")}
-                </View>
-              }
+              <View>
+                {this._renderRequirementButton("Active")}
+                {this._renderRequirementButton("Pending")}
+                {this._renderRequirementButton("Completed")}
+              </View>
             </Card>
           </View>
           <View style={styles.requirementView}>
@@ -458,11 +461,10 @@ class ProjectInfo extends Component {
           />
         </View>
         <View>
-          {this.state.commentList === "null" ?
-            <View style={styles.warningView} >
-              <Icon style={styles.warningIcon} name="warning" />
-              <Text style={styles.warningText}>{this.state.ApiErrorsList}</Text>
-            </View> :
+          {this.state.ApiErrors ?
+            <ManageMe_DisplayError
+              ApiErrorsList={this.state.ApiErrors}
+            /> :
             <FlatList
               data={this.state.commentList}
               renderItem={data => this._renderComment(data.item)}

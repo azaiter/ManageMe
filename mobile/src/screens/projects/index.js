@@ -152,7 +152,10 @@ class Projects extends Component {
     if (this.getRenderFromState()) {
       return (
         <Content padder>
-          {this.state.ApiErrors ? <ManageMe_DisplayError ApiErrorsList={this.state.ApiErrors} /> :
+          {this.state.ApiErrors ?
+            <ManageMe_DisplayError
+              ApiErrorsList={this.state.ApiErrors}
+            /> :
             <FlatList
               style={styles.container}
               data={this.state.projectsList}
