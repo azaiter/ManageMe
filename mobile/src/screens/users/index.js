@@ -1,13 +1,7 @@
 import React, { Component } from "react";
 import {
   Container,
-  Header,
-  Title,
   Content,
-  Button,
-  Left,
-  Right,
-  Body,
   Text,
   Icon,
   View,
@@ -17,6 +11,7 @@ import styles from "./styles";
 import { TouchableOpacity, FlatList, Alert, TouchableWithoutFeedback } from "react-native";
 import Modal from "react-native-modal";
 import SectionedMultiSelect from "react-native-sectioned-multi-select";
+import { ManageMe_Header } from "../../util/Render";
 const Auth = require("../../util/Auth");
 const ApiCalls = require("../../util/ApiCalls");
 
@@ -35,7 +30,6 @@ class Users extends Component {
     this.closeModal.bind(this);
     this.goToUserInfo.bind(this);
     this._renderModal.bind(this);
-    this._renderHeader.bind(this);
     this._renderModalButton.bind(this);
     this._renderBody.bind(this);
     this._renderUserData.bind(this);
@@ -162,7 +156,15 @@ class Users extends Component {
     this.assignUsersToState();
     return (
       <Container style={styles.container}>
-        {this._renderHeader()}
+        <ManageMe_Header
+          title="Users"
+          leftIcon="menu"
+          onPress={{
+            left: this.props.navigation.openDrawer,
+            add: () => { this.props.navigation.navigate("CreateUser", { action: "create" }); },
+            refresh: () => { this.assignUsersToState({ refresh: true }); }
+          }}
+        />
         {this._renderBody()}
       </Container>
     );
@@ -174,39 +176,6 @@ class Users extends Component {
       <Content padder>
         <Spinner color="blue" />
       </Content>
-    );
-  }
-
-  // Render Header
-  _renderHeader() {
-    return (
-      <Header>
-        <Left>
-          <Button
-            transparent
-            onPress={() => this.props.navigation.openDrawer()}
-          >
-            <Icon name="menu" />
-          </Button>
-        </Left>
-        <Body>
-          <Title>Users</Title>
-        </Body>
-        <Right>
-          <Button
-            transparent
-            onPress={() => this.props.navigation.navigate("CreateUser", { action: "create" })}
-          >
-            <Icon name="ios-add-circle" />
-          </Button>
-          <Button
-            transparent
-            onPress={() => this.assignUsersToState({ refresh: true })}
-          >
-            <Icon name="ios-refresh-circle" />
-          </Button>
-        </Right>
-      </Header>
     );
   }
 
@@ -306,8 +275,8 @@ class Users extends Component {
             <View style={styles.modalFlex}>
               {
                 Auth.userHasPermission(this, 11) ?
-                this._renderModalButton(userData, "Edit User", () => { this.goToUserInfo(userData); })
-                : null
+                  this._renderModalButton(userData, "Edit User", () => { this.goToUserInfo(userData); })
+                  : null
               }
               {this._renderModalButton(userData, userData.enabled ? "Disable User" : "Enable User", () => { this.enableDisableUser(userData); })}
             </View>

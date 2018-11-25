@@ -1,13 +1,7 @@
 import React, { Component } from "react";
 import {
   Container,
-  Header,
-  Title,
   Content,
-  Button,
-  Left,
-  Right,
-  Body,
   Text,
   Icon,
   View,
@@ -15,6 +9,7 @@ import {
 } from "native-base";
 import styles from "./styles";
 import { TouchableOpacity, FlatList } from "react-native";
+import { ManageMe_Header } from "../../util/Render";
 const Auth = require("../../util/Auth");
 const ApiCalls = require("../../util/ApiCalls");
 
@@ -30,7 +25,6 @@ class Teams extends Component {
     Auth.userHasPermission.bind(this);
     this.assignTeamsToState.bind(this);
     this.getRenderFromState.bind(this);
-    this._renderHeader.bind(this);
     this._renderBody.bind(this);
     this._renderLoadingScreen.bind(this);
     this._renderTeamData.bind(this);
@@ -97,7 +91,15 @@ class Teams extends Component {
     this.assignTeamsToState();
     return (
       <Container style={styles.container}>
-        {this._renderHeader()}
+        <ManageMe_Header
+          title="Teams"
+          leftIcon="menu"
+          onPress={{
+            left: this.props.navigation.openDrawer,
+            add: () => { this.props.navigation.navigate("CreateTeam"); },
+            refresh: () => { this.assignTeamsToState({ refresh: true }); }
+          }}
+        />
         {this._renderBody()}
       </Container>
     );
@@ -109,39 +111,6 @@ class Teams extends Component {
       <Content padder>
         <Spinner color="blue" />
       </Content>
-    );
-  }
-
-  // Render Header
-  _renderHeader() {
-    return (
-      <Header>
-        <Left>
-          <Button
-            transparent
-            onPress={() => this.props.navigation.openDrawer()}
-          >
-            <Icon name="menu" />
-          </Button>
-        </Left>
-        <Body>
-          <Title>Teams</Title>
-        </Body>
-        <Right>
-          <Button
-            transparent
-            onPress={() => this.props.navigation.navigate("CreateTeam")}
-          >
-            <Icon name="ios-add-circle" />
-          </Button>
-          <Button
-            transparent
-            onPress={() => this.assignTeamsToState({ refresh: true })}
-          >
-            <Icon name="ios-refresh-circle" />
-          </Button>
-        </Right>
-      </Header>
     );
   }
 

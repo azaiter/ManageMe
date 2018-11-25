@@ -1,19 +1,13 @@
 import React, { Component } from "react";
 import {
   Container,
-  Header,
-  Title,
   Content,
-  Button,
-  Left,
-  Right,
-  Body,
   Text,
-  Icon,
   View,
 } from "native-base";
 import { FlatList, TouchableOpacity } from "react-native";
 import styles from "./styles";
+import { ManageMe_Header } from "../../util/Render";
 const Auth = require("../../util/Auth");
 class Permissions extends Component {
   _isMounted = false;
@@ -25,7 +19,6 @@ class Permissions extends Component {
       setUserPermissions: true
     });
     Auth.getPermissions.bind(this);
-    this._renderHeader.bind(this);
     this._renderContent.bind(this);
     this._renderPermissionData.bind(this);
   }
@@ -46,36 +39,16 @@ class Permissions extends Component {
   render() {
     return (
       <Container style={styles.container}>
-        {this._renderHeader()}
+        <ManageMe_Header
+          title="My Permissions"
+          leftIcon="menu"
+          onPress={{
+            left: this.props.navigation.openDrawer,
+            refresh: () => { Auth.getPermissions.bind(this); }
+          }}
+        />
         {this._renderContent()}
       </Container>
-    );
-  }
-
-  // Render Header
-  _renderHeader() {
-    return (
-      <Header>
-        <Left>
-          <Button
-            transparent
-            onPress={() => this.props.navigation.openDrawer()}
-          >
-            <Icon name="menu" />
-          </Button>
-        </Left>
-        <Body>
-          <Title>My Permissions</Title>
-        </Body>
-        <Right>
-          <Button
-            transparent
-            onPress={() => Auth.getPermissions.bind(this)}
-          >
-            <Icon name="ios-refresh-circle" />
-          </Button>
-        </Right>
-      </Header>
     );
   }
 

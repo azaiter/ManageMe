@@ -1,13 +1,7 @@
 import React, { Component } from "react";
 import {
   Container,
-  Header,
-  Title,
   Content,
-  Button,
-  Left,
-  Right,
-  Body,
   Text,
   Icon,
   View,
@@ -32,7 +26,6 @@ class Projects extends Component {
     Auth.userHasPermission.bind(this);
     this.assignProjectsToState.bind(this);
     this.getRenderFromState.bind(this);
-    this._renderHeader.bind(this);
     this._renderBody.bind(this);
     this._renderLoadingScreen.bind(this);
     this._renderProjectData.bind(this);
@@ -121,13 +114,13 @@ class Projects extends Component {
     this.assignProjectsToState();
     return (
       <Container style={styles.container}>
-      <ManageMe_Header
-          title = "Projects"
-          leftIcon = "menu"
-          onPress = {{
+        <ManageMe_Header
+          title="Projects"
+          leftIcon="menu"
+          onPress={{
             left: this.props.navigation.openDrawer,
-            add: () => {this.props.navigation.navigate("CreateProject", { action: "create" });},
-            refresh: () => {this.assignProjectsToState({ refresh: true });}
+            add: () => { this.props.navigation.navigate("CreateProject", { action: "create" }); },
+            refresh: () => { this.assignProjectsToState({ refresh: true }); }
           }}
         />
         {this._renderBody()}
@@ -141,39 +134,6 @@ class Projects extends Component {
       <Content padder>
         <Spinner color="blue" />
       </Content>
-    );
-  }
-
-  // Render Header
-  _renderHeader() {
-    return (
-      <Header>
-        <Left>
-          <Button
-            transparent
-            onPress={() => this.props.navigation.openDrawer()}
-          >
-            <Icon name="menu" />
-          </Button>
-        </Left>
-        <Body>
-          <Title>Projects</Title>
-        </Body>
-        <Right>
-          <Button
-            transparent
-            onPress={() => this.props.navigation.navigate("CreateProject", { action: "create" })}
-          >
-            <Icon name="ios-add-circle" />
-          </Button>
-          <Button
-            transparent
-            onPress={() => this.assignProjectsToState({ refresh: true })}
-          >
-            <Icon name="ios-refresh-circle" />
-          </Button>
-        </Right>
-      </Header>
     );
   }
 

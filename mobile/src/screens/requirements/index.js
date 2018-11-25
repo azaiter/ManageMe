@@ -1,13 +1,8 @@
 import React, { Component } from "react";
 import {
   Container,
-  Header,
-  Title,
   Content,
   Button,
-  Left,
-  Right,
-  Body,
   Text,
   Tab,
   Tabs,
@@ -18,6 +13,7 @@ import {
 } from "native-base";
 import { Alert } from "react-native";
 import styles from "./styles";
+import { ManageMe_Header } from "../../util/Render";
 const Auth = require("../../util/Auth");
 const ApiCalls = require("../../util/ApiCalls");
 
@@ -42,7 +38,6 @@ class Requirements extends Component {
     this.clockInText.bind(this);
     this.timeRemaining.bind(this);
     this.getTimeFormat.bind(this);
-    this._renderHeader.bind(this);
     this._renderTabs.bind(this);
     this._renderLoadingScreen.bind(this);
     this._renderAccordionHeader.bind(this);
@@ -404,7 +399,18 @@ class Requirements extends Component {
     this.assignTimeToState();
     return (
       <Container style={styles.container}>
-        {this._renderHeader()}
+        <ManageMe_Header
+          title="Requirements"
+          leftIcon="back"
+          onPress={{
+            left: this.props.navigation.goBack,
+            add: () => { this.props.navigation.navigate("CreateRequirement", { action: "create", projId: this.params.uid }); },
+            refresh: () => {
+              this.assignRequirementsToState({ refresh: true });
+              this.assignTimeToState({ refresh: true });
+            }
+          }}
+        />
         {this._renderTabs()}
       </Container>
     );
@@ -416,42 +422,6 @@ class Requirements extends Component {
       <Content padder>
         <Spinner color="blue" />
       </Content>
-    );
-  }
-
-  // Render Header
-  _renderHeader() {
-    return (
-      <Header hasTabs>
-        <Left>
-          <Button
-            transparent
-            onPress={() => this.props.navigation.goBack()}
-          >
-            <Icon name="ios-arrow-dropleft-circle" />
-          </Button>
-        </Left>
-        <Body>
-          <Title>Requirements</Title>
-        </Body>
-        <Right>
-          <Button
-            transparent
-            onPress={() => this.props.navigation.navigate("CreateRequirement", { action: "create", projId: this.params.uid })}
-          >
-            <Icon name="ios-add-circle" />
-          </Button>
-          <Button
-            transparent
-            onPress={() => {
-              this.assignRequirementsToState({ refresh: true });
-              this.assignTimeToState({ refresh: true });
-            }}
-          >
-            <Icon name="ios-refresh-circle" />
-          </Button>
-        </Right>
-      </Header>
     );
   }
 
