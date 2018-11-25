@@ -5,11 +5,17 @@ import {
   Text,
   Icon,
   View,
-  Spinner,
 } from "native-base";
 import styles from "./styles";
-import { TouchableOpacity, FlatList, TouchableWithoutFeedback } from "react-native";
-import { ManageMe_Header } from "../../util/Render";
+import {
+  TouchableOpacity,
+  FlatList,
+  TouchableWithoutFeedback
+} from "react-native";
+import {
+  ManageMe_Header,
+  ManageMe_LoadingScreen
+} from "../../util/Render";
 import Modal from "react-native-modal";
 const Auth = require("../../util/Auth");
 const ApiCalls = require("../../util/ApiCalls");
@@ -27,7 +33,6 @@ class Projects extends Component {
     this.assignProjectsToState.bind(this);
     this.getRenderFromState.bind(this);
     this._renderBody.bind(this);
-    this._renderLoadingScreen.bind(this);
     this._renderProjectData.bind(this);
     this._renderModal.bind(this);
     this._renderModalButton.bind(this);
@@ -128,15 +133,6 @@ class Projects extends Component {
     );
   }
 
-  // Render loading screen
-  _renderLoadingScreen() {
-    return (
-      <Content padder>
-        <Spinner color="blue" />
-      </Content>
-    );
-  }
-
   // Render Body
   _renderBody() {
     if (this.getRenderFromState()) {
@@ -156,7 +152,7 @@ class Projects extends Component {
         </Content>
       );
     } else {
-      return this._renderLoadingScreen();
+      return <ManageMe_LoadingScreen />;
     }
   }
 

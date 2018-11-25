@@ -9,12 +9,17 @@ import {
   View,
   Text,
   Card,
-  Spinner,
   Input,
 } from "native-base";
 import styles from "./styles";
-import { FlatList, Alert } from "react-native";
-import { ManageMe_Header } from "../../util/Render";
+import {
+  FlatList,
+  Alert
+} from "react-native";
+import {
+  ManageMe_Header,
+  ManageMe_LoadingScreen
+} from "../../util/Render";
 const Auth = require("../../util/Auth");
 const ApiCalls = require("../../util/ApiCalls");
 
@@ -53,7 +58,6 @@ class ProjectInfo extends Component {
     this.getTime.bind(this);
     this.getInitialPage.bind(this);
     this._renderTabs.bind(this);
-    this._renderLoadingScreen.bind(this);
     this._renderProjectInfo.bind(this);
     this._renderProject.bind(this);
     this._renderRequirementButton.bind(this);
@@ -330,15 +334,6 @@ class ProjectInfo extends Component {
     );
   }
 
-  // Render loading screen
-  _renderLoadingScreen() {
-    return (
-      <Content padder>
-        <Spinner color="blue" />
-      </Content>
-    );
-  }
-
   // Render Tabs
   _renderTabs() {
     if (this.getRenderFromState()) {
@@ -353,7 +348,7 @@ class ProjectInfo extends Component {
         </Tabs>
       );
     } else {
-      return this._renderLoadingScreen();
+      return <ManageMe_LoadingScreen />;
     }
   }
 

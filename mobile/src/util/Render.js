@@ -7,7 +7,9 @@ import {
   Right,
   Body,
   Icon,
-  Text
+  Text,
+  Content,
+  Spinner
 } from "native-base";
 
 /** HEADER **/
@@ -55,6 +57,15 @@ export function ManageMe_Button(props) {
     >
       <Icon name={props.iconName} />
     </Button>
+  );
+}
+
+/** LOADING SCREEN **/
+export function ManageMe_LoadingScreen() {
+  return (
+    <Content padder>
+      <Spinner color="blue" />
+    </Content>
   );
 }
 
