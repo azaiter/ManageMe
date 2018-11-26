@@ -14,7 +14,8 @@ import {
 } from "react-native";
 import {
   ManageMe_Header,
-  ManageMe_LoadingScreen
+  ManageMe_LoadingScreen,
+  ManageMe_DisplayError,
 } from "../../util/Render";
 import Modal from "react-native-modal";
 const Auth = require("../../util/Auth");
@@ -139,10 +140,9 @@ class Projects extends Component {
       return (
         <Content padder>
           {this.state.projectsList === "null" ?
-            <View style={styles.warningView} >
-              <Icon style={styles.warningIcon} name="warning" />
-              <Text style={styles.warningText}>{this.state.ApiErrorsList}</Text>
-            </View> :
+            <ManageMe_DisplayError
+              ApiErrorsList={this.state.ApiErrorsList}
+            /> :
             <FlatList
               style={styles.container}
               data={this.state.projectsList}

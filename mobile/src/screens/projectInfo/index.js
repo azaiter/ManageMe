@@ -18,7 +18,8 @@ import {
 } from "react-native";
 import {
   ManageMe_Header,
-  ManageMe_LoadingScreen
+  ManageMe_LoadingScreen,
+  ManageMe_DisplayError
 } from "../../util/Render";
 const Auth = require("../../util/Auth");
 const ApiCalls = require("../../util/ApiCalls");
@@ -357,10 +358,9 @@ class ProjectInfo extends Component {
     return (
       <Content padder>
         {this.state.projectInfo === "null" ?
-          <View style={styles.warningView} >
-            <Icon style={styles.warningIcon} name="warning" />
-            <Text style={styles.warningText}>{this.state.ApiErrorsList}</Text>
-          </View> :
+          <ManageMe_DisplayError
+            ApiErrorsList={this.state.ApiErrorsList}
+          /> :
           <FlatList
             style={styles.container}
             data={this.state.projectInfo}
@@ -388,10 +388,9 @@ class ProjectInfo extends Component {
               {"  "}{info.created}
             </Text>
           </View>{this.state.teamData === "null" ?
-            <View style={styles.warningView} >
-              <Icon style={styles.warningIcon} name="warning" />
-              <Text style={styles.warningText}>{this.state.ApiErrorsList}</Text>
-            </View> :
+            <ManageMe_DisplayError
+              ApiErrorsList={this.state.ApiErrorsList}
+            /> :
             <Button
               transparent
               onPress={() => this.props.navigation.navigate("TeamMembers", { uid: this.state.teamData[0].uid })}
@@ -403,10 +402,9 @@ class ProjectInfo extends Component {
             </Button>
           }
           {this.state.projectHours === "null" ?
-            <View style={styles.warningView} >
-              <Icon style={styles.warningIcon} name="warning" />
-              <Text style={styles.warningText}>{this.state.ApiErrorsList}</Text>
-            </View> :
+            <ManageMe_DisplayError
+              ApiErrorsList={this.state.ApiErrorsList}
+            /> :
             <Text style={styles.projectHours}>
               {this.getTime()}
             </Text>
@@ -417,10 +415,9 @@ class ProjectInfo extends Component {
             <Card style={styles.card}>
               <Text style={styles.projectTitle}>Requirements</Text>
               {this.state.requirementList === "null" ?
-                <View style={styles.warningView} >
-                  <Icon style={styles.warningIcon} name="warning" />
-                  <Text style={styles.warningText}>{this.state.ApiErrorsList}</Text>
-                </View> :
+                <ManageMe_DisplayError
+                  ApiErrorsList={this.state.ApiErrorsList}
+                /> :
                 <View>
                   {this._renderRequirementButton("Active")}
                   {this._renderRequirementButton("Pending")}
@@ -473,10 +470,9 @@ class ProjectInfo extends Component {
         </View>
         <View>
           {this.state.commentList === "null" ?
-            <View style={styles.warningView} >
-              <Icon style={styles.warningIcon} name="warning" />
-              <Text style={styles.warningText}>{this.state.ApiErrorsList}</Text>
-            </View> :
+            <ManageMe_DisplayError
+              ApiErrorsList={this.state.ApiErrorsList}
+            /> :
             <FlatList
               data={this.state.commentList}
               renderItem={data => this._renderComment(data.item)}
