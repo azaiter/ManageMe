@@ -103,8 +103,9 @@ export function ManageMe_Modal(props) {
         swipeDirection="down"
         isVisible={props.data.modalVisible}>
         <View style={{ padding: 22, justifyContent: "center", alignItems: "center" }}>
-          <Text style={{ fontSize: 30, fontWeight: "bold", color: "white" }}>
-            {props.data.name}
+          <Text style={{ fontSize: 30, fontWeight: "bold", color: "white" }}>{
+            props.data.name || props.data.first_name + " " + props.data.last_name
+          }
           </Text>
         </View>
         <View style={{

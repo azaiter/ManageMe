@@ -8,10 +8,16 @@ import {
     Spinner,
 } from "native-base";
 import styles from "./styles";
-import { TouchableOpacity, FlatList, TouchableWithoutFeedback, Alert } from "react-native";
-import Modal from "react-native-modal";
+import {
+    TouchableOpacity,
+    FlatList,
+    Alert
+} from "react-native";
 import SectionedMultiSelect from "react-native-sectioned-multi-select";
-import { ManageMe_Header } from "../../util/Render";
+import {
+    ManageMe_Header,
+    ManageMe_Modal,
+} from "../../util/Render";
 const Auth = require("../../util/Auth");
 const ApiCalls = require("../../util/ApiCalls");
 
@@ -30,13 +36,9 @@ class TeamMembers extends Component {
         this.assignUsersToState.bind(this);
         this.getRenderFromState.bind(this);
         this.onSelectedItemsChange.bind(this);
-        this.onModalButtonClick.bind(this);
-        this.closeModal.bind(this);
         this._renderBody.bind(this);
         this._renderLoadingScreen.bind(this);
         this._renderTeamMemberData.bind(this);
-        this._renderModal.bind(this);
-        this._renderModalButton.bind(this);
     }
 
     // Refresh the page when coming from a back navigation event.
@@ -156,24 +158,10 @@ class TeamMembers extends Component {
         }
     }
 
-    // Handles the onClick event for the modal buttons.
-    onModalButtonClick(teamMemberData, buttonText) {
-        this.closeModal(teamMemberData);
-        if (buttonText === "Assign Lead") {
-            ApiCalls.makeTeamLead(this.params.uid, teamMemberData.uid).then(response => {
-                ApiCalls.handleAPICallResult(response, this).then(apiResults => {
-                    if (apiResults) {
-                        this.assignTeamMembersToState({ refresh: true });
-                    }
-                });
-            });
-        }
-    }
-
-    // Closes the modal.
-    closeModal(teamMemberData) {
-        teamMemberData.modalVisible = false;
+    // Modal Set State.
+    modalSetstate = async (teamMemberData) => {
         if (this._isMounted) {
+            teamMemberData.modalVisible = !teamMemberData.modalVisible;
             this.setState(JSON.parse(JSON.stringify(this.state)));
         }
     }
@@ -187,7 +175,7 @@ class TeamMembers extends Component {
                     title="Team Members"
                     leftIcon="back"
                     onPress={{
-                        left: this.props.navigation.goBack,
+                        left: () => this.props.navigation.goBack(),
                         refresh: () => { this.assignTeamMembersToState({ refresh: true }); }
                     }}
                 />
@@ -250,12 +238,9 @@ class TeamMembers extends Component {
 
     _renderTeamMemberData(teamMemberData) {
         return (
-            <TouchableOpacity style={styles.teamItem} onPress={() => {
-                teamMemberData.modalVisible = true;
-                if (this._isMounted) {
-                    this.setState(JSON.parse(JSON.stringify(this.state)));
-                }
-            }}>
+            <TouchableOpacity style={styles.teamItem} onPress={() =>
+                this.modalSetstate(teamMemberData)
+            }>
                 <View style={styles.text}>
                     <Text style={[styles.title, styles["isLead" + teamMemberData.isLead]]}>{teamMemberData.first_name} {teamMemberData.last_name}</Text>
                     <Text style={styles.body}>
@@ -272,40 +257,41 @@ class TeamMembers extends Component {
                     </View>
                 </View>
                 <Icon style={styles.icon} name="more" />
-                {teamMemberData.isLead === 1 ? null : this._renderModal(teamMemberData)}
+                {teamMemberData.isLead === 1 ? null :
+                    <ManageMe_Modal
+                        data={teamMemberData}
+                        button={
+                            [
+                                {
+                                    text: "Assign Lead",
+                                    onPress: () => { this.makeTeamLead(teamMemberData); }
+                                }
+                            ]
+                        }
+                        onPress={{ modal: () => this.modalSetstate(teamMemberData) }}
+                    />
+                }
             </TouchableOpacity>
         );
     }
 
-    _renderModal(teamMemberData) {
-        return (
-            <TouchableWithoutFeedback onPress={() => this.closeModal(teamMemberData)}>
-                <Modal
-                    onBackdropPress={() => this.closeModal(teamMemberData)}
-                    onBackButtonPress={() => this.closeModal(teamMemberData)}
-                    onSwipe={() => this.closeModal(teamMemberData)}
-                    swipeDirection="down"
-                    isVisible={teamMemberData.modalVisible}>
-                    <View style={styles.modalContent}>
-                        <Text style={styles.modalTitle}>{teamMemberData.first_name} {teamMemberData.last_name}</Text>
-                        <View style={styles.modalFlex}>
-                            {this._renderModalButton(teamMemberData, "Assign Lead")}
-                        </View>
-                    </View>
-                </Modal>
-            </TouchableWithoutFeedback>
-        );
-    }
-
-    _renderModalButton(teamMemberData, buttonText) {
-        return (
-            <TouchableOpacity style={styles.modalButton} onPress={() => {
-                this.onModalButtonClick(teamMemberData, buttonText);
-            }}>
-                <Text style={styles.modalText}>{buttonText}</Text>
-            </TouchableOpacity>
-        );
-    }
+    makeTeamLead(teamMemberData) {
+        ApiCalls.makeTeamLead(this.params.uid, teamMemberData.uid).then(response => {
+          ApiCalls.handleAPICallResult(response, this).then(apiResults => {
+            if (apiResults) {
+              Alert.alert("Success", `"${teamMemberData.first_name} ${teamMemberData.last_name}" has been made Team Lead !`,
+                [
+                  {
+                    text: "OK", onPress: () => {
+                        this.assignTeamMembersToState({ refresh: true });
+                    }
+                  },
+                ],
+                { cancelable: false });
+            }
+          });
+        });
+      }
 }
 
 export default TeamMembers;
