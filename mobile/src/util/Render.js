@@ -9,7 +9,8 @@ import {
   Icon,
   Text,
   Content,
-  Spinner
+  Spinner,
+  View,
 } from "native-base";
 
 /** HEADER **/
@@ -66,6 +67,16 @@ export function ManageMe_LoadingScreen() {
     <Content padder>
       <Spinner color="blue" />
     </Content>
+  );
+}
+
+/** DISPLAY ERROR **/
+export function ManageMe_DisplayError(props) {
+  return (
+    <View style={{ alignItems: "center" }} >
+      <Icon style={{ fontSize: 60, color: "red" }} name="ios-close-circle" />
+      <Text style={{ fontWeight: "bold", fontSize: 22, color: "red" }}>{props.ApiErrorsList}</Text>
+    </View>
   );
 }
 
