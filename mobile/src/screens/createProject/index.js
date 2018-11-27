@@ -215,7 +215,7 @@ class CreateProject extends Component {
           title={(this.params.action === "edit") ? "Edit Project" : "Create Project"}
           leftIcon="back"
           onPress={{
-            left: this.props.navigation.goBack,
+            left: () => this.props.navigation.goBack(),
             refresh: () => { this.assignTeamsToState({ refresh: true }); }
           }}
         />

@@ -206,7 +206,7 @@ class CreateUser extends Component {
         <ManageMe_Header
           title = {(this.params.action === "edit") ? "Edit User" : "Create User"}
           leftIcon = "back"
-          onPress = {{ left: this.props.navigation.goBack }}
+          onPress = {{ left: () => this.props.navigation.goBack() }}
         />
         {this._renderBody()}
       </Container>
