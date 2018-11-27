@@ -403,7 +403,7 @@ class Requirements extends Component {
           title="Requirements"
           leftIcon="back"
           onPress={{
-            left: this.props.navigation.goBack,
+            left: () => this.props.navigation.goBack(),
             add: () => { this.props.navigation.navigate("CreateRequirement", { action: "create", projId: this.params.uid }); },
             refresh: () => {
               this.assignRequirementsToState({ refresh: true });

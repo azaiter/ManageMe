@@ -202,7 +202,7 @@ class CreateRequirement extends Component {
         <ManageMe_Header
           title={(this.params.action === "edit") ? "Edit Requirement" : "Create Requirement"}
           leftIcon="back"
-          onPress={{ left: this.props.navigation.goBack }}
+          onPress={{ left: () => this.props.navigation.goBack() }}
         />
         {this._renderBody()}
       </Container>

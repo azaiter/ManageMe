@@ -33,18 +33,6 @@ export default {
     color: "#000090",
   },
 
-  modalTitle: {
-    fontSize: 30,
-    fontWeight: "bold",
-    color: "white",
-  },
-
-  modalText: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "black",
-  },
-
   bodyFlex: {
     paddingBottom: 10,
   },
@@ -54,10 +42,6 @@ export default {
     flexDirection: "row",
     paddingTop: 10,
     paddingBottom: 10,
-  },
-
-  modalFlex: {
-    flexDirection: "row",
   },
 
   time: {
@@ -81,21 +65,6 @@ export default {
     textShadowColor: "#FF4B4B",
     textShadowOffset: { width: -1, height: 1 },
     textShadowRadius: 10,
-  },
-
-  modalButton: {
-    backgroundColor: "lightskyblue",
-    padding: 12,
-    margin: 16,
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 4,
-  },
-
-  modalContent: {
-    padding: 22,
-    justifyContent: "center",
-    alignItems: "center",
   },
 
   warningIcon: {

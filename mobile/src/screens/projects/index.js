@@ -10,14 +10,13 @@ import styles from "./styles";
 import {
   TouchableOpacity,
   FlatList,
-  TouchableWithoutFeedback
 } from "react-native";
 import {
   ManageMe_Header,
   ManageMe_LoadingScreen,
   ManageMe_DisplayError,
+  ManageMe_Modal,
 } from "../../util/Render";
-import Modal from "react-native-modal";
 const Auth = require("../../util/Auth");
 const ApiCalls = require("../../util/ApiCalls");
 
@@ -35,10 +34,6 @@ class Projects extends Component {
     this.getRenderFromState.bind(this);
     this._renderBody.bind(this);
     this._renderProjectData.bind(this);
-    this._renderModal.bind(this);
-    this._renderModalButton.bind(this);
-    this.onModalButtonClick.bind(this);
-    this.closeModal.bind(this);
   }
 
   // Refresh the page when coming from a back navigation event.
@@ -88,30 +83,20 @@ class Projects extends Component {
     }
   }
 
-  // Handles the onClick event for the modal buttons.
-  onModalButtonClick(projectData, buttonText) {
-    this.closeModal(projectData);
-    if (buttonText === "Project Info") {
-      return this.props.navigation.navigate("ProjectInfo", { uid: projectData.uid });
-    } else {
-      return this.props.navigation.navigate("Requirements", { uid: projectData.uid });
-    }
-  }
-
-  // Closes the modal.
-  closeModal(projectData) {
-    projectData.modalVisible = false;
-    if (this._isMounted) {
-      this.setState(JSON.parse(JSON.stringify(this.state)));
-    }
-  }
-
   // Reduces text to 40 characters.
   truncate(text) {
     if (text.length > 40) {
       return `${text.substr(0, 40)}...`;
     } else {
       return text;
+    }
+  }
+
+  // Modal Set State.
+  modalSetstate = async (projectData) => {
+    if (this._isMounted) {
+      projectData.modalVisible = !projectData.modalVisible;
+      this.setState(JSON.parse(JSON.stringify(this.state)));
     }
   }
 
@@ -124,7 +109,7 @@ class Projects extends Component {
           title="Projects"
           leftIcon="menu"
           onPress={{
-            left: this.props.navigation.openDrawer,
+            left: () => this.props.navigation.openDrawer(),
             add: () => { this.props.navigation.navigate("CreateProject", { action: "create" }); },
             refresh: () => { this.assignProjectsToState({ refresh: true }); }
           }}
@@ -159,12 +144,9 @@ class Projects extends Component {
   // Render Project Data
   _renderProjectData(projectData) {
     return (
-      <TouchableOpacity style={styles.projectItem} onPress={() => {
-        projectData.modalVisible = true;
-        if (this._isMounted) {
-          this.setState(JSON.parse(JSON.stringify(this.state)));
-        }
-      }}>
+      <TouchableOpacity style={styles.projectItem} onPress={() =>
+        this.modalSetstate(projectData)
+      }>
         <View style={styles.text}>
           <Text style={styles.title}>{projectData.name}</Text>
           <Text style={styles.body}>
@@ -178,40 +160,28 @@ class Projects extends Component {
           </View>
         </View>
         <Icon style={styles.icon} name="more" />
-        {this._renderModal(projectData)}
-      </TouchableOpacity>
-    );
-  }
-
-  // Render Modal
-  _renderModal(projectData) {
-    return (
-      <TouchableWithoutFeedback onPress={() => this.closeModal(projectData)}>
-        <Modal
-          onBackdropPress={() => this.closeModal(projectData)}
-          onBackButtonPress={() => this.closeModal(projectData)}
-          onSwipe={() => this.closeModal(projectData)}
-          swipeDirection="down"
-          isVisible={projectData.modalVisible}>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>{projectData.name}</Text>
-            <View style={styles.modalFlex}>
-              {this._renderModalButton(projectData, "Project Info")}
-              {this._renderModalButton(projectData, "Requirements")}
-            </View>
-          </View>
-        </Modal>
-      </TouchableWithoutFeedback>
-    );
-  }
-
-  // Render Modal Button
-  _renderModalButton(projectData, buttonText) {
-    return (
-      <TouchableOpacity style={styles.modalButton} onPress={() => {
-        this.onModalButtonClick(projectData, buttonText);
-      }}>
-        <Text style={styles.modalText}>{buttonText}</Text>
+        <ManageMe_Modal
+          data={projectData}
+          button={
+            [
+              {
+                text: "Project Info",
+                onPress: () => {
+                  this.props.navigation.navigate("ProjectInfo", { uid: projectData.uid });
+                  this.modalSetstate(projectData);
+                }
+              },
+              {
+                text: "Requirements",
+                onPress: () => {
+                  this.props.navigation.navigate("Requirements", { uid: projectData.uid });
+                  this.modalSetstate(projectData);
+                }
+              }
+            ]
+          }
+          onPress={{ modal: () => this.modalSetstate(projectData) }}
+        />
       </TouchableOpacity>
     );
   }

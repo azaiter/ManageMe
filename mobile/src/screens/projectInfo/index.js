@@ -321,7 +321,7 @@ class ProjectInfo extends Component {
           title="Project Details"
           leftIcon="back"
           onPress={{
-            left: this.props.navigation.goBack,
+            left: () => this.props.navigation.goBack(),
             refresh: () => {
               this.assignRequirementsToState({ refresh: true });
               this.assignCommentsToState({ refresh: true });

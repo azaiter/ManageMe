@@ -43,7 +43,7 @@ class Permissions extends Component {
           title="My Permissions"
           leftIcon="menu"
           onPress={{
-            left: this.props.navigation.openDrawer,
+            left: () => this.props.navigation.openDrawer(),
             refresh: () => { Auth.getPermissions.bind(this); }
           }}
         />

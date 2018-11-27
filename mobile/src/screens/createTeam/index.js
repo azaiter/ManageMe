@@ -132,7 +132,7 @@ class CreateTeam extends Component {
         <ManageMe_Header
           title="Create Team"
           leftIcon="back"
-          onPress={{ left: this.props.navigation.goBack }}
+          onPress={{ left: () => this.props.navigation.goBack() }}
         />
         {this._renderBody()}
       </Container>

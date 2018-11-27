@@ -50,10 +50,6 @@ class Teams extends Component {
         if (this._isMounted) {
           ApiCalls.handleAPICallResult(response, this).then(apiResults => {
             if (apiResults) {
-              apiResults.forEach(result => {
-                result.modalVisible = false;
-                result.key = result.uid.toString() + "_" + result.modalVisible.toString();
-              });
               this.setState({
                 teamsList: apiResults
               });
@@ -95,7 +91,7 @@ class Teams extends Component {
           title="Teams"
           leftIcon="menu"
           onPress={{
-            left: this.props.navigation.openDrawer,
+            left: () => this.props.navigation.openDrawer(),
             add: () => { this.props.navigation.navigate("CreateTeam"); },
             refresh: () => { this.assignTeamsToState({ refresh: true }); }
           }}
