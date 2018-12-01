@@ -443,6 +443,17 @@ class Requirements extends Component {
                   renderContent={this._renderAccordionContent}
                 />
               }
+              {this.state.requirementList === "null" ?
+                <View style={styles.warningView} >
+                  <Icon style={styles.warningIcon} name="warning" />
+                  <Text style={styles.warningText}>{this.state.ApiErrorsList}</Text>
+                </View> :
+                <Accordion
+                  dataArray={this.state.requirementList.changeRequest}
+                  renderHeader={this._renderAccordionHeader}
+                  renderContent={this._renderAccordionContent}
+                />
+              }
             </Content>
           </Tab>
           <Tab heading="Pending" >
@@ -485,8 +496,8 @@ class Requirements extends Component {
   // Render Accordion Header
   _renderAccordionHeader = (requirementData, expanded) => {
     return (
-      <View style={styles.accordionHeaderView}>
-        <Text style={styles.requirementDataTitle}>{requirementData.name}</Text>
+      <View style={requirementData.status === 4 ? styles.accordionHeaderViewOld : styles.accordionHeaderView}>
+          <Text style={requirementData.status === 4 ? styles.requirementDataTitleOld : styles.requirementDataTitle}>{requirementData.name}</Text> :
         {
           expanded ?
             <Icon style={styles.expandedIconStyle} name="remove-circle" /> :
@@ -499,7 +510,7 @@ class Requirements extends Component {
   // Render Accordion Content
   _renderAccordionContent = (requirementData) => {
     return (
-      <View style={styles.accordionContentView}>
+      <View style={requirementData.status === 4 ? styles.accordionContentViewOld : styles.accordionContentView}>
         <View>
           <Text style={styles.requirementDataDesc}>{requirementData.desc}</Text>
           <View style={styles.flex}>
