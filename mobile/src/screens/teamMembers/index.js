@@ -5,7 +5,6 @@ import {
     Text,
     Icon,
     View,
-    Spinner,
 } from "native-base";
 import styles from "./styles";
 import {
@@ -38,7 +37,6 @@ class TeamMembers extends Component {
         this.getRenderFromState.bind(this);
         this.onSelectedItemsChange.bind(this);
         this._renderBody.bind(this);
-        this._renderLoadingScreen.bind(this);
         this._renderTeamMemberData.bind(this);
     }
 

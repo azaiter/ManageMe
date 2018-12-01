@@ -16,6 +16,14 @@ export default {
     backgroundColor: "#A9DAD6"
   },
 
+  accordionHeaderViewOld: {
+    flexDirection: "row",
+    padding: 10,
+    justifyContent: "space-between",
+    alignItems: "center",
+    backgroundColor: "#769895"
+  },
+
   iconStyle: {
     fontSize: 20,
     color: "green",
@@ -31,10 +39,22 @@ export default {
     backgroundColor: "#E3F1F1"
   },
 
+  accordionContentViewOld: {
+    padding: 10,
+    backgroundColor: "#9EA8A8"
+  },
+
   requirementDataTitle: {
     fontSize: 23,
     fontWeight: "bold",
     color: "#008000",
+  },
+
+  requirementDataTitleOld: {
+    fontSize: 23,
+    fontWeight: "bold",
+    color: "#800000",
+    textDecorationLine: "line-through",
   },
 
   requirementDataDesc: {
