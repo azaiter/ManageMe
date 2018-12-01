@@ -224,7 +224,7 @@ class TeamMembers extends Component {
                 </Content>
             );
         } else {
-            return this._renderLoadingScreen();
+            return <ManageMe_LoadingScreen />;
         }
     }
 

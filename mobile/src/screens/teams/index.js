@@ -1,20 +1,24 @@
 import React, { Component } from "react";
 import {
   Container,
+  Header,
+  Title,
   Content,
+  Button,
+  Left,
+  Right,
+  Body,
   Text,
   Icon,
-  View,
-  Spinner,
+  View
 } from "native-base";
 import styles from "./styles";
-import { TouchableOpacity, FlatList } from "react-native";
-import { ManageMe_Header } from "../../util/Render";
+import { TouchableOpacity, FlatList, TouchableWithoutFeedback } from "react-native";
+import Modal from "react-native-modal";
 const Auth = require("../../util/Auth");
 const ApiCalls = require("../../util/ApiCalls");
 
 class Teams extends Component {
-  _isMounted = false;
   constructor(props) {
     super(props);
     this.state = {};
@@ -22,54 +26,38 @@ class Teams extends Component {
       navigate: "Teams",
       setUserPermissions: true
     });
-    Auth.userHasPermission.bind(this);
-    this.assignTeamsToState.bind(this);
-    this.getRenderFromState.bind(this);
-    this._renderBody.bind(this);
-    this._renderLoadingScreen.bind(this);
-    this._renderTeamData.bind(this);
   }
 
   // Refresh the page when coming from a back navigation event.
   willFocus = this.props.navigation.addListener("willFocus", payload => {
     this.assignTeamsToState({ refresh: true });
   });
-
-  componentDidMount() {
-    this._isMounted = true;
-  }
-
-  componentWillUnmount() {
-    this._isMounted = false;
-  }
-
++
   // Retrieve team list from API and assign to state.
   assignTeamsToState(opts = { refresh: false }) {
     if ((this.state && this.state.loggedIn) && (!this.state.teamsList || opts.refresh)) {
       ApiCalls.getTeams().then(response => {
-        if (this._isMounted) {
-          ApiCalls.handleAPICallResult(response, this).then(apiResults => {
-            if (apiResults) {
-              this.setState({
-                teamsList: apiResults
-              });
-            } else {
-              this.setState({
-                teamsList: "null"
-              });
-            }
-          });
-        }
+        ApiCalls.handleAPICallResult(response).then(apiResults => {
+          if (apiResults) {
+            apiResults.forEach(result => {
+              result.modalVisible = false;
+              result.key = result.uid.toString() + "_" + result.modalVisible.toString();
+            });
+            this.setState({
+              teamsList: apiResults
+            });
+          }
+        });
       });
     }
   }
 
-  // Retrieve Render from state.
-  getRenderFromState() {
+  // Retrieve team list from state.
+  getTeamsFromState() {
     if (this.state && this.state.teamsList) {
-      return true;
+      return this.state.teamsList;
     } else {
-      return false;
+      return [];
     }
   }
 
@@ -82,73 +70,128 @@ class Teams extends Component {
     }
   }
 
+  // Handles the onClick event for the modal buttons.
+  onModalButtonClick(teamData, buttonText) {
+    this.closeModal(teamData);
+    // @TODO: Implement Button Events
+    if (buttonText === "Info") {
+      return this.props.navigation.navigate("TeamInfo", { uid: teamData.uid });
+    } else {
+      return this.props.navigation.navigate("TeamMembers", { uid: teamData.uid });
+    }
+  }
+
+  // Closes the modal.
+  closeModal(teamData) {
+    teamData.modalVisible = false;
+    this.setState(JSON.parse(JSON.stringify(this.state)));
+  }
+
   // Render
   render() {
     this.assignTeamsToState();
     return (
       <Container style={styles.container}>
-        <ManageMe_Header
-          title="Teams"
-          leftIcon="menu"
-          onPress={{
-            left: () => this.props.navigation.openDrawer(),
-            add: () => { this.props.navigation.navigate("CreateTeam"); },
-            refresh: () => { this.assignTeamsToState({ refresh: true }); }
-          }}
-        />
+        {this._renderHeader()}
         {this._renderBody()}
       </Container>
     );
   }
 
-  // Render loading screen
-  _renderLoadingScreen() {
+  // Render Header
+  _renderHeader() {
     return (
-      <Content padder>
-        <Spinner color="blue" />
-      </Content>
+      <Header>
+        <Left>
+          <Button
+            transparent
+            onPress={() => this.props.navigation.navigate("DrawerOpen")}
+          >
+            <Icon name="menu" />
+          </Button>
+        </Left>
+        <Body>
+          <Title>Teams</Title>
+        </Body>
+        <Right style={styles.flex}>
+          <Button
+            transparent
+            onPress={() => this.props.navigation.navigate("CreateTeam")}
+          >
+            <Icon name="add" />
+          </Button>
+          <Button
+            transparent
+            onPress={() => this.assignTeamsToState({ refresh: true })}
+          >
+            <Icon name="refresh" />
+          </Button>
+        </Right>
+      </Header>
     );
   }
 
   // Render Body
   _renderBody() {
-    if (this.getRenderFromState()) {
-      return (
-        <Content padder>
-          {this.state.teamsList === "null" ?
-            <View style={styles.warningView} >
-              <Icon style={styles.warningIcon} name="warning" />
-              <Text style={styles.warningText}>{this.state.ApiErrorsList}</Text>
-            </View> :
-            <FlatList
-              style={styles.container}
-              data={this.state.teamsList}
-              renderItem={data => this._renderTeamData(data.item)}
-              keyExtractor={item => item.uid.toString()}
-            />
-          }
-        </Content>
-      );
-    } else {
-      return this._renderLoadingScreen();
-    }
+    return (
+      <Content padder>
+        <FlatList
+          style={styles.container}
+          data={this.getTeamsFromState()}
+          renderItem={data => this._renderTeamData(data.item)}
+        />
+      </Content>
+    );
   }
 
   // Render Team Data
   _renderTeamData(teamData) {
     return (
-      <TouchableOpacity style={styles.teamItem} onPress={() =>
-        this.props.navigation.navigate("TeamMembers", { uid: teamData.uid })
-      }>
+      <TouchableOpacity style={styles.teamItem} onPress={() => {
+        teamData.modalVisible = true;
+        this.setState(JSON.parse(JSON.stringify(this.state)));
+      }}>
         <View style={styles.text}>
           <Text style={styles.title}>{teamData.name}</Text>
-          <View style={styles.bodyFlex}>
-            <Text style={styles.body}>
-              {this.truncate(teamData.desc)}
-            </Text>
-          </View>
+          <Text style={styles.body}>
+            {this.truncate(teamData.desc)}
+          </Text>
         </View>
         <Icon style={styles.icon} name="more" />
+        {this._renderModal(teamData)}
+      </TouchableOpacity>
+    );
+  }
+
+  // Render Modal
+  _renderModal(teamData) {
+    return (
+      <TouchableWithoutFeedback onPress={() => this.closeModal(teamData)}>
+        <Modal
+          onBackdropPress={() => this.closeModal(teamData)}
+          onBackButtonPress={() => this.closeModal(teamData)}
+          onSwipe={() => this.closeModal(teamData)}
+          swipeDirection="down"
+          isVisible={teamData.modalVisible}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>{teamData.name}</Text>
+            <View style={styles.modalFlex}>
+              {this._renderModalButton(teamData, "Info")}
+              {this._renderModalButton(teamData, "Members")}
+            </View>
+          </View>
+        </Modal>
+      </TouchableWithoutFeedback>
+    );
+  }
+
+  // Render Modal Button
+  _renderModalButton(teamData, buttonText) {
+    return (
+      <TouchableOpacity style={styles.modalButton} onPress={() => {
+        this.onModalButtonClick(teamData, buttonText);
+      }}>
+        <Text style={styles.modalText}>{buttonText}</Text>
       </TouchableOpacity>
     );
   }

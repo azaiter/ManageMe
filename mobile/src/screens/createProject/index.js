@@ -14,7 +14,10 @@ import {
 } from "native-base";
 import { Alert, View, Platform } from "react-native";
 import styles from "./styles";
-import { ManageMe_Header } from "../../util/Render";
+import {
+  ManageMe_Header,
+  ManageMe_LoadingScreen
+} from "../../util/Render";
 const Auth = require("../../util/Auth");
 const ApiCalls = require("../../util/ApiCalls");
 
@@ -224,15 +227,6 @@ class CreateProject extends Component {
     );
   }
 
-  // Render loading screen
-  _renderLoadingScreen() {
-    return (
-      <Content padder>
-        <Spinner color="blue" />
-      </Content>
-    );
-  }
-
   _renderBody() {
     if (this.getRenderFromState()) {
       return (
@@ -309,7 +303,7 @@ class CreateProject extends Component {
         </Content>
       );
     } else {
-      return this._renderLoadingScreen();
+      
     }
   }
 
