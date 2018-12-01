@@ -13,7 +13,10 @@ import {
 } from "native-base";
 import { Alert } from "react-native";
 import styles from "./styles";
-import { ManageMe_Header } from "../../util/Render";
+import {
+  ManageMe_Header,
+  ManageMe_LoadingScreen
+} from "../../util/Render";
 const Auth = require("../../util/Auth");
 const ApiCalls = require("../../util/ApiCalls");
 
@@ -416,15 +419,6 @@ class Requirements extends Component {
     );
   }
 
-  // Render loading screen
-  _renderLoadingScreen() {
-    return (
-      <Content padder>
-        <Spinner color="blue" />
-      </Content>
-    );
-  }
-
   // Render Tabs
   _renderTabs() {
     if (this.getRenderFromState()) {
@@ -478,7 +472,7 @@ class Requirements extends Component {
         </Tabs>
       );
     } else {
-      return this._renderLoadingScreen();
+      return <ManageMe_LoadingScreen />;
     }
   }
 

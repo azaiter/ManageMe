@@ -17,6 +17,7 @@ import SectionedMultiSelect from "react-native-sectioned-multi-select";
 import {
     ManageMe_Header,
     ManageMe_Modal,
+    ManageMe_LoadingScreen
 } from "../../util/Render";
 const Auth = require("../../util/Auth");
 const ApiCalls = require("../../util/ApiCalls");
@@ -224,16 +225,8 @@ class TeamMembers extends Component {
                 </Content>
             );
         } else {
-            return this._renderLoadingScreen();
+            return <ManageMe_LoadingScreen />;
         }
-    }
-
-    _renderLoadingScreen() {
-        return (
-            <Content padder>
-                <Spinner color="blue" />
-            </Content>
-        );
     }
 
     _renderTeamMemberData(teamMemberData) {

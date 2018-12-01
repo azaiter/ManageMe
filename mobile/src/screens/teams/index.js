@@ -9,7 +9,10 @@ import {
 } from "native-base";
 import styles from "./styles";
 import { TouchableOpacity, FlatList } from "react-native";
-import { ManageMe_Header } from "../../util/Render";
+import {
+  ManageMe_Header,
+  ManageMe_LoadingScreen
+} from "../../util/Render";
 const Auth = require("../../util/Auth");
 const ApiCalls = require("../../util/ApiCalls");
 
@@ -101,15 +104,6 @@ class Teams extends Component {
     );
   }
 
-  // Render loading screen
-  _renderLoadingScreen() {
-    return (
-      <Content padder>
-        <Spinner color="blue" />
-      </Content>
-    );
-  }
-
   // Render Body
   _renderBody() {
     if (this.getRenderFromState()) {
@@ -130,7 +124,7 @@ class Teams extends Component {
         </Content>
       );
     } else {
-      return this._renderLoadingScreen();
+      return <ManageMe_LoadingScreen />;
     }
   }
 
