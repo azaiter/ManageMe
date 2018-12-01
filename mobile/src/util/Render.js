@@ -8,8 +8,16 @@ import {
   Right,
   Body,
   Icon,
-  Text
+  Text,
+  Content,
+  Spinner,
+  View,
 } from "native-base";
+import {
+  TouchableOpacity,
+  TouchableWithoutFeedback
+} from "react-native";
+import Modal from "react-native-modal";
 
 /** HEADER **/
 export function ManageMe_Header(props) {
@@ -59,10 +67,12 @@ export function ManageMe_Button(props) {
   );
 }
 
-/** BODY **/
-export function ManageMe_Body(props) {
+/** LOADING SCREEN **/
+export function ManageMe_LoadingScreen() {
   return (
-    <Text>Not Yet Implemented</Text>
+    <Content padder>
+      <Spinner color="blue" />
+    </Content>
   );
 }
 
@@ -76,9 +86,68 @@ export function ManageMe_DisplayError(props) {
   );
 }
 
+/** BODY **/
+export function ManageMe_Body(props) {
+  return (
+    <Text>Not Yet Implemented</Text>
+  );
+}
+
 /** MODAL **/
 export function _Modal(props) {
   return (
-    <Text>Not Yet Implemented</Text>
+    <TouchableWithoutFeedback onPress={props.onPress.modal}>
+      <Modal
+        onBackdropPress={props.onPress.modal}
+        onBackButtonPress={props.onPress.modal}
+        onSwipe={props.onPress.modal}
+        swipeDirection="down"
+        isVisible={props.data.modalVisible}>
+        <View style={{ padding: 22, justifyContent: "center", alignItems: "center" }}>
+          <Text style={{ fontSize: 30, fontWeight: "bold", color: "white" }}>{
+            props.data.name || props.data.first_name + " " + props.data.last_name
+          }
+          </Text>
+        </View>
+        <View style={{
+          flexDirection: "row",
+          justifyContent: "center"
+        }}>
+          {props.button.map(item => (
+            <ManageMe_ModalButton
+              key={item.text}
+              text={item.text}
+              onPress={item.onPress} />
+          ))}
+        </View>
+      </Modal>
+    </TouchableWithoutFeedback >
+  );
+}
+
+export function ManageMe_ModalButton(props) {
+  return (
+    <TouchableOpacity
+      style={{
+        backgroundColor: "lightskyblue",
+        padding: 12,
+        margin: 16,
+        justifyContent: "center",
+        alignItems: "center",
+        borderRadius: 4,
+      }}
+      onPress={() => {
+        props.onPress();
+      }}
+    >
+      <Text
+        style={{
+          fontSize: 18,
+          fontWeight: "bold",
+          color: "black",
+        }}>
+        {props.text}
+      </Text>
+    </TouchableOpacity>
   );
 }

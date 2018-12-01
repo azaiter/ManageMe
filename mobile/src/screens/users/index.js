@@ -5,13 +5,19 @@ import {
   Text,
   Icon,
   View,
-  Spinner,
 } from "native-base";
 import styles from "./styles";
-import { TouchableOpacity, FlatList, Alert, TouchableWithoutFeedback } from "react-native";
-import Modal from "react-native-modal";
+import {
+  TouchableOpacity,
+  FlatList,
+  Alert,
+} from "react-native";
 import SectionedMultiSelect from "react-native-sectioned-multi-select";
-import { ManageMe_Header } from "../../util/Render";
+import {
+  ManageMe_Header,
+  ManageMe_Modal,
+  ManageMe_LoadingScreen
+} from "../../util/Render";
 const Auth = require("../../util/Auth");
 const ApiCalls = require("../../util/ApiCalls");
 
@@ -27,10 +33,6 @@ class Users extends Component {
     Auth.userHasPermission.bind(this);
     this.assignUsersToState.bind(this);
     this.enableDisableUser.bind(this);
-    this.closeModal.bind(this);
-    this.goToUserInfo.bind(this);
-    this._renderModal.bind(this);
-    this._renderModalButton.bind(this);
     this._renderBody.bind(this);
     this._renderUserData.bind(this);
     this.onSelectedItemsChange.bind(this);
@@ -134,20 +136,20 @@ class Users extends Component {
     }
   }
 
-  // Closes the modal.
-  closeModal(userData) {
-    userData.modalVisible = false;
-    if (this._isMounted) {
-      this.setState(JSON.parse(JSON.stringify(this.state)));
-    }
-  }
-
   // Reduces text to 40 characters.
   truncate(text) {
     if (text.length > 40) {
       return `${text.substr(0, 40)}...`;
     } else {
       return text;
+    }
+  }
+
+  // Modal Set State.
+  modalSetstate = async (userData) => {
+    if (this._isMounted) {
+      userData.modalVisible = !userData.modalVisible;
+      this.setState(JSON.parse(JSON.stringify(this.state)));
     }
   }
 
@@ -160,22 +162,13 @@ class Users extends Component {
           title="Users"
           leftIcon="menu"
           onPress={{
-            left: this.props.navigation.openDrawer,
+            left: () => this.props.navigation.openDrawer(),
             add: () => { this.props.navigation.navigate("CreateUser", { action: "create" }); },
             refresh: () => { this.assignUsersToState({ refresh: true }); }
           }}
         />
         {this._renderBody()}
       </Container>
-    );
-  }
-
-  // Render loading screen
-  _renderLoadingScreen() {
-    return (
-      <Content padder>
-        <Spinner color="blue" />
-      </Content>
     );
   }
 
@@ -199,7 +192,7 @@ class Users extends Component {
         </Content>
       );
     } else {
-      return this._renderLoadingScreen();
+      return <ManageMe_LoadingScreen />;
     }
   }
 
@@ -232,12 +225,9 @@ class Users extends Component {
   // Render User Data
   _renderUserData(userData) {
     return (
-      <TouchableOpacity style={[styles.userItem]} onPress={() => {
-        userData.modalVisible = true;
-        if (this._isMounted) {
-          this.setState(JSON.parse(JSON.stringify(this.state)));
-        }
-      }}>
+      <TouchableOpacity style={[styles.userItem]} onPress={() =>
+        this.modalSetstate(userData)
+      }>
         <View style={styles.text}>
           <Text style={[styles.title, styles["userListEnabled" + userData.enabled]]}>{userData.first_name} {userData.last_name}</Text>
           <Text style={styles.body}> Username: {userData.username} </Text>
@@ -254,51 +244,28 @@ class Users extends Component {
           {this._renderPermissionsSelector(userData)}
         </View>
         <Icon style={styles.icon} name="more" />
-        {this._renderModal(userData)}
-      </TouchableOpacity>
-    );
-  }
-
-  // Render Modal
-  // @TODO: Implement proper buttons menu and polish the UI
-  _renderModal(userData) {
-    return (
-      <TouchableWithoutFeedback onPress={() => this.closeModal(userData)}>
-        <Modal
-          onBackdropPress={() => this.closeModal(userData)}
-          onBackButtonPress={() => this.closeModal(userData)}
-          onSwipe={() => this.closeModal(userData)}
-          swipeDirection="down"
-          isVisible={userData.modalVisible}>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>{userData.first_name} {userData.last_name}</Text>
-            <View style={styles.modalFlex}>
+        <ManageMe_Modal
+          data={userData}
+          button={
+            [
+              Auth.userHasPermission(this, 11) ?
+                {
+                  text: "Edit User",
+                  onPress: () => {
+                    this.props.navigation.navigate("CreateUser", { action: "edit", userData: userData });
+                    this.modalSetstate(userData);
+                  }
+                } : null,
               {
-                Auth.userHasPermission(this, 11) ?
-                  this._renderModalButton(userData, "Edit User", () => { this.goToUserInfo(userData); })
-                  : null
+                text: userData.enabled ? "Disable User" : "Enable User",
+                onPress: () => { this.enableDisableUser(userData); }
               }
-              {this._renderModalButton(userData, userData.enabled ? "Disable User" : "Enable User", () => { this.enableDisableUser(userData); })}
-            </View>
-          </View>
-        </Modal>
-      </TouchableWithoutFeedback>
-    );
-  }
-
-  // Render Modal Button
-  // @TODO: Implement OnClose
-  _renderModalButton(userData, buttonText, functionToExec = false) {
-    return (
-      <TouchableOpacity style={styles.modalButton} onPress={functionToExec}>
-        <Text style={styles.modalText}>{buttonText}</Text>
+            ]
+          }
+          onPress={{ modal: () => this.modalSetstate(userData) }}
+        />
       </TouchableOpacity>
     );
-  }
-
-  goToUserInfo(userData) {
-    this.closeModal(userData);
-    this.props.navigation.navigate("CreateUser", { action: "edit", userData: userData });
   }
 
   enableDisableUser(userData) {
@@ -306,11 +273,10 @@ class Users extends Component {
     ApiCalls.enabledDisableUser(userData.uid, enabled).then(response => {
       ApiCalls.handleAPICallResult(response, this).then(apiResults => {
         if (apiResults) {
-          Alert.alert("Success", `User has been ${enabled ? "enabled" : "disabled"}!`,
+          Alert.alert("Success", `"${userData.first_name} ${userData.last_name}"  has been ${enabled ? "enabled" : "disabled"}!`,
             [
               {
                 text: "OK", onPress: () => {
-                  this.closeModal(userData);
                   this.assignUsersToState({ refresh: true });
                 }
               },

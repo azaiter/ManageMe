@@ -5,11 +5,13 @@ import {
   Text,
   Icon,
   View,
-  Spinner,
 } from "native-base";
 import styles from "./styles";
 import { TouchableOpacity, FlatList } from "react-native";
-import { ManageMe_Header } from "../../util/Render";
+import {
+  ManageMe_Header,
+  ManageMe_LoadingScreen
+} from "../../util/Render";
 const Auth = require("../../util/Auth");
 const ApiCalls = require("../../util/ApiCalls");
 
@@ -26,7 +28,6 @@ class Teams extends Component {
     this.assignTeamsToState.bind(this);
     this.getRenderFromState.bind(this);
     this._renderBody.bind(this);
-    this._renderLoadingScreen.bind(this);
     this._renderTeamData.bind(this);
   }
 
@@ -50,10 +51,6 @@ class Teams extends Component {
         if (this._isMounted) {
           ApiCalls.handleAPICallResult(response, this).then(apiResults => {
             if (apiResults) {
-              apiResults.forEach(result => {
-                result.modalVisible = false;
-                result.key = result.uid.toString() + "_" + result.modalVisible.toString();
-              });
               this.setState({
                 teamsList: apiResults
               });
@@ -95,22 +92,13 @@ class Teams extends Component {
           title="Teams"
           leftIcon="menu"
           onPress={{
-            left: this.props.navigation.openDrawer,
+            left: () => this.props.navigation.openDrawer(),
             add: () => { this.props.navigation.navigate("CreateTeam"); },
             refresh: () => { this.assignTeamsToState({ refresh: true }); }
           }}
         />
         {this._renderBody()}
       </Container>
-    );
-  }
-
-  // Render loading screen
-  _renderLoadingScreen() {
-    return (
-      <Content padder>
-        <Spinner color="blue" />
-      </Content>
     );
   }
 
@@ -134,7 +122,7 @@ class Teams extends Component {
         </Content>
       );
     } else {
-      return this._renderLoadingScreen();
+      return <ManageMe_LoadingScreen />;
     }
   }
 

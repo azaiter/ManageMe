@@ -10,11 +10,13 @@ import {
   Item,
   Form,
   Picker,
-  Spinner,
 } from "native-base";
 import { Alert, View, Platform } from "react-native";
 import styles from "./styles";
-import { ManageMe_Header } from "../../util/Render";
+import {
+  ManageMe_Header,
+  ManageMe_LoadingScreen
+} from "../../util/Render";
 const Auth = require("../../util/Auth");
 const ApiCalls = require("../../util/ApiCalls");
 
@@ -64,7 +66,6 @@ class CreateProject extends Component {
     this.getFieldValidation.bind(this);
     this.onTeamSelect.bind(this);
     this._renderBody.bind(this);
-    this._renderLoadingScreen.bind(this);
     this._renderSelectOption.bind(this);
   }
 
@@ -215,21 +216,12 @@ class CreateProject extends Component {
           title={(this.params.action === "edit") ? "Edit Project" : "Create Project"}
           leftIcon="back"
           onPress={{
-            left: this.props.navigation.goBack,
+            left: () => this.props.navigation.goBack(),
             refresh: () => { this.assignTeamsToState({ refresh: true }); }
           }}
         />
         {this._renderBody()}
       </Container>
-    );
-  }
-
-  // Render loading screen
-  _renderLoadingScreen() {
-    return (
-      <Content padder>
-        <Spinner color="blue" />
-      </Content>
     );
   }
 
@@ -309,7 +301,7 @@ class CreateProject extends Component {
         </Content>
       );
     } else {
-      return this._renderLoadingScreen();
+      return <ManageMe_LoadingScreen />;
     }
   }
 

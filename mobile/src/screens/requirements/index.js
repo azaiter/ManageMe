@@ -6,7 +6,6 @@ import {
   Text,
   Tab,
   Tabs,
-  Spinner,
   View,
   Icon,
   Accordion,
@@ -15,7 +14,8 @@ import { Alert } from "react-native";
 import styles from "./styles";
 import {
   ManageMe_Header,
-  ManageMe_DisplayError
+  ManageMe_DisplayError,
+  ManageMe_LoadingScreen
 } from "../../util/Render";
 const Auth = require("../../util/Auth");
 const ApiCalls = require("../../util/ApiCalls");
@@ -43,7 +43,6 @@ class Requirements extends Component {
     this.timeRemaining.bind(this);
     this.getTimeFormat.bind(this);
     this._renderTabs.bind(this);
-    this._renderLoadingScreen.bind(this);
     this._renderAccordionHeader.bind(this);
     this._renderAccordionContent.bind(this);
   }
@@ -377,7 +376,7 @@ class Requirements extends Component {
           title="Requirements"
           leftIcon="back"
           onPress={{
-            left: this.props.navigation.goBack,
+            left: () => this.props.navigation.goBack(),
             add: () => { this.props.navigation.navigate("CreateRequirement", { action: "create", projId: this.params.uid }); },
             refresh: () => {
               this.assignRequirementsToState({ refresh: true });
@@ -387,15 +386,6 @@ class Requirements extends Component {
         />
         {this._renderTabs()}
       </Container>
-    );
-  }
-
-  // Render loading screen
-  _renderLoadingScreen() {
-    return (
-      <Content padder>
-        <Spinner color="blue" />
-      </Content>
     );
   }
 
@@ -412,6 +402,17 @@ class Requirements extends Component {
                 /> :
                 <Accordion
                   dataArray={this.state.requirementList.initial}
+                  renderHeader={this._renderAccordionHeader}
+                  renderContent={this._renderAccordionContent}
+                />
+              }
+              {this.state.requirementList === "null" ?
+                <View style={styles.warningView} >
+                  <Icon style={styles.warningIcon} name="warning" />
+                  <Text style={styles.warningText}>{this.state.ApiErrorsList}</Text>
+                </View> :
+                <Accordion
+                  dataArray={this.state.requirementList.changeRequest}
                   renderHeader={this._renderAccordionHeader}
                   renderContent={this._renderAccordionContent}
                 />
@@ -449,15 +450,15 @@ class Requirements extends Component {
         </Tabs>
       );
     } else {
-      return this._renderLoadingScreen();
+      return <ManageMe_LoadingScreen />;
     }
   }
 
   // Render Accordion Header
   _renderAccordionHeader = (requirementData, expanded) => {
     return (
-      <View style={styles.accordionHeaderView}>
-        <Text style={styles.requirementDataTitle}>{requirementData.name}</Text>
+      <View style={requirementData.status === 4 ? styles.accordionHeaderViewOld : styles.accordionHeaderView}>
+          <Text style={requirementData.status === 4 ? styles.requirementDataTitleOld : styles.requirementDataTitle}>{requirementData.name}</Text> :
         {
           expanded ?
             <Icon style={styles.expandedIconStyle} name="remove-circle" /> :
@@ -470,7 +471,7 @@ class Requirements extends Component {
   // Render Accordion Content
   _renderAccordionContent = (requirementData) => {
     return (
-      <View style={styles.accordionContentView}>
+      <View style={requirementData.status === 4 ? styles.accordionContentViewOld : styles.accordionContentView}>
         <View>
           <Text style={styles.requirementDataDesc}>{requirementData.desc}</Text>
           <View style={styles.flex}>

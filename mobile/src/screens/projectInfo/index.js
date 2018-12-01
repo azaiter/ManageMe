@@ -10,15 +10,15 @@ import {
   Text,
   Card,
   Input,
-  Spinner,
 } from "native-base";
 import styles from "./styles";
 import {
   FlatList,
-  Alert,
+  Alert
 } from "react-native";
 import {
   ManageMe_Header,
+  ManageMe_LoadingScreen,
   ManageMe_DisplayError
 } from "../../util/Render";
 const Auth = require("../../util/Auth");
@@ -60,7 +60,6 @@ class ProjectInfo extends Component {
     this.getTime.bind(this);
     this.getInitialPage.bind(this);
     this._renderTabs.bind(this);
-    this._renderLoadingScreen.bind(this);
     this._renderProjectInfo.bind(this);
     this._renderProject.bind(this);
     this._renderRequirementButton.bind(this);
@@ -69,7 +68,7 @@ class ProjectInfo extends Component {
   }
 
   // Refresh the page when coming from a back navigation event.
-  willFocus = this.props.navigation.addListener("willFocus", payload => {
+  willFocus = this.props.navigation.addListener("willFocus", () => {
     this.assignRequirementsToState({ refresh: true });
     this.assignCommentsToState({ refresh: true });
     this.assignProjectInfoToState({ refresh: true });
@@ -224,21 +223,18 @@ class ProjectInfo extends Component {
         HandleError.showToastsInArr(["Comment field is invalid."]);
       }
       else {
-        ApiCalls.addProjectComment({ projID: this.params.uid, comment: this.state.projectComment }).then(apiResults => {
+        ApiCalls.addProjectComment({ projID: this.params.uid, comment: this.state.projectComment }).then(() => {
           this.setState({ projectComment: "" });
           let message = "Comment was added successfully!";
           HandleError.showToastsInArr([message], {
             type: "success",
             duration: 10000
           });
-          Alert.alert(
-            "Comment Added!",
-            message, [{
-              text: "OK", onPress: () => {
-                this.assignCommentsToState({ refresh: true });
-              }
-            }]
-          );
+          Alert.alert("Comment Added!", message, [{
+            text: "OK", onPress: () => {
+              this.assignCommentsToState({ refresh: true });
+            }
+          }]);
         }, error => {
           HandleError.handleError(this, error);
           Alert.alert("Comment not Added!!",
@@ -318,7 +314,7 @@ class ProjectInfo extends Component {
           title="Project Details"
           leftIcon="back"
           onPress={{
-            left: this.props.navigation.goBack,
+            left: () => this.props.navigation.goBack(),
             refresh: () => {
               this.assignRequirementsToState({ refresh: true });
               this.assignCommentsToState({ refresh: true });
@@ -329,15 +325,6 @@ class ProjectInfo extends Component {
         />
         {this._renderTabs()}
       </Container>
-    );
-  }
-
-  // Render loading screen
-  _renderLoadingScreen() {
-    return (
-      <Content padder>
-        <Spinner color="blue" />
-      </Content>
     );
   }
 
@@ -355,7 +342,7 @@ class ProjectInfo extends Component {
         </Tabs>
       );
     } else {
-      return this._renderLoadingScreen();
+      return <ManageMe_LoadingScreen />;
     }
   }
 
@@ -363,9 +350,9 @@ class ProjectInfo extends Component {
   _renderProjectInfo() {
     return (
       <Content padder>
-        {this.state.ApiErrors ?
+        {this.state.projectInfo === "null" ?
           <ManageMe_DisplayError
-            ApiErrorsList={this.state.ApiErrors}
+            ApiErrorsList={this.state.ApiErrorsList}
           /> :
           <FlatList
             style={styles.container}
@@ -393,29 +380,43 @@ class ProjectInfo extends Component {
             <Text style={styles.projectTime}>
               {"  "}{info.created}
             </Text>
-          </View>
-          <Button
-            transparent
-            onPress={() => this.props.navigation.navigate("TeamMembers", { uid: this.state.teamData[0].uid })}
-          >
-            <View style={styles.flex}>
-              <Text style={styles.requirementCount}>Team: </Text>
-              <Text style={styles.requirementStatus}>{this.state.teamData[0].name}</Text>
-            </View>
-          </Button>
-          <Text style={styles.projectHours}>
-            {this.getTime()}
-          </Text>
+          </View>{this.state.teamData === "null" ?
+            <ManageMe_DisplayError
+              ApiErrorsList={this.state.ApiErrorsList}
+            /> :
+            <Button
+              transparent
+              onPress={() => this.props.navigation.navigate("TeamMembers", { uid: this.state.teamData[0].uid })}
+            >
+              <View style={styles.flex}>
+                <Text style={styles.requirementCount}>Team: </Text>
+                <Text style={styles.requirementStatus}>{this.state.teamData[0].name}</Text>
+              </View>
+            </Button>
+          }
+          {this.state.projectHours === "null" ?
+            <ManageMe_DisplayError
+              ApiErrorsList={this.state.ApiErrorsList}
+            /> :
+            <Text style={styles.projectHours}>
+              {this.getTime()}
+            </Text>
+          }
         </View>
         <View style={styles.flexRow}>
           <View>
             <Card style={styles.card}>
               <Text style={styles.projectTitle}>Requirements</Text>
-              <View>
-                {this._renderRequirementButton("Active")}
-                {this._renderRequirementButton("Pending")}
-                {this._renderRequirementButton("Completed")}
-              </View>
+              {this.state.requirementList === "null" ?
+                <ManageMe_DisplayError
+                  ApiErrorsList={this.state.ApiErrorsList}
+                /> :
+                <View>
+                  {this._renderRequirementButton("Active")}
+                  {this._renderRequirementButton("Pending")}
+                  {this._renderRequirementButton("Completed")}
+                </View>
+              }
             </Card>
           </View>
           <View style={styles.requirementView}>
@@ -461,9 +462,9 @@ class ProjectInfo extends Component {
           />
         </View>
         <View>
-          {this.state.ApiErrors ?
+          {this.state.commentList === "null" ?
             <ManageMe_DisplayError
-              ApiErrorsList={this.state.ApiErrors}
+              ApiErrorsList={this.state.ApiErrorsList}
             /> :
             <FlatList
               data={this.state.commentList}

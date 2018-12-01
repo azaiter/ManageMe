@@ -1,130 +1,103 @@
 export default {
-    container: {
-      backgroundColor: "#FFF",
-      flex: 1,
-    },
+  container: {
+    backgroundColor: "#FFF",
+    flex: 1,
+  },
 
-    mb10: {
-      marginBottom: 10
-    },
+  mb10: {
+    marginBottom: 10
+  },
 
-    userItem: {
-      flex: 1,
-      flexDirection: "row",
-      borderBottomWidth: 1,
-      borderBottomColor: "#E4E4E4",
-      paddingTop: 10,
-      alignSelf: "flex-start",
-      justifyContent: "flex-start",
-      height: "100%",
-    },
+  userItem: {
+    flex: 1,
+    flexDirection: "row",
+    borderBottomWidth: 1,
+    borderBottomColor: "#E4E4E4",
+    paddingTop: 10,
+    alignSelf: "flex-start",
+    justifyContent: "flex-start",
+    height: "100%",
+  },
 
-    text: {
-      flex: 3,
-    },
+  text: {
+    flex: 3,
+  },
 
-    icon: {
-      color: "#000090",
-    },
+  icon: {
+    color: "#000090",
+  },
 
-    title: {
-      fontSize: 23,
-      fontWeight: "bold",
-      color: "#000090",
-    },
+  title: {
+    fontSize: 23,
+    fontWeight: "bold",
+    color: "#000090",
+  },
 
-    modalTitle: {
-      fontSize: 30,
-      fontWeight: "bold",
-      color: "white",
-    },
+  flex: {
+    flex: 1,
+    flexDirection: "row",
+    paddingTop: 10,
+    paddingBottom: 10,
+  },
 
-    modalText: {
-      fontSize: 18,
-      fontWeight: "bold",
-      color: "black",
-    },
+  time: {
+    fontSize: 17.5,
+    fontStyle: "italic",
+    color: "black",
+  },
 
-    flex: {
-      flex: 1,
-      flexDirection: "row",
-      paddingTop: 10,
-      paddingBottom: 10,
-    },
+  body: {
+    fontSize: 20,
+    color: "black",
+  },
 
-    modalFlex: {
-      flexDirection: "row",
-    },
+  userListEnabled1: {
+    textShadowColor: "#008000",
+    textShadowOffset: { width: -1, height: 1 },
+    textShadowRadius: 10,
+    //backgroundColor: "#008000"
+  },
 
-    time: {
-      fontSize: 17.5,
-      fontStyle: "italic",
-      color: "black",
-    },
+  userListEnabled0: {
+    //backgroundColor: "#FF4B4B",
+    textShadowColor: "#FF4B4B",
+    textShadowOffset: { width: -1, height: 1 },
+    textShadowRadius: 10,
+  },
 
-    body: {
-      fontSize: 20,
-      color: "black",
-    },
+  selectToggle: {
+    width: "100%",
+  },
 
-    modalButton: {
-      backgroundColor: "lightskyblue",
-      padding: 12,
-      margin: 16,
-      justifyContent: "center",
-      alignItems: "center",
-      borderRadius: 4,
-    },
+  multiSelect: {
+    alignItems: "stretch",
+    flexDirection: "row",
+    width: "100%",
+    flexGrow: 1,
+  },
 
-    modalContent: {
-      padding: 22,
-      justifyContent: "center",
-      alignItems: "center",
-    },
+  scrollViewCustomH: {
+    height: "25%",
+  },
 
-    userListEnabled1: {
-        textShadowColor: "#008000",
-        textShadowOffset: {width: -1, height: 1},
-        textShadowRadius: 10,
-        //backgroundColor: "#008000"
-    },
+  scrollViewContentContainer: {
+    alignItems: "stretch",
+    justifyContent: "center",
+  },
 
-    userListEnabled0: {
-        //backgroundColor: "#FF4B4B",
-        textShadowColor: "#FF4B4B",
-        textShadowOffset: {width: -1, height: 1},
-        textShadowRadius: 10,
-    },
-    selectToggle: {
-      width: "100%",
-    },
-    multiSelect: {
-      alignItems: "stretch",
-      flexDirection: "row",
-      width: "100%",
-      flexGrow: 1,
-    },
-    scrollViewCustomH: {
-      height: "25%",
-    },
-    scrollViewContentContainer: {
-      alignItems: "stretch",
-      justifyContent: "center",
-    },
+  warningIcon: {
+    fontSize: 40,
+    color: "orange"
+  },
 
-    warningIcon: {
-      fontSize: 40,
-      color:"orange"
-    },
+  warningText: {
+    fontWeight: "bold",
+    fontSize: 22,
+    color: "orange"
+  },
 
-    warningText: {
-      fontWeight: "bold",
-      fontSize: 22,
-      color:"orange"
-    },
-
-    warningView: {
-      alignItems:"center"
-    },
-  };
+  warningView: {
+    alignItems: "center"
+  },
+};
 
