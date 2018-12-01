@@ -5,7 +5,6 @@ import {
   Text,
   Icon,
   View,
-  Spinner,
 } from "native-base";
 import styles from "./styles";
 import { TouchableOpacity, FlatList } from "react-native";
@@ -29,7 +28,6 @@ class Teams extends Component {
     this.assignTeamsToState.bind(this);
     this.getRenderFromState.bind(this);
     this._renderBody.bind(this);
-    this._renderLoadingScreen.bind(this);
     this._renderTeamData.bind(this);
   }
 

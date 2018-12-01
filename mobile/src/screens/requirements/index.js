@@ -6,7 +6,6 @@ import {
   Text,
   Tab,
   Tabs,
-  Spinner,
   View,
   Icon,
   Accordion,
@@ -42,7 +41,6 @@ class Requirements extends Component {
     this.timeRemaining.bind(this);
     this.getTimeFormat.bind(this);
     this._renderTabs.bind(this);
-    this._renderLoadingScreen.bind(this);
     this._renderAccordionHeader.bind(this);
     this._renderAccordionContent.bind(this);
   }

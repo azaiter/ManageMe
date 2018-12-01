@@ -10,7 +10,6 @@ import {
   Item,
   Form,
   Picker,
-  Spinner,
 } from "native-base";
 import { Alert, View, Platform } from "react-native";
 import styles from "./styles";
@@ -67,7 +66,6 @@ class CreateProject extends Component {
     this.getFieldValidation.bind(this);
     this.onTeamSelect.bind(this);
     this._renderBody.bind(this);
-    this._renderLoadingScreen.bind(this);
     this._renderSelectOption.bind(this);
   }
 

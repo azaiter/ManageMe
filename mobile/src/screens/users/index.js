@@ -5,7 +5,6 @@ import {
   Text,
   Icon,
   View,
-  Spinner,
 } from "native-base";
 import styles from "./styles";
 import {
