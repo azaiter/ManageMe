@@ -96,14 +96,14 @@ class Requirements extends Component {
       }, error => {
         HandleError.handleError(this, error);
         Alert.alert("Error!",
-          JSON.stringify(this.state.ApiErrors || this.state.Errors),
-          (this.state.ApiErrors ? null :
+          JSON.stringify(this.state.getRequirementsByProjectId$ || this.state.Error),
+          (this.state.Error ?
             [{
               text: "OK", onPress: () => {
                 this.assignRequirementsToState({ refresh: true });
               }
-            }]
-          )
+            }] : null
+          ), { cancelable: false }
         );
       });
     }
@@ -119,14 +119,14 @@ class Requirements extends Component {
       }, error => {
         HandleError.handleError(this, error);
         Alert.alert("Error!",
-          JSON.stringify(this.state.ApiErrors || this.state.Errors),
-          (this.state.ApiErrors ? null :
+          JSON.stringify(this.state.getTime$ || this.state.Error),
+          (this.state.Error ?
             [{
               text: "OK", onPress: () => {
                 this.assignTimeToState({ refresh: true });
               }
-            }]
-          )
+            }] : null
+          ), { cancelable: false }
         );
       });
     }
@@ -134,7 +134,7 @@ class Requirements extends Component {
 
   // Retrieve Render from state.
   getRenderFromState() {
-    if ((this.state.requirementList && this.state.clockedTime && this.state) || (this.state && this.state.ApiErrors)) {
+    if ((this.state.requirementList && this.state.clockedTime && this.state) || (this.state && this.state.getTime$ && this.state.getRequirementsByProjectId$)) {
       return true;
     } else {
       return false;
@@ -159,14 +159,14 @@ class Requirements extends Component {
       }, error => {
         HandleError.handleError(this, error);
         Alert.alert("Requirement not Completed!",
-          JSON.stringify(this.state.ApiErrors || this.state.Errors),
-          (this.state.ApiErrors ? null :
+          JSON.stringify(this.state.completeReq$ || this.state.Error),
+          (this.state.Error ?
             [{
               text: "OK", onPress: () => {
                 this.assignRequirementsToState({ refresh: true });
               }
-            }]
-          )
+            }] : null
+          ), { cancelable: false }
         );
       });
     }
@@ -193,14 +193,14 @@ class Requirements extends Component {
       }, error => {
         HandleError.handleError(this, error);
         Alert.alert(`Requirement not ${action}!`,
-          JSON.stringify(this.state.ApiErrors || this.state.Errors),
-          (this.state.ApiErrors ? null :
+          JSON.stringify(this.state.clockOut$ || this.state.Error || this.state.clockIn$),
+          (this.state.Error ?
             [{
               text: "OK", onPress: () => {
                 this.assignRequirementsToState({ refresh: true });
               }
-            }]
-          )
+            }] : null
+          ), { cancelable: false }
         );
       });
     }
@@ -259,14 +259,14 @@ class Requirements extends Component {
       }, error => {
         HandleError.handleError(this, error);
         Alert.alert(`Requirement not "${action}"!`,
-          JSON.stringify(this.state.ApiErrors || this.state.Errors),
-          (this.state.ApiErrors ? null :
+          JSON.stringify(this.state.acceptChangeRequest$ || this.state.Error || this.state.rejectChangeRequest$),
+          (this.state.Error ?
             [{
               text: "OK", onPress: () => {
                 this.assignRequirementsToState({ refresh: true });
               }
-            }]
-          )
+            }] : null
+          ), { cancelable: false }
         );
       });
     }
@@ -337,9 +337,14 @@ class Requirements extends Component {
               <Text style={styles.requirementDetails}>{requirementData.priority}{" "}{" "}</Text>
             </View>
           </View>
-          <View>
-            {this.getTimeRemaining(requirementData)}
-          </View>
+          {this.state.getTime$ ?
+            <ManageMe_DisplayError
+              ApiErrors={this.state.getTime$}
+            /> :
+            <View>
+              {this.getTimeRemaining(requirementData)}
+            </View>
+          }
         </View>
       );
     }
@@ -396,9 +401,9 @@ class Requirements extends Component {
         <Tabs initialPage={this.params.initialPage}>
           <Tab heading="Active">
             <Content padder>
-              {this.state.ApiErrors ?
+              {this.state.getRequirementsByProjectId$ ?
                 <ManageMe_DisplayError
-                  ApiErrorsList={this.state.ApiErrors}
+                  ApiErrors={this.state.getRequirementsByProjectId$}
                 /> :
                 <Accordion
                   dataArray={this.state.requirementList.initial}
@@ -406,11 +411,10 @@ class Requirements extends Component {
                   renderContent={this._renderAccordionContent}
                 />
               }
-              {this.state.requirementList === "null" ?
-                <View style={styles.warningView} >
-                  <Icon style={styles.warningIcon} name="warning" />
-                  <Text style={styles.warningText}>{this.state.ApiErrorsList}</Text>
-                </View> :
+              {this.state.getRequirementsByProjectId$ ?
+                <ManageMe_DisplayError
+                  ApiErrors={this.state.getRequirementsByProjectId$}
+                /> :
                 <Accordion
                   dataArray={this.state.requirementList.changeRequest}
                   renderHeader={this._renderAccordionHeader}
@@ -421,9 +425,9 @@ class Requirements extends Component {
           </Tab>
           <Tab heading="Pending" >
             <Content padder>
-              {this.state.ApiErrors ?
+              {this.state.getRequirementsByProjectId$ ?
                 <ManageMe_DisplayError
-                  ApiErrorsList={this.state.ApiErrors}
+                  ApiErrors={this.state.getRequirementsByProjectId$}
                 /> :
                 <Accordion
                   dataArray={this.state.requirementList.pending}
@@ -435,9 +439,9 @@ class Requirements extends Component {
           </Tab>
           <Tab heading="Completed" >
             <Content padder>
-              {this.state.ApiErrors ?
+              {this.state.getRequirementsByProjectId$ ?
                 <ManageMe_DisplayError
-                  ApiErrorsList={this.state.ApiErrors}
+                  ApiErrors={this.state.getRequirementsByProjectId$}
                 /> :
                 <Accordion
                   dataArray={this.state.requirementList.completed}
@@ -458,7 +462,7 @@ class Requirements extends Component {
   _renderAccordionHeader = (requirementData, expanded) => {
     return (
       <View style={requirementData.status === 4 ? styles.accordionHeaderViewOld : styles.accordionHeaderView}>
-          <Text style={requirementData.status === 4 ? styles.requirementDataTitleOld : styles.requirementDataTitle}>{requirementData.name}</Text> :
+        <Text style={requirementData.status === 4 ? styles.requirementDataTitleOld : styles.requirementDataTitle}>{requirementData.name}</Text> :
         {
           expanded ?
             <Icon style={styles.expandedIconStyle} name="remove-circle" /> :

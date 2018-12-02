@@ -65,14 +65,14 @@ class Projects extends Component {
       }, error => {
         HandleError.handleError(this, error);
         Alert.alert("Error!",
-          JSON.stringify(this.state.ApiErrors || this.state.Errors),
-          (this.state.ApiErrors ? null :
+          JSON.stringify(this.state.getProjects$ || this.state.Error),
+          (this.state.Error ?
             [{
               text: "OK", onPress: () => {
                 this.assignProjectsToState({ refresh: true });
               }
-            }]
-          )
+            }] : null
+          ), { cancelable: false }
         );
       });
     }
@@ -80,7 +80,7 @@ class Projects extends Component {
 
   // Retrieve Render from state.
   getRenderFromState() {
-    if ((this.state && this.state.projectsList) || (this.state && this.state.ApiErrors)) {
+    if ((this.state && this.state.projectsList) || (this.state && this.state.getProjects$)) {
       return true;
     } else {
       return false;
@@ -127,9 +127,9 @@ class Projects extends Component {
     if (this.getRenderFromState()) {
       return (
         <Content padder>
-          {this.state.projectsList === "null" ?
+          {this.state.getProjects$ ?
             <ManageMe_DisplayError
-              ApiErrorsList={this.state.ApiErrorsList}
+              ApiErrors={this.state.getProjects$}
             /> :
             <FlatList
               style={styles.container}

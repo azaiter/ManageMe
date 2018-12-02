@@ -4,10 +4,6 @@ export default {
     flex: 1,
   },
 
-  mb10: {
-    marginBottom: 10
-  },
-
   accordionHeaderView: {
     flexDirection: "row",
     padding: 10,

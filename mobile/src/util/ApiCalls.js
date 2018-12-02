@@ -2,15 +2,16 @@ const apiURL = "https://api.manageme.tech";
 const Auth = require("../util/Auth");
 
 let callHandler = async function (params) {
+    const ApiError = callHandler.caller.name;
     return new Promise((resolve, reject) => {
         callFetch(params).then(result => {
             if (result[1] !== 200) {
-                reject({ ApiErr: getErrorsListFromObj(result[0]) });
+                reject({ [ApiError]: getErrorsListFromObj(result[0]) });
             } else {
                 resolve(result[0]);
             }
         }).catch(err => {
-            reject({ err: err.message });
+            reject({ Error : err.message });
         });
     });
 };
@@ -19,8 +20,7 @@ let callFetch = async function (params) {
     if (params.url) {
         let tok = await Auth.getLocalToken();
         let bodyObj = (params.body) ? params.body : params;
-        let json = {};
-        if (!params.tok) {
+        if (params.tok !== true) {
             if (bodyObj.paramArr) {
                 if (bodyObj.paramArr.constructor === Array) {
                     bodyObj.paramArr = [tok.token].concat(bodyObj.paramArr);
@@ -39,12 +39,8 @@ let callFetch = async function (params) {
             headers: { "content-type": params.contentType || "application/json" },
             body: JSON.stringify(bodyObj)
         });
-        try {
-            json = await res.json();
-        } catch (e) {
-            json = { err: e.message };
-        }
-        return [json, res.status || 501];
+        const json = await res.json();
+        return [json, res.status];
     }
 };
 

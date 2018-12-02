@@ -11,9 +11,12 @@ import {
 } from "native-base";
 import { Alert, Platform } from "react-native";
 import styles from "./styles";
-import { ManageMe_Header } from "../../util/Render";
+import {
+  ManageMe_Header
+} from "../../util/Render";
 const Auth = require("../../util/Auth");
 const ApiCalls = require("../../util/ApiCalls");
+const HandleError = require("../../util/HandleError");
 
 const fieldsArr = [
   {
@@ -112,61 +115,80 @@ class CreateRequirement extends Component {
   handleSubmit = async () => {
     if (this._isMounted) {
       if (fieldsArr.filter(x => { return !this.state[x.name + "Validation"]; }).length > 0) {
-        ApiCalls.showToastsInArr(["Some of the fields below are invalid."], {
-          buttonText: "OK",
-          type: "danger",
-          position: "top",
-          duration: 5 * 1000
-        });
+        HandleError.showToastsInArr(["Some of the fields below are invalid."]);
       }
       else {
         if (this.params.action === "edit") {
-          ApiCalls.createChangeRequest(this.params.requirementData.uid, this.state.est, this.state.reqDesc, this.state.reqName, this.state.reqSoft, this.state.reqHard, this.state.reqPriority).then(response => {
-            ApiCalls.handleAPICallResult(response, this).then(apiResults => {
-              if (apiResults) {
-                let message = `Requirement "${this.state.reqName}" was modified successfully!`;
-                ApiCalls.showToastsInArr([message], {
-                  buttonText: "OK",
-                  type: "success",
-                  position: "top",
-                  duration: 10 * 1000
-                });
-                Alert.alert("Requirement modified!", message, [
-                  {
-                    text: "OK", onPress: () => {
-                      this.props.navigation.navigate("Requirements");
-                    }
-                  },
-                ]);
-              } else {
-                Alert.alert("Requirement not modified", JSON.stringify(this.state.ApiErrorsList));
-              }
+          ApiCalls.createChangeRequest({
+            OldreqID: this.params.requirementData.uid,
+            estimate: this.state.est,
+            desc: this.state.reqDesc,
+            name: this.state.reqName,
+            softcap: this.state.reqSoft,
+            hardcap: this.state.reqHard,
+            priority: this.state.reqPriority
+          }).then(apiResults => {
+            let message = `Requirement "${this.state.reqName}" was modified successfully!`;
+            HandleError.showToastsInArr([message], {
+              type: "success",
+              duration: 10000
             });
+            Alert.alert("Requirement modified!", message, [
+              {
+                text: "OK", onPress: () => {
+                  this.props.navigation.navigate("Requirements");
+                }
+              },
+            ]);
+          }, error => {
+            HandleError.handleError(this, error);
+            Alert.alert("Requirement not modified!",
+              JSON.stringify(this.state.createChangeRequest$ || this.state.Error),
+              (this.state.Error ?
+                [{
+                  text: "OK", onPress: () => {
+                    this.props.navigation.navigate("CreateRequirement");
+                  }
+                }] : null
+              ), { cancelable: false }
+            );
           });
         } else {
-          ApiCalls.createRequirement(this.params.projId, this.state.est, this.state.reqDesc, this.state.reqName, this.state.reqSoft, this.state.reqHard, this.state.reqPriority).then(response => {
-            ApiCalls.handleAPICallResult(response, this).then(apiResults => {
-              if (apiResults) {
-                let message = `Requirement "${this.state.reqName}" was added successfully!`;
-                ApiCalls.showToastsInArr([message], {
-                  buttonText: "OK",
-                  type: "success",
-                  position: "top",
-                  duration: 10 * 1000
-                });
-                Alert.alert("Requirement Added!",
-                  message,
-                  [
-                    {
-                      text: "OK", onPress: () => {
-                        this.props.navigation.navigate("Requirements");
-                      }
-                    },
-                  ]);
-              } else {
-                Alert.alert("Requirement not Added", JSON.stringify(this.state.ApiErrorsList));
-              }
+          ApiCalls.createRequirement({
+            projId: this.params.projId,
+            est: this.state.est,
+            reqDesc: this.state.reqDesc,
+            reqName: this.state.reqName,
+            reqSoft: this.state.reqSoft,
+            reqHard: this.state.reqHard,
+            reqPriority: this.state.reqPriority
+          }).then(apiResults => {
+            let message = `Requirement "${this.state.reqName}" was added successfully!`;
+            HandleError.showToastsInArr([message], {
+              type: "success",
+              duration: 10000
             });
+            Alert.alert("Requirement Added!",
+              message,
+              [
+                {
+                  text: "OK", onPress: () => {
+                    this.props.navigation.navigate("Requirements");
+                  }
+                },
+              ]);
+          }, error => {
+            HandleError.handleError(this, error);
+            Alert.alert("Requirement not added!",
+              JSON.stringify(this.state.createRequirement$ || this.state.Error),
+              (this.state.Error ?
+                [{
+                  text: "OK", onPress: () => {
+                    this.props.navigation.navigate("CreateRequirement");
+                  }
+                }] : null
+              ), { cancelable: false }
+            );
           });
         }
       }

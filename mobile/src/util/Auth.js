@@ -1,7 +1,6 @@
 import { AsyncStorage } from "react-native";
 
 const ApiCalls = require("./ApiCalls");
-const HandleError = require("./HandleError");
 
 export const loginTokenASKey = "@app:loginTokenObj";
 export const userPermissionsASKey = "@app:userPermissions";
@@ -84,13 +83,13 @@ export async function setUserPermissionsOnComponent(component) {
         if (!permissionsObj) {
             let localToken = await getLocalToken();
             //console.log("doing api call permissions")
-            ApiCalls.getUserPerms({
+            let apiResults = await ApiCalls.getUserPerms({
                 userId: localToken.uid
-            }).then(apiResults => {
-                permissionsObj = apiResults;
-            }, error => {
-                HandleError.handleError(this, error);
             });
+            if (apiResults) {
+                //console.log("UserPermissions: ", handledApiResults);
+                permissionsObj = apiResults;
+            }
         }
         if (component && component.state && !component.state.userPermissions) {
             //console.log("setting state main");
@@ -137,9 +136,9 @@ export async function removeLocalToken() {
 }
 
 export async function saveItem(item, selectedValue) {
-    try {
-        await AsyncStorage.setItem(item, JSON.stringify(selectedValue));
-    } catch (error) {
-        console.error("AsyncStorage error: " + error.message);
-    }
+    //try {
+    await AsyncStorage.setItem(item, JSON.stringify(selectedValue));
+    //} catch (error) {
+    //console.error("AsyncStorage error: " + error.message);
+    //}
 }

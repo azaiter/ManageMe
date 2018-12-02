@@ -13,8 +13,8 @@ export function showToastsInArr(arr, params = {}) {
 }
 
 export async function handleError(component, result) {
-  var error = result.ApiErr || result.err;
-  var name = result.ApiErr ? "ApiErrors" : "Errors";
-  component.setState({ [name]: error });
-  showToastsInArr(error);
+  var key = Object.keys(result);
+  var value = Object.values(result);
+  component.setState({ [key[0]]: value[0] });
+  showToastsInArr(value[0]);
 }

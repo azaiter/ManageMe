@@ -118,14 +118,14 @@ class ProjectInfo extends Component {
       }, error => {
         HandleError.handleError(this, error);
         Alert.alert("Error!",
-          JSON.stringify(this.state.ApiErrors || this.state.Errors),
-          (this.state.ApiErrors ? null :
+          JSON.stringify(this.state.getRequirementsByProjectId$ || this.state.Error),
+          (this.state.Error ?
             [{
               text: "OK", onPress: () => {
                 this.assignRequirementsToState({ refresh: true });
               }
-            }]
-          )
+            }] : null
+          ), { cancelable: false }
         );
       });
     }
@@ -141,14 +141,14 @@ class ProjectInfo extends Component {
       }, error => {
         HandleError.handleError(this, error);
         Alert.alert("Error!",
-          JSON.stringify(this.state.ApiErrors || this.state.Errors),
-          (this.state.ApiErrors ? null :
+          JSON.stringify(this.state.getProjectComments$ || this.state.Error),
+          (this.state.Error ?
             [{
               text: "OK", onPress: () => {
                 this.assignCommentsToState({ refresh: true });
               }
-            }]
-          )
+            }] : null
+          ), { cancelable: false }
         );
       });
     }
@@ -166,20 +166,20 @@ class ProjectInfo extends Component {
         }, error => {
           HandleError.handleError(this, error);
           Alert.alert("Error!",
-            JSON.stringify(this.state.ApiErrors || this.state.Errors),
+            JSON.stringify(this.state.getTeamById$ || this.state.Error),
           );
         });
       }, error => {
         HandleError.handleError(this, error);
         Alert.alert("Error!",
-          JSON.stringify(this.state.ApiErrors || this.state.Errors),
-          (this.state.ApiErrors ? null :
+          JSON.stringify(this.state.getProjectInfo$ || this.state.Error),
+          (this.state.Error ?
             [{
               text: "OK", onPress: () => {
                 this.assignProjectInfoToState({ refresh: true });
               }
-            }]
-          )
+            }] : null
+          ), { cancelable: false }
         );
       });
     }
@@ -195,14 +195,14 @@ class ProjectInfo extends Component {
       }, error => {
         HandleError.handleError(this, error);
         Alert.alert("Error!",
-          JSON.stringify(this.state.ApiErrors || this.state.Errors),
-          (this.state.ApiErrors ? null :
+          JSON.stringify(this.state.getProjectHours$ || this.state.Error),
+          (this.state.Error ?
             [{
               text: "OK", onPress: () => {
                 this.assignProjectHoursToState({ refresh: true });
               }
-            }]
-          )
+            }] : null
+          ), { cancelable: false }
         );
       });
     }
@@ -210,7 +210,24 @@ class ProjectInfo extends Component {
 
   // Retrieve Render from state.
   getRenderFromState() {
-    if ((this.state.requirementList && this.state.commentList && this.state.projectHours && this.state.projectInfo && this.state) || (this.state && this.state.ApiErrors)) {
+    if (
+      (
+        this.state.requirementList &&
+        this.state.commentList &&
+        this.state.projectHours &&
+        this.state.projectInfo &&
+        this.state.teamData &&
+        this.state
+      ) ||
+      (
+        this.state.getRequirementsByProjectId$ &&
+        this.state.getProjectComments$ &&
+        this.state.getProjectHours$ &&
+        this.state.getProjectInfo$ &&
+        this.state.getTeamById$ &&
+        this.state
+      )
+    ) {
       return true;
     } else {
       return false;
@@ -238,14 +255,14 @@ class ProjectInfo extends Component {
         }, error => {
           HandleError.handleError(this, error);
           Alert.alert("Comment not Added!!",
-            JSON.stringify(this.state.ApiErrors || this.state.Errors),
-            (this.state.ApiErrors ? null :
+            JSON.stringify(this.state.addProjectComment$ || this.state.Error),
+            (this.state.Error ?
               [{
                 text: "OK", onPress: () => {
                   this.assignCommentsToState({ refresh: true });
                 }
-              }]
-            )
+              }] : null
+            ), { cancelable: false }
           );
         });
       }
@@ -350,9 +367,9 @@ class ProjectInfo extends Component {
   _renderProjectInfo() {
     return (
       <Content padder>
-        {this.state.projectInfo === "null" ?
+        {this.state.getProjectInfo$ ?
           <ManageMe_DisplayError
-            ApiErrorsList={this.state.ApiErrorsList}
+            ApiErrors={this.state.getProjectInfo$}
           /> :
           <FlatList
             style={styles.container}
@@ -380,9 +397,9 @@ class ProjectInfo extends Component {
             <Text style={styles.projectTime}>
               {"  "}{info.created}
             </Text>
-          </View>{this.state.teamData === "null" ?
+          </View>{this.state.getTeamById$ ?
             <ManageMe_DisplayError
-              ApiErrorsList={this.state.ApiErrorsList}
+              ApiErrors={this.state.getTeamById$}
             /> :
             <Button
               transparent
@@ -394,9 +411,9 @@ class ProjectInfo extends Component {
               </View>
             </Button>
           }
-          {this.state.projectHours === "null" ?
+          {this.state.getProjectHours$ ?
             <ManageMe_DisplayError
-              ApiErrorsList={this.state.ApiErrorsList}
+              ApiErrors={this.state.getProjectHours$}
             /> :
             <Text style={styles.projectHours}>
               {this.getTime()}
@@ -407,9 +424,9 @@ class ProjectInfo extends Component {
           <View>
             <Card style={styles.card}>
               <Text style={styles.projectTitle}>Requirements</Text>
-              {this.state.requirementList === "null" ?
+              {this.state.getRequirementsByProjectId$ ?
                 <ManageMe_DisplayError
-                  ApiErrorsList={this.state.ApiErrorsList}
+                  ApiErrors={this.state.getRequirementsByProjectId$}
                 /> :
                 <View>
                   {this._renderRequirementButton("Active")}
@@ -462,9 +479,9 @@ class ProjectInfo extends Component {
           />
         </View>
         <View>
-          {this.state.commentList === "null" ?
+          {this.state.getProjectComments$ ?
             <ManageMe_DisplayError
-              ApiErrorsList={this.state.ApiErrorsList}
+              ApiErrors={this.state.getProjectComments$}
             /> :
             <FlatList
               data={this.state.commentList}

@@ -3,10 +3,6 @@ export default {
     backgroundColor: "#FFF"
   },
 
-  mb10: {
-    marginBottom: 10
-  },
-
   projectTitle: {
     fontSize: 28,
     fontWeight: "bold",

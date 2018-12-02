@@ -20,8 +20,8 @@ class Home extends Component {
       errorsList: [],
       loggedIn: false
     };
-    Auth.logout(this);
-    //Auth.setIsLoginStateOnScreenEntry(this, { navigate: "Projects" });
+    //Auth.logout(this);
+    Auth.setIsLoginStateOnScreenEntry(this, { navigate: "Projects" });
   }
 
   handleSubmit = async () => {
@@ -36,7 +36,14 @@ class Home extends Component {
     }, error => {
       HandleError.handleError(this, error);
       Alert.alert("Error Logging In!",
-        JSON.stringify(this.state.ApiErrors || this.state.Errors),
+        JSON.stringify(this.state.getToken$ || this.state.Error),
+        (this.state.Error ?
+          [{
+            text: "OK", onPress: () => {
+              this.props.navigation.navigate("Home");
+            }
+          }] : null
+        ), { cancelable: false }
       );
     });
   }
@@ -68,7 +75,7 @@ class Home extends Component {
     </Form>;
 
     let signedInForm =
-      <Button block success style={styles.mb15} onPress={() => { this.props.navigation.openDrawer(); }}>
+      <Button block success onPress={() => { this.props.navigation.openDrawer(); }}>
         <Text>You are logged in, Click to View Menu</Text>
       </Button>;
 

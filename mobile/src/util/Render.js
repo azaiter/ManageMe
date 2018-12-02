@@ -2,7 +2,6 @@ import React from "react";
 import {
   Header,
   Title,
-  View,
   Button,
   Left,
   Right,
@@ -81,7 +80,7 @@ export function ManageMe_DisplayError(props) {
   return (
     <View style={{ alignItems: "center" }} >
       <Icon style={{ fontSize: 60, color: "red" }} name="ios-close-circle" />
-      <Text style={{ fontWeight: "bold", fontSize: 22, color: "red" }}>{props.ApiErrorsList}</Text>
+      <Text style={{ fontWeight: "bold", fontSize: 22, color: "red" }}>{props.ApiErrors}</Text>
     </View>
   );
 }
@@ -94,7 +93,7 @@ export function ManageMe_Body(props) {
 }
 
 /** MODAL **/
-export function _Modal(props) {
+export function ManageMe_Modal(props) {
   return (
     <TouchableWithoutFeedback onPress={props.onPress.modal}>
       <Modal

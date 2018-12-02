@@ -11,14 +11,16 @@ import {
   Form,
   Picker,
 } from "native-base";
-import { Alert, View, Platform } from "react-native";
+import { Alert, Platform } from "react-native";
 import styles from "./styles";
 import {
   ManageMe_Header,
-  ManageMe_LoadingScreen
+  ManageMe_LoadingScreen,
+  ManageMe_DisplayError
 } from "../../util/Render";
 const Auth = require("../../util/Auth");
 const ApiCalls = require("../../util/ApiCalls");
+const HandleError = require("../../util/HandleError");
 
 const fieldsArr = [
   {
@@ -59,7 +61,7 @@ class CreateProject extends Component {
       setUserPermissions: true
     });
     Auth.getPermissions.bind(this);
-    this.assignTeamsToState.bind(this);
+    this.assignTeamsToState();
     this.getRenderFromState.bind(this);
     this.handleSubmit.bind(this);
     this.checkAndSetState.bind(this);
@@ -83,21 +85,23 @@ class CreateProject extends Component {
   }
 
   assignTeamsToState(opts = { refresh: false }) {
-    if ((this.state && this.state.loggedIn) && (!this.state.teams || opts.refresh)) {
-      ApiCalls.getTeams().then(response => {
-        if (this._isMounted) {
-          ApiCalls.handleAPICallResult(response, this).then(apiResults => {
-            if (apiResults) {
-              this.setState({
-                teams: apiResults,
-              });
-            } else {
-              this.setState({
-                teams: "null"
-              });
-            }
-          });
-        }
+    if ((this.state && this._isMounted) && (!this.state.teams || opts.refresh)) {
+      ApiCalls.getTeams().then(apiResults => {
+        this.setState({
+          teams: apiResults,
+        });
+      }, error => {
+        HandleError.handleError(this, error);
+        Alert.alert("Error!",
+          JSON.stringify(this.state.getTeams$ || this.state.Error),
+          (this.state.Error ?
+            [{
+              text: "OK", onPress: () => {
+                this.assignTeamsToState({ refresh: true });
+              }
+            }] : null
+          ), { cancelable: false }
+        );
       });
     }
   }
@@ -114,59 +118,70 @@ class CreateProject extends Component {
   handleSubmit = async () => {
     if (this._isMounted) {
       if (fieldsArr.filter(x => !this.state[x.name + "Validation"]).length > 0) {
-        ApiCalls.showToastsInArr(["Some of the fields below are invalid."], {
-          buttonText: "OK",
-          type: "danger",
-          position: "top",
-          duration: 5 * 1000
-        });
+        HandleError.showToastsInArr(["Some of the fields below are invalid."]);
       }
       else {
         if (this.params.action === "edit") {
-          ApiCalls.updateProject(this.params.projectData.uid, this.state.projectName, this.state.projectDesc).then(response => {
-            ApiCalls.handleAPICallResult(response, this).then(apiResults => {
-              if (apiResults) {
-                let message = `Project "${this.state.projectName}" was modified successfully!`;
-                ApiCalls.showToastsInArr([message], {
-                  buttonText: "OK",
-                  type: "success",
-                  position: "top",
-                  duration: 10 * 1000
-                });
-                Alert.alert("Project modified!", message, [
-                  {
-                    text: "OK", onPress: () => {
-                      this.props.navigation.navigate("Projects");
-                    }
-                  },
-                ]);
-              } else {
-                Alert.alert("Project not modified", JSON.stringify(this.state.ApiErrorsList));
-              }
+          ApiCalls.updateProject({
+            projId: this.params.projectData.uid,
+            projName: this.state.projectName,
+            projDesc: this.state.projectDesc
+          }).then(apiResults => {
+            let message = `Project "${this.state.projectName}" was modified successfully!`;
+            HandleError.showToastsInArr([message], {
+              type: "success",
+              duration: 10000
             });
+            Alert.alert("Project modified!", message, [
+              {
+                text: "OK", onPress: () => {
+                  this.props.navigation.navigate("Projects");
+                }
+              },
+            ]);
+          }, error => {
+            HandleError.handleError(this, error);
+            Alert.alert("Project not modified!",
+              JSON.stringify(this.state.updateProject$ || this.state.Error),
+              (this.state.Error ?
+                [{
+                  text: "OK", onPress: () => {
+                    this.props.navigation.navigate("CreateProject");
+                  }
+                }] : null
+              ), { cancelable: false }
+            );
           });
         } else {
-          ApiCalls.createProject(this.state.projectName, this.state.projectDesc, this.state.teamId).then(response => {
-            ApiCalls.handleAPICallResult(response, this).then(apiResults => {
-              if (apiResults) {
-                let message = `Project "${this.state.projectName}" was added successfully!`;
-                ApiCalls.showToastsInArr([message], {
-                  buttonText: "OK",
-                  type: "success",
-                  position: "top",
-                  duration: 10 * 1000
-                });
-                Alert.alert("Project Added!", message, [
-                  {
-                    text: "OK", onPress: () => {
-                      this.props.navigation.navigate("Projects");
-                    }
-                  },
-                ]);
-              } else {
-                Alert.alert("Project not Added", JSON.stringify(this.state.ApiErrorsList));
-              }
+          ApiCalls.createProject({
+            projectName: this.state.projectName,
+            projectDesc: this.state.projectDesc,
+            teamId: this.state.teamId
+          }).then(apiResults => {
+            let message = `Project "${this.state.projectName}" was added successfully!`;
+            HandleError.showToastsInArr([message], {
+              type: "success",
+              duration: 10000
             });
+            Alert.alert("Project Added!", message, [
+              {
+                text: "OK", onPress: () => {
+                  this.props.navigation.navigate("Projects");
+                }
+              },
+            ]);
+          }, error => {
+            HandleError.handleError(this, error);
+            Alert.alert("Project not Added!",
+              JSON.stringify(this.state.createProject$ || this.state.Error),
+              (this.state.Error ?
+                [{
+                  text: "OK", onPress: () => {
+                    this.props.navigation.navigate("CreateProject");
+                  }
+                }] : null
+              ), { cancelable: false }
+            );
           });
         }
       }
@@ -209,7 +224,6 @@ class CreateProject extends Component {
   }
 
   render() {
-    this.assignTeamsToState();
     return (
       <Container style={styles.container}>
         <ManageMe_Header
@@ -251,11 +265,10 @@ class CreateProject extends Component {
                 success={this.getFieldValidation(fieldsArr[2].name).success}
                 error={this.getFieldValidation(fieldsArr[2].name).error} >
                 <Label>{fieldsArr[2].label}</Label>
-                {this.state.teams === "null" ?
-                  <View style={styles.warningView} >
-                    <Icon style={styles.warningIcon} name="warning" />
-                    <Text style={styles.warningText}>{this.state.ApiErrorsList}</Text>
-                  </View> :
+                {this.state.getTeams$ ?
+                  <ManageMe_DisplayError
+                    ApiErrors={this.state.getTeams$}
+                  /> :
                   <Picker
                     value={this.state[fieldsArr[2].name]}
                     mode="dropdown"

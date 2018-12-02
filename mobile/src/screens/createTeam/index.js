@@ -14,6 +14,7 @@ import styles from "./styles";
 import { ManageMe_Header } from "../../util/Render";
 const Auth = require("../../util/Auth");
 const ApiCalls = require("../../util/ApiCalls");
+const HandleError = require("../../util/HandleError");
 
 const fieldsArr = [
   {
@@ -67,37 +68,37 @@ class CreateTeam extends Component {
   handleSubmit = async () => {
     if (this._isMounted) {
       if (fieldsArr.filter(x => { return !this.state[x.name + "Validation"]; }).length > 0) {
-        ApiCalls.showToastsInArr(["Some of the fields below are invalid."], {
-          buttonText: "OK",
-          type: "danger",
-          position: "top",
-          duration: 5 * 1000
-        });
+        HandleError.showToastsInArr(["Some of the fields below are invalid."]);
       }
       else {
-        ApiCalls.createTeam(this.state.teamName, this.state.teamDesc).then(response => {
-          ApiCalls.handleAPICallResult(response, this).then(apiResults => {
-            if (apiResults) {
-              let message = `Team "${this.state.teamName}" was added successfully!`;
-              ApiCalls.showToastsInArr([message], {
-                buttonText: "OK",
-                type: "success",
-                position: "top",
-                duration: 10 * 1000
-              });
-              Alert.alert("Team Added!",
-                message,
-                [
-                  {
-                    text: "OK", onPress: () => {
-                      this.props.navigation.navigate("Teams");
-                    }
-                  },
-                ]);
-            } else {
-              Alert.alert("Team not Added", JSON.stringify(this.state.ApiErrorsList));
-            }
+        ApiCalls.createTeam({
+          teamName: this.state.teamName,
+          desc: this.state.teamDesc
+        }).then(apiResults => {
+          let message = `Team "${this.state.teamName}" was added successfully!`;
+          ApiCalls.showToastsInArr([message], {
+            type: "success",
+            duration: 10000
           });
+          Alert.alert("Team Added!", message, [
+            {
+              text: "OK", onPress: () => {
+                this.props.navigation.navigate("Teams");
+              }
+            },
+          ]);
+        }, error => {
+          HandleError.handleError(this, error);
+          Alert.alert("Team not added!",
+            JSON.stringify(this.state.createTeam$ || this.state.Error),
+            (this.state.Error ?
+              [{
+                text: "OK", onPress: () => {
+                  this.props.navigation.navigate("CreateTeam");
+                }
+              }] : null
+            ), { cancelable: false }
+          );
         });
       }
     }

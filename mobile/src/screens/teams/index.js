@@ -7,13 +7,19 @@ import {
   View,
 } from "native-base";
 import styles from "./styles";
-import { TouchableOpacity, FlatList } from "react-native";
+import {
+  TouchableOpacity,
+  FlatList,
+  Alert
+} from "react-native";
 import {
   ManageMe_Header,
-  ManageMe_LoadingScreen
+  ManageMe_LoadingScreen,
+  ManageMe_DisplayError
 } from "../../util/Render";
 const Auth = require("../../util/Auth");
 const ApiCalls = require("../../util/ApiCalls");
+const HandleError = require("../../util/HandleError");
 
 class Teams extends Component {
   _isMounted = false;
@@ -25,7 +31,7 @@ class Teams extends Component {
       setUserPermissions: true
     });
     Auth.userHasPermission.bind(this);
-    this.assignTeamsToState.bind(this);
+    this.assignTeamsToState();
     this.getRenderFromState.bind(this);
     this._renderBody.bind(this);
     this._renderTeamData.bind(this);
@@ -46,28 +52,30 @@ class Teams extends Component {
 
   // Retrieve team list from API and assign to state.
   assignTeamsToState(opts = { refresh: false }) {
-    if ((this.state && this.state.loggedIn) && (!this.state.teamsList || opts.refresh)) {
-      ApiCalls.getTeams().then(response => {
-        if (this._isMounted) {
-          ApiCalls.handleAPICallResult(response, this).then(apiResults => {
-            if (apiResults) {
-              this.setState({
-                teamsList: apiResults
-              });
-            } else {
-              this.setState({
-                teamsList: "null"
-              });
-            }
-          });
-        }
+    if ((this.state && this._isMounted) && (!this.state.teamsList || opts.refresh)) {
+      ApiCalls.getTeams().then(apiResults => {
+        this.setState({
+          teamsList: apiResults
+        });
+      }, error => {
+        HandleError.handleError(this, error);
+        Alert.alert("Error!",
+          JSON.stringify(this.state.getTeams$ || this.state.Error),
+          (this.state.Error ?
+            [{
+              text: "OK", onPress: () => {
+                this.assignTeamsToState({ refresh: true });
+              }
+            }] : null
+          ), { cancelable: false }
+        );
       });
     }
   }
 
   // Retrieve Render from state.
   getRenderFromState() {
-    if (this.state && this.state.teamsList) {
+    if ((this.state && this.state.teamsList) || (this.state && this.state.getTeams$)) {
       return true;
     } else {
       return false;
@@ -107,11 +115,10 @@ class Teams extends Component {
     if (this.getRenderFromState()) {
       return (
         <Content padder>
-          {this.state.teamsList === "null" ?
-            <View style={styles.warningView} >
-              <Icon style={styles.warningIcon} name="warning" />
-              <Text style={styles.warningText}>{this.state.ApiErrorsList}</Text>
-            </View> :
+          {this.state.getTeams$ ?
+            <ManageMe_DisplayError
+              ApiErrors={this.state.getTeams$}
+            /> :
             <FlatList
               style={styles.container}
               data={this.state.teamsList}
