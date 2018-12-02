@@ -4,10 +4,6 @@ export default {
     flex: 1,
   },
 
-  mb10: {
-    marginBottom: 10
-  },
-
   teamItem: {
     flex: 1,
     flexDirection: "row",
@@ -53,20 +49,5 @@ export default {
   body: {
     fontSize: 20,
     color: "black",
-  },
-
-  warningIcon: {
-    fontSize: 40,
-    color:"orange"
-  },
-
-  warningText: {
-    fontWeight: "bold",
-    fontSize: 22,
-    color:"orange"
-  },
-
-  warningView: {
-    alignItems:"center"
   },
 };

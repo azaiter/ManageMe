@@ -48,7 +48,7 @@ class Requirements extends Component {
   }
 
   // Refresh the page when coming from a back navigation event.
-  willFocus = this.props.navigation.addListener("willFocus", payload => {
+  willFocus = this.props.navigation.addListener("willFocus", () => {
     this.assignRequirementsToState({ refresh: true });
     this.assignTimeToState({ refresh: true });
   });
@@ -64,6 +64,10 @@ class Requirements extends Component {
   // Retrieve requirement list from API and assign to state.
   assignRequirementsToState(opts = { refresh: false }) {
     if ((this.state && this._isMounted) && (!this.state.requirementList || opts.refresh)) {
+      this.setState({
+        requirementList: undefined,
+        getRequirementsByProjectId$: undefined
+      });
       ApiCalls.getRequirementsByProjectId({ projectId: this.params.uid }).then(apiResults => {
         let requirementList = {};
         requirementList.initial = [];
@@ -112,6 +116,10 @@ class Requirements extends Component {
   // Retrieve clocked time from API and assign to state.
   assignTimeToState(opts = { refresh: false }) {
     if ((this.state && this._isMounted) && (!this.state.clockedTime || opts.refresh)) {
+      this.setState({
+        clockedTime: undefined,
+        getTime$: undefined
+      });
       ApiCalls.getTime().then(apiResults => {
         this.setState({
           clockedTime: apiResults
@@ -134,7 +142,9 @@ class Requirements extends Component {
 
   // Retrieve Render from state.
   getRenderFromState() {
-    if ((this.state.requirementList && this.state.clockedTime && this.state) || (this.state && this.state.getTime$ && this.state.getRequirementsByProjectId$)) {
+    if (this.state &&
+      (this.state.requirementList || this.state.getRequirementsByProjectId$) &&
+      (this.state.clockedTime || this.state.getTime$)) {
       return true;
     } else {
       return false;

@@ -54,6 +54,10 @@ class Projects extends Component {
   // Retrieve project list from API and assign to state.
   assignProjectsToState(opts = { refresh: false }) {
     if ((this.state && this._isMounted) && (!this.state.projectsList || opts.refresh)) {
+      this.setState({
+        projectsList: undefined,
+        getProjects$: undefined
+      });
       ApiCalls.getProjects().then(apiResults => {
         apiResults.forEach(result => {
           result.modalVisible = false;
@@ -80,7 +84,7 @@ class Projects extends Component {
 
   // Retrieve Render from state.
   getRenderFromState() {
-    if ((this.state && this.state.projectsList) || (this.state && this.state.getProjects$)) {
+    if (this.state && (this.state.projectsList || this.state.getProjects$)) {
       return true;
     } else {
       return false;

@@ -156,7 +156,7 @@ class SideBar extends Component {
               <Text>|</Text>
             </Col>
             <Col style={styles.colVersion}>
-              <TouchableOpacity onPress={() => null }><Text style={styles.textVersion}>Privacy & Terms</Text></TouchableOpacity>
+              <TouchableOpacity onPress={() => null}><Text style={styles.textVersion}>Privacy & Terms</Text></TouchableOpacity>
             </Col>
           </Row>
         </Content>

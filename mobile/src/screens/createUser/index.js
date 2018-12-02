@@ -94,7 +94,7 @@ class CreateUser extends Component {
       navigate: "CreateUser",
       setUserPermissions: true
     });
-    Auth.getPermissions.bind(this);
+    Auth.userHasPermission.bind(this);
     this.checkAndSetState.bind(this);
     this.getFieldValidation.bind(this);
     this.handleSubmit.bind(this);
@@ -103,7 +103,7 @@ class CreateUser extends Component {
   }
 
   // Refresh the page when coming from a back navigation event.
-  willFocus = this.props.navigation.addListener("willFocus", payload => {
+  willFocus = this.props.navigation.addListener("willFocus", () => {
   });
 
   componentDidMount() {
@@ -132,7 +132,7 @@ class CreateUser extends Component {
             wage: this.state.wage
           }).then(apiResults => {
             let message = `User "${this.state.firstName} ${this.state.lastName}" was modified successfully!`;
-            ApiCalls.showToastsInArr([message], {
+            HandleError.showToastsInArr([message], {
               type: "success",
               duration: 10000
             });
@@ -168,7 +168,7 @@ class CreateUser extends Component {
             wage: this.state.wage
           }).then(apiResults => {
             let message = `User "${this.state.firstName} ${this.state.lastName}" was added successfully!`;
-            ApiCalls.showToastsInArr([message], {
+            HandleError.showToastsInArr([message], {
               type: "success",
               duration: 10000
             });

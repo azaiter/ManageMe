@@ -60,8 +60,8 @@ class CreateProject extends Component {
       navigate: "CreateProject",
       setUserPermissions: true
     });
-    Auth.getPermissions.bind(this);
     this.assignTeamsToState();
+    Auth.userHasPermission.bind(this);
     this.getRenderFromState.bind(this);
     this.handleSubmit.bind(this);
     this.checkAndSetState.bind(this);
@@ -72,7 +72,8 @@ class CreateProject extends Component {
   }
 
   // Refresh the page when coming from a back navigation event.
-  willFocus = this.props.navigation.addListener("willFocus", payload => {
+  willFocus = this.props.navigation.addListener("willFocus", () => {
+    this.assignTeamsToState({ refresh: true });
   });
 
   componentDidMount() {
@@ -86,6 +87,10 @@ class CreateProject extends Component {
 
   assignTeamsToState(opts = { refresh: false }) {
     if ((this.state && this._isMounted) && (!this.state.teams || opts.refresh)) {
+      this.setState({
+        teams: undefined,
+        getTeams$: undefined
+      });
       ApiCalls.getTeams().then(apiResults => {
         this.setState({
           teams: apiResults,
@@ -108,7 +113,7 @@ class CreateProject extends Component {
 
   // Retrieve Render from state.
   getRenderFromState() {
-    if (this.state && this.state.teams) {
+    if (this.state && (this.state.teams || this.state.getTeams$)) {
       return true;
     } else {
       return false;

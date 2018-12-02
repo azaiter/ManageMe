@@ -80,7 +80,7 @@ class CreateRequirement extends Component {
       navigate: "CreateRequirement",
       setUserPermissions: true
     });
-    Auth.getPermissions.bind(this);
+    Auth.userHasPermission.bind(this);
     this.checkAndSetState.bind(this);
     this.getFieldValidation.bind(this);
     this._renderBody.bind(this);
@@ -89,7 +89,7 @@ class CreateRequirement extends Component {
   }
 
   // Refresh the page when coming from a back navigation event.
-  willFocus = this.props.navigation.addListener("willFocus", payload => {
+  willFocus = this.props.navigation.addListener("willFocus", () => {
   });
 
   componentDidMount() {

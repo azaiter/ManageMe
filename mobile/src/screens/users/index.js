@@ -16,10 +16,12 @@ import SectionedMultiSelect from "react-native-sectioned-multi-select";
 import {
   ManageMe_Header,
   ManageMe_Modal,
-  ManageMe_LoadingScreen
+  ManageMe_LoadingScreen,
+  ManageMe_DisplayError
 } from "../../util/Render";
 const Auth = require("../../util/Auth");
 const ApiCalls = require("../../util/ApiCalls");
+const HandleError = require("../../util/HandleError");
 
 class Users extends Component {
   _isMounted = false;
@@ -30,8 +32,8 @@ class Users extends Component {
       navigate: "Users",
       setUserPermissions: true
     });
+    this.assignUsersToState();
     Auth.userHasPermission.bind(this);
-    this.assignUsersToState.bind(this);
     this.enableDisableUser.bind(this);
     this._renderBody.bind(this);
     this._renderUserData.bind(this);
@@ -40,7 +42,7 @@ class Users extends Component {
   }
 
   // Refresh the page when coming from a back navigation event.
-  willFocus = this.props.navigation.addListener("willFocus", payload => {
+  willFocus = this.props.navigation.addListener("willFocus", () => {
     this.assignUsersToState({ refresh: true });
   });
 
@@ -55,21 +57,47 @@ class Users extends Component {
   onSelectedItemsChange = (userData, selectedItems) => {
     let removed = this.state[`user_${userData.uid}_perms`].filter(x => !selectedItems.includes(x));
     let added = selectedItems.filter(x => !this.state[`user_${userData.uid}_perms`].includes(x));
-    for (let i = 0; i < removed.length; i++) {
-      const permissionID = removed[i];
-      ApiCalls.revokePrivilage(permissionID, userData.uid).then(res => {
-        ApiCalls.handleAPICallResult(res, this).then(apiResults => {
-        });
-      });
-    }
-    for (let i = 0; i < added.length; i++) {
-      const permissionID = added[i];
-      ApiCalls.assignPrivilage(permissionID, userData.uid).then(res => {
-        ApiCalls.handleAPICallResult(res, this).then(apiResults => {
-        });
-      });
-    }
     if (this._isMounted) {
+      for (let i = 0; i < removed.length; i++) {
+        const permissionID = removed[i];
+        ApiCalls.revokePrivilage({
+          privilageId: permissionID,
+          affectedUserId: userData.uid
+        }).then(apiResults => {
+        }, error => {
+          HandleError.handleError(this, error);
+          Alert.alert("Permission not Removed!",
+            JSON.stringify(this.state.revokePrivilage$ || this.state.Error),
+            (this.state.Error ?
+              [{
+                text: "OK", onPress: () => {
+                  this.props.navigate.navigation("Users");
+                }
+              }] : null
+            ), { cancelable: false }
+          );
+        });
+      }
+      for (let i = 0; i < added.length; i++) {
+        const permissionID = added[i];
+        ApiCalls.assignPrivilage({
+          privilageId: permissionID,
+          affectedUserId: userData.uid
+        }).then(apiResults => {
+        }, error => {
+          HandleError.handleError(this, error);
+          Alert.alert("Permission not Added!",
+            JSON.stringify(this.state.assignPrivilage$ || this.state.Error),
+            (this.state.Error ?
+              [{
+                text: "OK", onPress: () => {
+                  this.props.navigate.navigation("Users");
+                }
+              }] : null
+            ), { cancelable: false }
+          );
+        });
+      }
       this.setState({
         [`user_${userData.uid}_perms`]: selectedItems
       });
@@ -78,58 +106,70 @@ class Users extends Component {
 
   // Retrieve user list from API and assign to state.
   assignUsersToState(opts = { refresh: false }) {
-    if ((this.state && this.state.loggedIn) && (!this.state.usersList || opts.refresh)) {
-      ApiCalls.getUserInfo().then(response => {
-        if (this._isMounted) {
-          ApiCalls.handleAPICallResult(response, this).then(apiResults => {
-            if (apiResults) {
-              apiResults.forEach(result => {
-                result.modalVisible = false;
-                result.key = result.uid.toString() + "_" + result.modalVisible.toString();
-              });
-              ApiCalls.getAllPerms().then(_response => {
-                ApiCalls.handleAPICallResult(_response, this).then(_apiResults => {
-                  if (_apiResults) {
-                    let allPermissions = [
-                      {
-                        name: "Permissions",
-                        id: 0,
-                        children: _apiResults.map(x => { return { name: x.label, id: x.value }; })
-                      }
-                    ];
-                    let setStateObj = {
-                      usersList: apiResults.map(x => {
-                        x.permissions = x.permissions.map(y => y.uid);
-                        return x;
-                      }),
-                      allPermissions: allPermissions
-                    };
-                    for (let i = 0; i < setStateObj.usersList.length; i++) {
-                      const userObj = setStateObj.usersList[i];
-                      setStateObj[`user_${userObj.uid}_perms`] = userObj.permissions;
-                    }
-                    this.setState(setStateObj);
-                  } else {
-                    this.setState({
-                      setStateObj: "null"
-                    });
-                  }
-                });
-              });
-            } else {
-              this.setState({
-                usersList: "null"
-              });
+    if ((this.state && this._isMounted) && (!this.state.usersList || opts.refresh)) {
+      this.setState({
+        usersList: undefined,
+        getUserInfo$: undefined,
+        getAllPerms$: undefined
+      });
+      ApiCalls.getUserInfo().then(apiResults => {
+        apiResults.forEach(result => {
+          result.modalVisible = false;
+          result.key = result.uid.toString() + "_" + result.modalVisible.toString();
+        });
+        ApiCalls.getAllPerms().then(_apiResults => {
+          let allPermissions = [
+            {
+              name: "Permissions",
+              id: 0,
+              children: _apiResults.map(x => { return { name: x.label, id: x.value }; })
             }
-          });
-        }
+          ];
+          let setStateObj = {
+            usersList: apiResults.map(x => {
+              x.permissions = x.permissions.map(y => y.uid);
+              return x;
+            }),
+            allPermissions: allPermissions
+          };
+          for (let i = 0; i < setStateObj.usersList.length; i++) {
+            const userObj = setStateObj.usersList[i];
+            setStateObj[`user_${userObj.uid}_perms`] = userObj.permissions;
+          }
+          this.setState(setStateObj);
+        }, error => {
+          HandleError.handleError(this, error);
+          Alert.alert("Error!",
+            JSON.stringify(this.state.getAllPerms$ || this.state.Error),
+            (this.state.Error ?
+              [{
+                text: "OK", onPress: () => {
+                  this.assignUsersToState({ refresh: true });
+                }
+              }] : null
+            ), { cancelable: false }
+          );
+        });
+      }, error => {
+        HandleError.handleError(this, error);
+        Alert.alert("Error!",
+          JSON.stringify(this.state.getUserInfo$ || this.state.Error),
+          (this.state.Error ?
+            [{
+              text: "OK", onPress: () => {
+                this.assignUsersToState({ refresh: true });
+              }
+            }] : null
+          ), { cancelable: false }
+        );
       });
     }
   }
 
   // Retrieve Render from state.
   getRenderFromState() {
-    if (this.state && this.state.usersList) {
+    if (this.state &&
+      (this.state.usersList || this.state.getUserInfo$)) {
       return true;
     } else {
       return false;
@@ -155,7 +195,6 @@ class Users extends Component {
 
   // Render
   render() {
-    this.assignUsersToState();
     return (
       <Container style={styles.container}>
         <ManageMe_Header
@@ -177,11 +216,10 @@ class Users extends Component {
     if (this.getRenderFromState()) {
       return (
         <Content padder>
-          {this.state.usersList === "null" ?
-            <View style={styles.warningView} >
-              <Icon style={styles.warningIcon} name="warning" />
-              <Text style={styles.warningText}>{this.state.ApiErrorsList}</Text>
-            </View> :
+          {this.state.getUserInfo$ ?
+            <ManageMe_DisplayError
+              ApiErrors={this.state.getUserInfo$}
+            /> :
             <FlatList
               style={styles.container}
               data={this.state.usersList}
@@ -210,6 +248,7 @@ class Users extends Component {
           searchPlaceholderText="Search..."
           showChips={false}
           onSelectedItemsChange={selectedDataHandler}
+          onConfirm={() => this.assignUsersToState({ refresh: true })}
           selectedItems={this.state[`user_${userData.uid}_perms`]}
           readOnlyHeadings={true}
           style={{
@@ -270,20 +309,31 @@ class Users extends Component {
 
   enableDisableUser(userData) {
     let enabled = userData.enabled ? 0 : 1;
-    ApiCalls.enabledDisableUser(userData.uid, enabled).then(response => {
-      ApiCalls.handleAPICallResult(response, this).then(apiResults => {
-        if (apiResults) {
-          Alert.alert("Success", `"${userData.first_name} ${userData.last_name}"  has been ${enabled ? "enabled" : "disabled"}!`,
-            [
-              {
-                text: "OK", onPress: () => {
-                  this.assignUsersToState({ refresh: true });
-                }
-              },
-            ],
-            { cancelable: false });
-        }
-      });
+    ApiCalls.enabledDisableUser({
+      userId: userData.uid,
+      enabled: enabled
+    }).then(apiResults => {
+      Alert.alert("Success", `"${userData.first_name} ${userData.last_name}"  has been ${enabled ? "enabled" : "disabled"}!`,
+        [
+          {
+            text: "OK", onPress: () => {
+              this.assignUsersToState({ refresh: true });
+            }
+          },
+        ],
+        { cancelable: false });
+    }, error => {
+      HandleError.handleError(this, error);
+      Alert.alert(`"${userData.first_name} ${userData.last_name}"  has not been ${enabled ? "enabled" : "disabled"}!`,
+        JSON.stringify(this.state.enabledDisableUser$ || this.state.Error),
+        (this.state.Error ?
+          [{
+            text: "OK", onPress: () => {
+              this.props.navigate.navigation("Users");
+            }
+          }] : null
+        ), { cancelable: false }
+      );
     });
   }
 }

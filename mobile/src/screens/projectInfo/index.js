@@ -86,6 +86,10 @@ class ProjectInfo extends Component {
   // Retrieve Requirements from API and assign to state.
   assignRequirementsToState(opts = { refresh: false }) {
     if ((this.state && this._isMounted) && (!this.state.requirementList || opts.refresh)) {
+      this.setState({
+        requirementList: undefined,
+        getRequirementsByProjectId$: undefined
+      });
       ApiCalls.getRequirementsByProjectId({ projectId: this.params.uid }).then(apiResults => {
         let requirementList = {};
         requirementList.initial = [];
@@ -134,6 +138,10 @@ class ProjectInfo extends Component {
   // Retrieve comments from API and assign to state.
   assignCommentsToState(opts = { refresh: false }) {
     if ((this.state && this._isMounted) && (!this.state.commentList || opts.refresh)) {
+      this.setState({
+        commentList: undefined,
+        getProjectComments$: undefined
+      });
       ApiCalls.getProjectComments({ projID: this.params.uid }).then(apiResults => {
         this.setState({
           commentList: apiResults
@@ -157,17 +165,31 @@ class ProjectInfo extends Component {
   // Retrieve Project Info from API and assign to state.
   assignProjectInfoToState(opts = { refresh: false }) {
     if ((this.state && this._isMounted) && (!this.state.projectInfo || opts.refresh)) {
+      this.setState({
+        projectInfo: undefined,
+        getProjectInfo$: undefined,
+        teamData: undefined,
+        getTeamById$: undefined
+      });
       ApiCalls.getProjectInfo({ proj_id: this.params.uid }).then(response => {
+        this.setState({
+          projectInfo: response
+        });
         ApiCalls.getTeamById({ teamId: response[0].assigned_team }).then(apiResults => {
           this.setState({
-            teamData: apiResults,
-            projectInfo: response
+            teamData: apiResults
           });
         }, error => {
           HandleError.handleError(this, error);
           Alert.alert("Error!",
             JSON.stringify(this.state.getTeamById$ || this.state.Error),
-          );
+            (this.state.Error ?
+              [{
+                text: "OK", onPress: () => {
+                  this.assignProjectInfoToState({ refresh: true });
+                }
+              }] : null
+            ), { cancelable: false });
         });
       }, error => {
         HandleError.handleError(this, error);
@@ -188,6 +210,10 @@ class ProjectInfo extends Component {
   // Retrieve Project Hours from API and assign to state.
   assignProjectHoursToState(opts = { refresh: false }) {
     if ((this.state && this._isMounted) && (!this.state.projectHours || opts.refresh)) {
+      this.setState({
+        projectHours: undefined,
+        getProjectHours$: undefined
+      });
       ApiCalls.getProjectHours({ projId: this.params.uid }).then(apiResults => {
         this.setState({
           projectHours: apiResults
@@ -211,22 +237,12 @@ class ProjectInfo extends Component {
   // Retrieve Render from state.
   getRenderFromState() {
     if (
-      (
-        this.state.requirementList &&
-        this.state.commentList &&
-        this.state.projectHours &&
-        this.state.projectInfo &&
-        this.state.teamData &&
-        this.state
-      ) ||
-      (
-        this.state.getRequirementsByProjectId$ &&
-        this.state.getProjectComments$ &&
-        this.state.getProjectHours$ &&
-        this.state.getProjectInfo$ &&
-        this.state.getTeamById$ &&
-        this.state
-      )
+      this.state &&
+      (this.state.requirementList || this.state.getRequirementsByProjectId$) &&
+      (this.state.commentList || this.state.getProjectComments$) &&
+      (this.state.projectHours || this.state.getProjectHours$) &&
+      (this.state.projectInfo || this.state.getProjectInfo$) &&
+      (this.state.teamData || this.state.getTeamById$)
     ) {
       return true;
     } else {

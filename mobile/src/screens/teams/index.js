@@ -38,7 +38,7 @@ class Teams extends Component {
   }
 
   // Refresh the page when coming from a back navigation event.
-  willFocus = this.props.navigation.addListener("willFocus", payload => {
+  willFocus = this.props.navigation.addListener("willFocus", () => {
     this.assignTeamsToState({ refresh: true });
   });
 
@@ -53,6 +53,10 @@ class Teams extends Component {
   // Retrieve team list from API and assign to state.
   assignTeamsToState(opts = { refresh: false }) {
     if ((this.state && this._isMounted) && (!this.state.teamsList || opts.refresh)) {
+      this.setState({
+        teamsList: undefined,
+        getTeams$: undefined
+      });
       ApiCalls.getTeams().then(apiResults => {
         this.setState({
           teamsList: apiResults
@@ -75,7 +79,7 @@ class Teams extends Component {
 
   // Retrieve Render from state.
   getRenderFromState() {
-    if ((this.state && this.state.teamsList) || (this.state && this.state.getTeams$)) {
+    if (this.state && (this.state.teamsList || this.state.getTeams$)) {
       return true;
     } else {
       return false;
@@ -93,7 +97,6 @@ class Teams extends Component {
 
   // Render
   render() {
-    this.assignTeamsToState();
     return (
       <Container style={styles.container}>
         <ManageMe_Header

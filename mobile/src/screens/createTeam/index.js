@@ -45,7 +45,7 @@ class CreateTeam extends Component {
       navigate: "CreateTeam",
       setUserPermissions: true
     });
-    Auth.getPermissions.bind(this);
+    Auth.userHasPermission.bind(this);
     this.checkAndSetState.bind(this);
     this.getFieldValidation.bind(this);
     this._renderBody.bind(this);
@@ -54,7 +54,7 @@ class CreateTeam extends Component {
   }
 
   // Refresh the page when coming from a back navigation event.
-  willFocus = this.props.navigation.addListener("willFocus", payload => {
+  willFocus = this.props.navigation.addListener("willFocus", () => {
   });
 
   componentDidMount() {
@@ -76,7 +76,7 @@ class CreateTeam extends Component {
           desc: this.state.teamDesc
         }).then(apiResults => {
           let message = `Team "${this.state.teamName}" was added successfully!`;
-          ApiCalls.showToastsInArr([message], {
+          HandleError.showToastsInArr([message], {
             type: "success",
             duration: 10000
           });
