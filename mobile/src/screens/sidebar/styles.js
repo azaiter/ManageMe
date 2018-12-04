@@ -33,8 +33,8 @@ export default {
   },
   logout: {
     height: deviceHeight / 14,
-    borderTopWidth:1,
-    borderBottomWidth:1,
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
   },
   rowVersion: {
     flex: 1,
@@ -49,7 +49,7 @@ export default {
     alignItems: "center",
     width: "6%"
   },
-  textVersion:{
+  textVersion: {
     fontSize: 18,
     textDecorationLine: "underline",
   },

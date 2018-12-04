@@ -3,10 +3,6 @@ export default {
     backgroundColor: "#FFF"
   },
 
-  mb10: {
-    marginBottom: 10
-  },
-
   projectTitle: {
     fontSize: 28,
     fontWeight: "bold",
@@ -107,20 +103,5 @@ export default {
     borderColor: "black",
     borderWidth: 1,
     borderRadius: 4,
-  },
-
-  warningIcon: {
-    fontSize: 40,
-    color:"orange"
-  },
-
-  warningText: {
-    fontWeight: "bold",
-    fontSize: 22,
-    color:"orange"
-  },
-
-  warningView: {
-    alignItems:"center"
   },
 };

@@ -1,12 +1,12 @@
 import React, { Component } from "react";
-import { ImageBackground, View, StatusBar } from "react-native";
+import { ImageBackground, View, StatusBar, Alert } from "react-native";
 import { Container, Button, Text, Content, Form, Item, Label, Input } from "native-base";
-
 import styles from "./styles";
 
 const launchscreenBg = require("../../../assets/launchscreen-bg.png");
 const launchscreenLogo = require("../../../assets/logo-kitchen-sink.png");
 const ApiCalls = require("../../util/ApiCalls");
+const HandleError = require("../../util/HandleError");
 const Auth = require("../../util/Auth");
 
 class Home extends Component {
@@ -20,20 +20,31 @@ class Home extends Component {
       errorsList: [],
       loggedIn: false
     };
-    Auth.logout(this);
-    //Auth.setIsLoginStateOnScreenEntry(this, { navigate: "Projects" });
+    //Auth.logout(this);
+    Auth.setIsLoginStateOnScreenEntry(this, { navigate: "Projects" });
   }
 
   handleSubmit = async () => {
     this.setState({ isLoading: true });
-    ApiCalls.getToken(this.state.username, this.state.password).then(response => {
-      ApiCalls.handleAPICallResult(response, this).then(apiResults => {
-        if (apiResults) {
-          Auth.setLocalToken(apiResults);
-          this.setState({ loggedIn: true });
-          this.props.navigation.navigate("Projects");
-        }
-      });
+    ApiCalls.getToken({
+      user: this.state.username,
+      pass: this.state.password
+    }).then(apiResults => {
+      Auth.setLocalToken(apiResults);
+      this.setState({ loggedIn: true });
+      this.props.navigation.navigate("Projects");
+    }, error => {
+      HandleError.handleError(this, error);
+      Alert.alert("Error Logging In!",
+        JSON.stringify(this.state.getToken || this.state.Error),
+        (this.state.Error ?
+          [{
+            text: "OK", onPress: () => {
+              this.props.navigation.navigate("Home");
+            }
+          }] : null
+        ), { cancelable: false }
+      );
     });
   }
 
@@ -64,7 +75,7 @@ class Home extends Component {
     </Form>;
 
     let signedInForm =
-      <Button block success style={styles.mb15} onPress={() => { this.props.navigation.openDrawer();}}>
+      <Button block success onPress={() => { this.props.navigation.openDrawer(); }}>
         <Text>You are logged in, Click to View Menu</Text>
       </Button>;
 

@@ -4,10 +4,6 @@ export default {
     flex: 1,
   },
 
-  mb10: {
-    marginBottom: 10
-  },
-
   projectItem: {
     flex: 1,
     flexDirection: "row",

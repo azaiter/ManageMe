@@ -4,10 +4,6 @@ export default {
     flex: 1,
   },
 
-  mb10: {
-    marginBottom: 10
-  },
-
   teamItem: {
     flex: 1,
     flexDirection: "row",
@@ -65,20 +61,5 @@ export default {
     textShadowColor: "#FF4B4B",
     textShadowOffset: { width: -1, height: 1 },
     textShadowRadius: 10,
-  },
-
-  warningIcon: {
-    fontSize: 40,
-    color:"orange"
-  },
-
-  warningText: {
-    fontWeight: "bold",
-    fontSize: 22,
-    color:"orange"
-  },
-
-  warningView: {
-    alignItems:"center"
   },
 };

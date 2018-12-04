@@ -14,6 +14,7 @@ import styles from "./styles";
 import { ManageMe_Header } from "../../util/Render";
 const Auth = require("../../util/Auth");
 const ApiCalls = require("../../util/ApiCalls");
+const HandleError = require("../../util/HandleError");
 
 const fieldsArr = [
   {
@@ -93,7 +94,7 @@ class CreateUser extends Component {
       navigate: "CreateUser",
       setUserPermissions: true
     });
-    Auth.getPermissions.bind(this);
+    Auth.userHasPermission.bind(this);
     this.checkAndSetState.bind(this);
     this.getFieldValidation.bind(this);
     this.handleSubmit.bind(this);
@@ -102,7 +103,7 @@ class CreateUser extends Component {
   }
 
   // Refresh the page when coming from a back navigation event.
-  willFocus = this.props.navigation.addListener("willFocus", payload => {
+  willFocus = this.props.navigation.addListener("willFocus", () => {
   });
 
   componentDidMount() {
@@ -116,48 +117,80 @@ class CreateUser extends Component {
 
   handleSubmit = async () => {
     if (this._isMounted) {
-      if (fieldsArr.filter(x => !this.state[x.name + "Validation"]).length > 0)  {
-        ApiCalls.showToastsInArr(["Some of the fields below are invalid."], {
-          buttonText: "OK",
-          type: "danger",
-          position: "top",
-          duration: 5 * 1000
-        });
+      if (fieldsArr.filter(x => !this.state[x.name + "Validation"]).length > 0) {
+        HandleError.showToastsInArr(["Some of the fields below are invalid."]);
       }
       else {
         if (this.params.action === "edit") {
-          ApiCalls.updateUser(this.params.userData.uid, this.state.firstName, this.state.lastName, this.state.email, this.state.phoneNumber, this.state.address, this.state.wage).then(response => {
-            ApiCalls.handleAPICallResult(response, this).then(apiResults => {
-              if (apiResults) {
-                let message = `User "${this.state.firstName} ${this.state.lastName}" was modified successfully!`;
-                ApiCalls.showToastsInArr([message], {
-                  buttonText: "OK",
-                  type: "success",
-                  position: "top",
-                  duration: 10 * 1000
-                });
-                Alert.alert("User Modified!", message);
-              } else {
-                Alert.alert("User not Modified!", JSON.stringify(this.state.ApiErrorsList));
-              }
+          ApiCalls.updateUser({
+            userId: this.params.userData.uid,
+            firstName: this.state.firstName,
+            lastName: this.state.lastName,
+            email: this.state.email,
+            phoneNumber: this.state.phoneNumber,
+            address: this.state.address,
+            wage: this.state.wage
+          }).then(apiResults => {
+            let message = `User "${this.state.firstName} ${this.state.lastName}" was modified successfully!`;
+            HandleError.showToastsInArr([message], {
+              type: "success",
+              duration: 10000
             });
+            Alert.alert("User Modified!", message, [
+              {
+                text: "OK", onPress: () => {
+                  this.props.navigation.navigate("Users");
+                }
+              },
+            ]);
+          }, error => {
+            HandleError.handleError(this, error);
+            Alert.alert("User not modified!",
+              JSON.stringify(this.state.updateUser || this.state.Error),
+              (this.state.Error ?
+                [{
+                  text: "OK", onPress: () => {
+                    this.props.navigation.navigate("CreateUser");
+                  }
+                }] : null
+              ), { cancelable: false }
+            );
           });
         } else {
-          ApiCalls.createUser(this.state.firstName, this.state.lastName, this.state.email, this.state.phoneNumber, this.state.address, this.state.username, this.state.password, this.state.wage).then(response => {
-            ApiCalls.handleAPICallResult(response, this).then(apiResults => {
-              if (apiResults) {
-                let message = `User "${this.state.firstName} ${this.state.lastName}" was added successfully!`;
-                ApiCalls.showToastsInArr([message], {
-                  buttonText: "OK",
-                  type: "success",
-                  position: "top",
-                  duration: 10 * 1000
-                });
-                Alert.alert("User Added!", message);
-              } else {
-                Alert.alert("User not Added!", JSON.stringify(this.state.ApiErrorsList));
-              }
+          ApiCalls.createUser({
+            first: this.state.firstName,
+            last: this.state.lastName,
+            mail: this.state.email,
+            num: this.state.phoneNumber,
+            addr: this.state.address,
+            user: this.state.username,
+            pass: this.state.password,
+            wage: this.state.wage
+          }).then(apiResults => {
+            let message = `User "${this.state.firstName} ${this.state.lastName}" was added successfully!`;
+            HandleError.showToastsInArr([message], {
+              type: "success",
+              duration: 10000
             });
+            Alert.alert("User Added!", message, [
+              {
+                text: "OK", onPress: () => {
+                  this.props.navigation.navigate("Users");
+                }
+              },
+            ]);
+          }, error => {
+            HandleError.handleError(this, error);
+            Alert.alert("User not added!",
+              JSON.stringify(this.state.createUser || this.state.Error),
+              (this.state.Error ?
+                [{
+                  text: "OK", onPress: () => {
+                    this.props.navigation.navigate("CreateUser");
+                  }
+                }] : null
+              ), { cancelable: false }
+            );
           });
         }
       }
@@ -166,14 +199,14 @@ class CreateUser extends Component {
 
   setFieldValues() {
     if (this.params.action === "edit") {
-      this.checkAndSetState(fieldsArr[0].name ,this.params.userData.first_name  ,fieldsArr[0].regex);
-      this.checkAndSetState(fieldsArr[1].name ,this.params.userData.last_name   ,fieldsArr[1].regex);
-      this.checkAndSetState(fieldsArr[2].name ,this.params.userData.email       ,fieldsArr[2].regex);
-      this.checkAndSetState(fieldsArr[3].name ,this.params.userData.phone       ,fieldsArr[3].regex);
-      this.checkAndSetState(fieldsArr[4].name ,this.params.userData.address     ,fieldsArr[4].regex);
-      this.checkAndSetState(fieldsArr[5].name ,`${this.params.userData.wage}`   ,fieldsArr[5].regex);
-      this.checkAndSetState(fieldsArr[6].name ,this.params.userData.username    ,fieldsArr[6].regex);
-      this.checkAndSetState(fieldsArr[7].name ,"A!012345"                       ,fieldsArr[7].regex);
+      this.checkAndSetState(fieldsArr[0].name, this.params.userData.first_name, fieldsArr[0].regex);
+      this.checkAndSetState(fieldsArr[1].name, this.params.userData.last_name, fieldsArr[1].regex);
+      this.checkAndSetState(fieldsArr[2].name, this.params.userData.email, fieldsArr[2].regex);
+      this.checkAndSetState(fieldsArr[3].name, this.params.userData.phone, fieldsArr[3].regex);
+      this.checkAndSetState(fieldsArr[4].name, this.params.userData.address, fieldsArr[4].regex);
+      this.checkAndSetState(fieldsArr[5].name, `${this.params.userData.wage}`, fieldsArr[5].regex);
+      this.checkAndSetState(fieldsArr[6].name, this.params.userData.username, fieldsArr[6].regex);
+      this.checkAndSetState(fieldsArr[7].name, "A!012345", fieldsArr[7].regex);
     }
   }
 
@@ -204,9 +237,9 @@ class CreateUser extends Component {
     return (
       <Container style={styles.container}>
         <ManageMe_Header
-          title = {(this.params.action === "edit") ? "Edit User" : "Create User"}
-          leftIcon = "back"
-          onPress = {{ left: () => this.props.navigation.goBack() }}
+          title={(this.params.action === "edit") ? "Edit User" : "Create User"}
+          leftIcon="back"
+          onPress={{ left: () => this.props.navigation.goBack() }}
         />
         {this._renderBody()}
       </Container>
@@ -231,9 +264,9 @@ class CreateUser extends Component {
                 block style={{ margin: 15, marginTop: 50 }}
                 onPress={this.handleSubmit}
               >{
-                this.params.action === "edit" ?
-                  <Text>Edit User</Text> :
-                  <Text>Create User</Text>
+                  this.params.action === "edit" ?
+                    <Text>Edit User</Text> :
+                    <Text>Create User</Text>
                 }
               </Button>
             </Form>

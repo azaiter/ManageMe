@@ -10,6 +10,7 @@ import styles from "./styles";
 import {
   TouchableOpacity,
   FlatList,
+  Alert
 } from "react-native";
 import {
   ManageMe_Header,
@@ -19,6 +20,7 @@ import {
 } from "../../util/Render";
 const Auth = require("../../util/Auth");
 const ApiCalls = require("../../util/ApiCalls");
+const HandleError = require("../../util/HandleError");
 
 class Projects extends Component {
   _isMounted = false;
@@ -29,15 +31,15 @@ class Projects extends Component {
       navigate: "Projects",
       setUserPermissions: true
     });
+    this.assignProjectsToState();
     Auth.userHasPermission.bind(this);
-    this.assignProjectsToState.bind(this);
     this.getRenderFromState.bind(this);
     this._renderBody.bind(this);
     this._renderProjectData.bind(this);
   }
 
   // Refresh the page when coming from a back navigation event.
-  willFocus = this.props.navigation.addListener("willFocus", payload => {
+  willFocus = this.props.navigation.addListener("willFocus", () => {
     this.assignProjectsToState({ refresh: true });
   });
 
@@ -51,32 +53,38 @@ class Projects extends Component {
 
   // Retrieve project list from API and assign to state.
   assignProjectsToState(opts = { refresh: false }) {
-    if ((this.state && this.state.loggedIn) && (!this.state.projectsList || opts.refresh)) {
-      ApiCalls.getProjects().then(response => {
-        if (this._isMounted) {
-          ApiCalls.handleAPICallResult(response, this).then(apiResults => {
-            if (apiResults) {
-              apiResults.forEach(result => {
-                result.modalVisible = false;
-                result.key = result.uid.toString() + "_" + result.modalVisible.toString();
-              });
-              this.setState({
-                projectsList: apiResults
-              });
-            } else {
-              this.setState({
-                projectsList: "null"
-              });
-            }
-          });
-        }
+    if ((this.state && this._isMounted) && (!this.state.projectsList || opts.refresh)) {
+      this.setState({
+        projectsList: undefined,
+        getProjects: undefined
+      });
+      ApiCalls.getProjects().then(apiResults => {
+        apiResults.forEach(result => {
+          result.modalVisible = false;
+          result.key = result.uid.toString() + "_" + result.modalVisible.toString();
+        });
+        this.setState({
+          projectsList: apiResults
+        });
+      }, error => {
+        HandleError.handleError(this, error);
+        Alert.alert("Error!",
+          JSON.stringify(this.state.getProjects || this.state.Error),
+          (this.state.Error ?
+            [{
+              text: "OK", onPress: () => {
+                this.assignProjectsToState({ refresh: true });
+              }
+            }] : null
+          ), { cancelable: false }
+        );
       });
     }
   }
 
   // Retrieve Render from state.
   getRenderFromState() {
-    if (this.state && this.state.projectsList) {
+    if (this.state && (this.state.projectsList || this.state.getProjects$)) {
       return true;
     } else {
       return false;
@@ -102,7 +110,6 @@ class Projects extends Component {
 
   // Render
   render() {
-    this.assignProjectsToState();
     return (
       <Container style={styles.container}>
         <ManageMe_Header
@@ -124,9 +131,9 @@ class Projects extends Component {
     if (this.getRenderFromState()) {
       return (
         <Content padder>
-          {this.state.projectsList === "null" ?
+          {this.state.getProjects ?
             <ManageMe_DisplayError
-              ApiErrorsList={this.state.ApiErrorsList}
+              ApiErrors={this.state.getProjects}
             /> :
             <FlatList
               style={styles.container}

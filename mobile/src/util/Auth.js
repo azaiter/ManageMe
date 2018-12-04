@@ -83,11 +83,12 @@ export async function setUserPermissionsOnComponent(component) {
         if (!permissionsObj) {
             let localToken = await getLocalToken();
             //console.log("doing api call permissions")
-            let apiResult = await ApiCalls.getUserPerms(localToken.uid);
-            let handledApiResults = await ApiCalls.handleAPICallResult(apiResult, component);
-            if (handledApiResults) {
+            let apiResults = await ApiCalls.getUserPerms({
+                userId: localToken.uid
+            });
+            if (apiResults) {
                 //console.log("UserPermissions: ", handledApiResults);
-                permissionsObj = handledApiResults;
+                permissionsObj = apiResults;
             }
         }
         if (component && component.state && !component.state.userPermissions) {
@@ -135,9 +136,9 @@ export async function removeLocalToken() {
 }
 
 export async function saveItem(item, selectedValue) {
-    try {
-        await AsyncStorage.setItem(item, JSON.stringify(selectedValue));
-    } catch (error) {
-        console.error("AsyncStorage error: " + error.message);
-    }
+    //try {
+    await AsyncStorage.setItem(item, JSON.stringify(selectedValue));
+    //} catch (error) {
+    //console.error("AsyncStorage error: " + error.message);
+    //}
 }

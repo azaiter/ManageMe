@@ -23,6 +23,7 @@ import {
 } from "../../util/Render";
 const Auth = require("../../util/Auth");
 const ApiCalls = require("../../util/ApiCalls");
+const HandleError = require("../../util/HandleError");
 
 const fieldsArr = [
   {
@@ -46,11 +47,11 @@ class ProjectInfo extends Component {
       navigate: "ProjectInfo",
       setUserPermissions: true
     });
+    this.assignRequirementsToState();
+    this.assignCommentsToState();
+    this.assignProjectHoursToState();
+    this.assignProjectInfoToState();
     Auth.userHasPermission.bind(this);
-    this.assignRequirementsToState.bind(this);
-    this.assignCommentsToState.bind(this);
-    this.assignProjectInfoToState.bind(this);
-    this.assignProjectHoursToState.bind(this);
     this.getRenderFromState.bind(this);
     this.checkAndSetState.bind(this);
     this.handleSubmit.bind(this);
@@ -67,7 +68,7 @@ class ProjectInfo extends Component {
   }
 
   // Refresh the page when coming from a back navigation event.
-  willFocus = this.props.navigation.addListener("willFocus", payload => {
+  willFocus = this.props.navigation.addListener("willFocus", () => {
     this.assignRequirementsToState({ refresh: true });
     this.assignCommentsToState({ refresh: true });
     this.assignProjectInfoToState({ refresh: true });
@@ -84,129 +85,165 @@ class ProjectInfo extends Component {
 
   // Retrieve Requirements from API and assign to state.
   assignRequirementsToState(opts = { refresh: false }) {
-    if ((this.state && this.state.loggedIn) && (!this.state.requirementList || opts.refresh)) {
-      ApiCalls.getRequirementsByProjectId(this.params.uid).then(response => {
-        if (this._isMounted) {
-          ApiCalls.handleAPICallResult(response, this).then(apiResults => {
-            let requirementList = {};
-            requirementList.initial = [];
-            requirementList.completed = [];
-            requirementList.pending = [];
-            requirementList.changeRequest = [];
-            if (apiResults) {
-              /* 
-                1: initial
-                2: completed
-                3: pending
-                4: change request
-              */
-              apiResults.forEach(result => {
-                if (result.status === 1) {
-                  requirementList.initial.push(result);
-                }
-                if (result.status === 2) {
-                  requirementList.completed.push(result);
-                }
-                if (result.status === 3) {
-                  requirementList.pending.push(result);
-                }
-                if (result.status === 4) {
-                  requirementList.changeRequest.push(result);
-                }
-              });
-              this.setState({
-                requirementList
-              });
-            } else {
-              this.setState({
-                requirementList: "null"
-              });
-            }
-          });
-        }
+    if ((this.state && this._isMounted) && (!this.state.requirementList || opts.refresh)) {
+      this.setState({
+        requirementList: undefined,
+        getRequirementsByProjectId: undefined
+      });
+      ApiCalls.getRequirementsByProjectId({ projectId: this.params.uid }).then(apiResults => {
+        let requirementList = {};
+        requirementList.initial = [];
+        requirementList.completed = [];
+        requirementList.pending = [];
+        requirementList.changeRequest = [];
+        /*
+        1: initial
+        2: completed
+        3: pending
+        4: change request
+        */
+        apiResults.forEach(result => {
+          if (result.status === 1) {
+            requirementList.initial.push(result);
+          }
+          if (result.status === 2) {
+            requirementList.completed.push(result);
+          }
+          if (result.status === 3) {
+            requirementList.pending.push(result);
+          }
+          if (result.status === 4) {
+            requirementList.changeRequest.push(result);
+          }
+        });
+        this.setState({
+          requirementList
+        });
+      }, error => {
+        HandleError.handleError(this, error);
+        Alert.alert("Error!",
+          JSON.stringify(this.state.getRequirementsByProjectId || this.state.Error),
+          (this.state.Error ?
+            [{
+              text: "OK", onPress: () => {
+                this.assignRequirementsToState({ refresh: true });
+              }
+            }] : null
+          ), { cancelable: false }
+        );
       });
     }
   }
 
   // Retrieve comments from API and assign to state.
   assignCommentsToState(opts = { refresh: false }) {
-    if ((this.state && this.state.loggedIn) && (!this.state.commentList || opts.refresh)) {
-      ApiCalls.getProjectComments(this.params.uid).then(response => {
-        if (this._isMounted) {
-          ApiCalls.handleAPICallResult(response, this).then(apiResults => {
-            if (apiResults) {
-              this.setState({
-                commentList: apiResults
-              });
-            } else {
-              this.setState({
-                commentList: "null"
-              });
-            }
-          });
-        }
+    if ((this.state && this._isMounted) && (!this.state.commentList || opts.refresh)) {
+      this.setState({
+        commentList: undefined,
+        getProjectComments: undefined
+      });
+      ApiCalls.getProjectComments({ projID: this.params.uid }).then(apiResults => {
+        this.setState({
+          commentList: apiResults
+        });
+      }, error => {
+        HandleError.handleError(this, error);
+        Alert.alert("Error!",
+          JSON.stringify(this.state.getProjectComments || this.state.Error),
+          (this.state.Error ?
+            [{
+              text: "OK", onPress: () => {
+                this.assignCommentsToState({ refresh: true });
+              }
+            }] : null
+          ), { cancelable: false }
+        );
       });
     }
   }
 
   // Retrieve Project Info from API and assign to state.
   assignProjectInfoToState(opts = { refresh: false }) {
-    if ((this.state && this.state.loggedIn) && (!this.state.projectInfo || opts.refresh)) {
-      ApiCalls.getProjectInfo(this.params.uid).then(response => {
-        if (this._isMounted) {
-          ApiCalls.handleAPICallResult(response, this).then(apiResults => {
-            if (apiResults) {
-              ApiCalls.getTeamById(apiResults[0].assigned_team).then(_response => {
-                ApiCalls.handleAPICallResult(_response, this).then(_apiResults => {
-                  if (_apiResults) {
-                    this.setState({
-                      teamData: _apiResults
-                    });
-                  } else {
-                    this.setState({
-                      teamData: "null"
-                    });
-                  }
-                  this.setState({
-                    projectInfo: apiResults
-                  });
-                });
-              });
-            } else {
-              this.setState({
-                projectInfo: "null"
-              });
-            }
+    if ((this.state && this._isMounted) && (!this.state.projectInfo || opts.refresh)) {
+      this.setState({
+        projectInfo: undefined,
+        getProjectInfo: undefined,
+        teamData: undefined,
+        getTeamById: undefined
+      });
+      ApiCalls.getProjectInfo({ proj_id: this.params.uid }).then(response => {
+        this.setState({
+          projectInfo: response
+        });
+        ApiCalls.getTeamById({ teamId: response[0].assigned_team }).then(apiResults => {
+          this.setState({
+            teamData: apiResults
           });
-        }
+        }, error => {
+          HandleError.handleError(this, error);
+          Alert.alert("Error!",
+            JSON.stringify(this.state.getTeamById || this.state.Error),
+            (this.state.Error ?
+              [{
+                text: "OK", onPress: () => {
+                  this.assignProjectInfoToState({ refresh: true });
+                }
+              }] : null
+            ), { cancelable: false });
+        });
+      }, error => {
+        HandleError.handleError(this, error);
+        Alert.alert("Error!",
+          JSON.stringify(this.state.getProjectInfo || this.state.Error),
+          (this.state.Error ?
+            [{
+              text: "OK", onPress: () => {
+                this.assignProjectInfoToState({ refresh: true });
+              }
+            }] : null
+          ), { cancelable: false }
+        );
       });
     }
   }
 
   // Retrieve Project Hours from API and assign to state.
   assignProjectHoursToState(opts = { refresh: false }) {
-    if ((this.state && this.state.loggedIn) && (!this.state.projectHours || opts.refresh)) {
-      ApiCalls.getProjectHours(this.params.uid).then(response => {
-        if (this._isMounted) {
-          ApiCalls.handleAPICallResult(response, this).then(apiResults => {
-            if (apiResults) {
-              this.setState({
-                projectHours: apiResults
-              });
-            } else {
-              this.setState({
-                projectHours: "null"
-              });
-            }
-          });
-        }
+    if ((this.state && this._isMounted) && (!this.state.projectHours || opts.refresh)) {
+      this.setState({
+        projectHours: undefined,
+        getProjectHours: undefined
+      });
+      ApiCalls.getProjectHours({ projId: this.params.uid }).then(apiResults => {
+        this.setState({
+          projectHours: apiResults
+        });
+      }, error => {
+        HandleError.handleError(this, error);
+        Alert.alert("Error!",
+          JSON.stringify(this.state.getProjectHours || this.state.Error),
+          (this.state.Error ?
+            [{
+              text: "OK", onPress: () => {
+                this.assignProjectHoursToState({ refresh: true });
+              }
+            }] : null
+          ), { cancelable: false }
+        );
       });
     }
   }
 
   // Retrieve Render from state.
   getRenderFromState() {
-    if (this.state.requirementList && this.state.commentList && this.state.projectHours && this.state.projectInfo && this.state) {
+    if (
+      this.state &&
+      (this.state.requirementList || this.state.getRequirementsByProjectId) &&
+      (this.state.commentList || this.state.getProjectComments) &&
+      (this.state.projectHours || this.state.getProjectHours) &&
+      (this.state.projectInfo || this.state.getProjectInfo) &&
+      (this.state.teamData || this.state.getTeamById)
+    ) {
       return true;
     } else {
       return false;
@@ -216,40 +253,33 @@ class ProjectInfo extends Component {
   handleSubmit = async () => {
     if (this._isMounted) {
       if (fieldsArr.filter(x => { return !this.state[x.name + "Validation"]; }).length > 0) {
-        ApiCalls.showToastsInArr(["Comment field is invalid."], {
-          buttonText: "OK",
-          type: "danger",
-          position: "top",
-          duration: 5 * 1000
-        });
+        HandleError.showToastsInArr(["Comment field is invalid."]);
       }
       else {
-        ApiCalls.addProjectComment(this.params.uid, this.state.projectComment).then(response => {
-          ApiCalls.handleAPICallResult(response, this).then(apiResults => {
-            this.setState({ projectComment: "" });
-            if (apiResults) {
-              let message = "Comment was added successfully!";
-              ApiCalls.showToastsInArr([message], {
-                buttonText: "OK",
-                type: "success",
-                position: "top",
-                duration: 10 * 1000
-              });
-              Alert.alert(
-                "Comment Added!",
-                message,
-                [
-                  {
-                    text: "OK", onPress: () => {
-                      this.assignCommentsToState({ refresh: true });
-                    }
-                  },
-                ]
-              );
-            } else {
-              Alert.alert("Comment not Added!", JSON.stringify(this.state.ApiErrorsList));
-            }
+        ApiCalls.addProjectComment({ projID: this.params.uid, comment: this.state.projectComment }).then(() => {
+          this.setState({ projectComment: "" });
+          let message = "Comment was added successfully!";
+          HandleError.showToastsInArr([message], {
+            type: "success",
+            duration: 10000
           });
+          Alert.alert("Comment Added!", message, [{
+            text: "OK", onPress: () => {
+              this.assignCommentsToState({ refresh: true });
+            }
+          }]);
+        }, error => {
+          HandleError.handleError(this, error);
+          Alert.alert("Comment not Added!!",
+            JSON.stringify(this.state.addProjectComment || this.state.Error),
+            (this.state.Error ?
+              [{
+                text: "OK", onPress: () => {
+                  this.assignCommentsToState({ refresh: true });
+                }
+              }] : null
+            ), { cancelable: false }
+          );
         });
       }
     }
@@ -311,10 +341,6 @@ class ProjectInfo extends Component {
 
   // Render
   render() {
-    this.assignRequirementsToState();
-    this.assignCommentsToState();
-    this.assignProjectHoursToState();
-    this.assignProjectInfoToState();
     return (
       <Container style={styles.container}>
         <ManageMe_Header
@@ -357,9 +383,9 @@ class ProjectInfo extends Component {
   _renderProjectInfo() {
     return (
       <Content padder>
-        {this.state.projectInfo === "null" ?
+        {this.state.getProjectInfo ?
           <ManageMe_DisplayError
-            ApiErrorsList={this.state.ApiErrorsList}
+            ApiErrors={this.state.getProjectInfo}
           /> :
           <FlatList
             style={styles.container}
@@ -387,9 +413,9 @@ class ProjectInfo extends Component {
             <Text style={styles.projectTime}>
               {"  "}{info.created}
             </Text>
-          </View>{this.state.teamData === "null" ?
+          </View>{this.state.getTeamById ?
             <ManageMe_DisplayError
-              ApiErrorsList={this.state.ApiErrorsList}
+              ApiErrors={this.state.getTeamById}
             /> :
             <Button
               transparent
@@ -401,9 +427,9 @@ class ProjectInfo extends Component {
               </View>
             </Button>
           }
-          {this.state.projectHours === "null" ?
+          {this.state.getProjectHours ?
             <ManageMe_DisplayError
-              ApiErrorsList={this.state.ApiErrorsList}
+              ApiErrors={this.state.getProjectHours}
             /> :
             <Text style={styles.projectHours}>
               {this.getTime()}
@@ -414,9 +440,9 @@ class ProjectInfo extends Component {
           <View>
             <Card style={styles.card}>
               <Text style={styles.projectTitle}>Requirements</Text>
-              {this.state.requirementList === "null" ?
+              {this.state.getRequirementsByProjectId ?
                 <ManageMe_DisplayError
-                  ApiErrorsList={this.state.ApiErrorsList}
+                  ApiErrors={this.state.getRequirementsByProjectId}
                 /> :
                 <View>
                   {this._renderRequirementButton("Active")}
@@ -469,9 +495,9 @@ class ProjectInfo extends Component {
           />
         </View>
         <View>
-          {this.state.commentList === "null" ?
+          {this.state.getProjectComments ?
             <ManageMe_DisplayError
-              ApiErrorsList={this.state.ApiErrorsList}
+              ApiErrors={this.state.getProjectComments}
             /> :
             <FlatList
               data={this.state.commentList}
