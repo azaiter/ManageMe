@@ -56,7 +56,7 @@ class Projects extends Component {
     if ((this.state && this._isMounted) && (!this.state.projectsList || opts.refresh)) {
       this.setState({
         projectsList: undefined,
-        getProjects$: undefined
+        getProjects: undefined
       });
       ApiCalls.getProjects().then(apiResults => {
         apiResults.forEach(result => {
@@ -69,7 +69,7 @@ class Projects extends Component {
       }, error => {
         HandleError.handleError(this, error);
         Alert.alert("Error!",
-          JSON.stringify(this.state.getProjects$ || this.state.Error),
+          JSON.stringify(this.state.getProjects || this.state.Error),
           (this.state.Error ?
             [{
               text: "OK", onPress: () => {
@@ -131,9 +131,9 @@ class Projects extends Component {
     if (this.getRenderFromState()) {
       return (
         <Content padder>
-          {this.state.getProjects$ ?
+          {this.state.getProjects ?
             <ManageMe_DisplayError
-              ApiErrors={this.state.getProjects$}
+              ApiErrors={this.state.getProjects}
             /> :
             <FlatList
               style={styles.container}

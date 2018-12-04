@@ -143,7 +143,7 @@ class CreateRequirement extends Component {
           }, error => {
             HandleError.handleError(this, error);
             Alert.alert("Requirement not modified!",
-              JSON.stringify(this.state.createChangeRequest$ || this.state.Error),
+              JSON.stringify(this.state.createChangeRequest || this.state.Error),
               (this.state.Error ?
                 [{
                   text: "OK", onPress: () => {
@@ -180,7 +180,7 @@ class CreateRequirement extends Component {
           }, error => {
             HandleError.handleError(this, error);
             Alert.alert("Requirement not added!",
-              JSON.stringify(this.state.createRequirement$ || this.state.Error),
+              JSON.stringify(this.state.createRequirement || this.state.Error),
               (this.state.Error ?
                 [{
                   text: "OK", onPress: () => {

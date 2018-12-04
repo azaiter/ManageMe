@@ -36,7 +36,7 @@ class Home extends Component {
     }, error => {
       HandleError.handleError(this, error);
       Alert.alert("Error Logging In!",
-        JSON.stringify(this.state.getToken$ || this.state.Error),
+        JSON.stringify(this.state.getToken || this.state.Error),
         (this.state.Error ?
           [{
             text: "OK", onPress: () => {

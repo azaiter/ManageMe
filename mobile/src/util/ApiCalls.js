@@ -2,7 +2,7 @@ const apiURL = "https://api.manageme.tech";
 const Auth = require("../util/Auth");
 
 let callHandler = async function (params) {
-    const ApiError = callHandler.caller.name;
+    const ApiError = callHandler.caller.name.slice(0, callHandler.caller.name.length - 1);
     return new Promise((resolve, reject) => {
         callFetch(params).then(result => {
             if (result[1] !== 200) {
@@ -11,7 +11,7 @@ let callHandler = async function (params) {
                 resolve(result[0]);
             }
         }).catch(err => {
-            reject({ Error : err.message });
+            reject({ Error: err.message });
         });
     });
 };

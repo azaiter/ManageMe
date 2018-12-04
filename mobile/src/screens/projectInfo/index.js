@@ -88,7 +88,7 @@ class ProjectInfo extends Component {
     if ((this.state && this._isMounted) && (!this.state.requirementList || opts.refresh)) {
       this.setState({
         requirementList: undefined,
-        getRequirementsByProjectId$: undefined
+        getRequirementsByProjectId: undefined
       });
       ApiCalls.getRequirementsByProjectId({ projectId: this.params.uid }).then(apiResults => {
         let requirementList = {};
@@ -122,7 +122,7 @@ class ProjectInfo extends Component {
       }, error => {
         HandleError.handleError(this, error);
         Alert.alert("Error!",
-          JSON.stringify(this.state.getRequirementsByProjectId$ || this.state.Error),
+          JSON.stringify(this.state.getRequirementsByProjectId || this.state.Error),
           (this.state.Error ?
             [{
               text: "OK", onPress: () => {
@@ -140,7 +140,7 @@ class ProjectInfo extends Component {
     if ((this.state && this._isMounted) && (!this.state.commentList || opts.refresh)) {
       this.setState({
         commentList: undefined,
-        getProjectComments$: undefined
+        getProjectComments: undefined
       });
       ApiCalls.getProjectComments({ projID: this.params.uid }).then(apiResults => {
         this.setState({
@@ -149,7 +149,7 @@ class ProjectInfo extends Component {
       }, error => {
         HandleError.handleError(this, error);
         Alert.alert("Error!",
-          JSON.stringify(this.state.getProjectComments$ || this.state.Error),
+          JSON.stringify(this.state.getProjectComments || this.state.Error),
           (this.state.Error ?
             [{
               text: "OK", onPress: () => {
@@ -167,9 +167,9 @@ class ProjectInfo extends Component {
     if ((this.state && this._isMounted) && (!this.state.projectInfo || opts.refresh)) {
       this.setState({
         projectInfo: undefined,
-        getProjectInfo$: undefined,
+        getProjectInfo: undefined,
         teamData: undefined,
-        getTeamById$: undefined
+        getTeamById: undefined
       });
       ApiCalls.getProjectInfo({ proj_id: this.params.uid }).then(response => {
         this.setState({
@@ -182,7 +182,7 @@ class ProjectInfo extends Component {
         }, error => {
           HandleError.handleError(this, error);
           Alert.alert("Error!",
-            JSON.stringify(this.state.getTeamById$ || this.state.Error),
+            JSON.stringify(this.state.getTeamById || this.state.Error),
             (this.state.Error ?
               [{
                 text: "OK", onPress: () => {
@@ -194,7 +194,7 @@ class ProjectInfo extends Component {
       }, error => {
         HandleError.handleError(this, error);
         Alert.alert("Error!",
-          JSON.stringify(this.state.getProjectInfo$ || this.state.Error),
+          JSON.stringify(this.state.getProjectInfo || this.state.Error),
           (this.state.Error ?
             [{
               text: "OK", onPress: () => {
@@ -212,7 +212,7 @@ class ProjectInfo extends Component {
     if ((this.state && this._isMounted) && (!this.state.projectHours || opts.refresh)) {
       this.setState({
         projectHours: undefined,
-        getProjectHours$: undefined
+        getProjectHours: undefined
       });
       ApiCalls.getProjectHours({ projId: this.params.uid }).then(apiResults => {
         this.setState({
@@ -221,7 +221,7 @@ class ProjectInfo extends Component {
       }, error => {
         HandleError.handleError(this, error);
         Alert.alert("Error!",
-          JSON.stringify(this.state.getProjectHours$ || this.state.Error),
+          JSON.stringify(this.state.getProjectHours || this.state.Error),
           (this.state.Error ?
             [{
               text: "OK", onPress: () => {
@@ -238,11 +238,11 @@ class ProjectInfo extends Component {
   getRenderFromState() {
     if (
       this.state &&
-      (this.state.requirementList || this.state.getRequirementsByProjectId$) &&
-      (this.state.commentList || this.state.getProjectComments$) &&
-      (this.state.projectHours || this.state.getProjectHours$) &&
-      (this.state.projectInfo || this.state.getProjectInfo$) &&
-      (this.state.teamData || this.state.getTeamById$)
+      (this.state.requirementList || this.state.getRequirementsByProjectId) &&
+      (this.state.commentList || this.state.getProjectComments) &&
+      (this.state.projectHours || this.state.getProjectHours) &&
+      (this.state.projectInfo || this.state.getProjectInfo) &&
+      (this.state.teamData || this.state.getTeamById)
     ) {
       return true;
     } else {
@@ -271,7 +271,7 @@ class ProjectInfo extends Component {
         }, error => {
           HandleError.handleError(this, error);
           Alert.alert("Comment not Added!!",
-            JSON.stringify(this.state.addProjectComment$ || this.state.Error),
+            JSON.stringify(this.state.addProjectComment || this.state.Error),
             (this.state.Error ?
               [{
                 text: "OK", onPress: () => {
@@ -383,9 +383,9 @@ class ProjectInfo extends Component {
   _renderProjectInfo() {
     return (
       <Content padder>
-        {this.state.getProjectInfo$ ?
+        {this.state.getProjectInfo ?
           <ManageMe_DisplayError
-            ApiErrors={this.state.getProjectInfo$}
+            ApiErrors={this.state.getProjectInfo}
           /> :
           <FlatList
             style={styles.container}
@@ -413,9 +413,9 @@ class ProjectInfo extends Component {
             <Text style={styles.projectTime}>
               {"  "}{info.created}
             </Text>
-          </View>{this.state.getTeamById$ ?
+          </View>{this.state.getTeamById ?
             <ManageMe_DisplayError
-              ApiErrors={this.state.getTeamById$}
+              ApiErrors={this.state.getTeamById}
             /> :
             <Button
               transparent
@@ -427,9 +427,9 @@ class ProjectInfo extends Component {
               </View>
             </Button>
           }
-          {this.state.getProjectHours$ ?
+          {this.state.getProjectHours ?
             <ManageMe_DisplayError
-              ApiErrors={this.state.getProjectHours$}
+              ApiErrors={this.state.getProjectHours}
             /> :
             <Text style={styles.projectHours}>
               {this.getTime()}
@@ -440,9 +440,9 @@ class ProjectInfo extends Component {
           <View>
             <Card style={styles.card}>
               <Text style={styles.projectTitle}>Requirements</Text>
-              {this.state.getRequirementsByProjectId$ ?
+              {this.state.getRequirementsByProjectId ?
                 <ManageMe_DisplayError
-                  ApiErrors={this.state.getRequirementsByProjectId$}
+                  ApiErrors={this.state.getRequirementsByProjectId}
                 /> :
                 <View>
                   {this._renderRequirementButton("Active")}
@@ -495,9 +495,9 @@ class ProjectInfo extends Component {
           />
         </View>
         <View>
-          {this.state.getProjectComments$ ?
+          {this.state.getProjectComments ?
             <ManageMe_DisplayError
-              ApiErrors={this.state.getProjectComments$}
+              ApiErrors={this.state.getProjectComments}
             /> :
             <FlatList
               data={this.state.commentList}

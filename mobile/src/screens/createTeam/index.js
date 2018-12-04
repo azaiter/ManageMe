@@ -90,7 +90,7 @@ class CreateTeam extends Component {
         }, error => {
           HandleError.handleError(this, error);
           Alert.alert("Team not added!",
-            JSON.stringify(this.state.createTeam$ || this.state.Error),
+            JSON.stringify(this.state.createTeam || this.state.Error),
             (this.state.Error ?
               [{
                 text: "OK", onPress: () => {

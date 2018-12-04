@@ -67,7 +67,7 @@ class Users extends Component {
         }, error => {
           HandleError.handleError(this, error);
           Alert.alert("Permission not Removed!",
-            JSON.stringify(this.state.revokePrivilage$ || this.state.Error),
+            JSON.stringify(this.state.revokePrivilage || this.state.Error),
             (this.state.Error ?
               [{
                 text: "OK", onPress: () => {
@@ -87,7 +87,7 @@ class Users extends Component {
         }, error => {
           HandleError.handleError(this, error);
           Alert.alert("Permission not Added!",
-            JSON.stringify(this.state.assignPrivilage$ || this.state.Error),
+            JSON.stringify(this.state.assignPrivilage || this.state.Error),
             (this.state.Error ?
               [{
                 text: "OK", onPress: () => {
@@ -109,8 +109,8 @@ class Users extends Component {
     if ((this.state && this._isMounted) && (!this.state.usersList || opts.refresh)) {
       this.setState({
         usersList: undefined,
-        getUserInfo$: undefined,
-        getAllPerms$: undefined
+        getUserInfo: undefined,
+        getAllPerms: undefined
       });
       ApiCalls.getUserInfo().then(apiResults => {
         apiResults.forEach(result => {
@@ -140,7 +140,7 @@ class Users extends Component {
         }, error => {
           HandleError.handleError(this, error);
           Alert.alert("Error!",
-            JSON.stringify(this.state.getAllPerms$ || this.state.Error),
+            JSON.stringify(this.state.getAllPerms || this.state.Error),
             (this.state.Error ?
               [{
                 text: "OK", onPress: () => {
@@ -153,7 +153,7 @@ class Users extends Component {
       }, error => {
         HandleError.handleError(this, error);
         Alert.alert("Error!",
-          JSON.stringify(this.state.getUserInfo$ || this.state.Error),
+          JSON.stringify(this.state.getUserInfo || this.state.Error),
           (this.state.Error ?
             [{
               text: "OK", onPress: () => {
@@ -169,7 +169,7 @@ class Users extends Component {
   // Retrieve Render from state.
   getRenderFromState() {
     if (this.state &&
-      (this.state.usersList || this.state.getUserInfo$)) {
+      (this.state.usersList || this.state.getUserInfo)) {
       return true;
     } else {
       return false;
@@ -216,9 +216,9 @@ class Users extends Component {
     if (this.getRenderFromState()) {
       return (
         <Content padder>
-          {this.state.getUserInfo$ ?
+          {this.state.getUserInfo ?
             <ManageMe_DisplayError
-              ApiErrors={this.state.getUserInfo$}
+              ApiErrors={this.state.getUserInfo}
             /> :
             <FlatList
               style={styles.container}
@@ -325,7 +325,7 @@ class Users extends Component {
     }, error => {
       HandleError.handleError(this, error);
       Alert.alert(`"${userData.first_name} ${userData.last_name}"  has not been ${enabled ? "enabled" : "disabled"}!`,
-        JSON.stringify(this.state.enabledDisableUser$ || this.state.Error),
+        JSON.stringify(this.state.enabledDisableUser || this.state.Error),
         (this.state.Error ?
           [{
             text: "OK", onPress: () => {

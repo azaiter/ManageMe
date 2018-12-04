@@ -89,7 +89,7 @@ class CreateProject extends Component {
     if ((this.state && this._isMounted) && (!this.state.teams || opts.refresh)) {
       this.setState({
         teams: undefined,
-        getTeams$: undefined
+        getTeams: undefined
       });
       ApiCalls.getTeams().then(apiResults => {
         this.setState({
@@ -98,7 +98,7 @@ class CreateProject extends Component {
       }, error => {
         HandleError.handleError(this, error);
         Alert.alert("Error!",
-          JSON.stringify(this.state.getTeams$ || this.state.Error),
+          JSON.stringify(this.state.getTeams || this.state.Error),
           (this.state.Error ?
             [{
               text: "OK", onPress: () => {
@@ -113,7 +113,7 @@ class CreateProject extends Component {
 
   // Retrieve Render from state.
   getRenderFromState() {
-    if (this.state && (this.state.teams || this.state.getTeams$)) {
+    if (this.state && (this.state.teams || this.state.getTeams)) {
       return true;
     } else {
       return false;
@@ -147,7 +147,7 @@ class CreateProject extends Component {
           }, error => {
             HandleError.handleError(this, error);
             Alert.alert("Project not modified!",
-              JSON.stringify(this.state.updateProject$ || this.state.Error),
+              JSON.stringify(this.state.updateProject || this.state.Error),
               (this.state.Error ?
                 [{
                   text: "OK", onPress: () => {
@@ -178,7 +178,7 @@ class CreateProject extends Component {
           }, error => {
             HandleError.handleError(this, error);
             Alert.alert("Project not Added!",
-              JSON.stringify(this.state.createProject$ || this.state.Error),
+              JSON.stringify(this.state.createProject || this.state.Error),
               (this.state.Error ?
                 [{
                   text: "OK", onPress: () => {
@@ -266,13 +266,13 @@ class CreateProject extends Component {
             {/* Project Team */}
             {this.params.action === "edit" ?
               null :
-              <Item stackedLabel
+              <Item picker
                 success={this.getFieldValidation(fieldsArr[2].name).success}
                 error={this.getFieldValidation(fieldsArr[2].name).error} >
                 <Label>{fieldsArr[2].label}</Label>
-                {this.state.getTeams$ ?
+                {this.state.getTeams ?
                   <ManageMe_DisplayError
-                    ApiErrors={this.state.getTeams$}
+                    ApiErrors={this.state.getTeams}
                   /> :
                   <Picker
                     value={this.state[fieldsArr[2].name]}

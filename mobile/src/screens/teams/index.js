@@ -55,7 +55,7 @@ class Teams extends Component {
     if ((this.state && this._isMounted) && (!this.state.teamsList || opts.refresh)) {
       this.setState({
         teamsList: undefined,
-        getTeams$: undefined
+        getTeams: undefined
       });
       ApiCalls.getTeams().then(apiResults => {
         this.setState({
@@ -64,7 +64,7 @@ class Teams extends Component {
       }, error => {
         HandleError.handleError(this, error);
         Alert.alert("Error!",
-          JSON.stringify(this.state.getTeams$ || this.state.Error),
+          JSON.stringify(this.state.getTeams || this.state.Error),
           (this.state.Error ?
             [{
               text: "OK", onPress: () => {
@@ -79,7 +79,7 @@ class Teams extends Component {
 
   // Retrieve Render from state.
   getRenderFromState() {
-    if (this.state && (this.state.teamsList || this.state.getTeams$)) {
+    if (this.state && (this.state.teamsList || this.state.getTeams)) {
       return true;
     } else {
       return false;
@@ -118,9 +118,9 @@ class Teams extends Component {
     if (this.getRenderFromState()) {
       return (
         <Content padder>
-          {this.state.getTeams$ ?
+          {this.state.getTeams ?
             <ManageMe_DisplayError
-              ApiErrors={this.state.getTeams$}
+              ApiErrors={this.state.getTeams}
             /> :
             <FlatList
               style={styles.container}

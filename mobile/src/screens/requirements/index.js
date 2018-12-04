@@ -66,7 +66,7 @@ class Requirements extends Component {
     if ((this.state && this._isMounted) && (!this.state.requirementList || opts.refresh)) {
       this.setState({
         requirementList: undefined,
-        getRequirementsByProjectId$: undefined
+        getRequirementsByProjectId: undefined
       });
       ApiCalls.getRequirementsByProjectId({ projectId: this.params.uid }).then(apiResults => {
         let requirementList = {};
@@ -100,7 +100,7 @@ class Requirements extends Component {
       }, error => {
         HandleError.handleError(this, error);
         Alert.alert("Error!",
-          JSON.stringify(this.state.getRequirementsByProjectId$ || this.state.Error),
+          JSON.stringify(this.state.getRequirementsByProjectId || this.state.Error),
           (this.state.Error ?
             [{
               text: "OK", onPress: () => {
@@ -118,7 +118,7 @@ class Requirements extends Component {
     if ((this.state && this._isMounted) && (!this.state.clockedTime || opts.refresh)) {
       this.setState({
         clockedTime: undefined,
-        getTime$: undefined
+        getTime: undefined
       });
       ApiCalls.getTime().then(apiResults => {
         this.setState({
@@ -127,7 +127,7 @@ class Requirements extends Component {
       }, error => {
         HandleError.handleError(this, error);
         Alert.alert("Error!",
-          JSON.stringify(this.state.getTime$ || this.state.Error),
+          JSON.stringify(this.state.getTime || this.state.Error),
           (this.state.Error ?
             [{
               text: "OK", onPress: () => {
@@ -143,8 +143,8 @@ class Requirements extends Component {
   // Retrieve Render from state.
   getRenderFromState() {
     if (this.state &&
-      (this.state.requirementList || this.state.getRequirementsByProjectId$) &&
-      (this.state.clockedTime || this.state.getTime$)) {
+      (this.state.requirementList || this.state.getRequirementsByProjectId) &&
+      (this.state.clockedTime || this.state.getTime)) {
       return true;
     } else {
       return false;
@@ -169,7 +169,7 @@ class Requirements extends Component {
       }, error => {
         HandleError.handleError(this, error);
         Alert.alert("Requirement not Completed!",
-          JSON.stringify(this.state.completeReq$ || this.state.Error),
+          JSON.stringify(this.state.completeReq || this.state.Error),
           (this.state.Error ?
             [{
               text: "OK", onPress: () => {
@@ -203,7 +203,7 @@ class Requirements extends Component {
       }, error => {
         HandleError.handleError(this, error);
         Alert.alert(`Requirement not ${action}!`,
-          JSON.stringify(this.state.clockOut$ || this.state.Error || this.state.clockIn$),
+          JSON.stringify(this.state.clockOut || this.state.Error || this.state.clockIn),
           (this.state.Error ?
             [{
               text: "OK", onPress: () => {
@@ -269,7 +269,7 @@ class Requirements extends Component {
       }, error => {
         HandleError.handleError(this, error);
         Alert.alert(`Requirement not "${action}"!`,
-          JSON.stringify(this.state.acceptChangeRequest$ || this.state.Error || this.state.rejectChangeRequest$),
+          JSON.stringify(this.state.acceptChangeRequest || this.state.Error || this.state.rejectChangeRequest),
           (this.state.Error ?
             [{
               text: "OK", onPress: () => {
@@ -347,9 +347,9 @@ class Requirements extends Component {
               <Text style={styles.requirementDetails}>{requirementData.priority}{" "}{" "}</Text>
             </View>
           </View>
-          {this.state.getTime$ ?
+          {this.state.getTime ?
             <ManageMe_DisplayError
-              ApiErrors={this.state.getTime$}
+              ApiErrors={this.state.getTime}
             /> :
             <View>
               {this.getTimeRemaining(requirementData)}
@@ -411,9 +411,9 @@ class Requirements extends Component {
         <Tabs initialPage={this.params.initialPage}>
           <Tab heading="Active">
             <Content padder>
-              {this.state.getRequirementsByProjectId$ ?
+              {this.state.getRequirementsByProjectId ?
                 <ManageMe_DisplayError
-                  ApiErrors={this.state.getRequirementsByProjectId$}
+                  ApiErrors={this.state.getRequirementsByProjectId}
                 /> :
                 <Accordion
                   dataArray={this.state.requirementList.initial}
@@ -421,9 +421,9 @@ class Requirements extends Component {
                   renderContent={this._renderAccordionContent}
                 />
               }
-              {this.state.getRequirementsByProjectId$ ?
+              {this.state.getRequirementsByProjectId ?
                 <ManageMe_DisplayError
-                  ApiErrors={this.state.getRequirementsByProjectId$}
+                  ApiErrors={this.state.getRequirementsByProjectId}
                 /> :
                 <Accordion
                   dataArray={this.state.requirementList.changeRequest}
@@ -435,9 +435,9 @@ class Requirements extends Component {
           </Tab>
           <Tab heading="Pending" >
             <Content padder>
-              {this.state.getRequirementsByProjectId$ ?
+              {this.state.getRequirementsByProjectId ?
                 <ManageMe_DisplayError
-                  ApiErrors={this.state.getRequirementsByProjectId$}
+                  ApiErrors={this.state.getRequirementsByProjectId}
                 /> :
                 <Accordion
                   dataArray={this.state.requirementList.pending}
@@ -449,9 +449,9 @@ class Requirements extends Component {
           </Tab>
           <Tab heading="Completed" >
             <Content padder>
-              {this.state.getRequirementsByProjectId$ ?
+              {this.state.getRequirementsByProjectId ?
                 <ManageMe_DisplayError
-                  ApiErrors={this.state.getRequirementsByProjectId$}
+                  ApiErrors={this.state.getRequirementsByProjectId}
                 /> :
                 <Accordion
                   dataArray={this.state.requirementList.completed}

@@ -146,7 +146,7 @@ class CreateUser extends Component {
           }, error => {
             HandleError.handleError(this, error);
             Alert.alert("User not modified!",
-              JSON.stringify(this.state.updateUser$ || this.state.Error),
+              JSON.stringify(this.state.updateUser || this.state.Error),
               (this.state.Error ?
                 [{
                   text: "OK", onPress: () => {
@@ -182,7 +182,7 @@ class CreateUser extends Component {
           }, error => {
             HandleError.handleError(this, error);
             Alert.alert("User not added!",
-              JSON.stringify(this.state.createUser$ || this.state.Error),
+              JSON.stringify(this.state.createUser || this.state.Error),
               (this.state.Error ?
                 [{
                   text: "OK", onPress: () => {

@@ -62,7 +62,7 @@ class TeamMembers extends Component {
     if ((this.state && this._isMounted) && (!this.state.teamMembersList || opts.refresh)) {
       this.setState({
         teamMembersList: undefined,
-        getTeamMembers$: undefined
+        getTeamMembers: undefined
       });
       let teamMember = [];
       ApiCalls.getTeamMembers({
@@ -83,7 +83,7 @@ class TeamMembers extends Component {
         });
         HandleError.handleError(this, error);
         Alert.alert("Error!",
-          JSON.stringify(this.state.getTeamMembers$ || this.state.Error),
+          JSON.stringify(this.state.getTeamMembers || this.state.Error),
           (this.state.Error ?
             [{
               text: "OK", onPress: () => {
@@ -100,7 +100,7 @@ class TeamMembers extends Component {
     if ((this.state && this._isMounted) && (!this.state.userList || opts.refresh)) {
       this.setState({
         userList: undefined,
-        getUserInfo$: undefined
+        getUserInfo: undefined
       });
       ApiCalls.getUserInfo().then(apiResults => {
         let userList = [
@@ -116,7 +116,7 @@ class TeamMembers extends Component {
       }, error => {
         HandleError.handleError(this, error);
         Alert.alert("Error!",
-          JSON.stringify(this.state.getUserInfo$ || this.state.Error),
+          JSON.stringify(this.state.getUserInfo || this.state.Error),
           (this.state.Error ?
             [{
               text: "OK", onPress: () => {
@@ -133,8 +133,8 @@ class TeamMembers extends Component {
   getRenderFromState() {
     if (
       this.state &&
-      (this.state.userList || this.state.getUserInfo$) &&
-      (this.state.teamMembersList || this.state.getTeamMembers$)
+      (this.state.userList || this.state.getUserInfo) &&
+      (this.state.teamMembersList || this.state.getTeamMembers)
     ) {
       return true;
     } else {
@@ -157,7 +157,7 @@ class TeamMembers extends Component {
           }, error => {
             HandleError.handleError(this, error);
             Alert.alert("User not Removed!",
-              JSON.stringify(this.state.removeUserFromTeam$ || this.state.Error),
+              JSON.stringify(this.state.removeUserFromTeam || this.state.Error),
               (this.state.Error ?
                 [{
                   text: "OK", onPress: () => {
@@ -180,7 +180,7 @@ class TeamMembers extends Component {
         }, error => {
           HandleError.handleError(this, error);
           Alert.alert("User not Added!",
-            JSON.stringify(this.state.addUserToTeam$ || this.state.Error),
+            JSON.stringify(this.state.addUserToTeam || this.state.Error),
             (this.state.Error ?
               [{
                 text: "OK", onPress: () => {
@@ -226,9 +226,9 @@ class TeamMembers extends Component {
       return (
         <Content padder>
           <View>
-            {this.state.getUserInfo$ ?
+            {this.state.getUserInfo ?
               <ManageMe_DisplayError
-                ApiErrors={this.state.getUserInfo$}
+                ApiErrors={this.state.getUserInfo}
               /> :
               <SectionedMultiSelect
                 items={this.state.userList}
@@ -248,9 +248,9 @@ class TeamMembers extends Component {
                 }}
               />}
           </View>
-          {this.state.getTeamMembers$ ?
+          {this.state.getTeamMembers ?
             <ManageMe_DisplayError
-              ApiErrors={this.state.getTeamMembers$}
+              ApiErrors={this.state.getTeamMembers}
             /> :
             <FlatList
               style={styles.container}
@@ -321,7 +321,7 @@ class TeamMembers extends Component {
     }, error => {
       HandleError.handleError(this, error);
       Alert.alert("Error!",
-        JSON.stringify(this.state.makeTeamLead$ || this.state.Error),
+        JSON.stringify(this.state.makeTeamLead || this.state.Error),
         (this.state.Error ?
           [{
             text: "OK", onPress: () => {
