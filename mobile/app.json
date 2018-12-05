@@ -24,7 +24,8 @@
       "bundleIdentifier": "com.zaiter.manageme"
     },
     "android": {
-      "package": "com.zaiter.manageme"
+      "package": "com.zaiter.manageme",
+      "versionCode": 2
     }
   }
 }
