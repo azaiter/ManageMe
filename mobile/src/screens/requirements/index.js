@@ -472,7 +472,7 @@ class Requirements extends Component {
   _renderAccordionHeader = (requirementData, expanded) => {
     return (
       <View style={requirementData.status === 4 ? styles.accordionHeaderViewOld : styles.accordionHeaderView}>
-        <Text style={requirementData.status === 4 ? styles.requirementDataTitleOld : styles.requirementDataTitle}>{requirementData.name}</Text> :
+        <Text style={requirementData.status === 4 ? styles.requirementDataTitleOld : styles.requirementDataTitle}>{requirementData.name}</Text>
         {
           expanded ?
             <Icon style={styles.expandedIconStyle} name="remove-circle" /> :
