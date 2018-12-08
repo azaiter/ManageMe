@@ -1,6 +1,6 @@
 ![ManageMe](https://i.imgur.com/5IK9Vb6.png)
 
-# ManageMe
+# ManageMe - NextGen Project Management Software
 
 Software Engineering & Mobile Computing Project
 
